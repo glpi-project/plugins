@@ -1,0 +1,13 @@
+{
+    "name": "glpi-plugin-directory/api",
+    "description": "The Server-code for the API of glpi-plugin-directory",
+    "authors": [
+        {
+            "name": "Nelson Zamith",
+            "email": "nzamith@teclib.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "~2.0"
+    }
+}
