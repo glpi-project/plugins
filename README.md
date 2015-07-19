@@ -6,7 +6,7 @@ for GLPI versions < 1 .
 This project if fully managed by, and used only by Teclib'
 and won't be shared on Teclib's github (or I don't think so).
 
-## Dependencies installation
+## Dependencies installation
 
 ### Server-Side : PHP
 dans glpi-plugin-directory :
