@@ -29,7 +29,7 @@ grunt build
  + Create a database that you would like to use
  + Load structure.sql
 
-## Loading Indepnet data from CSV file
+## Loading Indepnet data from CSV file (Optional)
 
 ```
 php misc/loadcsv.php -h hostname -d database -u username -p password -f csv_path
