@@ -18,7 +18,6 @@ and won't be shared on Teclib's github (or I don't think so).
 This is a configuration example for Apache HTTPd :
 
 ```
->>>>>>> Markdown block in ApacheConf format
 <VirtualHost *:80>
     ServerName glpiplugindirectory;
     DocumentRoot "/Users/nelson/Code/glpi-plugin-directory/frontend/dist"
