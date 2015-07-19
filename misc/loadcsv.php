@@ -99,6 +99,11 @@ function parse_csv($filename) {
     return $modules;
 }
 
+/**
+ * Prepare all the queries that are going to be
+ * executed in order to load the content of the
+ * csv file
+ */
 function buildQueries($modules) {
     $queries = [];
     foreach ($modules as $module) {
