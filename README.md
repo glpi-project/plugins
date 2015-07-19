@@ -38,3 +38,4 @@ This is a configuration example for Apache HTTPd :
     ErrorLog "/usr/local/var/log/apache2/glpiplugindirectory.error.log"
     CustomLog "/usr/local/var/log/apache2/glpiplugindirectory.access.log" common
 </VirtualHost>
+```
