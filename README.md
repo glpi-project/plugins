@@ -6,12 +6,34 @@ for GLPI versions < 1 .
 This project if fully managed by, and used only by Teclib'
 and won't be shared on Teclib's github (or I don't think so).
 
-## 
+## Dependencies installation
+
+### Server-Side : PHP
+dans glpi-plugin-directory :
+```
+cd api
+compoer install
+```
+
+### Client-Side : Angular
+dans glpi-plugin-directory :
+```
+cd frontend
+npm install
+bower install
+grunt build
+```
 
 ## Configuration (Mandatory)
 
  + Create a database that you would like to use
- + Load tables.sql
+ + Load structure.sql
+
+## Loading Indepnet data from CSV file
+
+```
+php misc/loadcsv.php -h hostname -d database -u username -p password -f csv_path
+```
 
 ## Configuration (Via Apache HTTPd)
 
