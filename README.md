@@ -6,6 +6,8 @@ for GLPI versions < 1 .
 This project if fully managed by, and used only by Teclib'
 and won't be shared on Teclib's github (or I don't think so).
 
+## 
+
 ## Configuration (Mandatory)
 
  + Create a database that you would like to use
@@ -15,7 +17,7 @@ and won't be shared on Teclib's github (or I don't think so).
 
 This is a configuration example for Apache HTTPd :
 
-```nginx
+```apacheconf
 <VirtualHost *:80>
     ServerName glpiplugindirectory;
     DocumentRoot "/Users/nelson/Code/glpi-plugin-directory/frontend/dist"
