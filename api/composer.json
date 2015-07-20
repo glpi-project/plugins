@@ -8,6 +8,7 @@
         }
     ],
     "require": {
-        "slim/slim": "~2.0"
+        "slim/slim": "~2.0",
+        "illuminate/database": "^5.1"
     }
 }
