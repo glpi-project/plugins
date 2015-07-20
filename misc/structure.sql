@@ -9,7 +9,6 @@ CREATE TABLE plugin (
 	issues_url TEXT,
 	readme_url TEXT,
 	license VARCHAR(255),
-	categories TEXT,
 	active INT(1),
 	date_added DATE,
 	date_updated DATE
