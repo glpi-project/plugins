@@ -2,7 +2,7 @@
 /**
  * update.php
  *
- * This script should be started a crontab to
+ * This script should be started by a crontab to
  * update the database according to all the
  * url and checksums.
  */
