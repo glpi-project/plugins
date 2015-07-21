@@ -23,7 +23,7 @@ $capsule->setAsGlobal();
 $plugins = Capsule::table('plugin')->get();
 
 // For each of these plugins
-$i = 0;
+$i = 1;
 foreach ($plugins as $plugin) {
 	$update = false;
 
@@ -36,6 +36,7 @@ foreach ($plugins as $plugin) {
 	$current_checksum = md5($xml);
 	if ($db_checksum != $current_checksum) {
 		$update = true;
+		echo 'different checksums';
 	}
 
 	// If the plugin name is not available
@@ -43,12 +44,13 @@ foreach ($plugins as $plugin) {
 	// this is another reason to update
 	if ($plugin->name == NULL) {
 		$update = true;
+		echo 'never fetched plugin';
 	}
 
 	// Now Parsing... thanks to SimpleXML!
 	$xml = simplexml_load_string($xml);
 
-	if ($update) {		
+	if ($update) {	
 		// for now, not doing any checkup on
 		// specific fields, just copying xml
 		// data, which is the reference data
@@ -56,13 +58,7 @@ foreach ($plugins as $plugin) {
 			       ->where('id', $plugin->id)
 			       ->update([
 			       		'xml_crc'      => $current_checksum,
-
-			       		// not updating the name at dev
-			      		// time because still want to
-			      		// force update at every cycle
-			      		//for now ..
-
-			       		// 'name'         => $xml->name,
+			       		'name'         => $xml->name,
 			       		'key'          => $xml->key,
 			       		'homepage_url' => $xml->homepage,
 			       		'download_url' => $xml->download,
@@ -96,8 +92,9 @@ foreach ($plugins as $plugin) {
 			           	]); // Inserting current ones
 		}
 
+		echo "Imported ".$i."/".sizeof($plugins)." plugins\n";
+	} else {
+		echo "Passing import of plugin ".$i."/".sizeof($plugins)."\n";
 	}
-
 	$i++;
-	echo "Imported ".$i."/".sizeof($plugins)." plugins\n";
 }
