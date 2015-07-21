@@ -12,7 +12,7 @@ and won't be shared on Teclib's github (or I don't think so).
 dans glpi-plugin-directory :
 ```
 cd api
-compoer install
+composer install
 ```
 
 ### Client-Side : Angular
