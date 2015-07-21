@@ -23,6 +23,7 @@ $capsule->setAsGlobal();
 $plugins = Capsule::table('plugin')->get();
 
 // For each of these plugins
+$i = 0;
 foreach ($plugins as $plugin) {
 	$update = false;
 
@@ -83,7 +84,20 @@ foreach ($plugins as $plugin) {
 			           	]); // Inserting current ones
 		}
 
+		// Refreshing all authors
+		Capsule::table('plugin_author')
+		           ->where('plugin_id', $plugin->id)
+		           ->delete(); // Deleting in-db ones ...
+		foreach ($xml->authors->children() as $author) {
+			Capsule::table('plugin_author')
+			           ->insert([
+			           		'plugin_id' => $plugin->id,
+			           		'author' => $author,
+			           	]); // Inserting current ones
+		}
+
 	}
 
-	break;
+	$i++;
+	echo "Imported ".$i."/".sizeof($plugins)." plugins\n";
 }
