@@ -55,7 +55,13 @@ foreach ($plugins as $plugin) {
 			       ->where('id', $plugin->id)
 			       ->update([
 			       		'xml_crc'      => $current_checksum,
-			       		'name'         => $xml->name,
+
+			       		// not updating the name at dev
+			      		// time because still want to
+			      		// force update at every cycle
+			      		//for now ..
+
+			       		// 'name'         => $xml->name,
 			       		'key'          => $xml->key,
 			       		'homepage_url' => $xml->homepage,
 			       		'download_url' => $xml->download,
@@ -65,19 +71,19 @@ foreach ($plugins as $plugin) {
 			       	]);
 
 		// Refreshing all descriptions
-		// Capsule::table('plugin_description')
-		//            ->where('plugin_id', $plugin->id)
-		//            ->delete();
+		Capsule::table('plugin_description')
+		           ->where('plugin_id', $plugin->id)
+		           ->delete(); // Deleting in-db ones ...
+		foreach ($xml->description->long->children() as $lang => $string) {
+			Capsule::table('plugin_description')
+			           ->insert([
+			           		'plugin_id' => $plugin->id,
+			           		'description' => $string,
+			           		'lang' => $lang
+			           	]); // Inserting current ones
+		}
 
-
-		// Capsule::table('plugin_description')
-		//            ->insert([
-		//            		'plugin_id' => $plugin->id,
-
-		//            	]);
 	}
-
-	// echo $xml->name;
 
 	break;
 }
