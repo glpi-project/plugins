@@ -2,10 +2,10 @@
 
 $db_settings = [
 	'driver'    =>  'mysql',
-	'host'      =>  'localhost',
-	'database'  =>  'glpiplugindirectory',
-	'username'  =>  'glpi',
-	'password'  =>  'glpi',
+	'host'      =>  '', 
+	'database'  =>  '',
+	'username'  =>  '',
+	'password'  =>  '',
 	'charset'   =>  'utf8',
 	'collation' =>  'utf8_general_ci',
 	'prefix'    =>  ''
