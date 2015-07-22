@@ -8,6 +8,6 @@ class PluginDescription extends Model {
 	protected $table = 'plugin_description';
  
 	public function plugin() {
-		return $this->belongsTo('Plugin');
+		return $this->belongsTo('\API\Plugin');
 	}
 }

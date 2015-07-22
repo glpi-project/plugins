@@ -8,6 +8,6 @@ class PluginAuthor extends Model {
 	protected $table = 'plugin_author';
 
 	public function plugin() {
-		return $this->belongsTo('Plugin');
+		return $this->belongsTo('\API\Plugin');
 	}
 }
