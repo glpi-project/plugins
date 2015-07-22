@@ -10,9 +10,4 @@ $app->get('/plugin', function() use ($app) {
 	echo json_encode(\API\Plugin::with('descriptions', 'authors')->get()->toArray());
 });
 
-$app->get('/test', function() use($app) {
-	$app->response->headers->set('Content-Type', 'application/json');
-	echo json_encode(\API\Plugin::first()->authors);
-});
-
 $app->run();

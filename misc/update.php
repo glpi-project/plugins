@@ -36,7 +36,6 @@ foreach ($plugins as $plugin) {
 	$current_checksum = md5($xml);
 	if ($db_checksum != $current_checksum) {
 		$update = true;
-		echo 'different checksums';
 	}
 
 	// If the plugin name is not available
@@ -44,7 +43,6 @@ foreach ($plugins as $plugin) {
 	// this is another reason to update
 	if ($plugin->name == NULL) {
 		$update = true;
-		echo 'never fetched plugin';
 	}
 
 	// Now Parsing... thanks to SimpleXML!
@@ -92,9 +90,44 @@ foreach ($plugins as $plugin) {
 			           	]); // Inserting current ones
 		}
 
-		echo "Imported ".$i."/".sizeof($plugins)." plugins\n";
+		foreach ($xml->tags->children() as $lang => $tags) {
+			foreach($tags->children() as $tag) {
+				// Insert tag `if not exists` !
+				$t = Capsule::table('tag')
+						       ->where('lang', $lang)
+				               ->where('tag', $tag)
+				               ->first(['id']);
+
+				if (!sizeof($t)) {
+					$t = Capsule::table('tag')
+							      ->insertGetId([
+							      		'tag'  => $tag,
+							      		'lang' => $lang
+							        ]);
+				} else {
+					$t = $t->id;
+				}
+
+				// Link tag to plugin if not linked				
+				$notLinked = Capsule::table('plugin_tags')
+				                        ->where('plugin_id', $plugin->id)
+				                        ->where('tag_id', $t)
+				                        ->get();
+				$notLinked = (sizeof($notLinked) == 0) ? true : false;
+
+				if ($notLinked) {
+					Capsule::table('plugin_tags')
+					            ->insert([
+					            	'tag_id' => $t,
+					            	'plugin_id' => $plugin->id
+					            ]);
+				}
+			}
+		}
+
+		echo "Imported/Refreshed (".$i."/".sizeof($plugins).") ".$plugin->name."\n";
 	} else {
-		echo "Passing import of plugin ".$i."/".sizeof($plugins)."\n";
+		echo "Passing import of plugin (".$i."/".sizeof($plugins).") ".$plugin->name."\n";
 	}
 	$i++;
 }

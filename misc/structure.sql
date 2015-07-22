@@ -43,6 +43,7 @@ CREATE TABLE plugin_author(
 	author TEXT,
 	FOREIGN KEY (plugin_id)
 		REFERENCES plugin(id)
+		ON DELETE CASCADE
 ) ENGINE=InnoDB;
 CREATE INDEX idx_plugin_author_plugin on plugin_author(plugin_id);
 
