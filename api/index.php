@@ -2,12 +2,12 @@
 
 require 'vendor/autoload.php';
 
-$db = (new \API\DB)->get();
+\API\DB::initCapsule();
 $app = new \Slim\Slim();
 
 $app->get('/plugin', function() use ($app) {
 	$app->response->headers->set('Content-Type', 'application/json');
-	echo json_encode(\API\Plugin::get()->toArray());
+	echo json_encode(\API\Plugin::with('descriptions', 'authors')->get()->toArray());
 });
 
 $app->get('/test', function() use($app) {

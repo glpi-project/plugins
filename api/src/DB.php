@@ -5,18 +5,13 @@ namespace API;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 class DB {
-	private $capsule = NULL;
+	private static $capsule;
 
-	public function __construct() {
+	public static function initCapsule() {
 		require 'config.php'; // need database credentials
-		$capsule = new Capsule;
-		$capsule->addConnection($db_settings);
-		$capsule->bootEloquent();
-		$capsule->setAsGlobal();
-		$this->capsule = $capsule;
-	}
-
-	public function get() {
-		return $this->capsule;
+		self::$capsule = new Capsule;
+		self::$capsule->addConnection($db_settings);
+		self::$capsule->bootEloquent();
+		self::$capsule->setAsGlobal();
 	}
 }
