@@ -2,6 +2,8 @@
 
 require 'vendor/autoload.php';
 
+use \Illuminate\Database\Capsule\Manager as DB;
+
 \API\Core\DB::initCapsule();
 $app = new \Slim\Slim();
 
@@ -14,13 +16,15 @@ $app->get('/plugin', function() use ($app) {
 // List of all trending plugins
 $app->get('/plugin/trending', function() use($app) {
 	$app->response->headers->set('Content-Type', 'application/json');
-	// This is the typical mysql query:
-	//    SELECT name, count(name) FROM plugin
-	//    INNER JOIN plugin_download
-	//    ON plugin.id = plugin_download.plugin_id
-	//    GROUP BY name;
-	echo json_encode(new stdClass);
-//	echo json_encode(\API\Model\Plugin::with('description', 'authors'));
+
+	$trending_plugins = DB::table('plugin')
+	      ->select(['plugin.name', DB::raw('COUNT(name) as downloaded')])
+	      ->join('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
+	      ->groupBy('name')
+	      ->orderBy('downloaded', 'DESC')
+	      ->get();
+
+	echo json_encode($trending_plugins);
 });
 
 // Star a plugin
