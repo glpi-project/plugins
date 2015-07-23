@@ -10,5 +10,7 @@
  */
 angular
   .module('frontendApp', [
-    'ngAnimate'
-  ]);
+    'ngAnimate',
+    'ui.router'
+  ])
+  .constant('API_URL', 'http://glpiplugindirectory/api');
