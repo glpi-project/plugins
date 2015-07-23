@@ -13,6 +13,20 @@ $app->get('/plugin', function() use ($app) {
 	echo json_encode(\API\Model\Plugin::with('descriptions', 'authors')->get()->toArray());
 });
 
+// List of all popular plugins
+$app->get('/plugin/popular', function() use($app) {
+	$app->response->headers->set('Content-Type', 'application/json');
+
+	$popular_plugins = DB::table('plugin')
+	      ->select(['plugin.name', DB::raw('COUNT(name) as downloaded')])
+	      ->join('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
+	      ->groupBy('name')
+	      ->orderBy('downloaded', 'DESC')
+	      ->get();
+
+	echo json_encode($popular_plugins);
+});
+
 // List of all trending plugins
 $app->get('/plugin/trending', function() use($app) {
 	$app->response->headers->set('Content-Type', 'application/json');
@@ -26,7 +40,6 @@ $app->get('/plugin/trending', function() use($app) {
 
 	echo json_encode($trending_plugins);
 });
-
 // Star a plugin
 $app->get('/plugin/star', function() use($app) {
 
