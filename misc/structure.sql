@@ -5,7 +5,7 @@ CREATE TABLE plugin (
 	name TEXT,
 	`key` VARCHAR(255),
 	homepage_url TEXT, 
-	download_url TEXT, 
+	download_url TEXT,
 	issues_url TEXT,
 	readme_url TEXT,
 	license VARCHAR(255),
@@ -13,6 +13,15 @@ CREATE TABLE plugin (
 	date_added DATE,
 	date_updated DATE
 ) ENGINE=InnoDB;
+
+CREATE TABLE plugin_download (
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	plugin_id INT NOT NULL,
+	downloaded_at DATETIME,
+	FOREIGN KEY (plugin_id)
+		REFERENCES plugin(id)
+) ENGINE=InnoDB;
+CREATE INDEX idx_plugin_download_id on plugin_download(plugin_id);
 
 CREATE TABLE plugin_description(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -24,7 +33,6 @@ CREATE TABLE plugin_description(
 		ON DELETE CASCADE
 ) ENGINE=InnoDB;
 CREATE INDEX idx_plugin_description_plugin on plugin_description(plugin_id);
-
 
 CREATE TABLE plugin_version(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
