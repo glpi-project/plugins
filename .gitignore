@@ -1,3 +1,4 @@
 api/vendor
 npm-debug.log
 api/config.php
+*.swp
