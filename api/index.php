@@ -11,7 +11,7 @@ $app->get('/plugin', function() use ($app) {
 	echo json_encode(\API\Model\Plugin::with('descriptions', 'authors')->get()->toArray());
 });
 
-// 
+// List of all trending plugins
 $app->get('/plugin/trending', function() use($app) {
 	$app->response->headers->set('Content-Type', 'application/json');
 	// This is the typical mysql query:
@@ -22,8 +22,6 @@ $app->get('/plugin/trending', function() use($app) {
 	echo json_encode(new stdClass);
 //	echo json_encode(\API\Model\Plugin::with('description', 'authors'));
 });
-
-
 
 // Star a plugin
 $app->get('/plugin/star', function() use($app) {
