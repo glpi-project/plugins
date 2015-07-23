@@ -12,6 +12,9 @@
         "illuminate/database": "^5.1"
     },
     "autoload": {
-        "psr-4": {"API\\": "src/"}
+        "psr-4": {
+            "API\\Core\\": "src/core",
+            "API\\Model\\": "src/models"
+        }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace API;
+namespace API\Core;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
