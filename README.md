@@ -8,14 +8,14 @@ and won't be shared on Teclib's github (or I don't think so).
 
 ## Dependencies installation
 
-### Server-Side : PHP
+### Server-Side PHP packages fetching
 dans glpi-plugin-directory :
 ```
 cd api
 composer install
 ```
 
-### Client-Side : Angular
+### Client-Side Angular modules fetching
 dans glpi-plugin-directory :
 ```
 cd frontend
@@ -23,6 +23,17 @@ npm install
 bower install
 grunt build
 ```
+
+### Client-Side Developers
+
+```
+cd frontend
+npm serve
+```
+
+And fire Chrome with -disable-web-security flag
+which will allow XmlHttpRequests on cross-domain
+urls.
 
 ## Configuration (Mandatory)
 
