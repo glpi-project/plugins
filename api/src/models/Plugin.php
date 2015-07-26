@@ -17,36 +17,32 @@ class Plugin extends Model {
     }
 
     public function scopeWithDownloads($query, $limit = false) {
-        $q = $query->select(['plugin.*',
+        $query->select(['plugin.*',
                              DB::raw('IF(COUNT(name)>1,COUNT(name),0) as downloaded')])
                      ->leftJoin('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
                      ->groupBy('name');
-        return $q;
+        return $query;
     }
 
     public function scopePopularTop($query, $limit = 10) {
-        $q = $query->select(['plugin.id', 'plugin.name',
+        $query->select(['plugin.id', 'plugin.name',
                                 DB::raw('COUNT(name) as downloaded')])
                      ->join('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
                      ->groupBy('name')
-                     ->orderBy('downloaded', 'DESC');
-                     if ($limit)  {
-                        $query->take(10);
-                     }
-        return $q;
+                     ->orderBy('downloaded', 'DESC')
+                     ->take(10);
+        return $query;
     }
 
     public function scopeTrendingTop($query, $limit = 10) {
-        $q = $query->select(['plugin.id', 'plugin.name',
+        $query->select(['plugin.id', 'plugin.name',
                                 DB::raw('COUNT(name) as downloaded')])
                      ->join('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
                      ->where('downloaded_at', '>', DB::raw('NOW() - INTERVAL 1 WEEK'))
                      ->groupBy('name')
-                     ->orderBy('downloaded', 'DESC');
-                     if ($limit)  {
-                        $query->take(10);
-                     }
-        return $q;
+                     ->orderBy('downloaded', 'DESC')
+                    ->take(10);
+        return $query;
     }
 
     public function scopeUpdatedRecently($query, $limit = 10) {
