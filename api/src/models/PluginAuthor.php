@@ -13,7 +13,7 @@ class PluginAuthor extends Model {
 		return $this->belongsTo('\API\Model\Plugin');
 	}
 
-	public function scopeWithPluginCount($query, $limit=10) {
+	public function scopeMostActive($query, $limit=10) {
 		$query->select(['plugin_author.author', DB::raw('COUNT(author) as plugin_count')])
 		      ->groupBy('author')
 		      ->orderBy('plugin_count', 'DESC')
