@@ -19,8 +19,9 @@ use \Illuminate\Database\Capsule\Manager as DB;
  * List of all plugins
  */
 $all = function() use($app) {
-	$all = \API\Model\Plugin::with('descriptions', 'authors')
-		                        ->get()->toArray();
+	$all = \API\Model\Plugin::withDownloads()
+						  ->with('descriptions', 'authors')
+		                  ->get()->toArray();
 
 	Tool::endWithJson($all);
 };
@@ -29,13 +30,8 @@ $all = function() use($app) {
  * Most popular plugins
  */
 $popular = function() use($app) {
-	$popular_plugins = DB::table('plugin')
-	      ->select(['plugin.name', DB::raw('COUNT(name) as downloaded')])
-	      ->join('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
-	      ->groupBy('name')
-	      ->orderBy('downloaded', 'DESC')
-	      ->get();
-
+	$popular_plugins = \API\Model\Plugin::popularTop(10)
+	                                    ->get();
 	Tool::endWithJson($popular_plugins);
 };
 
@@ -45,12 +41,8 @@ $popular = function() use($app) {
  */
  
 $trending = function() use($app) {
-	$trending_plugins = DB::table('plugin')
-	      ->select(['plugin.name', DB::raw('COUNT(name) as downloaded')])
-	      ->join('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
-	      ->groupBy('name')
-	      ->orderBy('downloaded', 'DESC')
-	      ->get();
+	$trending_plugins = \API\Model\Plugin::trendingTop(10)
+	     									 ->get();
 
 	Tool::endWithJson($trending_plugins);
 };
