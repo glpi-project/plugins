@@ -35,6 +35,10 @@ grunt build
 php misc/loadcsv.php -h hostname -d database -u username -p password -f csv_path
 ```
 
+you can give the indepnet.csv file provided in misc
+with the -f command line option shown in the example before.
+
+
 ## Configuration (Via Apache HTTPd)
 
 This is a configuration example for Apache HTTPd :
