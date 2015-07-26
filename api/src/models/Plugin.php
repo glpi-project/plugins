@@ -48,4 +48,8 @@ class Plugin extends Model {
                      }
         return $q;
     }
+
+    public function scopeUpdatedRecently($query, $limit = 10) {
+        $q = $query->where('date_updated', '>', DB::raw('NOW() - INTERVAL 2 WEEK'));
+    }
 }

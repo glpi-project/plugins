@@ -47,6 +47,13 @@ $trending = function() use($app) {
 	Tool::endWithJson($trending_plugins);
 };
 
+$updated = function() use($app) {
+	$updated_plugins = \API\Model\Plugin::updatedRecently(10)
+	  									->get();
+
+	Tool::endWithJson($updated_plugins);
+};
+
 /**
  * Remote procedure to star a plugin
  */
@@ -58,4 +65,5 @@ $star = function() use($app) {
 $app->get('/plugin', $all);
 $app->get('/plugin/popular', $popular);
 $app->get('/plugin/trending', $trending);
+$app->get('/plugin/updated', $updated);
 $app->post('/plugin/star', $star);
