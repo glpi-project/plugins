@@ -1,5 +1,13 @@
 # GLPI Plugin Directory
 
+## Demo
+
+If you're connected in a Teclib agency
+or on the Teclib VPN, you can see a demo
+of the current bleeding edge:
+
+http://172.28.211.125/
+
 This projects aims to serve the new GLPI plugin directory,
 for GLPI versions < 1 .
 
