@@ -2,7 +2,7 @@
 /**
  * Plugin
  *
- * This REST module uses
+ * This REST module hooks on
  * following URLs
  *
  * /plugin
