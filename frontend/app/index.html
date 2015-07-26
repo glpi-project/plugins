@@ -20,44 +20,45 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div class="wrapper">
+    <div class="main" layout="row">      
+      <div flex="80" class="wrapper">
 
-      <div class="header">
-        <div layout="row">
-          <div flex="10">
-            <h1><a class="sitename" href="#/">Glpi</a></h1>
-          </div>
-          <div flex="10">
-            <h2>Plugins</h2>
-          </div>
-          <div flex="80">
-            <md-input-container>
-              <label>Search</label>
-              <input type="text" ng-model="search">
-            </md-input-container>
-          </div>
-        </div> 
-      </div>
+        <div class="header">
+          <div layout="row">
+            <div flex="15">
+              <h1><a class="sitename" href="#/">Glpi</a></h1>
+            </div>
+            <div flex="15">
+              <h2>Plugins</h2>
+            </div>
+            <div flex="70">
+              <md-input-container class="searchbox">
+                <label>Search</label>
+                <input type="text" ng-model="search">
+              </md-input-container>
+            </div>
+          </div> 
+        </div>
 
-      <div class="container">
-      <div ng-include="'views/home.html'" ng-controller="HomeCtrl"></div>
-      </div>
-
-      <div class="footer">
         <div class="container">
-          <p>&copy; 2015 Teclib</p>
+        <div ng-include="'views/home.html'" ng-controller="HomeCtrl"></div>
         </div>
       </div>
-      
+
+      <aside flex="20" class="aside-menu">
+        <ul>
+          <li><a href="#/">Browse</a></li>
+          <li><a href="#/submit">Submit a plugin</a></li>
+          <li><a href="#/contact">Contact</a></li>
+        </ul>
+      </aside>
     </div>
 
-    <aside class="aside-menu">
-      <ul>
-        <li><a href="#/">Browse</a></li>
-        <li><a href="#/submit">Submit a plugin</a></li>
-        <li><a href="#/contact">Contact</a></li>
-      </ul>
-    </aside>
+    <div class="footer">
+      <div class="container">
+        <p>&copy; 2015 Teclib</p>
+      </div>
+    </div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
      <script>
