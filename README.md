@@ -1,5 +1,11 @@
 # GLPI Plugin Directory
 
+This projects aims to serve the new GLPI plugin directory,
+for GLPI versions < 1 .
+
+This project if fully managed by, and used only by Teclib'
+and won't be shared on Teclib's github (or I don't think so).
+
 ## Demo
 
 If you're connected in a Teclib agency
@@ -8,11 +14,6 @@ of the current bleeding edge:
 
 http://172.28.211.125/
 
-This projects aims to serve the new GLPI plugin directory,
-for GLPI versions < 1 .
-
-This project if fully managed by, and used only by Teclib'
-and won't be shared on Teclib's github (or I don't think so).
 
 ## Dependencies installation
 
