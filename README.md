@@ -40,7 +40,7 @@ cd frontend
 npm serve
 ```
 
-And fire Chrome with -disable-web-security flag
+And fire Chrome with --disable-web-security flag
 which will allow XmlHttpRequests on cross-domain
 urls.
 
