@@ -1,9 +1,17 @@
-.navbar-header {
-  .navbar-brand {
-    display: block;
-    width: 100px;
-    height: 50px;
-    text-indent: -9999px;
-    background-image: url(../images/logo-small.png);
-  }
+.sitename {
+	display: block;
+	width: 100px;
+	height: 50px;
+	text-indent: -9999px;
+	background-image: url(../images/logo-small.png);
+}
+
+.wrapper {
+	width: 80%
+}
+.aside-menu {
+	width: 20%;
+}
+.wrapper, .aside-menu {
+	float: left;
 }

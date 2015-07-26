@@ -16,6 +16,8 @@ angular.module('frontendApp')
   		$scope.tags = [];
   		$scope.authors = [];
 
+      $scope.search = '';
+
   		$http({
   			method: 'GET',
   			url: apiUrl + '/plugin/trending'
