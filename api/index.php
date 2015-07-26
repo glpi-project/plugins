@@ -2,47 +2,22 @@
 
 require 'vendor/autoload.php';
 
-use \Illuminate\Database\Capsule\Manager as DB;
-
 \API\Core\DB::initCapsule();
 $app = new \Slim\Slim();
 
-// List of all plugins
-$app->get('/plugin', function() use ($app) {
-	$app->response->headers->set('Content-Type', 'application/json');
-	echo json_encode(\API\Model\Plugin::with('descriptions', 'authors')->get()->toArray());
-});
+// Loading all REST modules
+// with their endpoints like that:
+// inside 'src/endoints'
+$dir_endpoints = opendir('src/endpoints');
+while ($ent = readdir($dir_endpoints)) {
+	// For each .php file
+	if (preg_match('/^(.*)\.php$/', $ent, $m)) {
+		$endpoint = $m[0];
+		// Read the file with PHP
+		require 'src/endpoints/' . $endpoint;
+	}
+}
+closedir($dir_endpoints);
 
-// List of all popular plugins
-$app->get('/plugin/popular', function() use($app) {
-	$app->response->headers->set('Content-Type', 'application/json');
-
-	$popular_plugins = DB::table('plugin')
-	      ->select(['plugin.name', DB::raw('COUNT(name) as downloaded')])
-	      ->join('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
-	      ->groupBy('name')
-	      ->orderBy('downloaded', 'DESC')
-	      ->get();
-
-	echo json_encode($popular_plugins);
-});
-
-// List of all trending plugins
-$app->get('/plugin/trending', function() use($app) {
-	$app->response->headers->set('Content-Type', 'application/json');
-
-	$trending_plugins = DB::table('plugin')
-	      ->select(['plugin.name', DB::raw('COUNT(name) as downloaded')])
-	      ->join('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
-	      ->groupBy('name')
-	      ->orderBy('downloaded', 'DESC')
-	      ->get();
-
-	echo json_encode($trending_plugins);
-});
-// Star a plugin
-$app->get('/plugin/star', function() use($app) {
-
-});
-
+// Ready to serve with Slim
 $app->run();
