@@ -24,7 +24,7 @@
     <section class="main" layout="row" flex>
       <md-content class="wrapper" flex>
 
-        <div class="header">
+        <div class="header" ng-controller="HeaderCtrl">
           <div layout="row">
             <div flex="15">
               <h1><a class="sitename" href="#/">Glpi</a></h1>
@@ -42,16 +42,16 @@
         </div>
 
         <div class="container">
-        <div ng-include="'views/home.html'" ng-controller="HomeCtrl"></div>
+          <div ui-view></div>
         </div>
       </md-content>
 
       <md-sidenav class="md-sidenav-right" md-component-id="side-menu" md-is-locked-open="true">
         <md-content>
           <ul>
-            <li><a href="#/">Browse</a></li>
-            <li><a href="#/submit">Submit a plugin</a></li>
-            <li><a href="#/contact">Contact</a></li>
+            <li><a ui-sref="home">Browse</a></li>
+            <li><a ui-sref="submit">Submit a plugin</a></li>
+            <li><a ui-sref="contact">Contact</a></li>
           </ul>
         </md-content>
       </md-sidenav>
@@ -86,7 +86,11 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
+        <script src="scripts/controllers/header.js"></script>
+        <script src="scripts/controllers/search.js"></script>
         <script src="scripts/controllers/home.js"></script>
+        <script src="scripts/controllers/submit.js"></script>
+        <script src="scripts/controllers/contact.js"></script>
         <!-- endbuild -->
 </body>
 </html>

@@ -8,8 +8,8 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('HomeCtrl', ['API_URL', '$http', '$scope', '$mdSidenav',
-    function (apiUrl, $http, $scope, $mdSidenav) {
+  .controller('HomeCtrl', ['API_URL', '$http', '$scope',
+    function (apiUrl, $http, $scope) {
   		$scope.trending = [];
   		$scope.new = [];
   		$scope.popular = [];
