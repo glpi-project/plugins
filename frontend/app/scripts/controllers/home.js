@@ -8,7 +8,8 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('HomeCtrl', ['API_URL', '$http', '$scope', function (apiUrl, $http, $scope) {
+  .controller('HomeCtrl', ['API_URL', '$http', '$scope', '$mdSidenav',
+    function (apiUrl, $http, $scope, $mdSidenav) {
   		$scope.trending = [];
   		$scope.new = [];
   		$scope.popular = [];
@@ -50,4 +51,7 @@ angular.module('frontendApp')
         $scope.authors = data;
       });
 
-    }]);
+      $scope.toggleSideNavTest = function() {
+        $mdSidenav('side-menu').toggle();
+      };
+  }]);
