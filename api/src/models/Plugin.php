@@ -16,6 +16,11 @@ class Plugin extends Model {
         return $this->hasMany('\API\Model\PluginAuthor');
     }
 
+    public function scopeShort($query) {
+        $query->select(['id', 'name']);
+        return $query;
+    }
+
     public function scopeWithDownloads($query, $limit = false) {
         $query->select(['plugin.*',
                              DB::raw('IF(COUNT(name)>1,COUNT(name),0) as downloaded')])
