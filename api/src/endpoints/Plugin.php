@@ -77,8 +77,8 @@ $star = function() use($app) {
 
 // HTTP REST Map
 $app->get('/plugin', $all);
-$app->get('/plugin/:id', $single);
 $app->get('/plugin/popular', $popular);
 $app->get('/plugin/trending', $trending);
 $app->get('/plugin/updated', $updated);
 $app->post('/plugin/star', $star);
+$app->get('/plugin/:id', $single);
