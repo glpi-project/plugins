@@ -1,4 +1,4 @@
-<div layout="column">
+<div layout="column" class="plugin">
 	<div layout="row">
 		<div flex="50">			
 			<h2>{{plugin.name}}</h2>
@@ -6,13 +6,24 @@
 		</div>
 		<div flex="50">
 			<div layout="row">				
-				<vote-box flex="50">
+				<rate-box flex="50">
 					
-				</vote-box>
+				</rate-box>
 				<div flex="50">
 					<md-button flex="50">Download</md-button>
 				</div>
 			</div>
 		</div>
+	</div>
+	<div layout="row">
+		<md-content class="md-padding">
+			<md-tabs md-dynamic-height>
+				<md-tab ng-repeat="description in plugin.descriptions" label="{{description.lang}}">
+					<md-content class="md-padding">
+						<h2 ng-bind-html="description.description | unsafe"></h2>
+					</md-content>
+				</md-tab>
+			</md-tabs>
+		</md-content>
 	</div>
 </div>

@@ -9,13 +9,7 @@
  */
 angular.module('frontendApp')
 
-  .directive('voteBox', function() {
-  	return {
-  		restrict: 'E'
-  	};
-  })
-
-  .controller('PluginCtrl', function (API_URL, $scope, $http, $stateParams) {
+  .controller('PluginCtrl', function (API_URL, $scope, $http, $stateParams, $sce) {
   	$scope.plugin = {
   		authors: {}
   	};
