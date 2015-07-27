@@ -36,7 +36,6 @@ $all = function() use($app) {
 	$all = \API\Model\Plugin::withDownloads()
 						    ->with('descriptions', 'authors')
 		                    ->get()->toArray();
-
 	Tool::endWithJson($all);
 };
 
@@ -53,18 +52,15 @@ $popular = function() use($app) {
  * Trending plugins
  *  most popular the 2 last weeks
  */
- 
 $trending = function() use($app) {
 	$trending_plugins = \API\Model\Plugin::trendingTop(10)
 	     							     ->get();
-
 	Tool::endWithJson($trending_plugins);
 };
 
 $updated = function() use($app) {
 	$updated_plugins = \API\Model\Plugin::updatedRecently(10)
 	  									->get();
-
 	Tool::endWithJson($updated_plugins);
 };
 
