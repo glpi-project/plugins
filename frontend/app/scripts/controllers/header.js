@@ -12,13 +12,13 @@ angular.module('frontendApp')
     $scope.search = '';
 
     $scope.$watch('search', function() {
-    	if ($scope.search.length > 0) {
-    		if (!$state.is('search')) {
-    			$state.go('search');
-    		}
-    	}
-    	else {
-    		$state.go('home');
-    	}
+        if ($scope.search.length > 0) {
+                $state.go('search', {
+                    val: $scope.search
+                });
+        }
+        else {
+            $state.go('home');
+        }
     });
   });

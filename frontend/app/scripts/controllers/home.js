@@ -8,8 +8,13 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('HomeCtrl', ['API_URL', '$http', '$scope',
-    function (apiUrl, $http, $scope) {
+  .controller('HomeCtrl', ['API_URL', '$http', '$rootScope', '$scope', '$timeout',
+    function (apiUrl, $http, $rootScope, $scope, $timeout) {
+      if ($rootScope.currentSearch !== null) {
+        $timeout.cancel($rootScope.currentSearch)
+        delete $rootScope.currentSearch;
+      }
+
   		$scope.trending = [];
   		$scope.new = [];
   		$scope.popular = [];

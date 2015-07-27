@@ -7,11 +7,11 @@
  * # SearchCtrl
  * Controller of the frontendApp
  */
+
 angular.module('frontendApp')
-  .controller('SearchCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('SearchCtrl', function ($rootScope, $timeout) {
+    $timeout.cancel($rootScope.currentSearch);
+    $rootScope.currentSearch = $timeout(function() {
+        console.log('Search initialized')
+    }, 800);
   });

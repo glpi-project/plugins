@@ -32,7 +32,7 @@ angular
        })
        // search State
        .state('search', {
-         url: '/search',
+         url: '/search/:val',
          templateUrl: "views/search.html",
          controller: "SearchCtrl"
        })
