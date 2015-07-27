@@ -50,8 +50,4 @@ angular.module('frontendApp')
       .success(function(data, status, headers, config) {
         $scope.authors = data;
       });
-
-      $scope.toggleSideNavTest = function() {
-        $mdSidenav('side-menu').toggle();
-      };
   }]);
