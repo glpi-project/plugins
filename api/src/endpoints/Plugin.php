@@ -16,6 +16,20 @@ use \API\Core\Tool;
 use \Illuminate\Database\Capsule\Manager as DB;
 
 /**
+ * Fetching infos of a single plugin
+ */
+$single = function($id) use($app) {
+	$plugin = \API\Model\Plugin::with('descriptions', 'authors')->find($id);
+	if ($plugin) {
+		Tool::endWithJson($plugin);
+	} else {
+		Tool::endWithJson([
+			'error' => 'No plugin has that index'
+		]);
+	}
+};
+
+/**
  * List of all plugins
  */
 $all = function() use($app) {
@@ -62,6 +76,7 @@ $star = function() use($app) {
 };
 
 // HTTP REST Map
+$app->get('/plugin/:id', $single);
 $app->get('/plugin', $all);
 $app->get('/plugin/popular', $popular);
 $app->get('/plugin/trending', $trending);
