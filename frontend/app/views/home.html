@@ -4,7 +4,7 @@
 			<md-subheader>Trending</md-subheader>
 			<md-list-item ng-repeat="plugin in trending">
 				<div class="md-list-item-text">
-					<md-button class="md-primary md-hue-1">
+					<md-button ui-sref="plugin({id: plugin.id})" class="md-primary md-hue-1">
 						<h3>{{plugin.name}}</h3>
 						<h4>Downloaded {{plugin.downloaded}} times</h4>
 					</md-button>
@@ -22,7 +22,7 @@
 			<md-subheader>Popular</md-subheader>
 			<md-list-item ng-repeat="plugin in popular">
 				<div class="md-list-item-text">
-					<md-button class="md-primary md-hue-1">
+					<md-button ui-sref="plugin({id: plugin.id, name: plugin.name})" class="md-primary md-hue-1">
 						<h3>{{plugin.name}}</h3>
 						<h4>Downloaded {{plugin.downloaded}} times</h4>
 					</md-button>
@@ -37,7 +37,7 @@
 			<md-subheader>Updated</md-subheader>
 			<md-list-item ng-repeat="plugin in updated">
 				<div class="md-list-item-text">
-					<md-button class="md-primary md-hue-1">
+					<md-button ui-sref="plugin({id: plugin.id})" class="md-primary md-hue-1">
 						<h3>{{plugin.name}}</h3>
 						<h4>Updated 2 days ago</h4>
 					</md-button>
