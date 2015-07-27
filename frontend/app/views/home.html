@@ -1,34 +1,58 @@
 <div layout="row">
-	<div flex>
-		<h3>Trending</h3>
-		<ul class="plugin-list">
-			<li ng-repeat="plugin in trending"><span class="name">{{plugin.name}}</span><span class="downloaded">{{plugin.downloaded}}</span></li>
-		</ul>
-	</div>
-	<div flex>
-		<h3>New</h3>
-	</div>
-	<div flex>
-		<h3>Popular</h3>
-		<ul class="plugin-list">
-			<li ng-repeat="plugin in popular"><span class="name">{{plugin.name}}</span><span class="downloaded">{{plugin.downloaded}}</span></li>
-		</ul>
-	</div>
+	<md-content flex>
+		<md-list class="plugin-list">
+			<md-subheader>Trending</md-subheader>
+			<md-list-item ng-repeat="plugin in trending">
+				<div class="md-list-item-text">
+					<h3>{{plugin.name}}</h3>
+					<h4>Downloaded {{plugin.downloaded}} times</h4>
+				</div>
+			</md-list-item>
+		</md-list>
+	</md-content>
+	<md-content flex>
+		<md-list class="plugin-list">
+			<md-subheader>New</md-subheader>
+		</md-list>
+	</md-content>
+	<md-content flex>
+		<md-list class="plugin-list">
+			<md-subheader>Popular</md-subheader>
+			<md-list-item ng-repeat="plugin in popular">
+				<div class="md-list-item-text">
+					<h3>{{plugin.name}}</h3>
+					<h4>Downloaded {{plugin.downloaded}} times</h4>
+				</div>
+			</md-list-item>
+		</md-list>
+	</md-content>
 </div>
 <div layout="row">
-	<div flex>
-		<h3>Updated</h3>
-		<ul class="plugin-list">
-			<li ng-repeat="plugin in updated"><span class="name">{{plugin.name}}</span><span class="downloaded">{{plugin.downloaded}}</span></li>
-		</ul>
-	</div>
-	<div flex>
-		<h3>Tags</h3>
-	</div>
-	<div flex>
-		<h3>Authors</h3>
-		<ul class="author-list">
-			<li ng-repeat="author in authors"><span class="name">{{author.author}}</span><span class="plugins">{{author.plugin_count}}</span></li>
-		</ul>
-	</div>
+	<md-content flex>
+		<md-list class="plugin-list">
+			<md-subheader>Updated</md-subheader>
+			<md-list-item ng-repeat="plugin in updated">
+				<div class="md-list-item-text">
+					<h3>{{plugin.name}}</h3>
+					<h4>Updated 2 days ago</h4>
+				</div>
+			</md-list-item>
+		</md-list>
+	</md-content>
+	<md-content flex>
+		<md-list class="plugin-list">
+			<md-subheader>Tags</md-subheader>
+		</md-list>
+	</md-content>
+	<md-content flex>
+		<md-list class="plugin-list">
+			<md-subheader>Authors</md-subheader>
+			<md-list-item ng-repeat="author in authors">
+				<div class="md-list-item-text">
+					<h3>{{author.author}}</h3>
+					<h4>Contributed to {{author.plugin_count}} plugins</h4>
+				</div>
+			</md-list-item>
+		</md-list>
+	</md-content>
 </div>
