@@ -13,4 +13,11 @@ class Tool {
 		$app->response->headers->set('Content-Type', 'application/json');
 		echo json_encode($json_value);
 	}
+
+	public static function getBody() {
+		global $app;
+		$json = $app->request->getBody();
+		$json = json_decode($json);
+		return $json;
+	}
 }
