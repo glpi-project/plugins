@@ -58,6 +58,14 @@ php misc/loadcsv.php -h hostname -d database -u username -p password -f csv_path
 you can give the indepnet.csv file provided in misc
 with the -f command line option shown in the example before.
 
+## Parse plugins xml 
+
+You must have a api/config.php file (see api/config.example.php)
+
+```
+php misc/update.php
+```
+
 
 ## Configuration (Via Apache HTTPd)
 
