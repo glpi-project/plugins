@@ -48,13 +48,11 @@
       </md-content>
 
       <md-sidenav class="md-sidenav-right" md-component-id="side-menu" md-is-locked-open="true">
-        <md-content>
-          <ul>
-            <li><a ui-sref="home">Browse</a></li>
-            <li><a ui-sref="submit">Submit a plugin</a></li>
-            <li><a ui-sref="contact">Contact</a></li>
-          </ul>
-        </md-content>
+        <nav>
+          <a ui-sref="home" ui-sref-active="active">Browse</a>
+          <a ui-sref="submit" ui-sref-active="active">Submit a plugin</a>
+          <a ui-sref="contact" ui-sref-active="active">Contact</a>
+        </nav>
       </md-sidenav>
     </section>
 
