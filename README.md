@@ -37,7 +37,7 @@ grunt build
 
 ```
 cd frontend
-npm serve
+grunt serve
 ```
 
 And fire Chrome with --disable-web-security flag
