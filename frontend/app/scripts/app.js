@@ -16,7 +16,7 @@ angular
   ])
 
   // Constant to set API url
-  .constant('API_URL', 'http://glpiplugindirectory/api')
+  .constant('API_URL', API_URL)
 
   // Determining current language
   .run(function() {
