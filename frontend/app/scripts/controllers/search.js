@@ -16,7 +16,8 @@ angular.module('frontendApp')
   			method: "POST",
   			url: API_URL + '/search',
   			data: {
-  				query_string: string
+  				query_string: string,
+          lang: localStorage.getItem('lang')
   			}
   		});
   	}
@@ -35,4 +36,13 @@ angular.module('frontendApp')
           	$scope.results = data;
           });
     }, 800);
+
+    // method to sort by relevance
+    $scope.sortByRelevance = function() {
+
+    };
+    // method to sort by popularity
+    $scope.sortByPopularity = function() {
+
+    };
   });

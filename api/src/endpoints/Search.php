@@ -8,15 +8,16 @@
  * /search
  */
 
-
 use \API\Core\Tool;
 use \Illuminate\Database\Capsule\Manager as DB;
 
 // Minimal length of search string
 $search_min_length = 2;
+$allowed_languages = ['en', 'fr'];
 
 $search = function() use($app) {
-	global $search_min_length;
+	global $search_min_length,
+	       $allowed_languages;
 
 	$body = Tool::getBody();
 	if ( $body == NULL ||
@@ -31,9 +32,16 @@ $search = function() use($app) {
 	}
 	$query_string = $body->query_string;
 
+	if (!isset($body->lang) ||
+		!in_array($body->lang, $allowed_languages))
+		$lang = 'en';
+	else
+		$lang = $body->lang;
+
 	$_search = \API\Model\Plugin::short()
-							   ->where('name', 'LIKE', "%$query_string%")
-						       ->get();
+	                            ->descWithLang($lang)
+							    ->where('name', 'LIKE', "%$query_string%")
+						        ->get();
 	Tool::endWithJson($_search);
 };
 

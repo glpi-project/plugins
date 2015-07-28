@@ -17,7 +17,14 @@ class Plugin extends Model {
     }
 
     public function scopeShort($query) {
-        $query->select(['id', 'name']);
+        $query->select(['plugin.id', 'plugin.name']);
+        return $query;
+    }
+
+    public function scopeDescWithLang($query, $lang) {
+        $query->addSelect(['plugin_description.description'])
+              ->leftJoin('plugin_description', 'plugin.id', '=', 'plugin_description.plugin_id')
+              ->where('plugin_description.lang', '=', $lang);
         return $query;
     }
 
