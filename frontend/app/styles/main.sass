@@ -1,9 +1,19 @@
 body
     font-family: 'Roboto'
 
+.main
+    margin-left: 15px
+
 a
     color: #3f51b5 
     text-decoration: none
+
+h2 
+    margin-bottom: 2px
+h4
+    margin: 0
+    font-size: 0.8em
+    color: #949494 
 
 ul li
     list-style-type: none
@@ -22,8 +32,30 @@ ul li
 
 .plugin
     min-height: 500px
+    h2 
+        text-transform: capitalize
+    .tabs
+        margin-top: -45px
+        background-color: inherit
+    .description
+        background-color: #EEEEEE
     .infos
+        font-size: 0.8em
         overflow: visible
+        ul 
+            padding: 0
+            display: table
+            li 
+                margin-top: 8px
+                display: table-row     
+                label
+                    display: table-cell
+                    padding: 10px 10px 0 0
+                    color: #909090
+                    text-transform: uppercase
+                label + span 
+                    display: table-cell
+        
 
 .plugin-list
     .md-subheader
@@ -36,9 +68,9 @@ ul li
             margin: 0 auto
         h3, h4
             margin: 0
+            text-align: left
         h4
             font-size: 0.8em
-
 
 .footer
     height: 50px
