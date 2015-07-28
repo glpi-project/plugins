@@ -5,7 +5,9 @@
          <md-list-item ng-repeat="plugin in trending">
             <md-button ui-sref="plugin({id: plugin.id})">
                <h4>{{plugin.name}}</h4>
-               <h4>Downloaded {{plugin.downloaded}} times</h4>
+               <md-tooltip md-direction="right">
+                  Downloaded {{plugin.downloaded}} times
+               </md-tooltip>
             </md-button>
          </md-list-item>
       </md-list>
@@ -21,7 +23,9 @@
          <md-list-item ng-repeat="plugin in popular">
             <md-button ui-sref="plugin({id: plugin.id, name: plugin.name})">
                <h4>{{plugin.name}}</h4>
-               <h4>Downloaded {{plugin.downloaded}} times</h4>
+               <md-tooltip md-direction="right">
+                  Downloaded {{plugin.downloaded}} times
+               </md-tooltip>
             </md-button>
          </md-list-item>
       </md-list>
@@ -34,7 +38,7 @@
          <md-list-item ng-repeat="plugin in updated">
             <md-button ui-sref="plugin({id: plugin.id})">
                <h4>{{plugin.name}}</h4>
-               <md-chip>Updated 2 days ago</md-chip>
+               <md-tooltip md-direction="right">Updated 2 days ago</md-tooltip>
             </md-button>
          </md-list-item>
       </md-list>
@@ -50,7 +54,9 @@
          <md-list-item ng-repeat="author in authors">
             <md-button>
                <h4>{{author.author}}</h4>
-               <!-- <h4>Contributed to {{author.plugin_count}} plugins</h4> -->
+               <md-tooltip md-direction="right">
+                  Contributed to {{author.plugin_count}} plugins
+               </md-tooltip>
             </md-button>
          </md-list-item>
       </md-list>
