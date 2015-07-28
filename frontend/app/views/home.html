@@ -1,66 +1,58 @@
-<div layout="row">
-	<md-content flex>
-		<md-list class="plugin-list">
-			<md-subheader>Trending</md-subheader>
-			<md-list-item ng-repeat="plugin in trending">
-				<div class="md-list-item-text">
-					<md-button ui-sref="plugin({id: plugin.id})" class="md-primary md-hue-1">
-						<h3>{{plugin.name}}</h3>
-						<h4>Downloaded {{plugin.downloaded}} times</h4>
-					</md-button>
-				</div>
-			</md-list-item>
-		</md-list>
-	</md-content>
-	<md-content flex>
-		<md-list class="plugin-list">
-			<md-subheader>New</md-subheader>
-		</md-list>
-	</md-content>
-	<md-content flex>
-		<md-list class="plugin-list">
-			<md-subheader>Popular</md-subheader>
-			<md-list-item ng-repeat="plugin in popular">
-				<div class="md-list-item-text">
-					<md-button ui-sref="plugin({id: plugin.id, name: plugin.name})" class="md-primary md-hue-1">
-						<h3>{{plugin.name}}</h3>
-						<h4>Downloaded {{plugin.downloaded}} times</h4>
-					</md-button>
-				</div>
-			</md-list-item>
-		</md-list>
-	</md-content>
+<div layout="row" layout-sm="column">
+   <md-content flex>
+      <md-list class="plugin-list">
+         <md-subheader class='topic'>Trending</md-subheader>
+         <md-list-item ng-repeat="plugin in trending">
+            <md-button ui-sref="plugin({id: plugin.id})">
+               <h4>{{plugin.name}}</h4>
+               <h4>Downloaded {{plugin.downloaded}} times</h4>
+            </md-button>
+         </md-list-item>
+      </md-list>
+   </md-content>
+   <md-content flex>
+      <md-list class="plugin-list">
+         <md-subheader class='topic'>New</md-subheader>
+      </md-list>
+   </md-content>
+   <md-content flex>
+      <md-list class="plugin-list">
+         <md-subheader class='topic'>Popular</md-subheader>
+         <md-list-item ng-repeat="plugin in popular">
+            <md-button ui-sref="plugin({id: plugin.id, name: plugin.name})">
+               <h4>{{plugin.name}}</h4>
+               <h4>Downloaded {{plugin.downloaded}} times</h4>
+            </md-button>
+         </md-list-item>
+      </md-list>
+   </md-content>
 </div>
-<div layout="row">
-	<md-content flex>
-		<md-list class="plugin-list">
-			<md-subheader>Updated</md-subheader>
-			<md-list-item ng-repeat="plugin in updated">
-				<div class="md-list-item-text">
-					<md-button ui-sref="plugin({id: plugin.id})" class="md-primary md-hue-1">
-						<h3>{{plugin.name}}</h3>
-						<md-chip>Updated 2 days ago</md-chip>
-					</md-button>
-				</div>
-			</md-list-item>
-		</md-list>
-	</md-content>
-	<md-content flex>
-		<md-list class="plugin-list">
-			<md-subheader>Tags</md-subheader>
-		</md-list>
-	</md-content>
-	<md-content flex>
-		<md-list class="plugin-list">
-			<md-subheader>Authors</md-subheader>
-			<md-list-item ng-repeat="author in authors">
-				<div class="md-list-item-text">
-					<md-button class="md-primary md-hue-1">
-						<h3>{{author.author}}</h3>
-						<h4>Contributed to {{author.plugin_count}} plugins</h4>
-					</md-button>
-				</div>
-			</md-list-item>
-		</md-list>
-	</md-content>
+<div layout="row" layout-sm="column">
+   <md-content flex>
+      <md-list class="plugin-list">
+         <md-subheader class='topic'>Updated</md-subheader>
+         <md-list-item ng-repeat="plugin in updated">
+            <md-button ui-sref="plugin({id: plugin.id})">
+               <h4>{{plugin.name}}</h4>
+               <md-chip>Updated 2 days ago</md-chip>
+            </md-button>
+         </md-list-item>
+      </md-list>
+   </md-content>
+   <md-content flex>
+      <md-list class="plugin-list">
+         <md-subheader class='topic'>Tags</md-subheader>
+      </md-list>
+   </md-content>
+   <md-content flex>
+      <md-list class="plugin-list">
+         <md-subheader class='topic'>Authors</md-subheader>
+         <md-list-item ng-repeat="author in authors">
+            <md-button>
+               <h4>{{author.author}}</h4>
+               <!-- <h4>Contributed to {{author.plugin_count}} plugins</h4> -->
+            </md-button>
+         </md-list-item>
+      </md-list>
+   </md-content>
 </div>
