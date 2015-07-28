@@ -10,6 +10,9 @@
 
 angular.module('frontendApp')
 
+  // This Search factory is used to search
+  // for items using the REST endpoint
+  // it returns the $http promise
   .factory('Search', function(API_URL, $http) {
   	return function(string) {
   		return $http({
@@ -23,6 +26,8 @@ angular.module('frontendApp')
   	}
   })
 
+  // This controller is created anytime the search
+  // input's content is changed
   .controller('SearchCtrl', function ($rootScope, $scope, $timeout, Search, $stateParams) {
     // will store the results
     $scope.results = [];
