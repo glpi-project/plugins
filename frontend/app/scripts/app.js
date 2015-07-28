@@ -18,6 +18,20 @@ angular
   // Constant to set API url
   .constant('API_URL', 'http://glpiplugindirectory/api')
 
+  // Determining current language
+  .run(function() {
+    var langs = ['en', 'fr'];
+
+    if (localStorage.getItem('lang') == null) {
+      var lang = navigator.language.split('-')[0];
+      if (langs.indexOf(lang) > 0) {
+        localStorage.setItem('lang', lang);
+      } else {
+        localStorage.setItem('lang', 'en');
+      }
+    }
+  })
+
   // Configuration of states in router
   .config(function($stateProvider, $urlRouterProvider) {
      // For any unmatched url, redirect to /
