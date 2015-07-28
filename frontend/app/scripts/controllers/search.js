@@ -22,12 +22,17 @@ angular.module('frontendApp')
   	}
   })
 
-  .controller('SearchCtrl', function ($rootScope, $timeout, Search) {
+  .controller('SearchCtrl', function ($rootScope, $scope, $timeout, Search, $stateParams) {
+    // will store the results
+    $scope.results = [];
+    // cancel the previous $timeout promise if there's any
     $timeout.cancel($rootScope.currentSearch);
+    // delaying another request
     $rootScope.currentSearch = $timeout(function() {
-        Search("mana")
+        Search($stateParams.val)
           .success(function(data, status, headers, config) {
-          	console.log(data, status, headers, config);
+            // moving the results to the $scope
+          	$scope.results = data;
           });
     }, 800);
   });

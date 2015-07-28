@@ -1,0 +1,33 @@
+<div layout="column">
+	<div class="sort-filters">
+		<p>Sort by :</p>
+		<a href="" ng-click="sortByRelevance()"></a>
+		<a href="" ng-click="sortByPopularity()"></a>
+	</div>
+
+	<div class="results">
+		<div class="result" ng-repeat="plugin in results">
+			<div layout="row">
+				<div layout="row" flex>
+					<a href=""><h2 class="name" flex>{{plugin.name}}</h2></a>
+					<h3 class="author" flex>by Author</h3>
+				</div>
+
+				<div layout="row" flex>
+					<rate-box flex>
+					</rate-box>
+					<p class="downloads" flex>
+						37k downloads
+					</p>
+				</div>
+			</div>
+			<div class="description">
+				
+			</div>
+		</div>
+	</div>
+
+	<div class="pagination">
+		
+	</div>
+</div>
