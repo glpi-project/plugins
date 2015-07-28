@@ -10,6 +10,7 @@
  */
 angular
   .module('frontendApp', [
+    'angular-loading-bar', 
     'ngAnimate',
     'ui.router',
     'ngMaterial'
