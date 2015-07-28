@@ -9,7 +9,7 @@
 		<div class="result" ng-repeat="plugin in results">
 			<div layout="row">
 				<div layout="row" flex>
-					<a href=""><h2 class="name" flex>{{plugin.name}}</h2></a>
+					<a ui-sref="plugin({id: plugin.id})"><h2 class="name" flex>{{plugin.name}}</h2></a>
 					<h3 class="author" flex>by Author</h3>
 				</div>
 
