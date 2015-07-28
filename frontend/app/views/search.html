@@ -8,7 +8,7 @@
 	</div>
 
 	<div class="results">
-		<div class="result" ng-repeat="plugin in results">
+		<div class="result" ng-repeat="plugin in results track by $index">
 			<div layout="row">
 				<div layout="row" flex>
 					<a ui-sref="plugin({id: plugin.id})"><h2 class="name" flex>{{plugin.name}}</h2></a>
