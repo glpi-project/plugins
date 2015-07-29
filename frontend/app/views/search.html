@@ -9,7 +9,7 @@
 
 	<div class="results">
 		<div class="result" ng-repeat="plugin in results track by $index">
-			<div layout="row">
+			<div layout="row" layout-wrap>
 				<div flex>
                <h2 class="name">
                   <a ui-sref="plugin({id: plugin.id})">{{plugin.name}}</a>
@@ -20,7 +20,7 @@
 				<rate-box flex>
 				</rate-box>
 				<span class="downloads" flex>
-					<span>
+					<span class='pill bg_red'>
                   37k
                   <md-tooltip>downloads</md-tooltip>
                </span>
