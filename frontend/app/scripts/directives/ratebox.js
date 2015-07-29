@@ -7,42 +7,60 @@
  * # rateBox
  */
 angular.module('frontendApp')
+
+  // The rateBox directive shows a
+  // "star rate" widget which allow
+  // users to rate a plugin
   .directive('rateBox', function () {
     return {
       restrict: 'E',
       link: function postLink(scope, element, attrs, controller) {
+        // Defaults the current note to 0
         if (typeof(scope.currentNote) === 'undefined')
           scope.currentNote = 0;
 
-        var stars = controller.getStarsFromNote(scope.currentNote);
+        // Modify the DOM with the current stars
+        var displayStars = function() {
+          element.html('');
+          var stars = controller.getStarsFromNote(scope.currentNote);
+          stars.forEach(function(star) {
+            element.append(star);
+          });
+        };
 
-        for (var i = 0 ; i < stars.length ; i++) {
-          element.append(stars[i]);
-        }
+        // Watch for future modifications of the note
+        scope.$watch('currentNote', function() {
+          displayStars();
+        });
+        // Create stars for current note
+        displayStars();
       },
+
       scope: {
         currentNote: "=currentNote"
       },
       controller: function($scope) {
+        // returns a full star
         this.getFullStar = function() {
           return angular.element('<i class="fa fa-star">');
         };
-
+        // returns half a star
         this.getHalfStar = function() {
           return angular.element('<i class="fa fa-star-half-o">');
         };
-
+        // returns an empty star
         this.getEmptyStar = function() {
           return angular.element('<i class="fa fa-star-o">');
         };
-
+        // returns an array of dom elements
+        // which are the stars of the current
+        // note
         this.getStarsFromNote = function(note) {
           if (note > 5 || note < 0)
             note = 0;
           var stars = [];
           var lastIsHalf = note % 1 > 0;
 
-          console.log(note, lastIsHalf);
           note = Math.floor(note);
 
           for (var i = 0 ; i < note ; i++) {

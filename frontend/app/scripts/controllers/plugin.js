@@ -9,7 +9,7 @@
  */
 angular.module('frontendApp')
 
-  .controller('PluginCtrl', function (API_URL, $scope, $http, $stateParams, $sce) {
+  .controller('PluginCtrl', function (API_URL, $scope, $http, $stateParams, $sce, $timeout) {
     $scope.plugin = {
       authors: {}
     };
