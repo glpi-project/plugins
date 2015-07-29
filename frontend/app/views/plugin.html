@@ -1,6 +1,8 @@
 <div layout="column" class="plugin">
 
 	<div layout="row">
+      <i class="icon fa fa-2x fa-smile-o"></i>
+
 		<div flex>			
 			<h2>{{plugin.name}}</h2>
 			<h4 class="author">by {{inlineAuthors(plugin.authors)}}</h4>
@@ -21,10 +23,12 @@
       
 		<rate-box flex current-note="note"></rate-box>
 
-		<md-button class="md-fab md-primary md-raised">
-         <i class="fa fa-download"></i>
-         <md-tooltip>Download</md-tooltip>
-      </md-button>
+      <span class='download'>
+   		<md-button class="md-fab md-primary md-raised">
+            <i class="fa fa-download"></i>
+            <md-tooltip>Download</md-tooltip>
+         </md-button>
+      </span>
 	</div>
 
 	<div layout="row">
