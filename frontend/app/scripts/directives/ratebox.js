@@ -19,13 +19,20 @@ angular.module('frontendApp')
         if (typeof(scope.currentNote) === 'undefined')
           scope.currentNote = 0;
 
+        // Creating five icon elements to display stars
+        var stars = [];
+        for (var i = 0 ; i < 5 ; i++) {
+          var icon = angular.element('<i>');
+          stars.push(icon)
+          element.append(icon);
+        }
+
         // Modify the DOM with the current stars
         var displayStars = function() {
-          element.html('');
-          var stars = controller.getStarsFromNote(scope.currentNote);
-          stars.forEach(function(star) {
-            element.append(star);
-          });
+          var classes = controller.getClassesFromNote(scope.currentNote);
+          for (var i = 0 ; i < stars.length ; i++) {
+           stars[i].attr('class', classes[i]);
+          }
         };
 
         // Watch for future modifications of the note
@@ -40,22 +47,22 @@ angular.module('frontendApp')
         currentNote: "=currentNote"
       },
       controller: function($scope) {
-        // returns a full star
+        // returns fontawesome class for a full star
         this.getFullStar = function() {
-          return angular.element('<i class="fa fa-star">');
+          return 'fa fa-star';
         };
-        // returns half a star
+        // returns fontawesome class for half a star
         this.getHalfStar = function() {
-          return angular.element('<i class="fa fa-star-half-o">');
+          return 'fa fa-star-half-o';
         };
-        // returns an empty star
+        // returns fontawesome class for an empty star
         this.getEmptyStar = function() {
-          return angular.element('<i class="fa fa-star-o">');
+          return 'fa fa-star-o';
         };
         // returns an array of dom elements
         // which are the stars of the current
         // note
-        this.getStarsFromNote = function(note) {
+        this.getClassesFromNote = function(note) {
           if (note > 5 || note < 0)
             note = 0;
           var stars = [];
