@@ -10,18 +10,21 @@
 	<div class="results">
 		<div class="result" ng-repeat="plugin in results track by $index">
 			<div layout="row">
-				<div layout="row" flex>
-					<a ui-sref="plugin({id: plugin.id})"><h2 class="name" flex>{{plugin.name}}</h2></a>
-					<h3 class="author" flex>by Author</h3>
+				<div flex>
+               <h2 class="name">
+                  <a ui-sref="plugin({id: plugin.id})">{{plugin.name}}</a>
+               </h2>
+					<h4 class="author">by Author</h4>
 				</div>
 
-				<div layout="row" flex>
-					<rate-box flex>
-					</rate-box>
-					<p class="downloads" flex>
-						37k downloads
-					</p>
-				</div>
+				<rate-box flex>
+				</rate-box>
+				<span class="downloads" flex>
+					<span>
+                  37k
+                  <md-tooltip>downloads</md-tooltip>
+               </span>
+				</span>
 			</div>
 			<div class="description">
 				<p ng-bind-html="plugin.description | unsafe"></p>
