@@ -33,6 +33,14 @@ angular
     }
   })
 
+  // http://stackoverflow.com/questions/12111936/angularjs-performs-an-options-http-request-for-a-cross-origin-resource
+  .config(['$httpProvider', function ($httpProvider) {
+    $httpProvider.defaults.headers.common = {};
+    $httpProvider.defaults.headers.post = {};
+    $httpProvider.defaults.headers.put = {};
+    $httpProvider.defaults.headers.patch = {};
+  }])
+
   // Configuration of states in router
   .config(function($stateProvider, $urlRouterProvider) {
      // For any unmatched url, redirect to /
