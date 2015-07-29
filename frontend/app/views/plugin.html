@@ -1,21 +1,17 @@
 <div layout="column" class="plugin">
+
 	<div layout="row">
-		<div flex="50">			
+		<div flex>			
 			<h2>{{plugin.name}}</h2>
 			<h4 class="author">by {{inlineAuthors(plugin.authors)}}</h4>
-		</div>
-		<div flex="50">
-			<div layout="row">				
-				<rate-box flex="50" current-note="note"></rate-box>
-				<div flex="50">
-					<md-button class="md-fab md-primary md-raised" flex="50">
-                  <i class="fa fa-download"></i>
-                  <md-tooltip>Download</md-tooltip>
-               </md-button>
-				</div>
-			</div>
-		</div>
+		</div>		
+		<rate-box flex current-note="note"></rate-box>
+		<md-button class="md-fab md-primary md-raised">
+         <i class="fa fa-download"></i>
+         <md-tooltip>Download</md-tooltip>
+      </md-button>
 	</div>
+
 	<div layout="row">
 		<md-content class='tabs'>
 			<md-tabs md-dynamic-height>
