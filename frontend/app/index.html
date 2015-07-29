@@ -48,13 +48,22 @@
         </div>
       </md-content>
 
-      <md-sidenav class="md-sidenav-right" md-component-id="side-menu" md-is-locked-open="true">
-        <nav>
-          <a ui-sref="home" ui-sref-active="active">Browse</a>
-          <a ui-sref="submit" ui-sref-active="active">Submit a plugin</a>
-          <a ui-sref="contact" ui-sref-active="active">Contact</a>
-        </nav>
-      </md-sidenav>
+   <div ng-controller="NavCtrl">
+         <md-sidenav class="md-sidenav-right" md-component-id="side-menu" md-is-locked-open="$mdMedia('gt-md')">
+            <md-button ng-click="closeNavBar()" class="md-icon-button" hide-gt-sm>
+               <i class="fa fa-times-circle"></i>  
+            </md-button>
+            <nav>
+               <a ui-sref="home" ui-sref-active="active">Browse</a>
+               <a ui-sref="submit" ui-sref-active="active">Submit a plugin</a>
+               <a ui-sref="contact" ui-sref-active="active">Contact</a>
+            </nav>
+         </md-sidenav>
+
+         <md-button class="md-icon-button" hide-gt-sm aria-label="Toggle Menu" ng-click="toggleNavBar()">
+            <i class="fa fa-bars"></i>    
+         </md-button>
+      </div>
     </section>
 
     <div class="footer">
@@ -89,6 +98,7 @@
         <script src="scripts/conf.js"></script>
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/header.js"></script>
+        <script src="scripts/controllers/nav.js"></script>
         <script src="scripts/controllers/search.js"></script>
         <script src="scripts/controllers/home.js"></script>
         <script src="scripts/controllers/submit.js"></script>

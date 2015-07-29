@@ -36,10 +36,6 @@ ul li
 nav
     padding-top: 50px
     border-left: 1px solid #eee
-    position: absolute
-    top: 0
-    bottom: 0
-    right: 0
     font-size: 16px
     a
         color: #555
@@ -76,7 +72,10 @@ nav
                     text-transform: uppercase
                 label + span 
                     display: table-cell
-        
+.container 
+    div[layout=row]
+        md-content:nth-child(2)
+            background-color: #EEE
 
 .plugin-list
     margin-bottom: 20px
