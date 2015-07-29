@@ -1,3 +1,18 @@
+$gp_white:         #FFF
+$gp_black:         #000
+$gp_red:           #ff8a80
+$gp_green:         #b9f6ca
+$gp_verylightgrey: #F4F4F4
+$gp_lightgrey:     #DADADA
+$gp_grey:          #949494
+$gp_darkgrey:      #555
+$gp_dark:          #2C2C2C
+$gp_blue:          #3f51b5
+$gp_lightblue:     #80d8ff
+$gp_darkblue:      #6F92BA
+$gp_yellow:        #ffff8d
+
+
 body
     font-family: 'Roboto'
     font-size: 15px
@@ -5,18 +20,18 @@ body
 
 .main
     padding-left: 15px
-    background-color: #FFF
+    background-color: $gp_white
     min-height: 250px
 
 a
-    color: #3f51b5 
+    color: $gp_blue 
     text-decoration: none
 
 h2 
     margin-bottom: 2px
 h4
     margin: 0
-    color: #949494 
+    color: $gp_grey 
 
 ul li
     list-style-type: none
@@ -33,23 +48,23 @@ ul li
             margin: 0
             display: inline-block
             vertical-align: bottom
-            color: #ff8a80
+            color: $gp_red
 
 nav
     padding-top: 50px
-    border-left: 1px solid #eee
+    border-left: 1px solid $gp_verylightgrey
     font-size: 16px
     a
-        color: #555
+        color: $gp_darkgrey
         display: block
         line-height: 1.6
         padding: 5px 15px
         margin: 0
         border-left: 2px solid transparent
     a.active
-        background-color: #F5F7F8
-        border-left-color: #6F92BA
-        color: #000
+        background-color: $gp_verylightgrey
+        border-left-color: $gp_darkblue
+        color: $gp_black
 .plugin
     min-height: 500px
     h2 
@@ -57,7 +72,7 @@ nav
     .tabs
         background-color: inherit
     .description
-        background-color: #EEEEEE
+        background-color: $gp-lightgrey
     .infos
         font-size: 0.8em
         overflow: visible
@@ -70,7 +85,7 @@ nav
                 label
                     display: table-cell
                     padding: 10px 10px 0 0
-                    color: #909090
+                    color: $gp_grey
                     text-transform: uppercase
                 label + span 
                     display: table-cell
@@ -81,12 +96,12 @@ rate-box
 .container 
     div[layout=row]
         md-content:nth-child(2)
-            background-color: #EEE
+            background-color: $gp_verylightgrey
 
 .legend
     font-size: 0.8em
     font-style: italic
-    color: #AFAFAF
+    color: $gp_grey
 
 .plugin-list
     margin-bottom: 20px
@@ -111,14 +126,14 @@ rate-box
             text-align: left
         h4
             font-weight: normal
-            color: #6F92BA
+            color: $gp_darkblue
 
 .footer
     position: fixed
     bottom: 0
     width: 100%
     height: 50px
-    background-color: #7a7a7a
-    color: #fff
+    background-color: $gp_grey
+    color: $gp_white
     line-height: 50px
-    box-shadow: inset 0 6px 12px -8px #333
+    box-shadow: inset 0 6px 12px -8px $gp_dark
