@@ -40,9 +40,13 @@ cd frontend
 grunt serve
 ```
 
-And fire Chrome with --disable-web-security flag
-which will allow XmlHttpRequests on cross-domain
-urls.
+You will also need this Chrome plugin
+[Allow-Control-Allow-Origin: *](https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en)
+To allow the client side working on a different
+URL from the API.
+
+Or, you can simply fire Chrome with --disable-web-security
+flag which will allow XmlHttpRequests on cross-domain urls.
 
 ## Configuration (Mandatory)
 
