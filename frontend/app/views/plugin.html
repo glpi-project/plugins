@@ -5,7 +5,22 @@
 			<h2>{{plugin.name}}</h2>
 			<h4 class="author">by {{inlineAuthors(plugin.authors)}}</h4>
 		</div>		
+
+      <div class='pills' flex>
+         <span class='pill bg_green'>0.90</span>
+         <span class='pill bg_green'>0.85</span>
+         <span class='pill bg_green'>0.83</span>
+         <span class="downloads">
+            <span class='pill bg_red'>
+               37k
+               <md-tooltip>downloads</md-tooltip>
+            </span>
+         </span>      
+      </div>
+
+      
 		<rate-box flex current-note="note"></rate-box>
+
 		<md-button class="md-fab md-primary md-raised">
          <i class="fa fa-download"></i>
          <md-tooltip>Download</md-tooltip>

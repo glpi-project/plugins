@@ -17,20 +17,20 @@
 					<h4 class="author">by Author</h4>
 				</div>
 
-            <div class='glpi_versions' flex>
+            <div class='pills' flex>
                <span class='pill bg_green'>0.90</span>
                <span class='pill bg_green'>0.85</span>
                <span class='pill bg_green'>0.83</span>
+               <span class="downloads" flex>
+                  <span class='pill bg_red'>
+                     37k
+                     <md-tooltip>downloads</md-tooltip>
+                  </span>
+               </span>
             </div>
 
 				<rate-box flex></rate-box>
 
-				<span class="downloads" flex>
-					<span class='pill bg_red'>
-                  37k
-                  <md-tooltip>downloads</md-tooltip>
-               </span>
-				</span>
 			</div>
 			<div class="description">
 				<p ng-bind-html="plugin.description | unsafe"></p>
