@@ -19,33 +19,33 @@ use \Illuminate\Database\Capsule\Manager as DB;
  * Fetching infos of a single plugin
  */
 $single = function($id) use($app) {
-	$plugin = \API\Model\Plugin::with('descriptions', 'authors')->find($id);
-	if ($plugin) {
-		Tool::endWithJson($plugin);
-	} else {
-		Tool::endWithJson([
-			'error' => 'No plugin has that index'
-		]);
-	}
+   $plugin = \API\Model\Plugin::with('descriptions', 'authors')->find($id);
+   if ($plugin) {
+      Tool::endWithJson($plugin);
+   } else {
+      Tool::endWithJson([
+         'error' => 'No plugin has that index'
+      ]);
+   }
 };
 
 /**
  * List of all plugins
  */
 $all = function() use($app) {
-	$all = \API\Model\Plugin::withDownloads()
-						    ->with('descriptions', 'authors')
-		                    ->get()->toArray();
-	Tool::endWithJson($all);
+   $all = \API\Model\Plugin::withDownloads()
+                           ->with('descriptions', 'authors')
+                           ->get()->toArray();
+   Tool::endWithJson($all);
 };
 
 /**
  * Most popular plugins
  */
 $popular = function() use($app) {
-	$popular_plugins = \API\Model\Plugin::popularTop(10)
-	                                    ->get();
-	Tool::endWithJson($popular_plugins);
+   $popular_plugins = \API\Model\Plugin::popularTop(10)
+                                       ->get();
+   Tool::endWithJson($popular_plugins);
 };
 
 /**
@@ -53,22 +53,22 @@ $popular = function() use($app) {
  *  most popular the 2 last weeks
  */
 $trending = function() use($app) {
-	$trending_plugins = \API\Model\Plugin::trendingTop(10)
-	     							     ->get();
-	Tool::endWithJson($trending_plugins);
+   $trending_plugins = \API\Model\Plugin::trendingTop(10)
+                                        ->get();
+   Tool::endWithJson($trending_plugins);
 };
 
 $updated = function() use($app) {
-	$updated_plugins = \API\Model\Plugin::updatedRecently(10)
-	  									->get();
-	Tool::endWithJson($updated_plugins);
+   $updated_plugins = \API\Model\Plugin::updatedRecently(10)
+                                       ->get();
+   Tool::endWithJson($updated_plugins);
 };
 
 /**
  * Remote procedure to star a plugin
  */
 $star = function() use($app) {
-	Tool::endWithJson(new stdClass);
+   Tool::endWithJson(new stdClass);
 };
 
 // HTTP REST Map
