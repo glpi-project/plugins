@@ -16,6 +16,10 @@ class Plugin extends Model {
         return $this->hasMany('\API\Model\PluginAuthor');
     }
 
+    public function stars() {
+        return $this->hasMany('\API\Model\PluginStar');
+    }
+
     public function scopeShort($query) {
         $query->select(['plugin.id', 'plugin.name']);
         return $query;
