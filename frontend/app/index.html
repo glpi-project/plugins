@@ -27,14 +27,14 @@
       <md-content class="wrapper" flex>
 
         <div class="header" ng-controller="HeaderCtrl">
-          <div layout="row">
-            <div flex="15">
+          <div layout="row" layout-wrap>
+            <div flex="10" flex-sm="35">
               <h1><a class="sitename" href="#/">Glpi</a></h1>
             </div>
-            <div flex="15">
+            <div flex="10" flex-sm="35">
               <h2>Plugins</h2>
             </div>
-            <div flex="70">
+            <div flex="75" flex-sm="100">
               <md-input-container class="searchbox">
                 <label>Search</label>
                 <input type="text" ng-model="search">
