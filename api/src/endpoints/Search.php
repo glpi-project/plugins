@@ -13,6 +13,7 @@ use \Illuminate\Database\Capsule\Manager as DB;
 
 // Minimal length of search string
 $search_min_length = 2;
+// Allowed languages for search
 $allowed_languages = ['en', 'fr'];
 
 $search = function() use($app) {
