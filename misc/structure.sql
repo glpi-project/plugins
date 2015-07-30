@@ -72,7 +72,7 @@ CREATE INDEX idx_plugin_tags_plugin on plugin_tags(plugin_id);
 
 CREATE TABLE plugin_stars(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	note INT, 
+	note FLOAT(2,1), 
 	`date` DATE, 
 	plugin_id INT,
 	FOREIGN KEY (plugin_id)
