@@ -13,7 +13,10 @@ angular.module('frontendApp')
     $scope.plugin = {
       authors: {}
     };
-    $scope.note = 4.5;
+
+    $scope.ratePlugin = function(note) {
+      console.log('rate that plugin', note)
+    };
 
     $scope.inlineAuthors = function(authors) {
       var _authors = '';

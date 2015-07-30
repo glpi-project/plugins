@@ -19,6 +19,11 @@ angular.module('frontendApp')
         if (typeof(scope.currentNote) === 'undefined')
           scope.currentNote = 0;
 
+        // Defaults to alreadyRated so, if directive
+        // attribute is not set, we cannot rate   
+        if (typeof(scope.alreadyRated) === 'undefined')
+          scope.alreadyRated = true;
+
         // Creating five icon elements to display stars
         var stars = [];
         for (var i = 0 ; i < 5 ; i++) {
@@ -47,14 +52,25 @@ angular.module('frontendApp')
         };
 
         stars.forEach(function(el, i) {
+          var note;
           el.on('mouseenter', function(ev) {
-            displayStars(i + halfOrPlain(ev.offsetX), true);
+            if (!scope.alreadyRated) {              
+              note = i + halfOrPlain(ev.offsetX);
+              displayStars(note, true);
+              el.on('mousedown', function() {
+                scope.rateMethod(note);
+              });
+            }
           });
           el.on('mousemove', function(ev) {
-            displayStars(i + halfOrPlain(ev.offsetX), true);
+            if (!scope.alreadyRated) {
+              note = i + halfOrPlain(ev.offsetX)  
+              displayStars(note, true);
+            }
           });
           el.on('mouseleave', function(ev) {
             displayStars(scope.currentNote);
+            el.off('mouseclick');
           });
         });
 
@@ -67,8 +83,11 @@ angular.module('frontendApp')
       },
 
       scope: {
-        currentNote: "=currentNote"
+        currentNote: "=currentNote",
+        alreadyRated: "=alreadyRated",
+        rateMethod: "=rateMethod"
       },
+
       controller: function($scope) {
         // returns fontawesome class for a full star
         this.getFullStar = function(hover) {
