@@ -15,7 +15,6 @@ angular.module('frontendApp')
     };
 
     $scope.ratePlugin = function(note) {
-      console.log('rate that plugin', note);
       $http({
         method: 'POST',
         url: API_URL + '/plugin/star',
