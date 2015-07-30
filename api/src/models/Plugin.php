@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Plugin extends Model {
     protected $table = 'plugin';
 
+    protected $casts = [
+      "note" => 'float'
+    ];
+
     public function descriptions() {
         return $this->hasMany('\API\Model\PluginDescription');
     }
