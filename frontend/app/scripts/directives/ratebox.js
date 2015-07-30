@@ -28,8 +28,8 @@ angular.module('frontendApp')
         }
 
         // Modify the DOM with the current stars
-        var displayStars = function(note) {
-          var classes = controller.getClassesFromNote(note);
+        var displayStars = function(note, hover) {
+          var classes = controller.getClassesFromNote(note, hover);
           for (var i = 0 ; i < stars.length ; i++) {
            stars[i].attr('class', classes[i]);
           }
@@ -48,10 +48,10 @@ angular.module('frontendApp')
 
         stars.forEach(function(el, i) {
           el.on('mouseenter', function(ev) {
-            displayStars(i + halfOrPlain(ev.offsetX));
+            displayStars(i + halfOrPlain(ev.offsetX), true);
           });
           el.on('mousemove', function(ev) {
-            displayStars(i + halfOrPlain(ev.offsetX));
+            displayStars(i + halfOrPlain(ev.offsetX), true);
           });
           el.on('mouseleave', function(ev) {
             displayStars(scope.currentNote);
