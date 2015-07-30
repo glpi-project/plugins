@@ -35,11 +35,6 @@ angular.module('frontendApp')
           }
         };
 
-        // Modify
-        var displayStarsHover = function() {
-
-        };
-
         // Compute the stars height/width
         controller.starWidth = 25;
         controller.starHeight = 25;
