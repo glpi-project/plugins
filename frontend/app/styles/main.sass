@@ -1,44 +1,76 @@
-$gp_white:         #FFF
-$gp_black:         #000
-$gp_red:           #ff8a80
-$gp_green:         #b9f6ca
-$gp_verylightgrey: #F4F4F4
-$gp_lightgrey:     #DADADA
-$gp_grey:          #949494
-$gp_darkgrey:      #555
-$gp_dark:          #2C2C2C
-$gp_blue:          #3f51b5
-$gp_lightblue:     #80d8ff
-$gp_darkblue:      #6F92BA
-$gp_yellow:        #ffff8d
+$white:         #FFF
+$black:         #000
+$red:           #ff8a80
+$green:         #7ABD57
+$teal:          #009688
+$verylightgrey: #F4F4F4
+$lightgrey:     #DADADA
+$grey:          #949494
+$darkgrey:      #555
+$dark:          #2C2C2C
+$blue:          #3f51b5
+$lightblue:     #8CABDB
+$darkblue:      #6F92BA
+$yellow:        #FEC95C
 
 
 .bg_white         
-    background-color: $gp_white
+    background-color: $white
 .bg_black         
-    background-color: $gp_black
+    background-color: $black
 .bg_red           
-    background-color: $gp_red
+    background-color: $red
 .bg_green         
-    background-color: $gp_green
+    background-color: $green
+.bg_teal
+    background-color: $teal
 .bg_verylightgrey 
-    background-color: $gp_verylightgrey
+    background-color: $verylightgrey
 .bg_lightgrey     
-    background-color: $gp_lightgrey
+    background-color: $lightgrey
 .bg_grey          
-    background-color: $gp_grey
+    background-color: $grey
 .bg_darkgrey      
-    background-color: $gp_darkgrey
+    background-color: $darkgrey
 .bg_dark          
-    background-color: $gp_dark
+    background-color: $dark
 .bg_blue          
-    background-color: $gp_blue
+    background-color: $blue
 .bg_lightblue     
-    background-color: $gp_lightblue
+    background-color: $lightblue
 .bg_darkblue      
-    background-color: $gp_darkblue
+    background-color: $darkblue
 .bg_yellow        
-    background-color: $gp_yellow
+    background-color: $yellow
+
+.white         
+    color: $white
+.black         
+    color: $black
+.red           
+    color: $red
+.green         
+    color: $green
+.teal
+    color: $teal
+.verylightgrey 
+    color: $verylightgrey
+.lightgrey     
+    color: $lightgrey
+.grey          
+    color: $grey
+.darkgrey      
+    color: $darkgrey
+.dark          
+    color: $dark
+.blue          
+    color: $blue
+.lightblue     
+    color: $lightblue
+.darkblue      
+    color: $darkblue
+.yellow        
+    color: $yellow
 
 body
     font-family: 'Roboto'
@@ -47,17 +79,17 @@ body
 
 .main
     padding: 0 0 50px 15px
-    background-color: $gp_white
+    background-color: $white
     min-height: 250px
 
 a
-    color: $gp_blue 
+    color: $blue 
     text-decoration: none
 
 h2, h4
     margin: 0
 h4
-    color: $gp_grey 
+    color: $grey 
 
 ul li
     list-style-type: none
@@ -75,23 +107,23 @@ ul li
             margin: 0
             display: inline-block
             vertical-align: bottom
-            color: $gp_red
+            color: $red
 
 nav
     padding-top: 50px
-    border-left: 1px solid $gp_verylightgrey
+    border-left: 1px solid $verylightgrey
     font-size: 16px
     a
-        color: $gp_darkgrey
+        color: $darkgrey
         display: block
         line-height: 1.6
         padding: 5px 15px
         margin: 0
         border-left: 2px solid transparent
     a.active
-        background-color: $gp_verylightgrey
-        border-left-color: $gp_darkblue
-        color: $gp_black
+        background-color: $verylightgrey
+        border-left-color: $darkblue
+        color: $black
 
 .pill 
     border-radius: 5px
@@ -110,10 +142,12 @@ nav
         text-transform: capitalize
     .author, .download
         height: 0
+        i 
+            vertical-align: middle
     .tabs
         background-color: inherit
         .description
-            background-color: $gp-verylightgrey
+            background-color: $verylightgrey
     .screenshots
         margin: 40px 0 0 10px
         .screenshot
@@ -136,38 +170,41 @@ nav
                 label
                     display: table-cell
                     padding: 10px 10px 0 0
-                    color: $gp_grey
+                    color: $grey
                     text-transform: uppercase
                 label + span 
                     display: table-cell
 rate-box
     i.fa
-        color: $gp_green
+        color: $green
         font-size: 25px
         &.hover
-            color: $gp_lightblue
+            color: $lightblue
 
 .container 
     div[layout=row]
         md-content:nth-child(2)
-            background-color: $gp_verylightgrey
+            background-color: $verylightgrey
 
 .legend, .author
     font-size: 0.8em
     font-style: italic
-    color: $gp_grey
+    color: $grey
     margin: 0
 
 .plugin-list
-    margin-bottom: 20px
+    margin-bottom: 30px
     .topic
         font-size: 2em
         .md-subheader-inner 
             padding: 0
         i 
             font-size: 0.7em
+    .legend
+        margin-bottom: 15px
+        display: inline-block
     md-list-item 
-        margin-top: 5px
+        margin-top: 1px
         min-height: inherit
         .md-button
             display: block
@@ -181,20 +218,21 @@ rate-box
             text-align: left
         h4
             font-weight: normal
-            color: $gp_darkblue
+            color: $darkblue
+            font-size: 1.2em
 
 .result
     margin: 0
     padding: 10px
 .result:nth-child(even)
-    background-color: $gp_verylightgrey
+    background-color: $verylightgrey
 
 .footer
     position: fixed
     bottom: 0
     width: 100%
     height: 50px
-    background-color: $gp_grey
-    color: $gp_white
+    background-color: $grey
+    color: $white
     line-height: 50px
-    box-shadow: inset 0 6px 12px -8px $gp_dark
+    box-shadow: inset 0 6px 12px -8px $dark
