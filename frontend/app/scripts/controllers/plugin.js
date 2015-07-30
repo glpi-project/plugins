@@ -9,13 +9,13 @@
  */
 angular.module('frontendApp')
 
-  .controller('PluginCtrl', function (API_URL, $scope, $http, $stateParams, $sce, $timeout) {
+  .controller('PluginCtrl', function (API_URL, $scope, $http, $stateParams) {
     $scope.plugin = {
       authors: {}
     };
 
     $scope.ratePlugin = function(note) {
-      console.log('rate that plugin', note)
+      console.log('rate that plugin', note);
     };
 
     $scope.inlineAuthors = function(authors) {
@@ -33,7 +33,7 @@ angular.module('frontendApp')
       method: 'GET',
       url: API_URL + '/plugin/' + $stateParams.id
     })
-    .success(function(data, status, headers, config) {
+    .success(function(data) {
       $scope.plugin = data;
     });
   });
