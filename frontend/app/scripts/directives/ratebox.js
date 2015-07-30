@@ -113,10 +113,6 @@ angular.module('frontendApp')
 
           return stars;
         };
-
-        this.getHoverClassesFromNote = function(note) {
-
-        };
       }
     };
   });
