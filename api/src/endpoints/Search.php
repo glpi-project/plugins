@@ -25,11 +25,10 @@ $search = function() use($app) {
        !isset($body->query_string) ||
        strlen($body->query_string) < $search_min_length )
    {
-      $app->response->setStatus(400);
       return Tool::endWithJson([
          "error" => "Your search string needs to ".
                   "have at least ".$search_min_length." chars"
-      ]);
+      ], 400);
    }
    $query_string = $body->query_string;
 
