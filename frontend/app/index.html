@@ -36,12 +36,11 @@
             <div flex="65" flex-sm="100">
               <md-input-container class="searchbox">
                 <label>Search</label>
-                <input type="text" ng-model="search">
+                <input type="text" ng-model="search" focus-me="$root.focusSearch">
               </md-input-container>
             </div>
           </div> 
         </div>
-
         <div class="container">
           <div ui-view></div>
         </div>
@@ -54,7 +53,7 @@
             </md-button>
             <nav>
                <a ui-sref="home" ui-sref-active="active">Browse</a>
-               <a ui-sref="search" ui-sref-active="active">Search</a>
+               <a ng-click="$root.focusSearch=true" ui-sref="search" ui-sref-active="active">Search</a>
                <a ui-sref="submit" ui-sref-active="active">Submit a plugin</a>
                <a ui-sref="contact" ui-sref-active="active">Contact</a>
             </nav>
@@ -105,6 +104,7 @@
         <script src="scripts/controllers/contact.js"></script>
         <script src="scripts/controllers/plugin.js"></script>
         <script src="scripts/directives/ratebox.js"></script>
+        <script src="scripts/directives/focusme.js"></script>
         <script src="scripts/filters/unsafe.js"></script>
         <!-- endbuild -->
 </body>
