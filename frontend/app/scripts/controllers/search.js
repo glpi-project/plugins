@@ -23,7 +23,7 @@ angular.module('frontendApp')
           lang: localStorage.getItem('lang')
   			}
   		});
-  	}
+  	};
   })
 
   // This controller is created anytime the search
@@ -35,8 +35,8 @@ angular.module('frontendApp')
     $timeout.cancel($rootScope.currentSearch);
     // delaying another request
     $rootScope.currentSearch = $timeout(function() {
-        Search($stateParams.val)
-          .success(function(data, status, headers, config) {
+        new Search($stateParams.val)
+          .success(function(data) {
             // moving the results to the $scope
           	$scope.results = data;
           });
