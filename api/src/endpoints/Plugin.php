@@ -21,7 +21,7 @@ use \API\Model\PluginStar;
  * Fetching infos of a single plugin
  */
 $single = function($id) use($app) {
-   $plugin = Plugin::with('descriptions', 'authors')
+   $plugin = Plugin::with('descriptions', 'authors', 'versions')
                    ->withAverageNote()
                    ->withCurrentVersion()
                    ->find($id);

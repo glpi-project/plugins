@@ -28,6 +28,10 @@ class Plugin extends Model {
         return $this->hasMany('\API\Model\PluginDownload');
     }
 
+    public function versions() {
+        return $this->hasMany('\API\Model\PluginVersion');
+    }
+
     public function scopeShort($query) {
         $query->select(['plugin.id', 'plugin.name']);
         return $query;
