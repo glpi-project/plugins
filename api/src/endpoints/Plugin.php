@@ -95,6 +95,13 @@ $star = function() use($app) {
    $plugin_star->date = DB::raw('NOW()');
 
    $plugin->stars()->save($plugin_star);
+
+   $plugin = Plugin::withAverageNote()
+                   ->find($body->plugin_id);
+   // returning new average
+   Tool::endWithJson([
+      "new_average" => $plugin->note
+   ]);
 };
 
 // HTTP REST Map

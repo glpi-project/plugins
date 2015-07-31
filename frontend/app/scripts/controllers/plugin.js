@@ -22,6 +22,9 @@ angular.module('frontendApp')
           note: note,
           plugin_id: $scope.plugin.id
         }
+      })
+      .success(function(data) {
+        $scope.plugin.note = data.new_average;
       });
     };
 
