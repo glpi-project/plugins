@@ -57,11 +57,11 @@
                     <label>Compatible With</label>
                     <span>GLPI Version {{plugin.compatible_with}}</span>
                 </li>
-                <li>
+                <li ng-show="plugin.homepage_url">
                     <label>Homepage</label>
                     <span><a href="{{plugin.homepage_url}}">{{plugin.homepage_url}}</a></td>
                 </li>
-                <li>
+                <li ng-show="plugin.issues_url">
                     <label>Issues</label>
                     <span><a href="{{plugin.issues_url}}">{{plugin.issues_url}}</a></td>
                 </li>
