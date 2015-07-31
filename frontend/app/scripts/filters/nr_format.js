@@ -12,7 +12,6 @@ angular.module('frontendApp')
   return function(number) {
     var abs;
     if (number !== void 0) {
-      console.log(number);
       abs = Math.abs(number);
       if (abs >= Math.pow(10, 12)) {
         number = (number / Math.pow(10, 12)).toFixed(1) + "t";
