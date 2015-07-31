@@ -1,7 +1,9 @@
 <form class="submit">
    <h2>Submit your plugin</h2>
+   <span class="legend">
+      Please, provide the url describing your plugin 
+   </span>
 
-   Please, provide the url describing your plugin 
    <md-input-container>
       <label>URL</label>
       <input ng-model="url" type="url">
@@ -19,7 +21,7 @@
 </form>
    
 <div class="xml_description">
-Your XML must be valid and respect this format :
+<span class="legend">Your XML must be valid and respect this format :</span>
 <div hljs>
 <root>
       <name>Displayed name</name>
