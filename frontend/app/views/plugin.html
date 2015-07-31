@@ -3,31 +3,30 @@
 	<div layout="row" layout-align="center end" class="plugin_header">
       <img class="icon" src="{{plugin.logo_url}}">
 
-        <div flex>          
+        <div class='plugin_name'>          
             <h2>{{plugin.name}}</h2>
             <h4 class="author">by {{inlineAuthors(plugin.authors)}}</h4>
         </div>      
 
-      <div class='pills' flex>
+      <div class='pills'>
          <span ng-repeat="version in plugin.versions | subpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
-         <span class="downloads">
-            <span class='pill bg_red'>
-               37k
-               <md-tooltip>downloads</md-tooltip>
-            </span>
-         </span>      
       </div>
 
       <rate-box flex current-note="plugin.note" already-rated="false" rate-method="ratePlugin"></rate-box>
 
       <span class='download'>
+        <span class="downloads">
+            <span class='pill bg_red'>
+               37k
+               <md-tooltip>downloads</md-tooltip>
+            </span>
+        </span>
         <md-button class="md-fab md-primary md-raised" ng-click="download()">
             <i class="fa fa-2x fa-download white"></i>
             <md-tooltip>Download</md-tooltip>
          </md-button>
       </span>
     </div>
-
     <div layout="row" layout-wrap>
         <md-content class='tabs' flex flex-sm="100">
             <md-tabs md-dynamic-height>

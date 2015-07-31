@@ -25,7 +25,7 @@ $plugins = Capsule::table('plugin')->get();
 // For each of these plugins
 $i = 1;
 foreach ($plugins as $plugin) {
-	$update = false;
+	$update = true;
 
 	// Fetching file via HTTP
 	$xml = file_get_contents($plugin->xml_url);
