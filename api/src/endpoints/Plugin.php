@@ -24,6 +24,7 @@ $single = function($id) use($app) {
    $plugin = Plugin::with('descriptions', 'authors', 'versions')
                    ->withAverageNote()
                    ->withCurrentVersion()
+                   ->withDownloads()
                    ->find($id);
    if ($plugin) {
       Tool::endWithJson($plugin);
