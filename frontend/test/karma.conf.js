@@ -28,6 +28,9 @@ module.exports = function(config) {
       'bower_components/angular-material/angular-material.js',
       'bower_components/angular-ui-router/release/angular-ui-router.js',
       'bower_components/angular-loading-bar/build/loading-bar.js',
+      'bower_components/angular-recaptcha/release/angular-recaptcha.js',
+      'bower_components/angular-highlightjs/build/angular-highlightjs.js',
+      'bower_components/highlightjs/highlight.pack.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",
