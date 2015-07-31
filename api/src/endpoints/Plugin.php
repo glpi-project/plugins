@@ -48,7 +48,7 @@ $all = function() use($app) {
  */
 $popular = function() use($app) {
    $popular_plugins = Plugin::popularTop(10)
-                                       ->get();
+                            ->get();
    Tool::endWithJson($popular_plugins);
 };
 
@@ -76,8 +76,8 @@ $star = function() use($app) {
 
    if (!isset($body->plugin_id) ||
        !isset($body->note) ||
-       is_numeric($body->plugin_id) ||
-       is_numeric($body->note))
+       !is_numeric($body->plugin_id) ||
+       !is_numeric($body->note))
       return Tool::endWithJson([
          "error" => "plugin_id and note should be provided as integer"
       ], 400);
