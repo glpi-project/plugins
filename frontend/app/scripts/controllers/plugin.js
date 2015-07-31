@@ -9,7 +9,7 @@
  */
 angular.module('frontendApp')
 
-  .controller('PluginCtrl', function (API_URL, $scope, $http, $stateParams) {
+  .controller('PluginCtrl', function (API_URL, $scope, $http, $stateParams, $window) {
     $scope.plugin = {
       authors: {}
     };
@@ -37,6 +37,10 @@ angular.module('frontendApp')
         _authors += authors[i].author;
       }
       return _authors;
+    };
+
+    $scope.download = function() {
+      $window.location.href = API_URL + '/plugin/'+$scope.plugin.id+'/download';
     };
 
     $http({
