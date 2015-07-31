@@ -15,7 +15,8 @@ angular
     'ui.router',
     'ngMaterial',
     'vcRecaptcha', 
-    'hljs'
+    'hljs', 
+    'ngSanitize'
   ])
 
   // Constant to set API url
