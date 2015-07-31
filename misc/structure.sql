@@ -3,6 +3,7 @@ CREATE TABLE plugin (
 	xml_url TEXT, 
 	xml_crc VARCHAR(32),
 	name TEXT,
+	logo_url TEXT,
 	`key` VARCHAR(255),
 	homepage_url TEXT, 
 	download_url TEXT,

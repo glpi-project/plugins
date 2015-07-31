@@ -56,6 +56,7 @@ foreach ($plugins as $plugin) {
 			       ->where('id', $plugin->id)
 			       ->update([
 			       		'xml_crc'      => $current_checksum,
+			       		'logo_url'     => $xml->logo,
 			       		'name'         => $xml->name,
 			       		'key'          => $xml->key,
 			       		'homepage_url' => $xml->homepage,
