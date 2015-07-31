@@ -69,13 +69,24 @@ foreach ($plugins as $plugin) {
 		Capsule::table('plugin_description')
 		           ->where('plugin_id', $plugin->id)
 		           ->delete(); // Deleting in-db ones ...
+
+		$langs_description = [];
+
+		foreach ($xml->description->short->children() as $lang => $string) {
+			$langs_description[$lang]['short'] = $string;
+		}
 		foreach ($xml->description->long->children() as $lang => $string) {
+			$langs_description[$lang]['long'] = $string;
+		}
+
+		foreach($langs_description as $lang => $desc) {
 			Capsule::table('plugin_description')
-			           ->insert([
-			           		'plugin_id' => $plugin->id,
-			           		'description' => $string,
-			           		'lang' => $lang
-			           	]); // Inserting current ones
+			       ->insert([
+			       	    'plugin_id' => $plugin->id,
+			       	    'short_description' => $desc['short'],
+			       	    'long_description' => $desc['long'],
+			       	    'lang' => $lang
+			       	]);
 		}
 
 		// Refreshing all authors

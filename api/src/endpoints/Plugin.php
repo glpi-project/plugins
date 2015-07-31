@@ -76,8 +76,8 @@ $star = function() use($app) {
 
    if (!isset($body->plugin_id) ||
        !isset($body->note) ||
-       gettype($body->plugin_id) != 'integer' ||
-       !in_array(gettype($body->note), ['integer', 'double']))
+       is_numeric($body->plugin_id) ||
+       is_numeric($body->note))
       return Tool::endWithJson([
          "error" => "plugin_id and note should be provided as integer"
       ], 400);

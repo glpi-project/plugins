@@ -26,7 +26,8 @@ CREATE INDEX idx_plugin_download_id on plugin_download(plugin_id);
 CREATE TABLE plugin_description(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	plugin_id INT,
-	description TEXT,
+	short_description TEXT,
+	long_description TEXT,
 	lang VARCHAR(10),
 	FOREIGN KEY (plugin_id)
 		REFERENCES plugin(id)
