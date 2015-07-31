@@ -1,12 +1,12 @@
 <div layout="column" class="plugin">
 
-	<div layout="row">
+    <div layout="row">
       <img class="icon" src="{{plugin.logo_url}}">
 
-		<div flex>			
-			<h2>{{plugin.name}}</h2>
-			<h4 class="author">by {{inlineAuthors(plugin.authors)}}</h4>
-		</div>		
+        <div flex>          
+            <h2>{{plugin.name}}</h2>
+            <h4 class="author">by {{inlineAuthors(plugin.authors)}}</h4>
+        </div>      
 
       <div class='pills' flex>
          <span class='pill bg_lightblue'>0.90</span>
@@ -20,26 +20,26 @@
          </span>      
       </div>
 
-	  <rate-box flex current-note="plugin.note" already-rated="false" rate-method="ratePlugin"></rate-box>
+      <rate-box flex current-note="plugin.note" already-rated="false" rate-method="ratePlugin"></rate-box>
 
       <span class='download'>
-   		<md-button class="md-fab md-primary md-raised">
+        <md-button class="md-fab md-primary md-raised">
             <i class="fa fa-2x fa-download white"></i>
             <md-tooltip>Download</md-tooltip>
          </md-button>
       </span>
-	</div>
+    </div>
 
-	<div layout="row" layout-wrap>
-		<md-content class='tabs' flex flex-sm="100">
-			<md-tabs md-dynamic-height>
-				<md-tab ng-repeat="description in plugin.descriptions" label="{{description.lang}}">
-					<md-content class="md-padding description">
-						<p ng-bind-html="description.long_description | unsafe"></p>
-					</md-content>
-				</md-tab>
-			</md-tabs>
-		</md-content>
+    <div layout="row" layout-wrap>
+        <md-content class='tabs' flex flex-sm="100">
+            <md-tabs md-dynamic-height>
+                <md-tab ng-repeat="description in plugin.descriptions" label="{{description.lang}}">
+                    <md-content class="md-padding description">
+                        <p ng-bind-html="description.long_description | unsafe"></p>
+                    </md-content>
+                </md-tab>
+            </md-tabs>
+        </md-content>
 
       <div class='screenshots' flex flex-sm="100">
          <!-- we need to implement a lightbox here -->
@@ -48,31 +48,35 @@
          <md-card class='screenshot'><img src="http://placehold.it/200x150"></md-card>
          <md-card class='screenshot'><img src="http://placehold.it/200x150"></md-card>
       </div>
-	</div>
-	<div layout="row">
-		<md-content class="infos" flex="50">
-			<ul>
-            <li>
-					<label>Version</label>
-				   <span>0.0</span
-				</li>
-            <li>
-					<label>Homepage</label>
-				   <span><a href="{{plugispanomepage_url}}">{{plugin.homepage_url}}</a></td>
-				</li>
-            <li>
-					<label>Issues</label>
-				   <span><a href="{{pluspan.issues_url}}">{{plugin.issues_url}}</a></td>
-				</li>
-            <li>
-					<label>Added</label>
-				   <span>2 years ago</span
-				</li>
-            <li>
-					<label>Updated</label>
-				   <span>5 minutes ago</span
-				</li>
-			</ul>
-		</md-content>
-	</div>
+    </div>
+    <div layout="row">
+        <md-content class="infos" flex="50">
+            <ul>
+                <li>
+                    <label>Version</label>
+                    <span>0.0</span
+                </li>
+                <li>
+                    <label>Compatible With</label>
+                    <span>GLPI Version {{plugin.compatible_with}}</span>
+                </li>
+                <li>
+                    <label>Homepage</label>
+                    <span><a href="{{plugispanomepage_url}}">{{plugin.homepage_url}}</a></td>
+                </li>
+                <li>
+                    <label>Issues</label>
+                    <span><a href="{{pluspan.issues_url}}">{{plugin.issues_url}}</a></td>
+                </li>
+                <li>
+                    <label>Added</label>
+                    <span>2 years ago</span
+                </li>
+                <li>
+                    <label>Updated</label>
+                    <span>5 minutes ago</span
+                </li>
+            </ul>
+        </md-content>
+    </div>
 </div>

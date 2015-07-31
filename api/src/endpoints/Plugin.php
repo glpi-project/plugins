@@ -23,6 +23,7 @@ use \API\Model\PluginStar;
 $single = function($id) use($app) {
    $plugin = Plugin::with('descriptions', 'authors')
                    ->withAverageNote()
+                   ->withCurrentVersion()
                    ->find($id);
    if ($plugin) {
       Tool::endWithJson($plugin);

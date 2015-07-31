@@ -73,6 +73,7 @@ foreach ($plugins as $plugin) {
 
 		$langs_description = [];
 
+		// Inserting all short and long descriptions in DB
 		foreach ($xml->description->short->children() as $lang => $string) {
 			$langs_description[$lang]['short'] = $string;
 		}
@@ -135,6 +136,15 @@ foreach ($plugins as $plugin) {
 					            ]);
 				}
 			}
+		}
+
+		foreach($xml->versions->children() as $version) {
+			Capsule::table('plugin_version')
+			       ->insert([
+			       		'plugin_id' => $plugin->id,
+			       		'num' => $version->num,
+			       		'compatibility' => $version->compatibility
+			       	]);
 		}
 
 		echo "Imported/Refreshed (".$i."/".sizeof($plugins).") ".$plugin->name."\n";

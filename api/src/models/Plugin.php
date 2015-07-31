@@ -82,4 +82,10 @@ class Plugin extends Model {
               ->take($limit);
         return $query;
     }
+
+    public function scopeWithCurrentVersion($query) {
+        $query->addSelect([DB::raw('plugin_version.compatibility as compatible_with')])
+              ->join('plugin_version', 'plugin.id', '=', 'plugin_version.plugin_id');
+        return $query;
+    }
 }
