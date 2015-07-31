@@ -1,1 +1,73 @@
-<p>This is the submit view.</p>
+<form class="submit">
+   <h2>Submit your plugin</h2>
+
+   Please, provide the url describing your plugin 
+   <md-input-container>
+      <label>URL</label>
+      <input ng-model="url" type="url">
+   </md-input-container>
+
+   <!-- <div vc-recaptcha
+        theme="light"
+        key="6LfvmwoTAAAAANxv0KzTuTr-MEnYGjzTqG6-sbFZ"></div> -->
+
+   <md-button class="md-raised md-primary submit-button">
+      Submit
+      <i class="fa fa-paper-plane"></i>
+   </md-button>
+
+</form>
+   
+<div class="xml_description">
+Your XML must be valid and respect this format :
+<div hljs>
+<root>
+      <name>Displayed name</name>
+      <key>System name</key>
+      <state>stable</state>
+      <logo>http://link/to/logo</logo>
+      <description>
+         <short>
+            <lang>short description of the plugin, displayed on list, text only</lang>
+            ...
+         </short>
+         <long>
+            <lang>short description of the plugin, displayed on detail, Markdown accepted</lang>
+         </long>
+      </description>
+      <homepage>http://link/to/your/page</homepage>
+      <download>http://link/to/your/files</download>
+      <issues>http://link/to/your/issues</issues>
+      <readme>http://link/to/your/readme</issues>
+      <authors>
+         <author>Your name</author>
+      </authors>
+      <versions>
+         <version>
+            <num>1.8.0</num>
+            <compatibility>0.85</compatibility>
+         </version>
+      </versions>
+      <langs>
+         <lang>en_GB</lang>
+         <lang>fr_FR</lang>
+         ...
+      </langs>
+      <license>GPL v2+</license>
+      <tags>
+         <fr>
+            <tag>tag1</tag>
+         </fr>
+         <en>
+            <tag>tag1</tag>
+         </en>
+      </tags>
+      <screenshots>
+         <screenshot>http://link/to/your/screenshot</screenshot>
+         <screenshot>http://link/to/your/screenshot</screenshot>
+         ...
+      </screenshots>
+   </root>
+</div>
+</div>
+

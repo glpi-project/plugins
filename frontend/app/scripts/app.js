@@ -13,7 +13,9 @@ angular
     'angular-loading-bar', 
     'ngAnimate',
     'ui.router',
-    'ngMaterial'
+    'ngMaterial',
+    'vcRecaptcha', 
+    'hljs'
   ])
 
   // Constant to set API url
