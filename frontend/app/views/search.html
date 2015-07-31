@@ -9,16 +9,16 @@
 
 	<div class="results">
 		<div class="result" ng-repeat="plugin in results track by $index">
-			<div layout="row" layout-wrap>
+			<div layout="row" layout-wrap layout-align="center end">
             <img class="icon" src="http://placehold.it/60x60">
-				<div flex>
+				<div class='plugin_name'>
                <h2 class="name">
                   <a ui-sref="plugin({id: plugin.id})">{{plugin.name}}</a>
                </h2>
 					<h4 class="author">by Author</h4>
 				</div>
 
-            <div class='pills' flex>
+            <div class='pills'>
                <span class='pill bg_lightblue'>0.90</span>
                <span class='pill bg_lightblue'>0.85</span>
                <span class='pill bg_lightblue'>0.83</span>
@@ -30,7 +30,9 @@
                </span>
             </div>
 
-				<rate-box flex></rate-box>
+				<rate-box></rate-box>
+
+            <div flex></div>
 
 			</div>
 			<div class="description">
