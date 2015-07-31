@@ -20,7 +20,6 @@ $download = function($id) use($app) {
 	$plugin_download = new PluginDownload();
 	$plugin_download->downloaded_at = DB::raw('NOW()');
 	$plugin->downloads()->save($plugin_download);
-	//echo json_encode($plugin->downloads()->save());
 	$app->redirect($plugin->download_url, 301);
 };
 
