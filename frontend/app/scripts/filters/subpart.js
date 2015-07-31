@@ -12,7 +12,14 @@ angular.module('frontendApp')
   .filter('subpart', function () {
     return function (input, many) {
       if (input instanceof Array)
-      	return input.slice(0,many);
+         return input.slice(0,many);
+      else return [];
+    };
+  })
+  .filter('lastpart', function () {
+    return function (input, many) {
+      if (input instanceof Array)
+      	return input.slice(many);
       else return [];
     };
   });
