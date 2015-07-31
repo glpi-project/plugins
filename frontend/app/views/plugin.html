@@ -14,7 +14,7 @@
          <span ng-show="plugin.versions.length > 3">
             ...
             <md-tooltip class="versions_more">
-               <span ng-repeat="version in plugin.versions | unique: 'compatibility'| lastpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
+               <span ng-repeat="version in plugin.versions | unique: 'compatibility' | lastpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
             </md-tooltip>
          </span>
       </div>
