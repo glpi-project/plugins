@@ -1,38 +1,40 @@
 <h2>A question, a suggestion, a problem ?</h2>
 <span class="legend">Please, send us a message.</span>
 
-<md-content layout-padding>
- <form name="contactForm">
-   <div layout layout-sm="column">
-     <md-input-container flex>
-       <label>First name</label>
-       <input ng-model="contact.firstName">
-     </md-input-container>
-     <md-input-container flex>
-       <label>Last Name</label>
-       <input ng-model="contact.lastname">
-     </md-input-container>
-   </div>
-   <md-input-container flex>
-     <label>Email</label>
-     <input ng-model="contact.email" type="email">
-   </md-input-container>
-   <md-input-container flex>
-     <label>Subject</label>
-     <input ng-model="contact.subject">
-   </md-input-container>
-   <md-input-container flex>
-     <label>Your message</label>
-     <textarea ng-model="contact.message" columns="1" md-maxlength="500"></textarea>
-   </md-input-container>
+<div layout="row" layout-wrap>
+   <md-content layout-padding flex="60" flex-sm="100" flex-md="100">
+    <form name="contactForm"> 
+      <div layout layout-sm="column">
+        <md-input-container flex class='firstnamebox picbox'>
+          <label>First name</label>
+          <input ng-model="contact.firstName">
+        </md-input-container>
+        <md-input-container flex class='realnamebox picbox'>
+          <label>Last Name</label>
+          <input ng-model="contact.lastname">
+        </md-input-container>
+      </div>
+      <md-input-container flex  class='emailbox picbox'>
+        <label>Email</label>
+        <input ng-model="contact.email" type="email">
+      </md-input-container>
+      <md-input-container flex class='subjectbox picbox'>
+        <label>Subject</label>
+        <input ng-model="contact.subject">
+      </md-input-container>
+      <md-input-container flex class='messagebox picbox'>
+        <label>Your message</label>
+        <textarea ng-model="contact.message" columns="1" md-maxlength="500"></textarea>
+      </md-input-container>
 
-   <div vc-recaptcha
-        theme="light"
-        key="'6LfvmwoTAAAAANxv0KzTuTr-MEnYGjzTqG6-sbFZ'"></div>
+      <div vc-recaptcha
+           theme="light"
+           key="'6LfvmwoTAAAAANxv0KzTuTr-MEnYGjzTqG6-sbFZ'"></div>
 
-   <md-button class="md-raised md-primary submit-button">
-      Submit
-      <i class="fa fa-paper-plane"></i>
-   </md-button>
- </form>
-</md-content>
+      <md-button class="md-raised md-primary submit-button">
+         Submit
+         <i class="fa fa-paper-plane"></i>
+      </md-button>
+    </form>
+   </md-content>
+</div>
