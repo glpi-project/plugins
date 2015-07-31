@@ -28,7 +28,7 @@ angular.module('frontendApp')
         var stars = [];
         for (var i = 0 ; i < 5 ; i++) {
           var icon = angular.element('<i>');
-          stars.push(icon)
+          stars.push(icon);
           element.append(icon);
         }
 
@@ -46,8 +46,8 @@ angular.module('frontendApp')
  
         var halfOrPlain = function(offsetX) {
           return (controller.starWidth -
-                  (controller.starWidth - offsetX)
-                  <= (controller.starWidth / 2)
+                  (controller.starWidth - offsetX) <=
+                  (controller.starWidth / 2)
                  ) ? 0.5 : 1;
         };
 
@@ -64,11 +64,11 @@ angular.module('frontendApp')
           });
           el.on('mousemove', function(ev) {
             if (!scope.alreadyRated) {
-              note = i + halfOrPlain(ev.offsetX)  
+              note = i + halfOrPlain(ev.offsetX);
               displayStars(note, true);
             }
           });
-          el.on('mouseleave', function(ev) {
+          el.on('mouseleave', function() {
             displayStars(scope.currentNote);
             el.off('mouseclick');
           });
