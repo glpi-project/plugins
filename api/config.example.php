@@ -10,3 +10,5 @@ $db_settings = [
 	'collation' =>  'utf8_general_ci',
 	'prefix'    =>  ''
 ];
+
+$log_queries = false;
