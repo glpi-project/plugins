@@ -19,7 +19,7 @@ class DB {
       if ($log_queries) {         
          self::$capsule->getEventDispatcher()->listen('illuminate.query', function($query) {
             $log = fopen('../misc/illuminate_queries.log', 'a+');
-            fwrite($log, date('Y/m/d H:i:s') . ' ' . $query . "\n");
+            fwrite($log, date('Y/m/d H:i:s') . ' [QUERY] : ' . $query . "\n");
             fclose($log);
          });
       }
