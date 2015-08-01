@@ -3,3 +3,4 @@ npm-debug.log
 api/config.php
 *.swp
 /frontend/app/scripts/conf.js
+/misc/illuminate_queries.log
