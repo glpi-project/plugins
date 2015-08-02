@@ -50,6 +50,14 @@ angular.module('frontendApp')
 
       $http({
         method: 'GET',
+        url: apiUrl + '/tags/top'
+      })
+      .success(function(data, status, headers, config) {
+        $scope.tags = data;
+      });
+
+      $http({
+        method: 'GET',
         url: apiUrl + '/author'
       })
       .success(function(data, status, headers, config) {
