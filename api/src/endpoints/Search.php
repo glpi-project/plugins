@@ -39,7 +39,7 @@ $search = function() use($app) {
       $lang = $body->lang;
 
    $_search = \API\Model\Plugin::short()
-                               ->with('authors')
+                               ->with('authors', 'versions')
                                ->withDownloads()
                                ->withAverageNote()
                                ->descWithLang($lang)
