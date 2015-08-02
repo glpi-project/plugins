@@ -29,6 +29,10 @@ class Plugin extends Model {
         return $this->hasMany('\API\Model\PluginDownload');
     }
 
+    public function screenshots() {
+      return $this->hasMany('\API\Model\PluginScreenshot');
+    }
+
     public function versions() {
         return $this->hasMany('\API\Model\PluginVersion');
     }
@@ -107,4 +111,5 @@ class Plugin extends Model {
             ->where('tag.id', '=', $tag->id);
       return $query;
     }
+
 }

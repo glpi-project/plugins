@@ -6,11 +6,11 @@
         <div class='plugin_name'>
             <h2>{{plugin.name}}</h2>
             <h4 class="author">by {{inlineAuthors(plugin.authors)}}</h4>
-        </div>      
+        </div>
 
       <div class='pills'>
          <span ng-repeat="version in plugin.versions | unique: 'compatibility' | subpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
-         
+
          <span ng-show="plugin.versions.length > 3">
             ...
             <md-tooltip class="versions_more">
@@ -47,10 +47,7 @@
 
       <div class='screenshots' flex flex-sm="100">
          <!-- we need to implement a lightbox here -->
-         <md-card class='screenshot'><img src="http://placehold.it/200x150"></md-card>
-         <md-card class='screenshot'><img src="http://placehold.it/200x150"></md-card>
-         <md-card class='screenshot'><img src="http://placehold.it/200x150"></md-card>
-         <md-card class='screenshot'><img src="http://placehold.it/200x150"></md-card>
+         <md-card class='screenshot' ng-repeat="screenshot in plugin.screenshots"><img src="{{screenshot.url}}"></md-card>
       </div>
     </div>
     <div layout="row">

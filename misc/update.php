@@ -20,7 +20,9 @@ $capsule->bootEloquent();
 $capsule->setAsGlobal();
 
 // Grabbing all the plugins
-$plugins = Capsule::table('plugin')->get();
+$plugins = Capsule::table('plugin')
+                  ->where('active', '=', true)
+                  ->get();
 
 // For each of these plugins
 $i = 1;
@@ -48,7 +50,7 @@ foreach ($plugins as $plugin) {
 	// Now Parsing... thanks to SimpleXML!
 	$xml = simplexml_load_string($xml);
 
-	if ($update) {	
+	if ($update) {
 		// for now, not doing any checkup on
 		// specific fields, just copying xml
 		// data, which is the reference data
@@ -121,7 +123,7 @@ foreach ($plugins as $plugin) {
 					$t = $t->id;
 				}
 
-				// Link tag to plugin if not linked				
+				// Link tag to plugin if not linked
 				$notLinked = Capsule::table('plugin_tags')
 				                        ->where('plugin_id', $plugin->id)
 				                        ->where('tag_id', $t)
@@ -145,6 +147,20 @@ foreach ($plugins as $plugin) {
 			       		'num' => $version->num,
 			       		'compatibility' => $version->compatibility
 			       	]);
+		}
+
+		if (isset($xml->screenshots)){
+			// Refreshing all authors
+			Capsule::table('plugin_screenshot')
+		           ->where('plugin_id', $plugin->id)
+		           ->delete(); // Deleting in-db ones ...
+    		foreach((array) $xml->screenshots->screenshot as $url) {
+				Capsule::table('plugin_screenshot')
+				       ->insert([
+				       		'plugin_id' => $plugin->id,
+				       		'url' => $url
+				       	]);
+			}
 		}
 
 		echo "Imported/Refreshed (".$i."/".sizeof($plugins).") ".$plugin->name."\n";

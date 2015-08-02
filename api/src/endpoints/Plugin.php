@@ -24,7 +24,7 @@ require 'config.php';
  * Fetching infos of a single plugin
  */
 $single = function($id) use($app) {
-   $plugin = Plugin::with('descriptions', 'authors', 'versions')
+   $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots')
                    ->withAverageNote()
                    ->withCurrentVersion()
                    ->withDownloads()
@@ -136,6 +136,7 @@ $submit = function() use($app, $recaptcha_secret) {
 
     $plugin = new Plugin;
     $plugin->xml_url = $body->plugin_url;
+    $plugin->date_added = DB::raw('NOW()');
     $plugin->active = false;
     $plugin->save();
 

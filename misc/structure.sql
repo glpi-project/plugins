@@ -69,6 +69,7 @@ CREATE TABLE plugin_tags(
 	tag_id INT,
 	FOREIGN KEY (plugin_id)
 		REFERENCES plugin(id)
+		ON DELETE CASCADE
 ) ENGINE=InnoDB;
 CREATE INDEX idx_plugin_tags_plugin on plugin_tags(plugin_id);
 
@@ -82,6 +83,16 @@ CREATE TABLE plugin_stars(
 		ON DELETE CASCADE
 ) ENGINE=InnoDB;
 CREATE INDEX idx_plugin_stars_plugin on plugin_description(plugin_id);
+
+CREATE TABLE plugin_screenshot(
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	plugin_id INT NOT NULL,
+	url VARCHAR(500),
+	FOREIGN KEY (plugin_id)
+		REFERENCES plugin(id)
+		ON DELETE CASCADE
+) ENGINE=InnoDB;
+CREATE INDEX idx_plugin_screenshot_plugin ON plugin_screenshot(plugin_id);
 
 -- CREATE TABLE plugin_view(
 -- 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
