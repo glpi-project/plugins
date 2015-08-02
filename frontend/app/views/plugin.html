@@ -24,7 +24,7 @@
       <span class='download'>
         <span class="downloads">
             <span class='pill bg_red'>
-               37k
+               <span ng-bind-html='37000 | nrFormat'></span>
                <md-tooltip>downloads</md-tooltip>
             </span>
         </span>
@@ -58,7 +58,7 @@
             <ul>
                 <li>
                     <label>Version</label>
-                    <span>0.0</span
+                    <span>{{plugin.versions[0].num}}</span
                 </li>
                 <li>
                     <label>Compatible With</label>
