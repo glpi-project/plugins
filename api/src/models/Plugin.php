@@ -46,13 +46,14 @@ class Plugin extends Model {
     }
 
     public function scopeWithAverageNote($query) {
-        $query->select(['plugin.*', DB::raw('AVG(plugin_stars.note) as note')])
+        $query->addSelect([DB::raw('AVG(plugin_stars.note) as note')])
               ->leftJoin('plugin_stars', 'plugin.id', '=', 'plugin_stars.plugin_id')
               ->groupBy('plugin.name');
+        return $query;
     }
 
     public function scopeWithDownloads($query, $limit = false) {
-        $query->addSelect([DB::raw('(SELECT COUNT(*) FROM plugin_download where plugin_download.plugin_id = plugin.id) as downloaded')])
+        $query->addSelect(['plugin.*', DB::raw('(SELECT COUNT(*) FROM plugin_download where plugin_download.plugin_id = plugin.id) as downloaded')])
                      ->leftJoin('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
                      ->groupBy('plugin.name');
         return $query;

@@ -51,28 +51,30 @@ angular.module('frontendApp')
                  ) ? 0.5 : 1;
         };
 
-        stars.forEach(function(el, i) {
-          var note;
-          el.on('mouseenter', function(ev) {
-            if (!scope.alreadyRated) {              
-              note = i + halfOrPlain(ev.offsetX);
-              displayStars(note, true);
-              el.on('mousedown', function() {
-                scope.rateMethod(note);
-              });
-            }
+        if (!scope.alreadyRated) {
+          stars.forEach(function(el, i) {
+            var note;
+            el.on('mouseenter', function(ev) {
+              if (!scope.alreadyRated) {              
+                note = i + halfOrPlain(ev.offsetX);
+                displayStars(note, true);
+                el.on('mousedown', function() {
+                  scope.rateMethod(note);
+                });
+              }
+            });
+            el.on('mousemove', function(ev) {
+              if (!scope.alreadyRated) {
+                note = i + halfOrPlain(ev.offsetX);
+                displayStars(note, true);
+              }
+            });
+            el.on('mouseleave', function() {
+              displayStars(scope.currentNote);
+              el.off('mouseclick');
+            });
           });
-          el.on('mousemove', function(ev) {
-            if (!scope.alreadyRated) {
-              note = i + halfOrPlain(ev.offsetX);
-              displayStars(note, true);
-            }
-          });
-          el.on('mouseleave', function() {
-            displayStars(scope.currentNote);
-            el.off('mouseclick');
-          });
-        });
+        }
 
         // Watch for future modifications of the note
         scope.$watch('currentNote', function() {
