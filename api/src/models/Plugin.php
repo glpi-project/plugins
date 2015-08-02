@@ -60,7 +60,7 @@ class Plugin extends Model {
     }
 
     public function scopePopularTop($query, $limit = 10) {
-        $query->select(['plugin.id', 'plugin.name',
+        $query->select(['plugin.id', 'plugin.name','plugin.key',
                                 DB::raw('COUNT(name) as downloaded')])
                      ->join('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
                      ->groupBy('name')
