@@ -81,7 +81,7 @@ class Plugin extends Model {
                                 DB::raw('COUNT(name) as downloaded')])
                      ->join('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
                      ->where('downloaded_at', '>', DB::raw('NOW() - INTERVAL 1 WEEK'))
-                     ->groupBy('name')
+                     ->groupBy('plugin.name')
                      ->orderBy('downloaded', 'DESC')
                     ->take($limit);
         return $query;

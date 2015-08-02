@@ -25,7 +25,7 @@
          </md-subheader>
          <span class='legend'>Just added to catalog</span>
          <md-list-item ng-repeat="plugin in new">
-            <md-button>
+            <md-button ui-sref="plugin({id: plugin.id})">
                <h4>{{plugin.name}}</h4>
                <md-tooltip md-direction="right">
                   Added on {{plugin.date_added}}
