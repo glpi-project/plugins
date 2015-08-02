@@ -39,6 +39,7 @@ $search = function() use($app) {
       $lang = $body->lang;
 
    $_search = \API\Model\Plugin::short()
+                               ->withDownloads()
                                ->descWithLang($lang)
                          ->where('name', 'LIKE', "%$query_string%")
                           ->get();
