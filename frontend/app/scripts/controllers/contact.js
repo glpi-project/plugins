@@ -10,7 +10,7 @@
 angular.module('frontendApp')
   .controller('ContactCtrl', function (API_URL, RECAPTCHA_PUBLIC_KEY, $scope, vcRecaptchaService, $http) {
     console.log("this is your app's controller");
-    $scope.key = RECAPTCHA_PUBLIC_KEY;
+    $scope.key = RECAPTCHA_PUBLIC_KEY
     $scope.response = null;
     $scope.widgetId = null;
 
@@ -37,10 +37,10 @@ angular.module('frontendApp')
             }
         })
         .success(function(data) {
-            if (data.valid) {
-                console.log('Success');
+            if (data.success) {
+                console.log('Message leaved');
             } else {
-                console.log('Failed validation');
+                console.log('Something went wrong');
                 vcRecaptchaService.reload($scope.widgetId);
             }
         });

@@ -47,6 +47,10 @@ $send = function() use($app, $recaptcha_secret) {
     $message->sent = DB::raw('NOW()');
 
     $message->save();
+
+    return Tool::endWithJson([
+        "success" => true
+    ]);
 };
 
 // HTTP REST Map
