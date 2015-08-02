@@ -7,7 +7,7 @@
          </md-subheader>
          <span class='legend'>A recent, relative, increase in installs</span>
          <md-list-item ng-repeat="plugin in trending">
-            <md-button ui-sref="plugin({id: plugin.id})">
+            <md-button ui-sref="plugin({id: plugin.id, key: plugin.key})">
                <h4>{{plugin.name}}</h4>
                <md-tooltip md-direction="right">
                   Downloaded {{plugin.downloaded}} times
@@ -25,7 +25,7 @@
          </md-subheader>
          <span class='legend'>Just added to catalog</span>
          <md-list-item ng-repeat="plugin in new">
-            <md-button ui-sref="plugin({id: plugin.id})">
+            <md-button ui-sref="plugin({id: plugin.id, key: plugin.key})">
                <h4>{{plugin.name}}</h4>
                <md-tooltip md-direction="right">
                   Added on {{plugin.date_added}}
@@ -43,7 +43,7 @@
          </md-subheader>
          <span class='legend'>With the most unique installs</span>
          <md-list-item ng-repeat="plugin in popular">
-            <md-button ui-sref="plugin({id: plugin.id, name: plugin.name})">
+            <md-button ui-sref="plugin({id: plugin.id, key: plugin.name})">
                <h4>{{plugin.name}}</h4>
                <md-tooltip md-direction="right">
                   Downloaded {{plugin.downloaded}} times
@@ -61,7 +61,7 @@
          </md-subheader>
          <span class='legend'>When the plugin was last updated</span>
          <md-list-item ng-repeat="plugin in updated">
-            <md-button ui-sref="plugin({id: plugin.id})">
+            <md-button ui-sref="plugin({id: plugin.id, key: plugin.key})">
                <h4>{{plugin.name}}</h4>
                <md-tooltip md-direction="right">Updated 2 days ago</md-tooltip>
             </md-button>

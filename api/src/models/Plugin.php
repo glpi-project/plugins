@@ -70,14 +70,14 @@ class Plugin extends Model {
     }
 
     public function scopeMostFreshlyAddedPlugins($query, $limit = 10) {
-      $query->select(['plugin.id', 'plugin.name', 'plugin.date_added'])
+      $query->select(['plugin.id', 'plugin.name', 'plugin.date_added', 'plugin.key'])
             ->orderBy('plugin.date_added', 'DESC')
             ->take($limit);
       return $query;
     }
 
     public function scopeTrendingTop($query, $limit = 10) {
-        $query->select(['plugin.id', 'plugin.name',
+        $query->select(['plugin.id', 'plugin.name', 'plugin.key',
                                 DB::raw('COUNT(name) as downloaded')])
                      ->join('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
                      ->where('downloaded_at', '>', DB::raw('NOW() - INTERVAL 1 MONTH'))
@@ -88,7 +88,7 @@ class Plugin extends Model {
     }
 
     public function scopeUpdatedRecently($query, $limit = 10) {
-        $query->select(['plugin.id', 'plugin.name', 'date_updated'])
+        $query->select(['plugin.id', 'plugin.key', 'plugin.name', 'plugin.date_updated'])
               ->orderBy('date_updated', 'DESC')
               ->take($limit);
         return $query;
