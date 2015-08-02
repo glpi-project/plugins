@@ -2,7 +2,7 @@
 
 $db_settings = [
 	'driver'    =>  'mysql',
-	'host'      =>  '', 
+	'host'      =>  '',
 	'database'  =>  '',
 	'username'  =>  '',
 	'password'  =>  '',
@@ -12,3 +12,5 @@ $db_settings = [
 ];
 
 $log_queries = false;
+
+$recaptcha_secret = '6LcnrwoTAAAAAEARsd1XMadhLthIibXeNZf4EeUZ';

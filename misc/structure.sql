@@ -1,11 +1,11 @@
 CREATE TABLE plugin (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
-	xml_url TEXT, 
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	xml_url TEXT,
 	xml_crc VARCHAR(32),
 	name TEXT,
 	logo_url TEXT,
 	`key` VARCHAR(255),
-	homepage_url TEXT, 
+	homepage_url TEXT,
 	download_url TEXT,
 	issues_url TEXT,
 	readme_url TEXT,
@@ -64,7 +64,7 @@ CREATE TABLE tag(
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_tags(
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	plugin_id INT,
 	tag_id INT,
 	FOREIGN KEY (plugin_id)
@@ -74,8 +74,8 @@ CREATE INDEX idx_plugin_tags_plugin on plugin_tags(plugin_id);
 
 CREATE TABLE plugin_stars(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	note FLOAT(2,1), 
-	`date` DATE, 
+	note FLOAT(2,1),
+	`date` DATE,
 	plugin_id INT,
 	FOREIGN KEY (plugin_id)
 		REFERENCES plugin(id)
@@ -92,3 +92,13 @@ CREATE INDEX idx_plugin_stars_plugin on plugin_description(plugin_id);
 -- 		ON DELETE CASCADE
 -- ) ENGINE=InnoDB;
 -- CREATE INDEX idx_plugin_view_plugin on plugin_description(plugin_id);
+
+CREATE TABLE message(
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	first_name VARCHAR(40),
+	last_name VARCHAR(60),
+	email VARCHAR(255),
+	subject VARCHAR(200),
+	sent DATETIME,
+	message TEXT
+) ENGINE=InnoDB;

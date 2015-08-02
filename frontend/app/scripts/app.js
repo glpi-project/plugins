@@ -21,6 +21,7 @@ angular
 
   // Constant to set API url
   .constant('API_URL', API_URL)
+  .constant('RECAPTCHA_PUBLIC_KEY', RECAPTCHA_PUBLIC_KEY)
 
   // Determining current language
   .run(function() {

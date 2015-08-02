@@ -3,11 +3,11 @@
 
 <div layout="row" layout-wrap>
    <md-content layout-padding flex="60" flex-sm="100" flex-md="100">
-    <form name="contactForm"> 
+    <form name="contactForm">
       <div layout layout-sm="column">
         <md-input-container flex class='firstnamebox picbox'>
           <label>First name</label>
-          <input ng-model="contact.firstName">
+          <input ng-model="contact.firstname">
         </md-input-container>
         <md-input-container flex class='realnamebox picbox'>
           <label>Last Name</label>
@@ -26,12 +26,16 @@
         <label>Your message</label>
         <textarea ng-model="contact.message" columns="1" md-maxlength="500"></textarea>
       </md-input-container>
+      <input type="hidden">
 
       <div vc-recaptcha
            theme="light"
-           key="'6LfvmwoTAAAAANxv0KzTuTr-MEnYGjzTqG6-sbFZ'"></div>
+           key="key"
+           on-create="setWidgetId(widgetId)"
+           on-success="setResponse(response)"
+           on-expire="cbExpiration()"></div>
 
-      <md-button class="md-raised md-primary submit-button">
+      <md-button class="md-raised md-primary submit-button" ng-click="submit()">
          Submit
          <i class="fa fa-paper-plane"></i>
       </md-button>
