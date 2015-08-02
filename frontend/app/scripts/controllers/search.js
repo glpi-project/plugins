@@ -34,13 +34,15 @@ angular.module('frontendApp')
     // cancel the previous $timeout promise if there's any
     $timeout.cancel($rootScope.currentSearch);
     // delaying another request
-    $rootScope.currentSearch = $timeout(function() {
-        new Search($stateParams.val)
-          .success(function(data) {
-            // moving the results to the $scope
-          	$scope.results = data;
-          });
-    }, 800);
+    if ($stateParams.val.length >= 2) {
+      $rootScope.currentSearch = $timeout(function() {
+          new Search($stateParams.val)
+            .success(function(data) {
+              // moving the results to the $scope
+            	$scope.results = data;
+            });
+      }, 800);
+    }
 
     // method to sort by relevance
     $scope.sortByRelevance = function() {
