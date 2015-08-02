@@ -24,6 +24,14 @@
             <i class="fa fa-plus darkblue"></i>
          </md-subheader>
          <span class='legend'>Just added to catalog</span>
+         <md-list-item ng-repeat="plugin in new">
+            <md-button>
+               <h4>{{plugin.name}}</h4>
+               <md-tooltip md-direction="right">
+                  Added on {{plugin.date_added}}
+               </md-tooltip>
+            </md-button>
+         </md-list-item>
       </md-list>
    </md-content>
 
@@ -69,7 +77,7 @@
          </md-subheader>
          <span class='legend'>With the most plugins</span>
          <md-list-item ng-repeat="tag in tags">
-            <md-button ui-sref="">
+            <md-button>
                <h4>{{tag.tag}}</h4>
                <md-tooltip md-direction="right">Tagged on {{tag.plugin_count}} plugins</md-tooltip>
             </md-button>

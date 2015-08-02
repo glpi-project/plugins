@@ -41,7 +41,7 @@ $single = function($id) use($app) {
 $all = function() use($app) {
    $all = Plugin::withDownloads()
                            ->with('descriptions', 'authors')
-                           ->get()->toArray();
+                           ->get();
    Tool::endWithJson($all);
 };
 
@@ -60,14 +60,20 @@ $popular = function() use($app) {
  */
 $trending = function() use($app) {
    $trending_plugins = Plugin::trendingTop(10)
-                                        ->get();
+                             ->get();
    Tool::endWithJson($trending_plugins);
 };
 
 $updated = function() use($app) {
    $updated_plugins = Plugin::updatedRecently(10)
-                                       ->get();
+                            ->get();
    Tool::endWithJson($updated_plugins);
+};
+
+$new = function() use($app) {
+  $new_plugins = Plugin::mostFreshlyAddedPlugins(10)
+                       ->get();
+  Tool::endWithJson($new_plugins);
 };
 
 /**
@@ -111,5 +117,6 @@ $app->get('/plugin', $all);
 $app->get('/plugin/popular', $popular);
 $app->get('/plugin/trending', $trending);
 $app->get('/plugin/updated', $updated);
+$app->get('/plugin/new', $new);
 $app->post('/plugin/star', $star);
 $app->get('/plugin/:id', $single);
