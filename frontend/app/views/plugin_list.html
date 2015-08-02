@@ -15,7 +15,7 @@
                <h2 class="name">
                   <a ui-sref="plugin({id: plugin.id})">{{plugin.name}}</a>
                </h2>
-					<h4 class="author">by Author</h4>
+					<h4 class="author">by {{inlineAuthors(plugin.authors)}}</h4>
 				</div>
 
             <div class='pills'>
@@ -42,6 +42,6 @@
 	</div>
 
 	<div class="pagination">
-		
+
 	</div>
 </div>

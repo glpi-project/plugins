@@ -10,6 +10,7 @@
  */
 
 use \API\Core\Tool;
+use \API\Model\Plugin;
 use \API\Model\Tag;
 use \Illuminate\Database\Capsule\Manager as DB;
 
@@ -28,6 +29,25 @@ $top = function() use ($app) {
     Tool::endWithJson($tags);
 };
 
+$tag_plugins = function($id) use($app) {
+    $tag = Tag::find($id);
+    if ($tag == NULL) {
+        Tool::endWithJson([
+            "error" => "Tag not found"
+        ], 400);
+    }
+
+    $plugins = Plugin::with('versions', 'authors')
+                     ->short()
+                     ->withDownloads()
+                     ->withAverageNote()
+                     ->descWithLang($tag->lang)
+                     ->withTag($tag)
+                     ->get();
+    Tool::endWithJson($plugins);
+};
+
 // HTTP rest map
 $app->get('/tags', $all);
 $app->get('/tags/top', $top);
+$app->get('/tags/:id/plugin', $tag_plugins);

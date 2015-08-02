@@ -10,12 +10,12 @@
  */
 angular
   .module('frontendApp', [
-    'angular-loading-bar', 
+    'angular-loading-bar',
     'ngAnimate',
     'ui.router',
     'ngMaterial',
-    'vcRecaptcha', 
-    'hljs', 
+    'vcRecaptcha',
+    'hljs',
     'ngSanitize'
   ])
 
@@ -71,8 +71,13 @@ angular
        // search State
        .state('search', {
          url: '/search/:val',
-         templateUrl: "views/search.html",
+         templateUrl: "views/plugin_list.html",
          controller: "SearchCtrl"
+       })
+       .state('tag', {
+        url: '/tag/:id',
+        templateUrl: "views/plugin_list.html",
+        controller: "TagCtrl"
        })
        // submit State
        .state('submit', {

@@ -31,7 +31,7 @@ $single = function($id) use($app) {
    } else {
       Tool::endWithJson([
          'error' => 'No plugin has that index'
-      ]);
+      ], 400);
    }
 };
 

@@ -12,4 +12,5 @@ class Tag extends Model {
       $query->addSelect(['*', DB::raw('(SELECT COUNT(*) FROM plugin_tags WHERE tag_id = tag.id) as plugin_count')]);
       return $query;
     }
+
 }

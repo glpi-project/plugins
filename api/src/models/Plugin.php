@@ -99,4 +99,11 @@ class Plugin extends Model {
               ->join('plugin_version', 'plugin.id', '=', 'plugin_version.plugin_id');
         return $query;
     }
+
+    public function scopeWithTag($query, $tag) {
+      $query->join('plugin_tags', 'plugin.id', '=', 'plugin_tags.plugin_id')
+            ->join('tag', 'plugin_tags.tag_id', '=', 'tag.id')
+            ->where('tag.id', '=', $tag->id);
+      return $query;
+    }
 }
