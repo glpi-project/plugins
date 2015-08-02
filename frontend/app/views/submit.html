@@ -10,16 +10,19 @@
    </md-input-container>
 
    <div vc-recaptcha
-        theme="light"
-        key="'6LfvmwoTAAAAANxv0KzTuTr-MEnYGjzTqG6-sbFZ'"></div>
+           theme="light"
+           key="key"
+           on-create="setWidgetId(widgetId)"
+           on-success="setResponse(response)"
+           on-expire="cbExpiration()"></div>
 
-   <md-button class="md-raised md-primary submit-button">
+   <md-button class="md-raised md-primary submit-button" ng-click="submit()">
       Submit
       <i class="fa fa-paper-plane"></i>
    </md-button>
 
 </form>
-   
+
 <div class="xml_description">
 <span class="legend">Your XML must be valid and respect this format :</span>
 <div hljs>

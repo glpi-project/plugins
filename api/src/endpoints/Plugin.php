@@ -16,6 +16,9 @@ use \API\Core\Tool;
 use \Illuminate\Database\Capsule\Manager as DB;
 use \API\Model\Plugin;
 use \API\Model\PluginStar;
+use \ReCaptcha\ReCaptcha;
+
+require 'config.php';
 
 /**
  * Fetching infos of a single plugin
@@ -112,8 +115,38 @@ $star = function() use($app) {
    ]);
 };
 
+$submit = function() use($app, $recaptcha_secret) {
+    $body = Tool::getBody();
+    $fields = ['plugin_url'];
+
+    $recaptcha = new ReCaptcha($recaptcha_secret);
+    $resp = $recaptcha->verify($body->recaptcha_response);
+    if (!$resp->isSuccess()) {
+       return  Tool::endWithJson([
+            "error" => "Recaptcha not validated"
+        ]);
+    }
+
+    foreach($fields as $prop) {
+        if (!property_exists($body, $prop))
+            return  Tool::endWithJson([
+                "error" => "Missing ". $prop
+            ]);
+    }
+
+    $plugin = new Plugin;
+    $plugin->xml_url = $body->plugin_url;
+    $plugin->active = false;
+    $plugin->save();
+
+    return Tool::endWithJson([
+        "success" => true
+    ]);
+};
+
 // HTTP REST Map
 $app->get('/plugin', $all);
+$app->post('/plugin', $submit);
 $app->get('/plugin/popular', $popular);
 $app->get('/plugin/trending', $trending);
 $app->get('/plugin/updated', $updated);

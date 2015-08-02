@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Plugin extends Model {
     protected $table = 'plugin';
+    public $timestamps = false;
 
     protected $casts = [
       "note" => 'float'
