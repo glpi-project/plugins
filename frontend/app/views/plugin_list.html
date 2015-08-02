@@ -1,4 +1,7 @@
 <div layout="column">
+    <div class="list-name" ng-show="listName">
+        <p>{{listName}}</p>
+    </div>
 	<div class="sort-filters" ng-show="results.length">
 		<p>
 		<span>Sort by :</span>
@@ -6,6 +9,8 @@
 		<a href="" ng-click="sortByPopularity()">Popularity</a>
 		</p>
 	</div>
+
+
 
 	<div class="results">
 		<div class="result" ng-repeat="plugin in results track by $index">
