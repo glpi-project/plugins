@@ -67,12 +67,20 @@ $trending = function() use($app) {
    Tool::endWithJson($trending_plugins);
 };
 
+/**
+ * Updated plugins
+ *  most recently updated plugins
+ */
 $updated = function() use($app) {
    $updated_plugins = Plugin::updatedRecently(10)
                             ->get();
    Tool::endWithJson($updated_plugins);
 };
 
+/**
+ * New plugins
+ *  most recently added plugins
+ */
 $new = function() use($app) {
   $new_plugins = Plugin::mostFreshlyAddedPlugins(10)
                        ->get();
@@ -115,6 +123,9 @@ $star = function() use($app) {
    ]);
 };
 
+/**
+ * Method called when an user submits a plugin
+ */
 $submit = function() use($app, $recaptcha_secret) {
     $body = Tool::getBody();
     $fields = ['plugin_url'];
