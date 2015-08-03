@@ -51,7 +51,7 @@ class Plugin extends Model {
     }
 
     public function scopeWithAverageNote($query) {
-        $query->addSelect([DB::raw('AVG(plugin_stars.note) as note')])
+        $query->addSelect([DB::raw('IF(AVG(plugin_stars.note),AVG(plugin_stars.note),0) as note')])
               ->leftJoin('plugin_stars', 'plugin.id', '=', 'plugin_stars.plugin_id')
               ->groupBy('plugin.name');
         return $query;
