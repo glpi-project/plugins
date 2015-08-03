@@ -39,16 +39,6 @@ cd frontend
 grunt serve
 ```
 
-You will also need this Chrome plugin
-[Allow-Control-Allow-Origin: *](https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en)
-To allow the client side working on a different
-URL from the API, because you're firing the
-generator-angular's built-in server to work
-with the API serve by your Apache instance.
-
-Or, you can simply fire Chrome with --disable-web-security
-flag which will allow XmlHttpRequests on cross-domain urls.
-
 ## Configuration (Mandatory)
 
  + Create a database that you would like to use
