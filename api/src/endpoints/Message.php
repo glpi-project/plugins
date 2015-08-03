@@ -19,7 +19,7 @@ use \ReCaptcha\ReCaptcha;
 
 require 'config.php';
 
-$send = function() use($app, $recaptcha_secret) {
+$send = function() use($app, $recaptcha_secret, $msg_alerts) {
     $body = Tool::getBody();
     $fields = ['firstname', 'lastname', 'email', 'subject', 'message'];
 
@@ -38,6 +38,22 @@ $send = function() use($app, $recaptcha_secret) {
             ]);
     }
 
+    // Preparing to send mail, making recipients string
+    $recipients = ''; $i = 0;
+    foreach ($msg_alerts['recipients'] as $recipient) {
+        if ($i > 0)
+            $recipients .= ', ';
+        $recipients .= $recipient;
+        $i++;
+    }
+
+    // Sending mail
+    mail($recipients,
+        $msg_alerts['subject_prefix'] . $body->contact->subject,
+        $body->contact->message,
+        "From: ".$body->contact->firstname." ".$body->contact->lastname." <".$body->contact->email.">");
+
+    // also saving message in database
     $message = new Message();
     $message->first_name = $body->contact->firstname;
     $message->last_name = $body->contact->lastname;
@@ -45,7 +61,6 @@ $send = function() use($app, $recaptcha_secret) {
     $message->subject = $body->contact->subject;
     $message->message = $body->contact->message;
     $message->sent = DB::raw('NOW()');
-
     $message->save();
 
     return Tool::endWithJson([
