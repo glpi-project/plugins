@@ -2,18 +2,18 @@
     <div class="list-name" ng-show="listName">
         <p>{{listName}}</p>
     </div>
-	<div class="sort-filters" ng-show="results.length">
+	<div ng-init="orderBy=['downloaded','note'];reverse=true" class="sort-filters" ng-show="results.length">
 		<p>
 		<span>Sort by :</span>
-		<a href="" ng-click="sortByRelevance()">Relevance</a>
-		<a href="" ng-click="sortByPopularity()">Popularity</a>
+		<a href="" ng-click="orderBy='$$hashKey';reverse=false">Relevance</a>
+		<a href="" ng-click="orderBy=['downloaded','note'];reverse=true">Popularity</a>
 		</p>
 	</div>
 
 
 
 	<div class="results">
-		<div class="result" ng-repeat="plugin in results track by $index">
+		<div class="result" ng-repeat="plugin in results | orderBy:orderBy:reverse track by $index">
 			<div layout="row" layout-wrap layout-align="center end">
             <img class="icon" src="http://placehold.it/60x60">
 				<div class='plugin_name'>
