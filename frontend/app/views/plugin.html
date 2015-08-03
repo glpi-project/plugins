@@ -47,7 +47,7 @@
 
       <div class='screenshots' flex flex-sm="100">
          <!-- we need to implement a lightbox here -->
-         <md-card class='screenshot' ng-repeat="screenshot in plugin.screenshots"><img src="{{screenshot.url}}"></md-card>
+         <md-card class='screenshot' ng-repeat="screenshot in plugin.screenshots"><img ng-src="{{screenshot.url}}"></md-card>
       </div>
     </div>
     <div layout="row">
