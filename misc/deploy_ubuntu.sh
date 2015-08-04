@@ -9,11 +9,12 @@ echo "Installing Apache 2, MySQL, PHP5, and other dependencies..."
 # Updating packages
 apt-get update
 
-curl --silent --location https://deb.nodesource.com/setup_0.12 | bash -
-
 # Preparing MySQL root password to be toor
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password toor'
 sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password toor'
+
+# Using NodeSource packages to install nodejs in the next command
+curl --silent --location https://deb.nodesource.com/setup_0.12 | bash -
 
 # Installing server-side dependencies
 # like PHP and everything
