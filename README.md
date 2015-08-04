@@ -24,8 +24,8 @@ vagrant up
 
 If everything went fine, you're done, go visit  
 http://localhost:8080
-you should see a local copy of glpi-plugin-directory
-running on your machine.
+you should see a running local-copy, or a local running-copy of glpi-plugin-directory  
+on your machine.
 
 
 ## Dependencies installation
