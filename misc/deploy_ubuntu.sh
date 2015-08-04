@@ -51,7 +51,7 @@ su vagrant -c 'bower -f install'
 su vagrant -c 'grunt build'
 
 # Preparing the VirtualHost in it's proper location
-cat > /etc/apache2/sites-available/glpiplugindirectory.conf <<EOL
+cat > /etc/apache2/sites-available/glpiplugindirectory.conf <<'EOL'
 <VirtualHost *:80>
     ServerName localhost
     DocumentRoot "/vagrant/frontend/dist"
@@ -81,18 +81,18 @@ cat > /etc/apache2/sites-available/glpiplugindirectory.conf <<EOL
 EOL
 
 # Copying glpi-plugin-directory backend config file
-su vagrant -c 'cat' > /vagrant/api/config.php <<EOL
+su vagrant -c 'cat > /vagrant/api/config.php' <<'EOL'
 <?php
 
 $db_settings = [
-	'driver'    =>  'mysql',
-	'host'      =>  'localhost',
-	'database'  =>  'glpiplugindirectory',
-	'username'  =>  'glpi',
-	'password'  =>  'glpi',
-	'charset'   =>  'utf8',
-	'collation' =>  'utf8_general_ci',
-	'prefix'    =>  ''
+    'driver'    =>  'mysql',
+    'host'      =>  'localhost',
+    'database'  =>  'glpiplugindirectory',
+    'username'  =>  'glpi',
+    'password'  =>  'glpi',
+    'charset'   =>  'utf8',
+    'collation' =>  'utf8_general_ci',
+    'prefix'    =>  ''
 ];
 
 $log_queries = false;
@@ -100,24 +100,24 @@ $log_queries = false;
 $recaptcha_secret = '6LcnrwoTAAAAAEARsd1XMadhLthIibXeNZf4EeUZ';
 
 $msg_alerts = [
-	"recipients" => [
-		"Walid Nouh <wnouh@teclib.com>",
-		"Alexandre Delaunay <adelaunay@teclib.com>",
-		"Nelson Zamith <nzamith@teclib.com>"
-	],
-	"subject_prefix" => "[GLPI PLUGINS : MSG] "
+    "recipients" => [
+        "Walid Nouh <wnouh@teclib.com>",
+        "Alexandre Delaunay <adelaunay@teclib.com>",
+        "Nelson Zamith <nzamith@teclib.com>"
+    ],
+    "subject_prefix" => "[GLPI PLUGINS : MSG] "
 ];
 EOL
 
 # Copying glpi-plugin-directory frontend config file
-su vagrant -c 'cat' > /vagrant/frontend/scripts/conf.js <<EOL
+su vagrant -c 'cat' > /vagrant/frontend/app/scripts/conf.js <<'EOL'
 var API_URL = 'http://localhost:8080/api';
 var RECAPTCHA_PUBLIC_KEY = '6LcnrwoTAAAAAHfjzXrBWOBMkbHY2QuZJtER7Y6M';
 EOL
 
 # Creating database and giving rights
 echo "Creating database"
-mysql -u root -ptoor <<EOL
+mysql -u root -ptoor <<'EOL'
 CREATE DATABASE glpiplugindirectory
 CHARACTER SET utf8
 COLLATE utf8_general_ci;
@@ -134,11 +134,11 @@ mysql -u glpi -pglpi glpiplugindirectory < /vagrant/misc/structure.sql
 # Landing Original Indepnet data
 echo "Installing original Indepnet plugin list and xml urls.."
 cd /vagrant
-sudo vagrant -c 'php misc/loadcsv.php -h localhost -u glpi -p glpi -d glpiplugindirectory -f misc/indepnet.csv'
+su vagrant -c 'php misc/loadcsv.php -h localhost -u glpi -p glpi -d glpiplugindirectory -f misc/indepnet.csv'
 
 # Doing a first fetch of all plugin information
 echo "Updating every plugin information via HTTP"
-sudo vagrant -c 'php misc/update.php'
+su vagrant -c 'php misc/update.php'
 
 # Making the virtualhost available to Apache
 a2ensite glpiplugindirectory
