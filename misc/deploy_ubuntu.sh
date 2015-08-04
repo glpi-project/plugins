@@ -48,6 +48,12 @@ cd /vagrant/frontend
 su vagrant -c 'npm install'
 su vagrant -c 'bower -f install' 
 
+# Copying glpi-plugin-directory frontend config file
+su vagrant -c 'cat' > /vagrant/frontend/app/scripts/conf.js <<'EOL'
+var API_URL = 'http://localhost:8080/api';
+var RECAPTCHA_PUBLIC_KEY = '6LcnrwoTAAAAAHfjzXrBWOBMkbHY2QuZJtER7Y6M';
+EOL
+
 # Building the frontend
 su vagrant -c 'grunt build'
 
@@ -108,12 +114,6 @@ $msg_alerts = [
     ],
     "subject_prefix" => "[GLPI PLUGINS : MSG] "
 ];
-EOL
-
-# Copying glpi-plugin-directory frontend config file
-su vagrant -c 'cat' > /vagrant/frontend/app/scripts/conf.js <<'EOL'
-var API_URL = 'http://localhost:8080/api';
-var RECAPTCHA_PUBLIC_KEY = '6LcnrwoTAAAAAHfjzXrBWOBMkbHY2QuZJtER7Y6M';
 EOL
 
 # Creating database and giving rights
