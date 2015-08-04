@@ -62,18 +62,29 @@ foreach($plugins as $num => $plugin) {
     }
 
     // Delete current descriptions
-    $plugin->descriptions()->delete();
+    //$plugin->descriptions()->delete();
+    // Refreshing them
     foreach($descriptions as $lang => $_type) {
         $description = new PluginDescription;
         $description->lang = $lang;
         foreach($_type as $type => $html) {
             $description[$type.'_description'] = $html;
         }
-        $plugin->descriptions()->save($description);
-        // descriptions for this plugin are refreshed
+        //$plugin->descriptions()->save($description);
     }
 
-    
+    // Delete current authors
+    //$plugin->authors()->delete();
+    foreach($xml->authors->children() as $author) {
+        var_dump((string)$author);
+    }
+
+    // Now going to think about making
+    // the datamodel evolve
+    // and also handle corruption in some
+    // xml files.
+    // for the datamodel, i'd need a
+    // join table between authors and plugins
 
     $plugin->xml_crc = $crc;
 }
