@@ -68,7 +68,7 @@ This is a configuration example for Apache HTTPd :
 
 ```
 <VirtualHost *:80>
-    ServerName glpiplugindirectory;
+    ServerName glpiplugindirectory
     DocumentRoot "/path/to/frontend/dist"
 
     <Directory "/path/to/glpi-plugin-directory">
