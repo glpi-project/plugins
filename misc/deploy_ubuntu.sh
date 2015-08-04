@@ -18,6 +18,7 @@ sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again p
 # Installing server-side dependencies
 # like PHP and everything
 apt-get install --yes \
+   build-essential \
    apache2 \
    mysql-server \
    libapache2-mod-php5 \
