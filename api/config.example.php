@@ -14,3 +14,12 @@ $db_settings = [
 $log_queries = false;
 
 $recaptcha_secret = '6LcnrwoTAAAAAEARsd1XMadhLthIibXeNZf4EeUZ';
+
+$msg_alerts = [
+	"recipients" => [
+		"Walid Nouh <wnouh@teclib.com>",
+		"Alexandre Delaunay <adelaunay@teclib.com>",
+		"Nelson Zamith <nzamith@teclib.com>"
+	],
+	"subject_prefix" => "[GLPI PLUGINS : MSG] "
+];
