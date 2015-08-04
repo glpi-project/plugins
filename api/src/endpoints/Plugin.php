@@ -18,7 +18,7 @@ use \API\Model\Plugin;
 use \API\Model\PluginStar;
 use \ReCaptcha\ReCaptcha;
 
-require 'config.php';
+require dirname(__FILE__) . '/../../config.php';
 
 /**
  * Fetching infos of a single plugin
@@ -32,7 +32,7 @@ $single = function($id) use($app) {
    if ($plugin) {
       Tool::endWithJson($plugin);
    } else {
-      Tool::endWithJson([
+      Tool::endWithJson([ 
          'error' => 'No plugin has that index'
       ], 400);
    }

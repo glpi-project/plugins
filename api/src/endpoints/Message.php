@@ -17,7 +17,7 @@ use \Illuminate\Database\Capsule\Manager as DB;
 use \API\Model\Message;
 use \ReCaptcha\ReCaptcha;
 
-require 'config.php';
+require dirname(__FILE__) . '/../../config.php';
 
 $send = function() use($app, $recaptcha_secret, $msg_alerts) {
     $body = Tool::getBody();

@@ -10,7 +10,7 @@ class DB {
    private static $capsule;
 
    public static function initCapsule() {
-      require 'config.php'; // need database credentials
+      require dirname(__FILE__) . '/../../config.php'; // need database credentials
       self::$capsule = new Capsule;
       self::$capsule->addConnection($db_settings);
       self::$capsule->setEventDispatcher(new Dispatcher(new Container));
