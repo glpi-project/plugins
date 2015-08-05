@@ -65,7 +65,7 @@ angular
        })
        // plugin State
        .state('plugin', {
-         url: '/plugin/:id-:key',
+         url: '/plugin/:key',
          templateUrl: 'views/plugin.html',
          controller: 'PluginCtrl'
        })

@@ -31,12 +31,12 @@ angular.module('frontendApp')
     $scope.inlineAuthors = inlineAuthors;
 
     $scope.download = function() {
-      $window.location.href = API_URL + '/plugin/'+$scope.plugin.id+'/download';
+      $window.location.href = API_URL + '/plugin/'+$scope.plugin.key+'/download';
     };
 
     $http({
       method: 'GET',
-      url: API_URL + '/plugin/' + $stateParams.id
+      url: API_URL + '/plugin/' + $stateParams.key
     })
     .success(function(data) {
       $scope.plugin = data;

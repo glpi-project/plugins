@@ -23,17 +23,20 @@ require dirname(__FILE__) . '/../../config.php';
 /**
  * Fetching infos of a single plugin
  */
-$single = function($id) use($app) {
+$single = function($key) use($app) {
    $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots')
+                   ->select([])
                    ->withAverageNote()
                    ->withCurrentVersion()
                    ->withDownloads()
-                   ->find($id);
+                   ->where('key', '=', $key)
+                   ->first();
+
    if ($plugin) {
       Tool::endWithJson($plugin);
    } else {
       Tool::endWithJson([ 
-         'error' => 'No plugin has that index'
+         'error' => 'No plugin has that key'
       ], 400);
    }
 };
@@ -43,8 +46,8 @@ $single = function($id) use($app) {
  */
 $all = function() use($app) {
    $all = Plugin::withDownloads()
-                           ->with('descriptions', 'authors')
-                           ->get();
+                ->with('descriptions', 'authors')
+                ->get();
    Tool::endWithJson($all);
 };
 

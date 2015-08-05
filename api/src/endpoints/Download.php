@@ -14,15 +14,16 @@ use \API\Model\Plugin;
 use \API\Model\PluginDownload;
 use \Illuminate\Database\Capsule\Manager as DB;
 
-$download = function($id) use($app) {
-	$plugin = Plugin::find($id);
+$download = function($key) use($app) {
+	$plugin = Plugin::where('key', '=', $key)->first();
 
 	$plugin_download = new PluginDownload();
 	$plugin_download->downloaded_at = DB::raw('NOW()');
-	$plugin->downloads()->save($plugin_download);
+	$plugin_download->plugin_id = $plugin->id;
+	$plugin_download->save();
 	$app->redirect($plugin->download_url, 301);
 };
 
 
 // HTTP Rest Map
-$app->get('/plugin/:id/download', $download);
+$app->get('/plugin/:key/download', $download);
