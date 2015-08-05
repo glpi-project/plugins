@@ -2,170 +2,248 @@
 /**
  * update.php
  *
- * This script should be started by a crontab to
- * update the database according to all the
- * url and checksums.
+ * This script should be fired by a crontab
+ * to update the database according to all
+ * the url and checksums.
  */
 
-// Using the same dependencies as the API does
 require 'api/vendor/autoload.php';
-// Plus grabbing the same database credentials
-require 'api/config.php';
 
-use Illuminate\Database\Capsule\Manager as Capsule;
 
-$capsule = new Capsule;
-$capsule->addConnection($db_settings);
-$capsule->bootEloquent();
-$capsule->setAsGlobal();
+use \Illuminate\Database\Capsule\Manager as DB;
+use \API\Model\Author;
+use \API\Model\Plugin;
+use \API\Model\PluginDescription;
+use \API\Model\PluginVersion;
+use \API\Model\PluginScreenshot;
 
-// Grabbing all the plugins
-$plugins = Capsule::table('plugin')
-                  ->where('active', '=', true)
-                  ->get();
+class DatabaseUpdater {
+    public function __construct() {
+        // Connecting to MySQL
+        \API\Core\DB::initCapsule();
+    }
 
-// For each of these plugins
-$i = 1;
-foreach ($plugins as $plugin) {
-	$update = false;
+    public function verifyAndUpdatePlugins() {
+        $plugins = Plugin::get();
 
-	// Fetching file via HTTP
-	$xml = file_get_contents($plugin->xml_url);
+        // Going to compare checksums
+        // for each of these plugins
+        foreach($plugins as $num => $plugin) {
+            // Defaults not to update
+            $update = false;
+            // fetching via http
+            $xml = file_get_contents($plugin->xml_url);
+            $crc = md5($xml); // compute crc
+            if ($plugin->xml_crc != $crc ||
+                $plugin->name == NULL) {
+                $update = true; // if we got
+                // missing name or changing
+                // crc, then we're going to
+                // update that one
+            }
+            else {
+                echo('Plugin (' . $plugin->id . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Already updated, Skipping.\n");
+                continue;
+            }
 
-	// Comparing checksums...
-	// The first-class reason to update.
-	$db_checksum = $plugin->xml_crc;
-	$current_checksum = md5($xml);
-	if ($db_checksum != $current_checksum) {
-		$update = true;
-	}
+            // loading XML OO-style with simplemxl
+            $xml = simplexml_load_string($xml);
+            echo('Plugin (' . $plugin->id . '/'. sizeof($plugins) .'): Updating ... ');
+            $this->updatePlugin($plugin, $xml, $crc);
+        }
+    }
 
-	// If the plugin name is not available
-	// The data might be incomplete
-	// this is another reason to update
-	if ($plugin->name == NULL) {
-		$update = true;
-	}
+    public function updatePlugin($plugin, $xml, $new_crc) {
+        if (strlen($plugin->name) == 0)
+            echo "first time update, found name \"".$xml->name."\"...";
+        else {
+            if ($plugin->name != $xml->name)
+                echo "\"".$plugin->name."\" going to become \"".$xml->name."\" ...";
+            else {
+                echo "\"".$xml->name."\" going to be updated ...";
+            }
+        }
+        // Updating basic infos
+        $plugin->logo_url = $xml->logo;
+        $plugin->name = $xml->name;
+        $plugin->key = $xml->key;
+        $plugin->homepage_url = $xml->homepage;
+        $plugin->download_url = $xml->download;
+        $plugin->issues_url = $xml->issues;
+        $plugin->readme_url  = $xml->readme;
+        $plugin->license = $xml->license;
 
-	// Now Parsing... thanks to SimpleXML!
-	$xml = simplexml_load_string($xml);
+        // reading descriptions,
+        // mapping type=>lang relation to lang=>type
+        $descriptions = [];
+        foreach ($xml->description->children() as $type => $descs) {
+            if (in_array($type, ['short','long'])) {
+                foreach($descs->children() as $_lang => $content) {
+                    $descriptions[$_lang][$type] = (string)$content;             
+                }
+            }
+        }
 
-	if ($update) {
-		// for now, not doing any checkup on
-		// specific fields, just copying xml
-		// data, which is the reference data
-		Capsule::table('plugin')
-			       ->where('id', $plugin->id)
-			       ->update([
-			       		'xml_crc'      => $current_checksum,
-			       		'logo_url'     => $xml->logo,
-			       		'name'         => $xml->name,
-			       		'key'          => $xml->key,
-			       		'homepage_url' => $xml->homepage,
-			       		'download_url' => $xml->download,
-			       		'issues_url'   => $xml->issues,
-			       		'readme_url'   => $xml->readme,
-			       		'license'      => $xml->license
-			       	]);
+        // Delete current descriptions
+        $plugin->descriptions()->delete();
+        // Refreshing them
+        foreach($descriptions as $lang => $_type) {
+            $description = new PluginDescription;
+            $description->lang = $lang;
+            foreach($_type as $type => $html) {
+                $description[$type.'_description'] = $html;
+            }
+            $description->plugin_id = $plugin->id;
+            $description->save();
+        }
 
-		// Refreshing all descriptions
-		Capsule::table('plugin_description')
-		           ->where('plugin_id', $plugin->id)
-		           ->delete(); // Deleting in-db ones ...
+        $clean_authors = [];
+        foreach($xml->authors->children() as $author) {
+            $_clean_authors = $this->fixParseAuthors((string)$author);
+            foreach ($_clean_authors as $author) {
+                $clean_authors[] = $author;
+            }
+        }
 
-		$langs_description = [];
+        foreach ($clean_authors as $_author) {
+            $found = Author::where('name', '=', $_author)->first();
+            if (sizeof($found) < 1) {
+                $author = new Author;
+                $author->name = $_author;
+                $author->save();
+            }
+            else {
+                $author = $found;
+            }
 
-		// Inserting all short and long descriptions in DB
-		foreach ($xml->description->short->children() as $lang => $string) {
-			$langs_description[$lang]['short'] = $string;
-		}
-		foreach ($xml->description->long->children() as $lang => $string) {
-			$langs_description[$lang]['long'] = $string;
-		}
+            if (!$plugin->authors->find($author->id)) {
+                $plugin->authors()->attach($author);
+            }
+        }
+        // NOTE: MUST IMPLEMENT A CHECK FOR REMOVED AUTHORS
+        //       WHICH ARE NOT LIKELY TO HAPPEN A LOT...
+        //       BUT WE NEVER KNOW. BETTER TO DO IT HERE.
 
-		foreach($langs_description as $lang => $desc) {
-			Capsule::table('plugin_description')
-			       ->insert([
-			       	    'plugin_id' => $plugin->id,
-			       	    'short_description' => $desc['short'],
-			       	    'long_description' => $desc['long'],
-			       	    'lang' => $lang
-			       	]);
-		}
+        // Refreshing all versions
+        $plugin->versions()->delete();
+        foreach($xml->versions->children() as $_version) {
+            $version = new PluginVersion;
+            $version->num = (string)$_version->num;
+            $version->compatibility = (string)$_version->compatibility;
+            $version->plugin_id = $plugin->id;
+            $version->save();
+        }
 
-		// Refreshing all authors
-		Capsule::table('plugin_author')
-		           ->where('plugin_id', $plugin->id)
-		           ->delete(); // Deleting in-db ones ...
-		foreach ($xml->authors->children() as $author) {
-			Capsule::table('plugin_author')
-			           ->insert([
-			           		'plugin_id' => $plugin->id,
-			           		'author' => $author,
-			           	]); // Inserting current ones
-		}
+        // Refreshing screenshots
+        if (isset($xml->screenshots)) {
+            $plugin->screenshots()->delete();
+            foreach ($xml->screenshots->children() as $url) {
+                $screenshot = new PluginScreenshot;
+                $screenshot->url = (string)$url;
+                $screenshot->plugin_id = $plugin->id;
+                $screenshot->save();
+            }
+        }
 
-		foreach ($xml->tags->children() as $lang => $tags) {
-			foreach($tags->children() as $tag) {
-				// Insert tag `if not exists` !
-				$t = Capsule::table('tag')
-						       ->where('lang', $lang)
-				               ->where('tag', $tag)
-				               ->first(['id']);
+        // new crc
+        $plugin->xml_crc = $new_crc;
+        // new timestamp
+        $plugin->date_updated = DB::raw('NOW()');
+        $plugin->save();
+        echo " OK\n";
+    }
 
-				if (!sizeof($t)) {
-					$t = Capsule::table('tag')
-							      ->insertGetId([
-							      		'tag'  => $tag,
-							      		'lang' => $lang
-							        ]);
-				} else {
-					$t = $t->id;
-				}
+    /*
+     * fixParseAuthors()
+     *
+     * This function is very specific,
+     * it aims to provide a fix to current
+     * state of things in xml files.
+     *
+     * Currently, some authors are duplicates,
+     * and spelled differently depending on
+     * plugins, this functions aims to ensure
+     * correct detection of EACH author.
+     *
+     * This function shouldn't be here and might
+     * dissapear someday.
+     */
+    private $fpa_separators = [',', '/'];
+    private $fpa_duplicates = [
+        [
+            "names" => ['Xavier Caillaud / Infotel',
+                        'Xavier CAILLAUD'],
+            "ends"  => 'Xavier Caillaud'
+        ],
+        [
+            "names" => ['Nelly LASSON',
+                        'Nelly MAHU-LASSON'],
+            "ends"  => 'Nelly Mahu-Lasson'
+        ],
+        [
+            "names" => ['David DURIEUX'],
+            "ends"  => 'David Durieux'
+        ],
+        [
+            "names" => ['Olivier DURGEAU'],
+            "ends"  => 'Olivier Durgeau'
+        ],
+        [
+            "names" => ['Yohan BOUSSION'],
+            "ends"  => 'Yohan Boussion'
+        ],
+        [
+            "names" => ['Philippe GODOT'],
+            "ends"  => 'Philippe Godot'
+        ],
+        [
+            "names" => ['Cyril ZORMAN'],
+            "ends"  => 'Cyril Zorman'
+        ],
+        [
+            "names" => ['Maxime BONILLO'],
+            "ends"  => 'Maxime Bonillo'
+        ],
+        [
+            "names" => ['Philippe THOIREY'],
+            "ends"  => 'Philippe Thoirey'
+        ]
+    ];
+    public function fixParseAuthors($author_string) {
+        $detectedAuthors = [];
+        // empty string
+        if ($author_string == '') {
+            return $detectedAuthors;
+        }
+        // detecting known duplicates
+        foreach($this->fpa_duplicates as $known_duplicate) {
+            foreach ($known_duplicate['names'] as $known_name) {
+                    if (preg_match('/'.preg_quote($known_name, '/').'/', $author_string)) {
+                        $author_string = preg_replace('/'.preg_quote($known_name, '/').'/',
+                                                      $known_duplicate['ends'],
+                                                      $author_string);
+                    }
+            }
+        }
 
-				// Link tag to plugin if not linked
-				$notLinked = Capsule::table('plugin_tags')
-				                        ->where('plugin_id', $plugin->id)
-				                        ->where('tag_id', $t)
-				                        ->get();
-				$notLinked = (sizeof($notLinked) == 0) ? true : false;
+        // detecting inline multiple authors
+        foreach($this->fpa_separators as $separator) {
+            $found_authors = explode($separator, $author_string);
+            if (sizeof($found_authors) > 1) {
+                foreach ($found_authors as $author) {
+                    $detectedAuthors[] = trim($author);
+                }
+                break;
+            }
+        }
 
-				if ($notLinked) {
-					Capsule::table('plugin_tags')
-					            ->insert([
-					            	'tag_id' => $t,
-					            	'plugin_id' => $plugin->id
-					            ]);
-				}
-			}
-		}
-
-		foreach($xml->versions->children() as $version) {
-			Capsule::table('plugin_version')
-			       ->insert([
-			       		'plugin_id' => $plugin->id,
-			       		'num' => $version->num,
-			       		'compatibility' => $version->compatibility
-			       	]);
-		}
-
-		if (isset($xml->screenshots)){
-			// Refreshing all authors
-			Capsule::table('plugin_screenshot')
-		           ->where('plugin_id', $plugin->id)
-		           ->delete(); // Deleting in-db ones ...
-    		foreach((array) $xml->screenshots->screenshot as $url) {
-				Capsule::table('plugin_screenshot')
-				       ->insert([
-				       		'plugin_id' => $plugin->id,
-				       		'url' => $url
-				       	]);
-			}
-		}
-
-		echo "Imported/Refreshed (".$i."/".sizeof($plugins).") ".$plugin->name."\n";
-	} else {
-		echo "Passing import of plugin (".$i."/".sizeof($plugins).") ".$plugin->name."\n";
-	}
-	$i++;
+        if (sizeof($detectedAuthors) == 0) {
+            return [trim($author_string)];
+        } else {
+            return $detectedAuthors;
+        }
+    }
 }
+
+$db_updater = new DatabaseUpdater;
+$db_updater->verifyAndUpdatePlugins();
