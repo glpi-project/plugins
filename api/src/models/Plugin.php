@@ -18,7 +18,7 @@ class Plugin extends Model {
     }
 
     public function authors() {
-        return $this->hasMany('\API\Model\PluginAuthor');
+        return $this->belongsToMany('\API\Model\Author', 'plugin_author');
     }
 
     public function stars() {

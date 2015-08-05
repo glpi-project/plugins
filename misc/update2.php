@@ -11,6 +11,7 @@ require 'api/vendor/autoload.php';
 
 
 use \Illuminate\Database\Capsule\Manager as DB;
+use \API\Model\Author;
 use \API\Model\Plugin;
 use \API\Model\PluginDescription;
 
@@ -49,6 +50,7 @@ class DatabaseUpdater {
     }
 
     public function updatePlugin($plugin, $xml, $new_crc) {
+        var_dump('updating ' . $plugin->id);
         // Updating basic infos
         $plugin->logo_url = $xml->logo;
         $plugin->name = $xml->name;
@@ -85,7 +87,6 @@ class DatabaseUpdater {
         // Delete current authors
         //$plugin->authors()->delete();
 
-        var_dump('updating ' . $plugin->id);
         $clean_authors = [];
         foreach($xml->authors->children() as $author) {
             $_clean_authors = $this->fixParseAuthors((string)$author);
@@ -94,15 +95,25 @@ class DatabaseUpdater {
             }
         }
 
-        var_dump($clean_authors);
+        foreach ($clean_authors as $_author) {
+            $found = Author::where('name', '=', $_author)->first();
+            if (sizeof($found) < 1) {
+                $author = new Author;
+                $author->name = $_author;
+                $author->save();
+            }
+            else {
+                $author = $found;
+            }
 
+            if (!$plugin->authors->find($author->id)) {
+                $plugin->authors()->attach($author);
+            }
+        }
+        // NOTE: MUST IMPLEMENT A CHECK FOR REMOVED AUTHORS
+        //       WHICH IS NOT LIKELY TO HAPPEN A LOT...
+        //       BUT WE NEVER KNOW. BETTER TO DO IT HERE.
 
-        // Now going to think about making
-        // the datamodel evolve
-        // and also handle corruption in some
-        // xml files.
-        // for the datamodel, i'd need a
-        // join table between authors and plugins
 
         $plugin->xml_crc = $new_crc;
     }
@@ -165,6 +176,10 @@ class DatabaseUpdater {
     ];
     public function fixParseAuthors($author_string) {
         $detectedAuthors = [];
+        // empty string
+        if ($author_string == '') {
+            return $detectedAuthors;
+        }
         // detecting known duplicates
         foreach($this->fpa_duplicates as $known_duplicate) {
             foreach ($known_duplicate['names'] as $known_name) {

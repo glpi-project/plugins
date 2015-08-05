@@ -15,6 +15,11 @@ CREATE TABLE plugin (
 	date_updated DATE
 ) ENGINE=InnoDB;
 
+CREATE TABLE author(
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	name TEXT
+) ENGINE=InnoDB;
+
 CREATE TABLE plugin_download (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	plugin_id INT NOT NULL,
@@ -22,7 +27,7 @@ CREATE TABLE plugin_download (
 	FOREIGN KEY (plugin_id)
 		REFERENCES plugin(id)
 ) ENGINE=InnoDB;
-CREATE INDEX idx_plugin_download_id on plugin_download(plugin_id);
+CREATE INDEX idx_plugin_download_id ON plugin_download(plugin_id);
 
 CREATE TABLE plugin_description(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -34,7 +39,7 @@ CREATE TABLE plugin_description(
 		REFERENCES plugin(id)
 		ON DELETE CASCADE
 ) ENGINE=InnoDB;
-CREATE INDEX idx_plugin_description_plugin on plugin_description(plugin_id);
+CREATE INDEX idx_plugin_description_plugin ON plugin_description(plugin_id);
 
 CREATE TABLE plugin_version(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -45,17 +50,20 @@ CREATE TABLE plugin_version(
 		REFERENCES plugin(id)
 		ON DELETE CASCADE
 ) ENGINE=InnoDB;
-CREATE INDEX idx_plugin_version_plugin on plugin_version(plugin_id);
+CREATE INDEX idx_plugin_version_plugin ON plugin_version(plugin_id);
 
 CREATE TABLE plugin_author(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	plugin_id INT,
-	author TEXT,
+	author_id INT,
 	FOREIGN KEY (plugin_id)
 		REFERENCES plugin(id)
-		ON DELETE CASCADE
+		ON DELETE CASCADE,
+	FOREIGN KEY (author_id)
+	    REFERENCES author(id)
 ) ENGINE=InnoDB;
-CREATE INDEX idx_plugin_author_plugin on plugin_author(plugin_id);
+CREATE INDEX idx_plugin_author_plugin ON plugin_author(plugin_id);
+CREATE INDEX idx_plugin_author_author ON plugin_author(author_id);
 
 CREATE TABLE tag(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -71,7 +79,7 @@ CREATE TABLE plugin_tags(
 		REFERENCES plugin(id)
 		ON DELETE CASCADE
 ) ENGINE=InnoDB;
-CREATE INDEX idx_plugin_tags_plugin on plugin_tags(plugin_id);
+CREATE INDEX idx_plugin_tags_plugin ON plugin_tags(plugin_id);
 
 CREATE TABLE plugin_stars(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -82,7 +90,7 @@ CREATE TABLE plugin_stars(
 		REFERENCES plugin(id)
 		ON DELETE CASCADE
 ) ENGINE=InnoDB;
-CREATE INDEX idx_plugin_stars_plugin on plugin_description(plugin_id);
+CREATE INDEX idx_plugin_stars_plugin ON plugin_description(plugin_id);
 
 CREATE TABLE plugin_screenshot(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -102,7 +110,7 @@ CREATE INDEX idx_plugin_screenshot_plugin ON plugin_screenshot(plugin_id);
 -- 		REFERENCES plugin(id)
 -- 		ON DELETE CASCADE
 -- ) ENGINE=InnoDB;
--- CREATE INDEX idx_plugin_view_plugin on plugin_description(plugin_id);
+-- CREATE INDEX idx_plugin_view_plugin ON plugin_description(plugin_id);
 
 CREATE TABLE message(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
