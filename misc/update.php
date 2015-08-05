@@ -16,6 +16,7 @@ use \API\Model\Plugin;
 use \API\Model\PluginDescription;
 use \API\Model\PluginVersion;
 use \API\Model\PluginScreenshot;
+use \API\Model\Tag;
 
 class DatabaseUpdater {
     public function __construct() {
@@ -86,7 +87,7 @@ class DatabaseUpdater {
 
         // Delete current descriptions
         $plugin->descriptions()->delete();
-        // Refreshing them
+        // Refreshing descriptions
         foreach($descriptions as $lang => $_type) {
             $description = new PluginDescription;
             $description->lang = $lang;
@@ -97,6 +98,8 @@ class DatabaseUpdater {
             $description->save();
         }
 
+        // Refreshing authors
+        $plugin->authors()->detach();
         $clean_authors = [];
         foreach($xml->authors->children() as $author) {
             $_clean_authors = $this->fixParseAuthors((string)$author);
@@ -104,7 +107,6 @@ class DatabaseUpdater {
                 $clean_authors[] = $author;
             }
         }
-
         foreach ($clean_authors as $_author) {
             $found = Author::where('name', '=', $_author)->first();
             if (sizeof($found) < 1) {
@@ -120,11 +122,8 @@ class DatabaseUpdater {
                 $plugin->authors()->attach($author);
             }
         }
-        // NOTE: MUST IMPLEMENT A CHECK FOR REMOVED AUTHORS
-        //       WHICH ARE NOT LIKELY TO HAPPEN A LOT...
-        //       BUT WE NEVER KNOW. BETTER TO DO IT HERE.
 
-        // Refreshing all versions
+        // Refreshing versions
         $plugin->versions()->delete();
         foreach($xml->versions->children() as $_version) {
             $version = new PluginVersion;
@@ -142,6 +141,22 @@ class DatabaseUpdater {
                 $screenshot->url = (string)$url;
                 $screenshot->plugin_id = $plugin->id;
                 $screenshot->save();
+            }
+        }
+
+        $plugin->tags()->detach();
+        foreach($xml->tags->children() as $lang => $tags) {
+            foreach($tags->children() as $_tag) {
+                $found = Tag::where('tag', '=', (string)$_tag)->first();
+                if (sizeof($found) < 1) {
+                    $tag = new Tag;
+                    $tag->tag = (string)$_tag;
+                    $tag->lang = $lang;
+                    $tag->save();
+                }
+                else $tag = $found;
+
+                $tag->plugins()->attach($plugin);
             }
         }
 

@@ -37,10 +37,15 @@ class Plugin extends Model {
         return $this->hasMany('\API\Model\PluginVersion');
     }
 
+    public function tags() {
+        return $this->belongsToMany('\API\Model\Tag', 'plugin_tags');
+    }
+
     public function scopeShort($query) {
         $query->select(['plugin.id', 'plugin.name', 'plugin.key']);
         return $query;
     }
+
 
     public function scopeDescWithLang($query, $lang) {
         $query->addSelect(['plugin_description.short_description'])
