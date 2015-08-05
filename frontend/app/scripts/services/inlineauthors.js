@@ -16,7 +16,7 @@ angular.module('frontendApp')
           if (i > 0) {
             _authors += ', ';
           }
-          _authors += authors[i].author;
+          _authors += authors[i].name;
         }
         return _authors;
       }
