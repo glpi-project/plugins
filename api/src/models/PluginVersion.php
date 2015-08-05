@@ -11,6 +11,6 @@ class PluginVersion extends Model {
     public $visible = ['num', 'compatibility'];
 
     public function plugin() {
-        $this->belongsTo('\API\Model\Plugin');
+        return $this->belongsTo('\API\Model\Plugin');
     }
 }

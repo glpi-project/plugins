@@ -30,7 +30,7 @@ class Plugin extends Model {
     }
 
     public function screenshots() {
-      return $this->hasMany('\API\Model\PluginScreenshot');
+        return $this->hasMany('\API\Model\PluginScreenshot');
     }
 
     public function versions() {
