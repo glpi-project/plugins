@@ -28,6 +28,12 @@ class Tool {
       return $json;
    }
 
+   /**
+    * This method is used by update.php
+    * to generate a slug from a utf-8
+    * string which helps having clean
+    * url-friendly identifiers for tags
+    */
    public static function getUrlSlug($free_string) {
     $free_string = strtolower($free_string);
     $free_string = mb_ereg_replace ( '[^a-z]' , '-' , $free_string);
