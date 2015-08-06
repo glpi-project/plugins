@@ -17,6 +17,7 @@ use \API\Model\PluginDescription;
 use \API\Model\PluginVersion;
 use \API\Model\PluginScreenshot;
 use \API\Model\Tag;
+use \API\Core\Tool;
 
 class DatabaseUpdater {
     public function __construct() {
@@ -152,6 +153,7 @@ class DatabaseUpdater {
                     $tag = new Tag;
                     $tag->tag = (string)$_tag;
                     $tag->lang = $lang;
+                    $tag->key = Tool::getUrlSlug((string)$_tag);
                     $tag->save();
                 }
                 else $tag = $found;
