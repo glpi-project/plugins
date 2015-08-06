@@ -13,14 +13,14 @@ angular.module('frontendApp')
     $scope.inlineAuthors = inlineAuthors;
     $http({
         method: "GET",
-        url: API_URL + '/tags/'+$stateParams.id
+        url: API_URL + '/tags/'+$stateParams.key
         })
         .success(function(data) {
             $scope.listName = "Tagged with \""+data.tag+"\”";
         });
     $http({
             method: "GET",
-            url: API_URL + '/tags/'+$stateParams.id+'/plugin'
+            url: API_URL + '/tags/'+$stateParams.key+'/plugin'
         })
         .success(function(data) {
             $scope.results = data;

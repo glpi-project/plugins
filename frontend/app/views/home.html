@@ -77,7 +77,7 @@
          </md-subheader>
          <span class='legend'>With the most plugins</span>
          <md-list-item ng-repeat="tag in tags">
-            <md-button ui-sref="tag({id: tag.id})">
+            <md-button ui-sref="tag({key: tag.key})">
                <h4>{{tag.tag}}</h4>
                <md-tooltip md-direction="right">Tagged on {{tag.plugin_count}} plugins</md-tooltip>
             </md-button>

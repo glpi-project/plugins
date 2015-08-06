@@ -76,7 +76,7 @@ angular
          controller: "SearchCtrl"
        })
        .state('tag', {
-        url: '/tag/:id',
+        url: '/tag/:key',
         templateUrl: "views/plugin_list.html",
         controller: "TagCtrl"
        })
