@@ -116,5 +116,4 @@ class Plugin extends Model {
             ->where('tag.id', '=', $tag->id);
       return $query;
     }
-
 }

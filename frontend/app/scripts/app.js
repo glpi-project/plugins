@@ -80,6 +80,11 @@ angular
         templateUrl: "views/plugin_list.html",
         controller: "TagCtrl"
        })
+       .state('author', {
+        url: '/author/:id',
+        templateUrl: "views/plugin_list.html",
+        controller: "AuthorCtrl"
+       })
        // submit State
        .state('submit', {
        	 url: '/submit',
