@@ -39,13 +39,15 @@ angular.module('frontendApp')
             if (data.success) {
                 $mdToast.show($mdToast.simple()
                                       .capsule(true)
-                                      .content('Thanks for your time, we are going to verify the plugin you have submitted.'));
+                                      .content('Thanks for your time ! We are going to verify the plugin you have submitted.'));
                 $timeout(function() {
                     $state.go('home');
                 },3800);
 
             } else {
-                $mdToast.show($mdToast.simple().content('Something went wrong with Recaptcha'));
+                $mdToast.show($mdToast.simple()
+                                      .capsule(true)
+                                      .content('Something went wrong with Recaptcha'));
                 vcRecaptchaService.reload($scope.widgetId);
             }
         });

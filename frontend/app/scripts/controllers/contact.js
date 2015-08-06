@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('ContactCtrl', function (API_URL, RECAPTCHA_PUBLIC_KEY, $scope, vcRecaptchaService, $http) {
+  .controller('ContactCtrl', function (API_URL, RECAPTCHA_PUBLIC_KEY, $scope, vcRecaptchaService, $http, $mdToast, $timeout, $state) {
     $scope.key = RECAPTCHA_PUBLIC_KEY
     $scope.response = null;
     $scope.widgetId = null;
@@ -37,9 +37,16 @@ angular.module('frontendApp')
         })
         .success(function(data) {
             if (data.success) {
-                console.log('Message leaved');
+                $mdToast.show($mdToast.simple()
+                                      .capsule(true)
+                                      .content('Thanks for your message ! Be certain we will love reading it'));
+                $timeout(function() {
+                    $state.go('home');
+                },3800);
             } else {
-                console.log('Something went wrong');
+                $mdToast.show($mdToast.simple()
+                                      .capsule(true)
+                                      .content('Your message was rejected. Please try again !'));
                 vcRecaptchaService.reload($scope.widgetId);
             }
         });
