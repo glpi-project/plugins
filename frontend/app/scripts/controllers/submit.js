@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('SubmitCtrl', function (RECAPTCHA_PUBLIC_KEY, $scope, $http, vcRecaptchaService) {
+  .controller('SubmitCtrl', function (RECAPTCHA_PUBLIC_KEY, $scope, $http, vcRecaptchaService, $mdToast, $timeout, $state) {
     $scope.key = RECAPTCHA_PUBLIC_KEY;
     $scope.response = null;
     $scope.widgetId = null;
@@ -37,9 +37,15 @@ angular.module('frontendApp')
         })
         .success(function(data) {
             if (data.success) {
-                console.log('Plugin submit');
+                $mdToast.show($mdToast.simple()
+                                      .capsule(true)
+                                      .content('Thanks for your time, we are going to verify the plugin you have submitted.'));
+                $timeout(function() {
+                    $state.go('home');
+                },3800);
+
             } else {
-                console.log('Something went wrong');
+                $mdToast.show($mdToast.simple().content('Something went wrong with Recaptcha'));
                 vcRecaptchaService.reload($scope.widgetId);
             }
         });
