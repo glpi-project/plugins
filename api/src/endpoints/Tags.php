@@ -29,19 +29,19 @@ $tags_top = function() use ($app) {
     Tool::endWithJson($tags);
 };
 
-$tag_single = function($id) use($app) {
-  $tag = Tag::find($id);
+$tag_single = function($key) use($app) {
+  $tag = Tag::where('key', '=', $key)->first();
   if ($tag == NULL)
-    Tool::endWithJson([
+    return Tool::endWithJson([
             "error" => "Tag not found"
         ], 400);
   Tool::endWithJson($tag);
 };
 
-$tag_plugins = function($id) use($app) {
-    $tag = Tag::find($id);
+$tag_plugins = function($key) use($app) {
+    $tag = Tag::where('key', '=', $key)->first();
     if ($tag == NULL) {
-        Tool::endWithJson([
+        return Tool::endWithJson([
             "error" => "Tag not found"
         ], 400);
     }
