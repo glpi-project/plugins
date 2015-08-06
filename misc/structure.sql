@@ -67,6 +67,7 @@ CREATE INDEX idx_plugin_author_author ON plugin_author(author_id);
 
 CREATE TABLE tag(
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`key` VARCHAR(255),
 	tag VARCHAR(25),
 	lang VARCHAR(10)
 ) ENGINE=InnoDB;
