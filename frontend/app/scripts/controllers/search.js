@@ -28,7 +28,7 @@ angular.module('frontendApp')
 
   // This controller is created anytime the search
   // input's content is changed
-  .controller('SearchCtrl', function ($rootScope, $scope, $timeout, Search, $stateParams, inlineAuthors) {
+  .controller('SearchCtrl', function ($rootScope, $scope, $timeout, Search, $stateParams) {
     // will store the results
     $scope.results = [];
     // cancel the previous $timeout promise if there's any
@@ -52,6 +52,4 @@ angular.module('frontendApp')
     $scope.sortByPopularity = function() {
 
     };
-
-    $scope.inlineAuthors = inlineAuthors;
   });
