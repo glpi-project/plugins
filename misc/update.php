@@ -37,7 +37,7 @@ class DatabaseUpdater {
             // fetching via http
             $xml = @file_get_contents($plugin->xml_url);
             if (!$xml) {
-                echo('Plugin (' . $plugin->id . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Unreadable XML, Skipping.\n");
+                echo('Plugin (' . $plugin->id . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Cannot get XML file via HTTP, Skipping.\n");
                 continue;
             }
             $crc = md5($xml); // compute crc
@@ -54,7 +54,12 @@ class DatabaseUpdater {
             }
 
             // loading XML OO-style with simplemxl
-            $xml = simplexml_load_string($xml);
+            $xml = @simplexml_load_string($xml);
+            if (!$xml) {
+                echo('Plugin (' . $plugin->id . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Unreadable XML, Skipping.\n");
+                continue;
+            }
+
             echo('Plugin (' . $plugin->id . '/'. sizeof($plugins) .'): Updating ... ');
             $this->updatePlugin($plugin, $xml, $crc);
         }
