@@ -32,6 +32,10 @@ angular.module('frontendApp')
       $window.location.href = API_URL + '/plugin/'+$scope.plugin.key+'/download';
     };
 
+    $scope.fromNow = function(date) {
+      return moment(date).fromNow();
+    };
+
     $http({
       method: 'GET',
       url: API_URL + '/plugin/' + $stateParams.key
