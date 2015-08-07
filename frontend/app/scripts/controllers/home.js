@@ -75,4 +75,8 @@ angular.module('frontendApp')
           $rootScope.authors = data;
         });
       }
+
+      $scope.fromNow = function(date) {
+        return moment(date).fromNow();
+      };
   }]);

@@ -63,7 +63,7 @@
          <md-list-item ng-repeat="plugin in updated">
             <md-button ui-sref="plugin({key: plugin.key})">
                <h4>{{plugin.name}}</h4>
-               <md-tooltip md-direction="right">Updated 2 days ago</md-tooltip>
+               <md-tooltip md-direction="right">Updated {{fromNow(plugin.date_updated)}}</md-tooltip>
             </md-button>
          </md-list-item>
       </md-list>
