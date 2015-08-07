@@ -26,8 +26,8 @@ class DatabaseUpdater {
     }
 
     public function verifyAndUpdatePlugins() {
-        $plugins = Plugin::get()
-                         ->where('active', '=', 1);
+        $plugins = Plugin::where('active', '=', 1)
+                         ->get();
 
         // Going to compare checksums
         // for each of these plugins
@@ -35,7 +35,11 @@ class DatabaseUpdater {
             // Defaults not to update
             $update = false;
             // fetching via http
-            $xml = file_get_contents($plugin->xml_url);
+            $xml = @file_get_contents($plugin->xml_url);
+            if (!$xml) {
+                echo('Plugin (' . $plugin->id . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Unreadable XML, Skipping.\n");
+                continue;
+            }
             $crc = md5($xml); // compute crc
             if ($plugin->xml_crc != $crc ||
                 $plugin->name == NULL) {
