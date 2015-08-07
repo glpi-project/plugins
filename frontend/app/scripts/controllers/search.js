@@ -43,13 +43,4 @@ angular.module('frontendApp')
             });
       }, 800);
     }
-
-    // method to sort by relevance
-    $scope.sortByRelevance = function() {
-
-    };
-    // method to sort by popularity
-    $scope.sortByPopularity = function() {
-
-    };
   });
