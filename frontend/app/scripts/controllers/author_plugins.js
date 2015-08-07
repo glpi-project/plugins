@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('AuthorCtrl', function (API_URL, $scope, $http, $stateParams, inlineAuthors) {
+  .controller('AuthorPluginsCtrl', function (API_URL, $scope, $http, $stateParams, inlineAuthors) {
     $scope.results = [];
     $scope.inlineAuthors = inlineAuthors;
     $http({

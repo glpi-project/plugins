@@ -80,10 +80,10 @@ angular
         templateUrl: "views/plugin_list.html",
         controller: "TagCtrl"
        })
-       .state('author', {
-        url: '/author/:id',
+       .state('author_plugins', {
+        url: '/author/:id/plugin',
         templateUrl: "views/plugin_list.html",
-        controller: "AuthorCtrl"
+        controller: "AuthorPluginsCtrl"
        })
        // submit State
        .state('submit', {
