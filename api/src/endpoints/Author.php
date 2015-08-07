@@ -18,7 +18,8 @@ $all = function() use($app) {
 };
 
 $single = function($id) use($app) {
-    $single = \API\Model\Author::find($id);
+    $single = \API\Model\Author::withPluginCount()
+                               ->find($id);
     Tool::endWithJson($single);
 };
 

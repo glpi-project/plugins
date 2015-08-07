@@ -14,6 +14,13 @@ class Author extends Model {
       return $this->belongsToMany('\API\Model\Plugin', 'plugin_author');;
    }
 
+   public function scopeWithPluginCount($query) {
+      $query->select(['author.id', 'author.name', DB::raw('COUNT(plugin_author.plugin_id) as plugin_count')])
+            ->leftJoin('plugin_author', 'author.id', '=', 'plugin_author.author_id')
+            ->groupBy('plugin_author.author_id');
+      return $query;
+   }
+
    public function scopeMostActive($query, $limit = 10) {
       $query->select(['author.id', 'author.name', DB::raw('COUNT(plugin_author.plugin_id) as plugin_count')])
             ->leftJoin('plugin_author', 'author.id', '=', 'plugin_author.author_id')

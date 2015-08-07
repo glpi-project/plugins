@@ -1,5 +1,14 @@
 <div layout="column">
 	<h2>{{author.name}}</h2>
 
-	<a ui-sref="author_plugins({id: author.id})">Plugins</a>
+	<table>
+		<tr>
+			<td>Name</td>
+			<td>{{author.name}}</td>
+		</tr>
+		<tr>
+			<td>Contributed to</td>
+			<td><a ui-sref="author_plugins({id: author.id})">{{author.plugin_count}} Plugins</a></td>
+		</tr>
+	</table>
 </div>
