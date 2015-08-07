@@ -26,7 +26,8 @@ class DatabaseUpdater {
     }
 
     public function verifyAndUpdatePlugins() {
-        $plugins = Plugin::get();
+        $plugins = Plugin::get()
+                         ->where('active', '=', 1);
 
         // Going to compare checksums
         // for each of these plugins
@@ -61,9 +62,8 @@ class DatabaseUpdater {
         else {
             if ($plugin->name != $xml->name)
                 echo "\"".$plugin->name."\" going to become \"".$xml->name."\" ...";
-            else {
+            else
                 echo "\"".$xml->name."\" going to be updated ...";
-            }
         }
         // Updating basic infos
         $plugin->logo_url = $xml->logo;
