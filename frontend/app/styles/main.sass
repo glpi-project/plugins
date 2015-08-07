@@ -147,6 +147,17 @@ nav
                     text-transform: uppercase
                 label + span
                     display: table-cell
+.inline-authors
+    span
+        padding-right: 6px
+    a:after
+        content: ", "
+        display: inline-block
+        margin: 0 4px 0 2px
+        color: #000
+    a:last-child
+        &:after
+            display: none
 rate-box
     margin-left: 5px
     i.fa

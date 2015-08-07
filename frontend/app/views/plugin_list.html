@@ -21,7 +21,7 @@
                <h2 class="name">
                   <a ui-sref="plugin({id: plugin.id, key: plugin.key})">{{plugin.name}}</a>
                </h2>
-					<h4 class="author">by {{inlineAuthors(plugin.authors)}}</h4>
+					     <h4 class="inline-authors" inline-authors="plugin.authors"></h4>
 				</div>
 
             <div class='pills'>

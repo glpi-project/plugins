@@ -8,9 +8,8 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('TagCtrl', function (API_URL, $scope, $http, $stateParams, inlineAuthors) {
+  .controller('TagCtrl', function (API_URL, $scope, $http, $stateParams) {
     $scope.results = [];
-    $scope.inlineAuthors = inlineAuthors;
     $http({
         method: "GET",
         url: API_URL + '/tags/'+$stateParams.key
