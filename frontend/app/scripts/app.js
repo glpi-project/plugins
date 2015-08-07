@@ -37,6 +37,15 @@ angular
     }
   })
 
+  .run(function($rootScope) {
+      $rootScope.trending = [];
+      $rootScope.new = [];
+      $rootScope.popular = [];
+      $rootScope.updated = [];
+      $rootScope.tags = [];
+      $rootScope.authors = [];
+  })
+
   // http://stackoverflow.com/questions/12111936/angularjs-performs-an-options-http-request-for-a-cross-origin-resource
   .config(['$httpProvider', function ($httpProvider) {
     $httpProvider.defaults.headers.common = {};

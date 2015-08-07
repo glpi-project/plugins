@@ -14,61 +14,65 @@ angular.module('frontendApp')
         $timeout.cancel($rootScope.currentSearch)
         delete $rootScope.currentSearch;
       }
+      $rootScope.search = '';
 
-  		$scope.trending = [];
-  		$scope.new = [];
-  		$scope.popular = [];
-  		$scope.updated = [];
-  		$scope.tags = [];
-  		$scope.authors = [];
+      if ($rootScope.trending.length < 1) {
+        $http({
+          method: 'GET',
+          url: apiUrl + '/plugin/trending'
+        })
+        .success(function(data, status, headers, config) {
+          $rootScope.trending = data;
+        });
+      }
 
-      $scope.search = '';
+      if ($rootScope.popular.length < 1) {
+        $http({
+          method: 'GET',
+          url: apiUrl + '/plugin/popular'
+        })
+        .success(function(data, status, headers, config) {
+          $rootScope.popular = data;
+        });
+      }
 
-  		$http({
-  			method: 'GET',
-  			url: apiUrl + '/plugin/trending'
-  		})
-      .success(function(data, status, headers, config) {
-        $scope.trending = data;
-      });
+      if ($rootScope.updated.length < 1) {      
+        $http({
+          method: 'GET',
+          url: apiUrl + '/plugin/updated'
+        })
+        .success(function(data, status, headers, config) {
+          $rootScope.updated = data;
+        });
+      }
 
-      $http({
-        method: 'GET',
-        url: apiUrl + '/plugin/popular'
-      })
-      .success(function(data, status, headers, config) {
-        $scope.popular = data;
-      });
+      if ($rootScope.new.length < 1) {      
+        $http({
+          method: 'GET',
+          url: apiUrl + '/plugin/new'
+        })
+        .success(function(data, status, headers, config) {
+          $rootScope.new = data;
+        });
+      }
 
-      $http({
-        method: 'GET',
-        url: apiUrl + '/plugin/updated'
-      })
-      .success(function(data, status, headers, config) {
-        $scope.updated = data;
-      });
+      if ($rootScope.tags.length < 1) {      
+        $http({
+          method: 'GET',
+          url: apiUrl + '/tags/top'
+        })
+        .success(function(data, status, headers, config) {
+          $rootScope.tags = data;
+        });
+      }
 
-      $http({
-        method: 'GET',
-        url: apiUrl + '/plugin/new'
-      })
-      .success(function(data, status, headers, config) {
-        $scope.new = data;
-      });
-
-      $http({
-        method: 'GET',
-        url: apiUrl + '/tags/top'
-      })
-      .success(function(data, status, headers, config) {
-        $scope.tags = data;
-      });
-
-      $http({
-        method: 'GET',
-        url: apiUrl + '/author'
-      })
-      .success(function(data, status, headers, config) {
-        $scope.authors = data;
-      });
+      if ($rootScope.authors.length < 1) {      
+        $http({
+          method: 'GET',
+          url: apiUrl + '/author'
+        })
+        .success(function(data, status, headers, config) {
+          $rootScope.authors = data;
+        });
+      }
   }]);
