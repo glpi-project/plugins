@@ -1,6 +1,6 @@
 <div layout="column">
     <div class="list-name" ng-show="listName">
-        <p>{{listName}}</p>
+        <p ng-bind-html="listName | unsafe"></p>
     </div>
 	<div ng-init="orderBy=['downloaded','note'];reverse=true" class="sort-filters" ng-show="results.length">
 		<p>
