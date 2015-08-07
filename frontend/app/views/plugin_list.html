@@ -11,12 +11,10 @@
 		</p>
 	</div>
 
-
-
 	<div class="results">
 		<div class="result" ng-repeat="plugin in results | orderBy:orderBy:reverse track by $index">
 			<div layout="row" layout-wrap layout-align="center end">
-            <img class="icon" src="http://placehold.it/60x60">
+        <img class="icon" src="http://placehold.it/60x60">
 				<div class='plugin_name'>
                <h2 class="name">
                   <a ui-sref="plugin({id: plugin.id, key: plugin.key})">{{plugin.name}}</a>
@@ -24,26 +22,24 @@
 					     <h4 class="inline-authors" inline-authors="plugin.authors"></h4>
 				</div>
 
-            <div class='pills'>
-               <span ng-repeat="version in plugin.versions | unique: 'compatibility' | subpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
+        <div class='pills'>
+           <span ng-repeat="version in plugin.versions | unique: 'compatibility' | subpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
 
-             <span ng-show="plugin.versions.length > 3">
-                ...
-                <md-tooltip class="versions_more">
-                   <span ng-repeat="version in plugin.versions | unique: 'compatibility' | lastpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
-                </md-tooltip>
-             </span>
-               <span class="downloads" flex>
-                  <span class='pill bg_red'>
-                     {{plugin.downloaded}}
-                     <md-tooltip>downloads</md-tooltip>
-                  </span>
-               </span>
-            </div>
+         <span ng-show="plugin.versions.length > 3">
+            ...
+            <md-tooltip class="versions_more">
+               <span ng-repeat="version in plugin.versions | unique: 'compatibility' | lastpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
+            </md-tooltip>
+         </span>
+           <span class="downloads" flex>
+              <span class='pill bg_red'>
+                 {{plugin.downloaded}}
+                 <md-tooltip>downloads</md-tooltip>
+              </span>
+           </span>
+        </div>
 
 				<rate-box flex current-note="plugin.note" already-rated="true"></rate-box>
-
-            <div flex></div>
 
 			</div>
 			<div class="description">
