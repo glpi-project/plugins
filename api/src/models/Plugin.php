@@ -46,7 +46,6 @@ class Plugin extends Model {
         return $query;
     }
 
-
     public function scopeDescWithLang($query, $lang) {
         $query->addSelect(['plugin_description.short_description'])
               ->leftJoin('plugin_description', 'plugin.id', '=', 'plugin_description.plugin_id')
