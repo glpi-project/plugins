@@ -37,6 +37,13 @@ angular
     }
   })
 
+  .config(['$httpProvider', function ($httpProvider) {
+    $httpProvider.defaults.headers.common = {};
+    $httpProvider.defaults.headers.post = {};
+    $httpProvider.defaults.headers.put = {};
+    $httpProvider.defaults.headers.patch = {};
+  }])
+
   // Associating empty arrays to
   // placeholders in $rootScope
   // that are going to be used
