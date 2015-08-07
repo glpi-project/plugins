@@ -16,7 +16,7 @@ angular.module('frontendApp')
         url: API_URL + '/tags/'+$stateParams.key
         })
         .success(function(data) {
-            $scope.listName = "Tagged with \"<span>"+data.tag+"</span>\”";
+            $scope.tag = data;
         });
     $http({
             method: "GET",

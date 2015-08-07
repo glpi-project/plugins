@@ -16,7 +16,7 @@ angular.module('frontendApp')
         url: API_URL + '/author/'+$stateParams.id
         })
         .success(function(data) {
-            $scope.listName = "Plugins <span>" +data.name+ "</span> worked on";
+            $scope.author = data;
         });
     $http({
             method: "GET",
