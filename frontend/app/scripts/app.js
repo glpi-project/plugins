@@ -37,6 +37,10 @@ angular
     }
   })
 
+  // Associating empty arrays to
+  // placeholders in $rootScope
+  // that are going to be used
+  // by home.js
   .run(function($rootScope) {
       $rootScope.trending = [];
       $rootScope.new = [];
@@ -45,14 +49,6 @@ angular
       $rootScope.tags = [];
       $rootScope.authors = [];
   })
-
-  // http://stackoverflow.com/questions/12111936/angularjs-performs-an-options-http-request-for-a-cross-origin-resource
-  .config(['$httpProvider', function ($httpProvider) {
-    $httpProvider.defaults.headers.common = {};
-    $httpProvider.defaults.headers.post = {};
-    $httpProvider.defaults.headers.put = {};
-    $httpProvider.defaults.headers.patch = {};
-  }])
 
   // Configuration of states in router
   .config(function($stateProvider, $urlRouterProvider, $mdThemingProvider) {
