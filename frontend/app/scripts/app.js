@@ -27,7 +27,7 @@ angular
   .run(function() {
     var langs = ['en', 'fr'];
 
-    if (localStorage.getItem('lang') == null) {
+    if (localStorage.getItem('lang') === null) {
       var lang = navigator.language.split('-')[0];
       if (langs.indexOf(lang) > 0) {
         localStorage.setItem('lang', lang);
@@ -37,12 +37,9 @@ angular
     }
   })
 
-  .config(['$httpProvider', function ($httpProvider) {
-    $httpProvider.defaults.headers.common = {};
-    $httpProvider.defaults.headers.post = {};
-    $httpProvider.defaults.headers.put = {};
-    $httpProvider.defaults.headers.patch = {};
-  }])
+  .config(function($httpProvider) {
+    $httpProvider.defaults.headers.common['X-Lang'] = localStorage.getItem('lang');
+  })
 
   // Associating empty arrays to
   // placeholders in $rootScope
@@ -69,19 +66,16 @@ angular
      $urlRouterProvider.otherwise("/");
 
      $stateProvider
-       // home State
        .state('home', {
          url: "/",
          templateUrl: "views/home.html",
          controller: 'HomeCtrl'
        })
-       // plugin State
        .state('plugin', {
          url: '/plugin/:key',
          templateUrl: 'views/plugin.html',
          controller: 'PluginCtrl'
        })
-       // search State
        .state('search', {
          url: '/search/:val',
          templateUrl: "views/plugin_list.html",
@@ -102,13 +96,11 @@ angular
         templateUrl: "views/plugin_list.html",
         controller: "AuthorPluginsCtrl"
        })
-       // submit State
        .state('submit', {
        	 url: '/submit',
        	 templateUrl: "views/submit.html",
        	 controller: "SubmitCtrl"
        })
-       // contact State
        .state('contact', {
        	 url: '/contact',
        	 templateUrl: 'views/contact.html',
