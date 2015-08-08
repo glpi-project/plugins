@@ -50,7 +50,7 @@ $tag_plugins = function($key) use($app) {
                      ->short()
                      ->withDownloads()
                      ->withAverageNote()
-                     ->descWithLang($tag->lang)
+                     ->descWithLang(Tool::getRequestLang())
                      ->withTag($tag)
                      ->get();
     Tool::endWithJson($plugins);
