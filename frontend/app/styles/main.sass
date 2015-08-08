@@ -1,3 +1,4 @@
+@import 'compass'
 @import 'colors'
 
 body
@@ -45,7 +46,7 @@ ul li
         padding-left: 16px
 
 nav
-    padding-top: 50px
+    padding-top: 22px
     border-left: 1px solid $verylightgrey
     font-size: 16px
     a
@@ -59,6 +60,25 @@ nav
         background-color: $verylightgrey
         border-left-color: $darkblue
         color: $black
+
+.lang-switcher
+    @include clearfix
+    text-align: center
+    ul
+        display: inline-block
+        margin: 0
+        padding: 0
+    li
+        float: left
+        margin-right: 8px
+        &:last-child
+            margin-right: 0
+    span
+        font-size: 18px
+    button
+        min-height: 30px
+        line-height: 30px
+        min-width: 36px
 
 .toggle_menu
     position: absolute

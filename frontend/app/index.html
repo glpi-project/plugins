@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
     <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
     <link rel="stylesheet" href="bower_components/highlightjs/styles/default.css" />
+    <link rel="stylesheet" href="bower_components/flag-icon-css/css/flag-icon.min.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -54,6 +55,25 @@
                <i class="fa fa-times-circle"></i>  
             </md-button>
             <nav>
+               <div class="lang-switcher" ng-controller="LangSwitcherCtrl">
+                 <ul>
+                   <li>
+                     <md-button class="md-raised">
+                      <span class="flag-icon flag-icon-gb"></span>
+                     </md-button>
+                   </li>
+                   <li>
+                     <md-button class="md-raised">
+                      <span class="flag-icon flag-icon-fr"></span>
+                     </md-button>
+                   </li>
+                   <li>
+                     <md-button class="md-raised">
+                      <span class="flag-icon flag-icon-es"></span>
+                     </md-button>
+                   </li>
+                 </ul>
+               </div>
                <a ui-sref="home" ui-sref-active="active">Browse</a>
                <a ng-click="$root.focusSearch=true" ui-sref="search" ui-sref-active="active">Search</a>
                <a ui-sref="submit" ui-sref-active="active">Submit a plugin</a>
@@ -122,6 +142,7 @@
         <script src="scripts/controllers/author_plugins.js"></script>
         <script src="scripts/controllers/author.js"></script>
         <script src="scripts/directives/inlineauthors.js"></script>
+        <script src="scripts/controllers/langswitcher.js"></script>
         <!-- endbuild -->
 </body>
 </html>
