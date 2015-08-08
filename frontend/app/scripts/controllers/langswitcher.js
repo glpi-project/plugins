@@ -8,6 +8,10 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('LangSwitcherCtrl', function () {
-    console.log('this is the lang switcher controller');
+  .controller('LangSwitcherCtrl', function ($scope, $translate) {
+    $scope.setLanguage = function(lang) {
+        $translate.use(lang);
+        moment.locale(lang);
+        localStorage.setItem('lang', lang);
+    };
   });

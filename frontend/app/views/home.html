@@ -2,10 +2,10 @@
    <md-content flex="33" flex-md="50" flex-sm="100">
       <md-list class="plugin-list">
          <md-subheader class='topic'>
-            Trending
+            {{'TRENDING' | translate}}
             <i class="fa fa-fire red"></i>
          </md-subheader>
-         <span class='legend'>A recent, relative, increase in installs</span>
+         <span class='legend'>{{'TRENDING_SUB'|translate}}</span>
          <md-list-item ng-repeat="plugin in trending">
             <md-button ui-sref="plugin({key: plugin.key})">
                <h4>{{plugin.name}}</h4>
@@ -20,10 +20,10 @@
    <md-content flex="33" flex-md="50" flex-sm="100">
       <md-list class="plugin-list">
          <md-subheader class='topic'>
-            New
+            {{'NEW'|translate}}
             <i class="fa fa-plus darkblue"></i>
          </md-subheader>
-         <span class='legend'>Just added to catalog</span>
+         <span class='legend'>{{'NEW_SUB'|translate}}</span>
          <md-list-item ng-repeat="plugin in new">
             <md-button ui-sref="plugin({key: plugin.key})">
                <h4>{{plugin.name}}</h4>
@@ -38,10 +38,10 @@
    <md-content flex="33" flex-md="50" flex-sm="100">
       <md-list class="plugin-list">
          <md-subheader class='topic'>
-            Popular
+            {{'POPULAR'|translate}}
             <i class="fa fa-trophy teal"></i>
          </md-subheader>
-         <span class='legend'>With the most unique installs</span>
+         <span class='legend'>{{'POPULAR_SUB'|translate}}</span>
          <md-list-item ng-repeat="plugin in popular">
             <md-button ui-sref="plugin({key: plugin.key})">
                <h4>{{plugin.name}}</h4>
@@ -59,7 +59,7 @@
             Updated
             <i class="fa fa-refresh green"></i>
          </md-subheader>
-         <span class='legend'>When the plugin was last updated</span>
+         <span class='legend'>{{'UPDATED_SUB'|translate}}</span>
          <md-list-item ng-repeat="plugin in updated">
             <md-button ui-sref="plugin({key: plugin.key})">
                <h4>{{plugin.name}}</h4>
@@ -72,10 +72,10 @@
    <md-content flex="33" flex-md="50" flex-sm="100">
       <md-list class="plugin-list">
          <md-subheader class='topic'>
-            Tags
+            {{'TAGS'|translate}}
             <i class="fa fa-tags"></i>
          </md-subheader>
-         <span class='legend'>With the most plugins</span>
+         <span class='legend'>{{'TAGS_SUB'|translate}}</span>
          <md-list-item ng-repeat="tag in tags">
             <md-button ui-sref="tag({key: tag.key})">
                <h4>{{tag.tag}}</h4>
@@ -88,10 +88,10 @@
    <md-content flex="33" flex-md="50" flex-sm="100">
       <md-list class="plugin-list">
          <md-subheader class='topic'>
-            Authors
+            {{'AUTHORS'|translate}}
             <i class="fa fa-user yellow"></i>
          </md-subheader>
-         <span class='legend'>With the most plugins</span>
+         <span class='legend'>{{'AUTHORS_SUB'|translate}}</span>
          <md-list-item ng-repeat="author in authors">
             <md-button ui-sref="author_plugins({id: author.id})">
                <h4>{{author.name}}</h4>

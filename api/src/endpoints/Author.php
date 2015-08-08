@@ -34,7 +34,7 @@ $author_plugins = function($id) use($app) {
                                      ->short()
                                      ->withDownloads()
                                      ->withAverageNote()
-                                     ->descWithLang('en')
+                                     ->descWithLang(Tool::getRequestLang())
                                      ->get());
 };
 
@@ -44,5 +44,5 @@ $app->get('/author/:id', $single);
 $app->get('/author/:id/plugin', $author_plugins);
 
 $app->options('/author',function(){});
-$app->options('author/:id',function($id){});
+$app->options('/author/:id',function($id){});
 $app->options('/author/:id/plugin',function($id){});

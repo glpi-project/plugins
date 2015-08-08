@@ -34,11 +34,11 @@
             <div flex="30" flex-sm="100" class='logo'>
               <a class="sitename" href="#/">Glpi</a>
               <h2>Plugins</h2>
-              <div class='legend'>Extend your glpi with plugins</div>
+              <div class='legend'>{{'SLOGAN' | translate}}</div>
             </div>
             <div flex="65" flex-sm="100">
               <md-input-container class="searchbox picbox">
-                <label>Search</label>
+                <label>{{'SEARCHBAR_PLACEHOLDER'|translate}}</label>
                 <input type="text" ng-model="search" class="search_bar" focus-me="$root.focusSearch">
               </md-input-container>
             </div>
@@ -58,12 +58,12 @@
                <div class="lang-switcher" ng-controller="LangSwitcherCtrl">
                  <ul>
                    <li>
-                     <md-button class="md-raised">
+                     <md-button ng-click="setLanguage('en')" class="md-raised">
                       <span class="flag-icon flag-icon-gb"></span>
                      </md-button>
                    </li>
                    <li>
-                     <md-button class="md-raised">
+                     <md-button ng-click="setLanguage('fr')" class="md-raised">
                       <span class="flag-icon flag-icon-fr"></span>
                      </md-button>
                    </li>
@@ -74,10 +74,10 @@
                    </li>
                  </ul>
                </div>
-               <a ui-sref="home" ui-sref-active="active">Browse</a>
-               <a ng-click="$root.focusSearch=true" ui-sref="search" ui-sref-active="active">Search</a>
-               <a ui-sref="submit" ui-sref-active="active">Submit a plugin</a>
-               <a ui-sref="contact" ui-sref-active="active">Contact</a>
+               <a ui-sref="home" ui-sref-active="active">{{'NAV_BROWSE'|translate}}</a>
+               <a ng-click="$root.focusSearch=true" ui-sref="search" ui-sref-active="active">{{'NAV_SEARCH'|translate}}</a>
+               <a ui-sref="submit" ui-sref-active="active">{{'NAV_SUBMIT_A_PLUGIN'|translate}}</a>
+               <a ui-sref="contact" ui-sref-active="active">{{'NAV_CONTACT'|translate}}</a>
             </nav>
          </md-sidenav>
          <md-button class="md-icon-button toggle_menu" hide-gt-md aria-label="Toggle Menu" ng-click="toggleNavBar()">
@@ -119,6 +119,7 @@
     <script src="bower_components/angular-highlightjs/build/angular-highlightjs.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/angular-translate/angular-translate.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 

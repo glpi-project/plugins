@@ -54,15 +54,15 @@
         <md-content class="infos" flex="50">
             <ul>
                 <li>
-                    <label>Version</label>
+                    <label>{{'VERSION'|translate}}</label>
                     <span>{{plugin.versions[0].num}}</span
                 </li>
                 <li>
-                    <label>Compatible With</label>
+                    <label>{{'COMPATIBLE_WITH'|translate}}</label>
                     <span>GLPI Version {{plugin.compatible_with}}</span>
                 </li>
                 <li ng-show="plugin.homepage_url">
-                    <label>Homepage</label>
+                    <label>{{'HOMEPAGE'|translate}}</label>
                     <span><a href="{{plugin.homepage_url}}">{{plugin.homepage_url}}</a></td>
                 </li>
                 <li ng-show="plugin.issues_url">
@@ -70,11 +70,11 @@
                     <span><a href="{{plugin.issues_url}}">{{plugin.issues_url}}</a></td>
                 </li>
                 <li>
-                    <label>Added</label>
+                    <label>{{'ADDED'|translate}}</label>
                     <span>{{fromNow(plugin.date_added)}}</span
                 </li>
                 <li>
-                    <label>Updated</label>
+                    <label>{{'UPDATED'|translate}}</label>
                     <span>{{fromNow(plugin.date_updated)}}</span
                 </li>
             </ul>

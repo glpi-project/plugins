@@ -30,13 +30,11 @@ $search = function() use($app) {
    }
    $query_string = $body->query_string;
 
-   $lang = Tool::getRequestLang();
-
    $_search = \API\Model\Plugin::short()
                                ->with('authors', 'versions', 'descriptions')
                                ->withDownloads()
                                ->withAverageNote()
-                               ->descWithLang($lang)
+                               ->descWithLang(Tool::getRequestLang())
                          ->where('name', 'LIKE', "%$query_string%")
                          ->orWhere('plugin_description.short_description', 'LIKE', "%$query_string%")
                          ->orWhere('plugin_description.long_description', 'LIKE', "%$query_string%")

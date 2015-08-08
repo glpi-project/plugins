@@ -1,4 +1,4 @@
-'use strict';
+  'use strict';
 
 /**
  * @ngdoc directive
@@ -14,7 +14,7 @@ angular.module('frontendApp')
             scope.$watch('inlineAuthors', function() {
               element.html('');
               element.append(angular.element('<span>')
-                                    .text('by'));
+                                    .text(scope.$eval("'BY'|translate")));
               if (scope.inlineAuthors instanceof Array) {
                 var _authors = '';
                 for (var i = 0 ; i < scope.inlineAuthors.length; i++) {
