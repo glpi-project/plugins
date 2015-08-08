@@ -39,4 +39,21 @@ class Tool {
     $free_string = mb_ereg_replace ( '[^a-z]' , '-' , $free_string);
     return $free_string;
    }
+
+   /**
+    * This method is a helper to get the
+    * user specified current default
+    * language for text
+    */
+   public static function getRequestLang() {
+    global $app;
+    if ($app->request->headers['x-lang']) {
+      if (in_array($app->request->headers['x-lang'],
+                    ['fr','en','es'])) {
+
+        return $app->request->headers['x-lang'];
+      }
+    }
+    return 'en';
+   }
 }
