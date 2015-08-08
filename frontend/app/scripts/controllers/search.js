@@ -19,8 +19,7 @@ angular.module('frontendApp')
   			method: "POST",
   			url: API_URL + '/search',
   			data: {
-  				query_string: string,
-          lang: localStorage.getItem('lang')
+  				query_string: string
   			}
   		});
   	};

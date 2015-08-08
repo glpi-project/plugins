@@ -13,8 +13,6 @@ use \Illuminate\Database\Capsule\Manager as DB;
 
 // Minimal length of search string
 $search_min_length = 2;
-// Allowed languages for search
-$allowed_languages = ['en', 'fr'];
 
 $search = function() use($app) {
    global $search_min_length,
@@ -32,11 +30,7 @@ $search = function() use($app) {
    }
    $query_string = $body->query_string;
 
-   if (!isset($body->lang) ||
-      !in_array($body->lang, $allowed_languages))
-      $lang = 'en';
-   else
-      $lang = $body->lang;
+   $lang = Tool::getRequestLang();
 
    $_search = \API\Model\Plugin::short()
                                ->with('authors', 'versions', 'descriptions')
