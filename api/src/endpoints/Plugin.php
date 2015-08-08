@@ -168,3 +168,11 @@ $app->get('/plugin/updated', $updated);
 $app->get('/plugin/new', $new);
 $app->post('/plugin/star', $star);
 $app->get('/plugin/:id', $single);
+
+$app->options('/plugin',function(){});
+$app->options('/plugin/popular',function(){});
+$app->options('/plugin/trending',function(){});
+$app->options('/plugin/updated',function(){});
+$app->options('/plugin/new',function(){});
+$app->options('/plugin/star',function(){});
+$app->options('/plugin/:id',function($id){});

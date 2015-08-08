@@ -42,3 +42,7 @@ $author_plugins = function($id) use($app) {
 $app->get('/author', $all);
 $app->get('/author/:id', $single);
 $app->get('/author/:id/plugin', $author_plugins);
+
+$app->options('/author',function(){});
+$app->options('author/:id',function($id){});
+$app->options('/author/:id/plugin',function($id){});

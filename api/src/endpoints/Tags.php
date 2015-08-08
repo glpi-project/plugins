@@ -61,3 +61,9 @@ $app->get('/tags', $tags_all);
 $app->get('/tags/top', $tags_top);
 $app->get('/tags/:id/plugin', $tag_plugins);
 $app->get('/tags/:id', $tag_single);
+
+
+$app->options('/tags', function(){});
+$app->options('/tags/top', function(){});
+$app->options('/tags/:id/plugin', function($id){});
+$app->options('/tags/:id', function($id){});

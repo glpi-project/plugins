@@ -51,3 +51,5 @@ $search = function() use($app) {
 };
 
 $app->post('/search', $search);
+
+$app->options('/search', function(){});

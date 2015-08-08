@@ -27,3 +27,5 @@ $download = function($key) use($app) {
 
 // HTTP Rest Map
 $app->get('/plugin/:key/download', $download);
+
+$app->options('/plugin/:key/download', function($key){});

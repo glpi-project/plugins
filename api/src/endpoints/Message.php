@@ -70,3 +70,5 @@ $send = function() use($app, $recaptcha_secret, $msg_alerts) {
 
 // HTTP REST Map
 $app->post('/message', $send);
+
+$app->options('/message',function(){});
