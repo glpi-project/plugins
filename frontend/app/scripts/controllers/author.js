@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('AuthorCtrl', function ($http, $stateParams, $scope) {
+  .controller('AuthorCtrl', function (API_URL, $http, $stateParams, $scope) {
     $http({
             method: "GET",
             url: API_URL + '/author/'+$stateParams.id

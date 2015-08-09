@@ -58,17 +58,17 @@
                <div class="lang-switcher" ng-controller="LangSwitcherCtrl">
                  <ul>
                    <li>
-                     <md-button ng-click="setLanguage('en')" class="md-raised">
+                     <md-button ng-click="setLanguage('en')" class="md-raised" aria-label="English">
                       <span class="flag-icon flag-icon-gb"></span>
                      </md-button>
                    </li>
                    <li>
-                     <md-button ng-click="setLanguage('fr')" class="md-raised">
+                     <md-button ng-click="setLanguage('fr')" class="md-raised" aria-label="French">
                       <span class="flag-icon flag-icon-fr"></span>
                      </md-button>
                    </li>
                    <li>
-                     <md-button class="md-raised">
+                     <md-button ng-click="setLanguage('es')" class="md-raised" aria-label="Spanish">
                       <span class="flag-icon flag-icon-es"></span>
                      </md-button>
                    </li>
@@ -124,8 +124,12 @@
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/conf.js"></script>
         <script src="scripts/app.js"></script>
+        <script src="scripts/translations/en.js"></script>
+        <script src="scripts/translations/fr.js"></script>
+        <script src="scripts/translations/es.js"></script>
+        <script src="scripts/conf.js"></script>
+        <script src="scripts/routes.js"></script>
         <script src="scripts/controllers/header.js"></script>
         <script src="scripts/controllers/nav.js"></script>
         <script src="scripts/controllers/search.js"></script>
