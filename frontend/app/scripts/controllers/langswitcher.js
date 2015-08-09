@@ -11,7 +11,10 @@ angular.module('frontendApp')
   .controller('LangSwitcherCtrl', function ($scope, $translate) {
     $scope.setLanguage = function(lang) {
         $translate.use(lang);
-        moment.locale(lang);
+        if (lang === 'en')
+            moment.locale('en-gb');
+        else
+            moment.locale(lang);
         localStorage.setItem('lang', lang);
     };
   });
