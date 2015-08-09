@@ -32,7 +32,7 @@ angular
         PLUGIN_TAGGED_WITH: "Plugins taggés avec",
         QUESTION_SUGGESTION_PROBLEM: "Une question, suggestion, ou un problème ?",
         FIRSTNAME: "Prénom",
-        LASTNAME: "Nom de famille",
+        LASTNAME: "Nom",
         EMAIL: "Email",
         SUBJECT: "Sujet",
         YOUR_MESSAGE: "Votre message",
