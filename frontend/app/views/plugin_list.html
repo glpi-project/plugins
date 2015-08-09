@@ -1,7 +1,7 @@
 <div layout="column">
   <div class="list-name">
-      <p ng-show="author">Plugins <a ui-sref="author({id: author.id})">{{author.name}}</a> contributed to/worked on</p>
-      <p ng-show="tag">Plugins tagged with "<a ui-sref="tag({key: tag.key})">{{tag.tag}}</a>"</p>
+      <p ng-show="author"><a ui-sref="author({id: author.id})">{{author.name}}</a> {{'PLUGIN_CONTRIBUTED_TO'|translate}}</p>
+      <p ng-show="tag">{{'PLUGIN_TAGGED_WITH'|translate}} "<a ui-sref="tag({key: tag.key})">{{tag.tag}}</a>"</p>
   </div>
 	<div ng-init="orderBy=['downloaded','note'];reverse=true" class="sort-filters" ng-show="results.length">
 		<p>

@@ -1,4 +1,4 @@
-<h2>A question, a suggestion, a problem ?</h2>
+<h2>{{'QUESTION_SUGGESTION_PROBLEM'|translate}}</h2>
 <span class="legend">Please, send us a message.</span>
 
 <div layout="row" layout-wrap>
@@ -6,24 +6,24 @@
     <form name="contactForm">
       <div layout layout-sm="column">
         <md-input-container flex class='firstnamebox picbox'>
-          <label>First name</label>
+          <label>{{'FIRSTNAME'|translate}}</label>
           <input ng-model="contact.firstname">
         </md-input-container>
         <md-input-container flex class='realnamebox picbox'>
-          <label>Last Name</label>
+          <label>{{'LASTNAME'|translate}}</label>
           <input ng-model="contact.lastname">
         </md-input-container>
       </div>
       <md-input-container flex  class='emailbox picbox'>
-        <label>Email</label>
+        <label>{{'EMAIL'|translate}}</label>
         <input ng-model="contact.email" type="email">
       </md-input-container>
       <md-input-container flex class='subjectbox picbox'>
-        <label>Subject</label>
+        <label>{{'SUBJECT'|translate}}</label>
         <input ng-model="contact.subject">
       </md-input-container>
       <md-input-container flex class='messagebox picbox'>
-        <label>Your message</label>
+        <label>{{'YOUR_MESSAGE'|translate}}</label>
         <textarea ng-model="contact.message" columns="1" md-maxlength="500"></textarea>
       </md-input-container>
       <input type="hidden">
@@ -36,7 +36,7 @@
            on-expire="cbExpiration()"></div>
 
       <md-button class="md-raised md-primary submit-button" ng-click="submit()">
-         Submit
+         {{'SUBMIT'|translate}}
          <i class="fa fa-paper-plane"></i>
       </md-button>
     </form>
