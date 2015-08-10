@@ -5,6 +5,7 @@ angular
   .config(function($translateProvider) {
     $translateProvider
       .translations('fr', {
+        ON: "sur",
         SLOGAN: "Etendez GLPI avec les plugins",
         TRENDING: "Tendances",
         TRENDING_SUB: "Beaucoup téléchargés ce mois-ci",
