@@ -13,8 +13,6 @@ angular.module('frontendApp')
       link: function postLink(scope, element, attrs, ctrl) {
             scope.$watch('inlineAuthors', function() {
               element.html('');
-              element.append(angular.element('<span>')
-                                    .text(scope.$eval("'BY'|translate")));
               if (scope.inlineAuthors instanceof Array) {
                 var _authors = '';
                 for (var i = 0 ; i < scope.inlineAuthors.length; i++) {
