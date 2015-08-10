@@ -27,6 +27,7 @@ $single = function($key) use($app) {
    $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots')
                    ->select([])
                    ->withAverageNote()
+                   ->withNumberOfVotes()
                    ->withCurrentVersion()
                    ->withDownloads()
                    ->where('key', '=', $key)
