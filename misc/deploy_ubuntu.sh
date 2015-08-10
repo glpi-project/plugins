@@ -51,8 +51,15 @@ su vagrant -c 'bower -f install'
 
 # Copying glpi-plugin-directory frontend config file
 su vagrant -c 'cat' > /vagrant/frontend/app/scripts/conf.js <<'EOL'
-var API_URL = 'http://localhost:8080/api';
-var RECAPTCHA_PUBLIC_KEY = '6LcnrwoTAAAAAHfjzXrBWOBMkbHY2QuZJtER7Y6M';
+'use strict';
+
+angular
+  .module('frontendApp')
+  // API url
+  .constant('API_URL', 'http://glpiplugindirectory/api')
+  // Recaptcha Public Key
+  .constant('RECAPTCHA_PUBLIC_KEY', '6LcnrwoTAAAAAHfjzXrBWOBMkbHY2QuZJtER7Y6M')
+;
 EOL
 
 # Building the frontend
