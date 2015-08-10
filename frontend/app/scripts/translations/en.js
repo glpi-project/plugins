@@ -28,7 +28,7 @@ angular
         HOMEPAGE: "Homepage",
         ADDED: "Added",
         BY: "By",
-        PLUGIN_CONTRIBUTED_TO: "contributed to/worked on",
+        PLUGIN_CONTRIBUTED_TO: "contributed to/worked on those plugins",
         PLUGIN_TAGGED_WITH: "Plugins tagged with",
         QUESTION_SUGGESTION_PROBLEM: "Any question, suggestion, problem ?",
         FIRSTNAME: "First name",
