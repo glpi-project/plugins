@@ -14,7 +14,7 @@
 	<div class="results">
 		<div class="result" ng-repeat="plugin in results | orderBy:orderBy:reverse track by $index">
 			<div layout="row" layout-wrap layout-align="center end">
-        <img class="icon" src="http://placehold.it/60x60">
+        <img class="icon" src="{{plugin.logo_url}}">
 				<div class='plugin_name'>
                <h2 class="name">
                   <a ui-sref="plugin({id: plugin.id, key: plugin.key})">{{plugin.name}}</a>
