@@ -11,13 +11,6 @@ angular.module('frontendApp')
   .controller('AuthorPluginsCtrl', function (API_URL, $scope, $http, $stateParams) {
     var grabAuthorPlugins = function() {
         $http({
-            method: "GET",
-            url: API_URL + '/author/'+$stateParams.id
-            })
-            .success(function(data) {
-                $scope.author = data;
-            });
-        $http({
                 method: "GET",
                 url: API_URL + '/author/'+$stateParams.id+'/plugin'
             })
@@ -25,6 +18,14 @@ angular.module('frontendApp')
                 $scope.results = data;
             });
     };
+    
+    $http({
+        method: "GET",
+        url: API_URL + '/author/'+$stateParams.id
+        })
+        .success(function(data) {
+            $scope.author = data;
+        });
 
     $scope.results = [];
 
