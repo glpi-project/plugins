@@ -49,15 +49,18 @@ class Plugin extends Model {
     public function scopeDescWithLang($query, $lang) {
         $query->addSelect(['plugin_description.short_description'])
               ->leftJoin('plugin_description', 'plugin.id', '=', 'plugin_description.plugin_id')
-              ->groupBy('plugin.name')
-              ->where('plugin_description.lang', '=', $lang);
+              ->groupBy('plugin.id')
+              ->where(function($query) use($lang) {
+                $query->where('plugin_description.lang', '=', $lang)
+                      ->orWhere('plugin_description.lang', '=', 'en');
+              });
         return $query;
     }
 
     public function scopeWithAverageNote($query) {
         $query->addSelect([DB::raw('IF(AVG(plugin_stars.note),AVG(plugin_stars.note),0) as note')])
               ->leftJoin('plugin_stars', 'plugin.id', '=', 'plugin_stars.plugin_id')
-              ->groupBy('plugin.name');
+              ->groupBy('plugin.id');
         return $query;
     }
 
