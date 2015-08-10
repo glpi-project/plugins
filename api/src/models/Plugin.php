@@ -68,14 +68,16 @@ class Plugin extends Model {
         return $query;
     }
 
+    public function scopeWithNumberOfVotes($query) {
+      $query->addSelect([DB::raw('(SELECT COUNT(*) FROM plugin_stars where plugin_stars.plugin_id = plugin.id) as n_votes')]);
+      return $query;
+    }
+
     public function scopePopularTop($query, $limit = 10) {
         $query->select(['plugin.id', 'plugin.name','plugin.key',
-                        DB::raw('COUNT(plugin_download.id) as downloaded'),
-                        DB::raw('COUNT(plugin_stars.id) as n_votes'),
-                        DB::raw('IF(AVG(plugin_stars.note),AVG(plugin_stars.note),0) as note')])
-                     ->leftJoin('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
-                     ->leftJoin('plugin_stars', 'plugin.id', '=', 'plugin_stars.plugin_id')
-                     ->groupBy('name')
+                        DB::raw('(SELECT COUNT(*) FROM plugin_download where plugin_download.plugin_id = plugin.id) as downloaded'),
+                        DB::raw('(SELECT COUNT(*) FROM plugin_stars where plugin_stars.plugin_id = plugin.id) as n_votes'),
+                        DB::raw('(SELECT IF(avg_note,avg_note,0) FROM (select avg(plugin_stars.note) AS avg_note FROM plugin_stars WHERE plugin_id = 77) AS sub_st) AS note')])
                      ->orderBy('downloaded', 'DESC')
                      ->orderBy('note', 'DESC')
                      ->orderBy('n_votes', 'DESC')
