@@ -409,6 +409,20 @@ module.exports = function (grunt) {
           dest: '<%= yeoman.dist %>/fonts',
           src: ['*.*'],
           filter: 'isFile'
+        }, {
+          expand: true,
+          flatten: true,
+          cwd: 'bower_components/flag-icon-css/flags/1x1',
+          dest: '<%= yeoman.dist %>/flags/1x1',
+          src: ['*.*'],
+          filter: 'isFile'
+        }, {
+          expand: true,
+          flatten: true,
+          cwd: 'bower_components/flag-icon-css/flags/4x3',
+          dest: '<%= yeoman.dist %>/flags/4x3',
+          src: ['*.*'],
+          filter: 'isFile'
         }]
       },
       styles: {
