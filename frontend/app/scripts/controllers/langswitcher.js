@@ -8,7 +8,17 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('LangSwitcherCtrl', function ($scope, $translate) {
+  .provider('UpdateHttpHeaderSettings', function($httpProvider) {
+    var changeHttpHeaderSettings = function() {
+        $httpProvider.defaults.headers.common['X-Lang'] = localStorage.getItem('lang');
+    };
+
+    this.$get = function() {
+        return changeHttpHeaderSettings;
+    };
+  })
+
+  .controller('LangSwitcherCtrl', function ($scope, $translate, $rootScope, UpdateHttpHeaderSettings) {
     $scope.setLanguage = function(lang) {
         $translate.use(lang);
         if (lang === 'en')
@@ -16,5 +26,12 @@ angular.module('frontendApp')
         else
             moment.locale(lang);
         localStorage.setItem('lang', lang);
+
+        UpdateHttpHeaderSettings();
+
+        // Broadcasting an event to every scope
+        $rootScope.$broadcast('languageChange', {
+            newLang: lang
+        });
     };
   });
