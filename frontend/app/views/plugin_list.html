@@ -3,52 +3,54 @@
       <p ng-show="author"><a ui-sref="author({id: author.id})">{{author.name}}</a> {{'PLUGIN_CONTRIBUTED_TO'|translate}}</p>
       <p ng-show="tag">{{'PLUGIN_TAGGED_WITH'|translate}} "<a ui-sref="tag({key: tag.key})">{{tag.tag}}</a>"</p>
   </div>
-	<div ng-init="orderBy=['downloaded','note'];reverse=true" class="sort-filters" ng-show="results.length">
-		<p>
-		<span>Sort by :</span>
-		<a href="" ng-click="orderBy='$$hashKey';reverse=false">Relevance</a>
-		<a href="" ng-click="orderBy=['downloaded','note'];reverse=true">Popularity</a>
-		</p>
-	</div>
+   <div ng-init="orderBy=['downloaded','note'];reverse=true" class="sort-filters" ng-show="results.length">
+      <p>
+      <span>Sort by :</span>
+      <a href="" ng-click="orderBy='$$hashKey';reverse=false">Relevance</a>
+      <a href="" ng-click="orderBy=['downloaded','note'];reverse=true">Popularity</a>
+      </p>
+   </div>
 
-	<div class="results">
-		<div class="result" ng-repeat="plugin in results | orderBy:orderBy:reverse track by $index">
-			<div layout="row" layout-wrap layout-align="center end">
-        <img class="icon" ng-src="{{plugin.logo_url}}">
-				<div class='plugin_name'>
+   <div class="results">
+      <div class="result" ng-repeat="plugin in results | orderBy:orderBy:reverse track by $index">
+         <div layout="row" layout-wrap layout-align="left end">
+            <img class="icon" ng-src="{{plugin.logo_url}}">
+            <div class='plugin_name' flex='45' flex-sm='30' >
                <h2 class="name">
                   <a ui-sref="plugin({id: plugin.id, key: plugin.key})">{{plugin.name}}</a>
                </h2>
-					     <h4 class="inline-authors"><span>{{'BY'|translate}}</span><span inline-authors="plugin.authors"></span></h4>
-				</div>
+               <h4 class="inline-authors"><span>{{'BY'|translate}}</span><span inline-authors="plugin.authors"></span></h4>
+            </div>
 
-        <div class='pills'>
-           <span ng-repeat="version in plugin.versions | unique: 'compatibility' | subpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
+            <div class='flex_right' layout="column" flex="50" layout-align="start end">
+               <div class='pills' flex>
+                  <span ng-repeat="version in plugin.versions | unique: 'compatibility' | subpart:3" class="pill  bg_lightblue">{{version.compatibility}}</span>
+    
+                  <span ng-show="plugin.versions.length > 3">
+                     ...
+                     <md-tooltip class="versions_more">
+                        <span ng-repeat="version in plugin.versions | unique: 'compatibility' | lastpart:3" class="   pill bg_lightblue">{{version.compatibility}}</span>
+                     </md-tooltip>
+                  </span>
+                  <span class="downloads" flex flex-sm='20'>
+                     <span class='pill bg_red'>
+                        {{plugin.downloaded}}
+                        <md-tooltip>downloads</md-tooltip>
+                     </span>
+                  </span>
+               </div>
 
-         <span ng-show="plugin.versions.length > 3">
-            ...
-            <md-tooltip class="versions_more">
-               <span ng-repeat="version in plugin.versions | unique: 'compatibility' | lastpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
-            </md-tooltip>
-         </span>
-           <span class="downloads" flex>
-              <span class='pill bg_red'>
-                 {{plugin.downloaded}}
-                 <md-tooltip>downloads</md-tooltip>
-              </span>
-           </span>
-        </div>
+               <rate-box flex current-note="plugin.note" already-rated="true"></rate-box>
+            </div>
+         </div>
 
-				<rate-box flex current-note="plugin.note" disable-rating="true"></rate-box>
+         <div class="description">
+            <p ng-bind-html="plugin.short_description | unsafe"></p>
+         </div>
+      </div>
+   </div>
 
-			</div>
-			<div class="description">
-				<p ng-bind-html="plugin.short_description | unsafe"></p>
-			</div>
-		</div>
-	</div>
+   <div class="pagination">
 
-	<div class="pagination">
-
-	</div>
+   </div>
 </div>
