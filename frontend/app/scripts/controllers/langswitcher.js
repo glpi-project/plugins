@@ -19,7 +19,9 @@ angular.module('frontendApp')
   })
 
   .controller('LangSwitcherCtrl', function ($scope, $translate, $rootScope, UpdateHttpHeaderSettings) {
-    $scope.setLanguage = function(lang) {
+    $scope.lang = localStorage.getItem('lang');
+
+    var setLanguage = function(lang) {
         $translate.use(lang);
         if (lang === 'en')
             moment.locale('en-gb');
@@ -34,4 +36,6 @@ angular.module('frontendApp')
             newLang: lang
         });
     };
+
+    $scope.$watch('lang', setLanguage);
   });

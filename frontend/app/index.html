@@ -56,23 +56,11 @@
             </md-button>
             <nav>
                <div class="lang-switcher" ng-controller="LangSwitcherCtrl">
-                 <ul>
-                   <li>
-                     <md-button ng-click="setLanguage('en')" class="md-raised" aria-label="English">
-                      <span class="flag-icon flag-icon-gb"></span>
-                     </md-button>
-                   </li>
-                   <li>
-                     <md-button ng-click="setLanguage('fr')" class="md-raised" aria-label="French">
-                      <span class="flag-icon flag-icon-fr"></span>
-                     </md-button>
-                   </li>
-                   <li>
-                     <md-button ng-click="setLanguage('es')" class="md-raised" aria-label="Spanish">
-                      <span class="flag-icon flag-icon-es"></span>
-                     </md-button>
-                   </li>
-                 </ul>
+                  <md-select placeholder="Site Language" ng-model="lang">
+                    <md-option value="en"><span class="flag-icon flag-icon-gb"></span> English</md-option>
+                    <md-option value="fr"><span class="flag-icon flag-icon-fr"></span> French</md-option>
+                    <md-option value="es"><span class="flag-icon flag-icon-es"></span> Spanish</md-option>
+                  </md-select>
                </div>
                <a ui-sref="home" ui-sref-active="active">{{'NAV_BROWSE'|translate}}</a>
                <a ng-click="$root.focusSearch=true" ui-sref="search" ui-sref-active="active">{{'NAV_SEARCH'|translate}}</a>
