@@ -18,7 +18,7 @@ class DB {
       self::$capsule->bootEloquent();
       if ($log_queries) {         
          self::$capsule->getEventDispatcher()->listen('illuminate.query', function($query, $params) {
-            $log = fopen('../misc/illuminate_queries.log', 'a+');
+            $log = fopen(__DIR__.'/../../../misc/illuminate_queries.log', 'a+');
             fwrite($log, date('Y/m/d H:i:s') . ' [QUERY] : ' . $query);
             fwrite($log, ' [with params ');
             $afterFirst = false;;
