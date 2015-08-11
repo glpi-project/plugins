@@ -1,27 +1,29 @@
 <div layout="column" class="plugin">
 
-	<div layout="row" layout-align="center end" class="plugin_header">
-      <img class="icon" src="{{plugin.logo_url}}">
+	<div layout="row" layout-wrap layout-align="start start" class="plugin_header">
+      <img class="icon" src="{{plugin.logo_url}}" flex-sm="10">
 
-        <div class='plugin_name'>
-            <h2>{{plugin.name}}</h2>
-            <h4 class="inline-authors"><span>{{'BY'|translate}}</span><span inline-authors="plugin.authors"></span></h4>
-        </div>
-
-      <div class='pills'>
-         <span ng-repeat="version in plugin.versions | unique: 'compatibility' | subpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
-
-         <span ng-show="plugin.versions.length > 3">
-            ...
-            <md-tooltip class="versions_more">
-               <span ng-repeat="version in plugin.versions | unique: 'compatibility' | lastpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
-            </md-tooltip>
-         </span>
+      <div class='plugin_name' flex-sm="45">
+         <h2>{{plugin.name}}</h2>
+         <h4 class="inline-authors"><span>{{'BY'|translate}}</span><span inline-authors="plugin.authors"></span></h4>
       </div>
 
-      <rate-box flex current-note="plugin.note" rate-method="ratePlugin" votes-number="plugin.n_votes" disable-rating="rated"></rate-box>
+      <div flex-sm="45" layout="row" layout-sm="column" layout-align="end end">
+         <div class='pills'>
+            <span ng-repeat="version in plugin.versions | unique: 'compatibility' | subpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
 
-      <span class='download'>
+            <span ng-show="plugin.versions.length > 3">
+               ...
+               <md-tooltip class="versions_more">
+                  <span ng-repeat="version in plugin.versions | unique: 'compatibility' | lastpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
+               </md-tooltip>
+            </span>
+         </div>
+
+         <rate-box current-note="plugin.note" already-rated="false" rate-method="ratePlugin" votes-number="plugin.n_votes"></rate-box>
+      </div>
+
+      <span class='download flex_right'>
         <span class="downloads">
             <span class='pill bg_red'>
                <span ng-bind-html='plugin.downloaded | nrFormat'></span>
@@ -34,6 +36,7 @@
          </md-button>
       </span>
     </div>
+
     <div layout="row" layout-wrap>
         <md-content class='tabs' flex="50" flex-sm="100">
             <md-tabs md-dynamic-height>
