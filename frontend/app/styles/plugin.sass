@@ -1,13 +1,25 @@
 .plugin_header
     border-bottom: 1px dashed $lightgrey
     padding-bottom: 5px
+    height: 68px
+    .pills, rate-box
+        height: 100%
+        line-height: 68px
+
 .plugin
     margin-top: 35px
     min-height: 500px
     .plugin_name
         margin-right: 50px
+        display: flex
+        flex-direction: column
+        justify-content: space-around
+        height: 100%
     .downloads, .pills span
         color: $white
+    .download
+        i
+            line-height: 58px
 
 @media (max-width: 599px)
     .plugin
