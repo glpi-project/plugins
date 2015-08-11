@@ -63,6 +63,7 @@ angular.module('frontendApp')
                 displayStars(note, true);
                 el.on('mousedown', function() {
                   scope.rateMethod(note);
+                  scope.votesNumber++;
                 });
               }
             });
@@ -74,7 +75,7 @@ angular.module('frontendApp')
             });
             el.on('mouseleave', function() {
               displayStars(scope.currentNote);
-              el.off('mouseclick');
+              el.off('mousedown');
             });
           });
         }
