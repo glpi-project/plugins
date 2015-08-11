@@ -149,6 +149,29 @@ $submit = function() use($app, $recaptcha_secret) {
             ]);
     }
 
+    // Quickly validating
+    if (Plugin::where('xml_url', '=', $body->plugin_url)->count() > 0)
+      return  Tool::endWithJson([
+          "error" => "That plugin XML URL has already been submitted."
+      ]);
+
+    $xml = @file_get_contents($body->plugin_url);
+    if (!$xml)
+      return  Tool::endWithJson([
+          "error" => "We cannot fetch that URL."
+      ]);
+
+    $xml = @simplexml_load_string($xml);
+    if (!$xml)
+      return  Tool::endWithJson([
+          "error" => "XML cannot be parsed."
+      ]);
+
+    if (Plugin::where('key', '=', $xml->key)->count() > 0)
+      return  Tool::endWithJson([
+          "error" => "Your XML describe a plugin whose key already exists in our database."
+      ]);
+
     $plugin = new Plugin;
     $plugin->xml_url = $body->plugin_url;
     $plugin->date_added = DB::raw('NOW()');

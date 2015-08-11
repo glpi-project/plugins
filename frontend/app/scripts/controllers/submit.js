@@ -47,7 +47,7 @@ angular.module('frontendApp')
             } else {
                 $mdToast.show($mdToast.simple()
                                       .capsule(true)
-                                      .content('Something went wrong with Recaptcha'));
+                                      .content(data.error));
                 vcRecaptchaService.reload($scope.widgetId);
             }
         });
