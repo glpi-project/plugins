@@ -41,6 +41,18 @@ angular.module('frontendApp')
       return moment(date).fromNow();
     };
 
+    $scope.$on('languageChange', function(event, data) {
+        var found_index = null;
+        for(var index in $scope.plugin.descriptions) {
+            if (data.newLang == $scope.plugin.descriptions[index].lang) {
+               found_index = index;
+            }
+        }
+        if (found_index !== null) {
+            $scope.selectedIndex = found_index
+        }
+    });
+
     $http({
       method: 'GET',
       url: API_URL + '/plugin/' + $stateParams.key
