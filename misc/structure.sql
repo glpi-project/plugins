@@ -12,7 +12,8 @@ CREATE TABLE plugin (
 	license VARCHAR(255),
 	active INT(1),
 	date_added DATE,
-	date_updated DATE
+	date_updated DATE,
+	UNIQUE KEY `ix_plugin` (`key`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE author(
