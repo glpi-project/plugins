@@ -11,7 +11,8 @@ angular.module('frontendApp')
 
   .controller('PluginCtrl', function (API_URL, $scope, $http, $stateParams, $window) {
     $scope.plugin = {
-      authors: {}
+      authors: {},
+      downloaded: 0
     };
     $scope.rated = false;
 
