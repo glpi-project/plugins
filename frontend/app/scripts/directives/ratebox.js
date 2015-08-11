@@ -13,6 +13,7 @@ angular.module('frontendApp')
   // users to rate a plugin
   .directive('rateBox', function () {
     return {
+      template: '<stars></stars><votes ng-show="votesNumber">({{votesNumber}} votes)</votes>',
       restrict: 'E',
       link: function postLink(scope, element, attrs, controller) {
         // Defaults the current note to 0
@@ -24,12 +25,14 @@ angular.module('frontendApp')
         if (typeof(scope.alreadyRated) === 'undefined')
           scope.alreadyRated = true;
 
+
         // Creating five icon elements to display stars
+        var _stars = element.find('stars');
         var stars = [];
         for (var i = 0 ; i < 5 ; i++) {
           var icon = angular.element('<i>');
           stars.push(icon);
-          element.append(icon);
+          _stars.append(icon);
         }
 
         // Modify the DOM with the current stars
@@ -87,10 +90,11 @@ angular.module('frontendApp')
       scope: {
         currentNote: "=currentNote",
         alreadyRated: "=alreadyRated",
-        rateMethod: "=rateMethod"
+        rateMethod: "=rateMethod",
+        votesNumber: "=votesNumber"
       },
 
-      controller: function($scope) {
+      controller: function() {
         // returns fontawesome class for a full star
         this.getFullStar = function(hover) {
           return 'fa fa-star' +(hover?' hover':'');
