@@ -41,18 +41,20 @@ angular.module('frontendApp')
       return moment(date).fromNow();
     };
 
-    $scope.$on('languageChange', function(event, data) {
-        var found_index = null;
-        for(var index in $scope.plugin.descriptions) {
-            if (data.newLang == $scope.plugin.descriptions[index].lang) {
-               found_index = index;
+    // Enable selection of correct tab
+    // according to language
+    var selectTabWithLang = function(lang) {
+        for (var index in $scope.plugin.descriptions) {
+            if (lang === $scope.plugin.descriptions[index].lang) {
+               $scope.selectedIndex = index;
             }
         }
-        if (found_index !== null) {
-            $scope.selectedIndex = found_index
-        }
+    };
+    $scope.$on('languageChange', function(event, data) {
+      selectTabWithLang(data.newLang);
     });
 
+    // Fetch the Plugin resource
     $http({
       method: 'GET',
       url: API_URL + '/plugin/' + $stateParams.key
@@ -60,5 +62,6 @@ angular.module('frontendApp')
     .success(function(data) {
       $scope.plugin = data;
       $scope.rated = (localStorage.getItem('rated_' + $scope.plugin.id) == 'true') ? true : false;
+      selectTabWithLang(localStorage.getItem('lang'));
     });
   });
