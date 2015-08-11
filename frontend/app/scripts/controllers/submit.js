@@ -39,7 +39,8 @@ angular.module('frontendApp')
             if (data.success) {
                 $mdToast.show($mdToast.simple()
                                       .capsule(true)
-                                      .content('Thanks for your time ! We are going to verify the plugin you have submitted.'));
+                                      .content('Thanks for your time ! We are going to verify the plugin you have submitted.')
+                                      .position('top'));
                 $timeout(function() {
                     $state.go('home');
                 },3800);
@@ -47,7 +48,8 @@ angular.module('frontendApp')
             } else {
                 $mdToast.show($mdToast.simple()
                                       .capsule(true)
-                                      .content(data.error));
+                                      .content(data.error)
+                                      .position('top'));
                 vcRecaptchaService.reload($scope.widgetId);
             }
         });
