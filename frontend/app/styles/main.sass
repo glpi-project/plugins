@@ -1,6 +1,17 @@
 @import 'compass'
 @import 'colors'
 
+@import 'helpers'
+@import 'ratebox'
+@import 'header'
+@import 'sidenav'
+@import 'home_plugin_list'
+@import 'plugin_list'
+@import 'plugin'
+@import 'contact'
+@import 'submit_plugin'
+@import 'footer'
+
 body
     font-family: 'Roboto'
     font-size: 15px
@@ -28,49 +39,6 @@ ul li
 .md-primary
     color: #642626 !important
 
-.header
-    margin-bottom: 30px
-    .logo
-        .sitename
-            display: inline-block
-            width: 100px
-            height: 50px
-            text-indent: -9999px
-            background-image: url(../images/logo-small.png)
-        h2
-            margin: 0
-            display: inline-block
-            vertical-align: bottom
-            color: $red
-    .legend
-        width: 182px
-        text-align: center
-
-nav
-    padding-top: 22px
-    border-left: 1px solid $verylightgrey
-    font-size: 16px
-    a
-        color: $darkgrey
-        display: block
-        line-height: 1.6
-        padding: 5px 15px
-        margin: 0
-        border-left: 2px solid transparent
-    a.active
-        background-color: $verylightgrey
-        border-left-color: $darkblue
-        color: $black
-
-.lang-switcher
-    md-select
-        padding: 0
-        margin-bottom: 20px
-
-.toggle_menu
-    position: absolute
-    right: 0
-    top: 0
 
 .picbox:after
     font-family: FontAwesome
@@ -80,21 +48,7 @@ nav
     top: 28px
 .picbox.md-input-focused:after
     color: $red
-.searchbox:after
-    content: "\f002"
-    color: $lightgrey
-.urlbox:after
-    content: "\f0c1"
-.firstnamebox:after
-    content: "\f007"
-.realnamebox:after
-    content: "\f007"
-.emailbox:after
-    content: "\f003"
-.subjectbox:after
-    content: "\f040"
-.messagebox:after
-    content: "\f0e5"
+
 
 .flex_right
     margin-left: auto
@@ -116,80 +70,6 @@ nav
     .icon
         margin-right: 0
 
-.plugin_header
-    border-bottom: 1px dashed $lightgrey
-    padding-bottom: 5px
-.plugin
-    margin-top: 35px
-    min-height: 500px
-    .plugin_name
-        margin-right: 50px
-@media (max-width: 599px)
-    .plugin
-        .plugin_name
-            margin-right: 0
-
-    h2
-        text-transform: capitalize
-    .author, .download
-        i
-            vertical-align: middle
-        .downloads
-            color: $white
-    .tabs
-        background-color: inherit
-        .description
-            background-color: $verylightgrey
-    .screenshots
-        margin: 40px 0 0 10px
-        max-width: 440px
-        .screenshot
-            width: 200px
-            height: 150px
-            margin: 10px
-            display: inline-block
-            text-align: center
-            cursor: pointer
-
-    .infos
-        overflow: visible
-        ul
-            padding: 0
-            display: table
-            li
-                margin-top: 8px
-                display: table-row
-                label
-                    display: table-cell
-                    padding: 5px 10px 0 0
-                    color: $grey
-                    text-transform: uppercase
-                label + span
-                    display: table-cell
-.inline-authors
-    span
-        padding-right: 6px
-    a:after
-        content: ", "
-        display: inline-block
-        margin: 0 4px 0 2px
-        color: #000
-    a:last-child
-        &:after
-            display: none
-rate-box
-    margin-left: 5px
-    i.fa
-        color: $yellow
-        font-size: 20px
-        &.hover
-            cursor: pointer
-            color: $lightblue
-    votes
-        color: rgba(0,0,0,0.54)
-        font-size: 17px
-        margin-left: 6px
-
 .container
     div[layout=row]
         md-content:nth-child(2)
@@ -201,65 +81,3 @@ rate-box
     color: $grey
     margin: 0
 
-.plugin-list
-    margin-bottom: 30px
-    .topic
-        font-size: 2em
-        .md-subheader-inner
-            padding: 0
-        i
-            font-size: 0.7em
-    .legend
-        margin-bottom: 15px
-        display: inline-block
-    md-list-item
-        margin-top: 1px
-        min-height: inherit
-        .md-button
-            display: block
-            margin: 0 auto
-            line-height: 25px
-            min-height: inherit
-            text-transform: capitalize
-            margin: inherit
-        h3, h4
-            margin: 0
-            text-align: left
-        h4
-            font-weight: normal
-            color: $darkblue
-            font-size: 1.2em
-
-.list-name
-    font-weight: bold
-    font-size: 24px
-    a
-        color: $teal
-
-.result
-    margin: 0
-    padding: 10px
-
-.result:nth-child(even)
-    background-color: $verylightgrey
-
-.xml_description
-    background-color: $verylightgrey
-    margin-top: 20px
-    line-height: 1.2
-    font-size: .9em
-
-.footer
-    position: fixed
-    bottom: 0
-    width: 100%
-    height: 50px
-    background-color: $grey
-    color: $white
-    line-height: 50px
-    box-shadow: inset 0 6px 12px -8px $dark
-    z-index: 1000
-    p
-        text-align: center
-        line-height: 16px
-        font-size: 16px
