@@ -154,6 +154,7 @@ class DatabaseUpdater {
             }
         }
 
+        // Reassociating plugin to tags
         $plugin->tags()->detach();
         foreach($xml->tags->children() as $lang => $tags) {
             foreach($tags->children() as $_tag) {
