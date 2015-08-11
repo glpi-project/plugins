@@ -14,15 +14,16 @@ angular.module('frontendApp')
     $scope.widgetId = null;
 
     $scope.setResponse = function (response) {
-        console.info('Response available');
         $scope.response = response;
     };
     $scope.setWidgetId = function (widgetId) {
-        console.info('Created widget ID: %s', widgetId);
         $scope.widgetId = widgetId;
     };
     $scope.cbExpiration = function() {
-        console.info('Captcha expired. Resetting response object');
+        $mdToast.show($mdToast.simple()
+                                      .capsule(true)
+                                      .content('Captcha expired, please select "I\'m not a robot" again')
+                                      .position('top'));
         $scope.response = null;
      };
 
@@ -48,7 +49,7 @@ angular.module('frontendApp')
             } else {
                 $mdToast.show($mdToast.simple()
                                       .capsule(true)
-                                      .content(data.error)
+                                      .content("Error: "+data.error)
                                       .position('top'));
                 vcRecaptchaService.reload($scope.widgetId);
             }
