@@ -22,9 +22,8 @@ angular.module('frontendApp')
 
         // Defaults to alreadyRated so, if directive
         // attribute is not set, we cannot rate   
-        if (typeof(scope.alreadyRated) === 'undefined')
-          scope.alreadyRated = true;
-
+        if (typeof(scope.disableRating) === 'undefined')
+          scope.disableRating = false;
 
         // Creating five icon elements to display stars
         var _stars = element.find('stars');
@@ -54,7 +53,7 @@ angular.module('frontendApp')
                  ) ? 0.5 : 1;
         };
 
-        if (!scope.alreadyRated) {
+        var enableRating = function() {
           stars.forEach(function(el, i) {
             var note;
             el.on('mouseenter', function(ev) {
@@ -64,33 +63,54 @@ angular.module('frontendApp')
                 el.on('mousedown', function() {
                   scope.rateMethod(note);
                   scope.votesNumber++;
+                  disableRating();
                 });
               }
             });
             el.on('mousemove', function(ev) {
-              if (!scope.alreadyRated) {
+              if (!scope.disableRating) {
                 note = i + halfOrPlain(ev.offsetX);
                 displayStars(note, true);
               }
             });
             el.on('mouseleave', function() {
               displayStars(scope.currentNote);
-              el.off('mousedown');
+              el.unbind('mousedown');
             });
           });
-        }
+        };
+
+        var disableRating = function() {
+          stars.forEach(function(el) {                    
+            el.unbind('mousedown');
+            el.unbind('mouseenter');
+            el.unbind('mousemove');
+            el.unbind('mouseleave');
+          });
+          displayStars(scope.currentNote);
+        };
+
 
         // Watch for future modifications of the note
         scope.$watch('currentNote', function() {
           displayStars(scope.currentNote);
         });
+
+        scope.$watch('disableRating', function(v) {
+          disableRating();
+          if (!v)
+            enableRating();
+        });
+
+        if (!scope.disableRating)
+          enableRating();
         // Create stars for current note
         displayStars(scope.currentNote);
       },
 
       scope: {
         currentNote: "=currentNote",
-        alreadyRated: "=alreadyRated",
+        disableRating: "=disableRating",
         rateMethod: "=rateMethod",
         votesNumber: "=votesNumber"
       },

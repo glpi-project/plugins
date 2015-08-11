@@ -13,19 +13,24 @@ angular.module('frontendApp')
     $scope.plugin = {
       authors: {}
     };
+    $scope.rated = false;
 
     $scope.ratePlugin = function(note) {
-      $http({
-        method: 'POST',
-        url: API_URL + '/plugin/star',
-        data: {
-          note: note,
-          plugin_id: $scope.plugin.id
-        }
-      })
-      .success(function(data) {
-        $scope.plugin.note = data.new_average;
-      });
+      if (!$scope.rated) {
+        $http({
+          method: 'POST',
+          url: API_URL + '/plugin/star',
+          data: {
+            note: note,
+            plugin_id: $scope.plugin.id
+          }
+        })
+        .success(function(data) {
+          $scope.plugin.note = data.new_average;
+        });
+        localStorage.setItem('rated_' + $scope.plugin.id, true);
+        $scope.rated = true;
+      }
     };
 
     $scope.download = function() {
@@ -42,5 +47,6 @@ angular.module('frontendApp')
     })
     .success(function(data) {
       $scope.plugin = data;
+      $scope.rated = (localStorage.getItem('rated_' + $scope.plugin.id) == 'true') ? true : false;
     });
   });
