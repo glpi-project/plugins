@@ -3,12 +3,7 @@
 angular
   .module('frontendApp')
   // Configuration of states in router
-  .config(function($stateProvider, $urlRouterProvider, $mdThemingProvider) {
-
-     // Define colors of application, from material angular
-     $mdThemingProvider.theme('default')
-       .primaryPalette('red', { 'default': '200' })
-       .accentPalette('orange');
+  .config(function($stateProvider, $urlRouterProvider) {
 
      // For any unmatched url, redirect to /
      $urlRouterProvider.otherwise("/");

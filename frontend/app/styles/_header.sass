@@ -1,5 +1,5 @@
 .header
-    margin-bottom: 30px
+    background-color: $darkblue
     .logo
         .sitename
             display: inline-block
@@ -11,11 +11,20 @@
             margin: 0
             display: inline-block
             vertical-align: bottom
-            color: $red
+            color: $lightblue
     .legend
         width: 182px
         text-align: center
+        color: $lightblue
 
-.searchbox:after
-    content: "\f002"
-    color: $lightgrey
+    .searchbox
+        input   
+            color: $verylightblue
+        label
+            color: $lightblue !important
+    .md-input-focused 
+        input 
+            border-color: $lightblue !important
+    .searchbox:after
+        content: "\f002"
+        color: $lightblue

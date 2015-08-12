@@ -27,30 +27,30 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
+    <div class="header" ng-controller="HeaderCtrl">
+       <div layout="row" layout-wrap>
+         <div flex="30" flex-sm="100" class='logo'>
+           <a class="sitename" href="#/">Glpi</a>
+           <h2>Plugins</h2>
+           <div class='legend'>{{'SLOGAN' | translate}}</div>
+         </div>
+         <div flex="65" flex-sm="100">
+           <md-input-container class="searchbox picbox md-accent md-hue-3">
+             <label>{{'SEARCHBAR_PLACEHOLDER'|translate}}</label>
+             <input type="text" ng-model="search" class="search_bar" focus-me="$root.focusSearch">
+           </md-input-container>
+         </div>
+       </div> 
+     </div>
+
     <section class="main" layout="row" flex>
       <md-content class="wrapper" flex>
-
-        <div class="header" ng-controller="HeaderCtrl">
-          <div layout="row" layout-wrap>
-            <div flex="30" flex-sm="100" class='logo'>
-              <a class="sitename" href="#/">Glpi</a>
-              <h2>Plugins</h2>
-              <div class='legend'>{{'SLOGAN' | translate}}</div>
-            </div>
-            <div flex="65" flex-sm="100">
-              <md-input-container class="searchbox picbox">
-                <label>{{'SEARCHBAR_PLACEHOLDER'|translate}}</label>
-                <input type="text" ng-model="search" class="search_bar" focus-me="$root.focusSearch">
-              </md-input-container>
-            </div>
-          </div> 
-        </div>
         <div class="container">
           <div ui-view></div>
         </div>
       </md-content>
 
-      <div ng-controller="NavCtrl">
+      <div ng-controller="NavCtrl" class="sidebar">
          <md-sidenav class="md-sidenav-right" md-component-id="side-menu" md-is-locked-open="$mdMedia('gt-md')">
             <md-button ng-click="closeNavBar()" class="md-icon-button" aria-label="Close Menu" hide-gt-sm>
                <i class="fa fa-times-circle"></i>  
@@ -125,6 +125,7 @@
     <script src="scripts/translations/fr.js"></script>
     <script src="scripts/translations/es.js"></script>
     <script src="scripts/conf.js"></script>
+    <script src="scripts/colors.js"></script>
     <script src="scripts/routes.js"></script>
     <script src="scripts/controllers/header.js"></script>
     <script src="scripts/controllers/nav.js"></script>
