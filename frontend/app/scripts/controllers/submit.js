@@ -43,7 +43,7 @@ angular.module('frontendApp')
                                       .content('Thanks for your time ! We are going to verify the plugin you have submitted.')
                                       .position('top'));
                 $timeout(function() {
-                    $state.go('home');
+                    $state.go('featured');
                 },3800);
 
             } else {

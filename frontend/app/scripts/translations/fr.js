@@ -19,7 +19,7 @@ angular
         TAGS_SUB: "Aux plugins les plus nombreux",
         AUTHORS: "Auteurs",
         AUTHORS_SUB: "Plus gros contributeurs",
-        NAV_BROWSE: "Naviguer",
+        NAV_FEATURED: "A la une",
         NAV_SEARCH: "Rechercher",
         NAV_SUBMIT_A_PLUGIN: "Ajouter votre plugin",
         NAV_CONTACT: "Contactez-nous",

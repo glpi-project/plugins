@@ -9,10 +9,10 @@ angular
      $urlRouterProvider.otherwise("/");
 
      $stateProvider
-       .state('home', {
+       .state('featured', {
          url: "/",
-         templateUrl: "views/home.html",
-         controller: 'HomeCtrl'
+         templateUrl: "views/featured.html",
+         controller: 'FeaturedCtrl'
        })
        .state('plugin', {
          url: '/plugin/:key',

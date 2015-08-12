@@ -18,7 +18,7 @@ angular.module('frontendApp')
                 });
         }
         else {
-            $state.go('home');
+            $state.go('featured');
         }
     });
   });

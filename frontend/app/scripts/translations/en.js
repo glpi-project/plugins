@@ -19,7 +19,7 @@ angular
         TAGS_SUB: "With the highest number of plugin",
         AUTHORS: "Authors",
         AUTHORS_SUB: "With the highest number of contributions",
-        NAV_BROWSE: "Browse",
+        NAV_FEATURED: "Featured",
         NAV_SEARCH: "Search",
         NAV_SUBMIT_A_PLUGIN: "Submit a plugin",
         NAV_CONTACT: "Contact",
