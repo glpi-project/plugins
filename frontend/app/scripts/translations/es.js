@@ -40,6 +40,7 @@ angular
         YOUR_MESSAGE: "Votre message",
         SUBMIT: "Envoyer",
         SUBMIT_YOUR_PLUGIN: "Ajouter votre plugin!",
-        SUB_SUBMIT_YOUR_PLUGIN: "Veuillez fournir une URL vers le fichier xml décrivant votre plugin"
+        SUB_SUBMIT_YOUR_PLUGIN: "Veuillez fournir une URL vers le fichier xml décrivant votre plugin",
+        GLPI_PLUGIN_CREATORS: "GLPI Plugin Creators"
       });
   });

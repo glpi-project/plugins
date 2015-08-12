@@ -69,7 +69,7 @@ angular.module('frontendApp')
       if ($rootScope.authors.length < 1) {      
         $http({
           method: 'GET',
-          url: apiUrl + '/author'
+          url: apiUrl + '/author/top'
         })
         .success(function(data, status, headers, config) {
           $rootScope.authors = data;

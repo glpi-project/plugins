@@ -34,6 +34,11 @@ angular
         templateUrl: "views/plugin_list.html",
         controller: "TagCtrl"
        })
+       .state('authors', {
+        url: '/authors',
+        templateUrl: 'views/authors.html',
+        controller: 'AuthorsCtrl'
+       })
        .state('author', {
         url: '/author/:id',
         templateUrl: 'views/author.html',
