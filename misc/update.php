@@ -18,6 +18,7 @@ use \API\Model\PluginVersion;
 use \API\Model\PluginScreenshot;
 use \API\Model\Tag;
 use \API\Core\Tool;
+use \API\Core\ValidableXMLPluginDescription;
 
 class DatabaseUpdater {
     public function __construct() {
@@ -54,11 +55,15 @@ class DatabaseUpdater {
             }
 
             // loading XML OO-style with simplemxl
-            $xml = @simplexml_load_string($xml);
-            if (!$xml) {
-                echo('Plugin (' . $plugin->id . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Unreadable XML, Skipping.\n");
+            $xml = new ValidableXMLPluginDescription($xml);
+            if (!$xml->isValid()) {
+                echo('Plugin (' . $plugin->id . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Unreadable/Non validable XML, Skipping.\n");
+                echo("Errors: \n");
+                foreach ($xml->errors as $error)
+                    echo (" - ".$error."\n");
                 continue;
             }
+            $xml = $xml->contents;
 
             echo('Plugin (' . $plugin->id . '/'. sizeof($plugins) .'): Updating ... ');
             $this->updatePlugin($plugin, $xml, $crc);

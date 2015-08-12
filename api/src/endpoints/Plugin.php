@@ -161,11 +161,14 @@ $submit = function() use($app, $recaptcha_secret) {
           "error" => "We cannot fetch that URL."
       ]);
 
-    $xml = @simplexml_load_string($xml);
-    if (!$xml)
+    $xml = new ValidableXMLPluginDescription($xml);
+    if (!$xml->isValid()) {
       return  Tool::endWithJson([
-          "error" => "XML cannot be parsed."
+          "error" => "Unreadable/Non validable XML.",
+          "details" => $xml->errors
       ]);
+    }
+    $xml = $xml->contents;
 
     if (Plugin::where('key', '=', $xml->key)->count() > 0)
       return  Tool::endWithJson([
