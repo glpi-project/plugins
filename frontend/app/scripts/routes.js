@@ -29,6 +29,11 @@ angular
          templateUrl: "views/plugin_list.html",
          controller: "SearchCtrl"
        })
+       .state('tags', {
+        url: '/tags',
+        templateUrl: "views/tags.html",
+        controller: "TagsCtrl"
+       })
        .state('tag', {
         url: '/tag/:key',
         templateUrl: "views/plugin_list.html",

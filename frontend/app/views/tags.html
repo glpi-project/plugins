@@ -1,0 +1,7 @@
+<div layout="column">
+	<h2>{{'TAGS'|translate}}</h2>
+
+	<ul ng-repeat="tag in tags">
+		<li><a ui-sref="tag({key: tag.key})">{{tag.tag}}</a></li>
+	</ul>
+</div>
