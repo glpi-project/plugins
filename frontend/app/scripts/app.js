@@ -18,7 +18,8 @@ angular
     'hljs',
     'ngSanitize',
     'pascalprecht.translate', 
-    'jkuri.gallery'
+    'jkuri.gallery', 
+    'btford.markdown'
   ])
 
   // Determining current language
