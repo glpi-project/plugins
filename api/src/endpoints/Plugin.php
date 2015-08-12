@@ -17,6 +17,7 @@ use \Illuminate\Database\Capsule\Manager as DB;
 use \API\Model\Plugin;
 use \API\Model\PluginStar;
 use \ReCaptcha\ReCaptcha;
+use \API\Core\ValidableXMLPluginDescription;
 
 require dirname(__FILE__) . '/../../config.php';
 
