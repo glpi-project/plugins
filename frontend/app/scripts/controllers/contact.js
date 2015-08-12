@@ -42,7 +42,7 @@ angular.module('frontendApp')
                                       .capsule(true)
                                       .content('Thanks for your message ! Be certain we will love reading it'));
                 $timeout(function() {
-                    $state.go('home');
+                    $state.go('featured');
                 },3800);
             } else {
                 $mdToast.show($mdToast.simple()
