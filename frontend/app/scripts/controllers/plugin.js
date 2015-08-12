@@ -42,7 +42,6 @@ angular.module('frontendApp')
       return moment(date).fromNow();
     };
 
-
     // Enable retrieval of tab index according
     // to given language
     var getTabWithLang = function(lang, defaults) {
@@ -65,6 +64,20 @@ angular.module('frontendApp')
     });
 
     // Fetch the Plugin resource
+    $scope.$on('languageChange', function(event, data) {
+        var found_index = null;
+        for(var index in $scope.plugin.descriptions) {
+            if (data.newLang === $scope.plugin.descriptions[index].lang) {
+               found_index = index;
+            }
+        }
+        if (found_index !== null) {
+            $scope.selectedIndex = found_index;
+        }
+    });
+
+    $scope.screenshots = [];
+
     $http({
       method: 'GET',
       url: API_URL + '/plugin/' + $stateParams.key
@@ -72,6 +85,19 @@ angular.module('frontendApp')
     .success(function(data) {
       $scope.plugin = data;
       $scope.rated = (localStorage.getItem('rated_' + $scope.plugin.id) == 'true') ? true : false;
+
       $scope.selectedIndex = getTabWithLang(localStorage.getItem('lang'));
+
+      for (var index in $scope.plugin.screenshots) {
+         var screenshot_url =  $scope.plugin.screenshots[index].url;
+         var thumb_url =  screenshot_url;
+         if (typeof $scope.plugin.screenshots[index].thumb_url !== 'undefined') {
+            thumb_url = $scope.plugin.screenshots[index].thumb_url;
+         }
+         $scope.screenshots.push({'thumb': thumb_url, 
+                                  'img':   screenshot_url, 
+                                  'description': ""});
+      }
+
     });
   });

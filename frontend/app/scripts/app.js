@@ -17,7 +17,8 @@ angular
     'vcRecaptcha',
     'hljs',
     'ngSanitize',
-    'pascalprecht.translate'
+    'pascalprecht.translate', 
+    'jkuri.gallery'
   ])
 
   // Determining current language

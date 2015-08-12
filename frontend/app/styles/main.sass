@@ -72,6 +72,82 @@ ul li
     .icon
         margin-right: 0
 
+.plugin_header
+    border-bottom: 1px dashed $lightgrey
+    padding-bottom: 5px
+.plugin
+    margin-top: 35px
+    min-height: 500px
+    .plugin_name
+        margin-right: 50px
+    h2
+        text-transform: capitalize
+    .author, .download
+        i
+            vertical-align: middle
+        .downloads
+            color: $white
+    .tabs
+        background-color: inherit
+        .description
+            background-color: $verylightgrey
+    .ng-gallery
+        margin: 40px 0 0 10px
+        max-width: 440px
+        .ng-thumb
+            width: 200px
+            height: 150px
+            margin: 10px
+            display: inline-block
+            text-align: center
+    .ng-thumbnails-wrapper
+        .ng-thumbnails
+            width: 4000px !important
+
+    .infos
+        overflow: visible
+        ul
+            padding: 0
+            display: table
+            li
+                margin-top: 8px
+                display: table-row
+                label
+                    display: table-cell
+                    padding: 5px 10px 0 0
+                    color: $grey
+                    text-transform: uppercase
+                label + span
+                    display: table-cell
+
+@media (max-width: 599px)
+    .plugin
+        .plugin_name
+            margin-right: 0
+.inline-authors
+    span
+        padding-right: 6px
+    a:after
+        content: ", "
+        display: inline-block
+        margin: 0 4px 0 2px
+        color: #000
+    a:last-child
+        &:after
+            display: none
+rate-box
+    margin-left: 5px
+    i.fa
+        color: $yellow
+        font-size: 20px
+        &.hover
+            cursor: pointer
+            color: $lightblue
+    votes
+        color: rgba(0,0,0,0.54)
+        font-size: 17px
+        margin-left: 6px
+
 .container
     div[layout=row]
         md-content:nth-child(2)
