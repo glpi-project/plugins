@@ -1,7 +1,15 @@
 <div layout="column">
-	<h2>{{'GLPI_PLUGIN_CREATORS'|translate}}</h2>
-
-	<ul ng-repeat="author in authors">
-		<li><a ui-sref="author({id: author.id})">{{author.name}}</a></li>
-	</ul>
+  <md-list class="plugin-list">
+     <md-subheader class='topic'>
+        <a ui-sref="authors">{{'AUTHORS'|translate}}</a>
+     </md-subheader>
+     <md-list-item ng-repeat="author in authors">
+        <md-button ui-sref="author({id: author.id})">
+           <h4>{{author.name}}</h4>
+           <md-tooltip md-direction="right">
+              Contributed to {{author.plugin_count}} plugins
+           </md-tooltip>
+        </md-button>
+     </md-list-item>
+  </md-list>
 </div>
