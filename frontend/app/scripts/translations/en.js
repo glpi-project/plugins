@@ -20,6 +20,7 @@ angular
         AUTHORS: "Authors",
         AUTHORS_SUB: "With the highest number of contributions",
         NAV_FEATURED: "Featured",
+        NAV_ALLPLUGINS: "All plugins",
         NAV_SEARCH: "Search",
         NAV_SUBMIT_A_PLUGIN: "Submit a plugin",
         NAV_CONTACT: "Contact",

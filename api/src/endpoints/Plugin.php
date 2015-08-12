@@ -47,9 +47,12 @@ $single = function($key) use($app) {
  * List of all plugins
  */
 $all = function() use($app) {
-   $all = Plugin::withDownloads()
-                ->with('descriptions', 'authors')
-                ->get();
+   $all = Plugin::short()
+                 ->with('authors', 'versions', 'descriptions')
+                 ->withDownloads()
+                 ->withAverageNote()
+                 ->descWithLang(Tool::getRequestLang())
+                 ->get();
    Tool::endWithJson($all);
 };
 

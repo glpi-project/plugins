@@ -14,6 +14,11 @@ angular
          templateUrl: "views/featured.html",
          controller: 'FeaturedCtrl'
        })
+       .state('all', {
+          url: "/plugins",
+          templateUrl: 'views/plugin_list.html',
+          controller: 'AllCtrl'
+       })
        .state('plugin', {
          url: '/plugin/:key',
          templateUrl: 'views/plugin.html',
