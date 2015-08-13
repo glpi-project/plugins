@@ -9,17 +9,18 @@
  */
 angular.module('frontendApp')
    .controller('NavCtrl', ['$scope', '$mdSidenav', '$rootScope',
-   function ($scope, $mdSidenav, $rootScope) {
-      
-      $scope.toggleNavBar = function() {
-         $mdSidenav("side-menu").toggle();
-      };
+      function($scope, $mdSidenav, $rootScope) {
 
-      $scope.closeNavBar = function() {
-         $mdSidenav("side-menu").close();
-      };
+         $scope.toggleNavBar = function() {
+            $mdSidenav("side-menu").toggle();
+         };
 
-      $rootScope.$on('$stateChangeStart', function(){ 
-          $scope.closeNavBar();
-      });   
-   }]);
+         $scope.closeNavBar = function() {
+            $mdSidenav("side-menu").close();
+         };
+
+         $rootScope.$on('$stateChangeStart', function() {
+            $scope.closeNavBar();
+         });
+      }
+   ]);

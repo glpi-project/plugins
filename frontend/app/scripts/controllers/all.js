@@ -8,19 +8,19 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('AllCtrl', function (API_URL, $http, $scope) {
-    var grabAllPlugins = function() {
-        $http({
+   .controller('AllCtrl', function(API_URL, $http, $scope) {
+      var grabAllPlugins = function() {
+         $http({
             method: "GET",
             url: API_URL + '/plugin'
-            })
-            .success(function(data) {
-                $scope.results = data;
-            });
-    };
+         })
+         .success(function(data) {
+            $scope.results = data;
+         });
+      };
 
-    $scope.results = [];
+      $scope.results = [];
 
-    grabAllPlugins();
-    $scope.$on('languageChange', grabAllPlugins);
-  });
+      grabAllPlugins();
+      $scope.$on('languageChange', grabAllPlugins);
+   });

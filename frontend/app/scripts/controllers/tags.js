@@ -8,12 +8,12 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('TagsCtrl', function (API_URL, $http, $stateParams, $scope) {
-	    $http({
-	            method: "GET",
-	            url: API_URL + '/tags'
-	        })
-	        .success(function(data) {
-	            $scope.tags = data;
-	        });
-  });
+   .controller('TagsCtrl', function(API_URL, $http, $stateParams, $scope) {
+      $http({
+         method: "GET",
+         url: API_URL + '/tags'
+      })
+         .success(function(data) {
+            $scope.tags = data;
+         });
+   });

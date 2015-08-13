@@ -9,8 +9,8 @@
  * Filter in the frontendApp.
  */
 angular.module('frontendApp')
-  .filter('unsafe', function ($sce) {
-    return function (val) {
-      return $sce.trustAsHtml(val);
-    };
-  });
+   .filter('unsafe', function($sce) {
+      return function(val) {
+         return $sce.trustAsHtml(val);
+      };
+   });
