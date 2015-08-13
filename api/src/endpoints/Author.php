@@ -23,24 +23,24 @@ $top = function() use($app) {
 };
 
 $single = function($id) use($app) {
-    $single = \API\Model\Author::withPluginCount()
-                               ->find($id);
-    Tool::endWithJson($single);
+   $single = \API\Model\Author::withPluginCount()
+                                  ->find($id);
+   Tool::endWithJson($single);
 };
 
 $author_plugins = function($id) use($app) {
-    $author_plugins = \API\Model\Author::find($id);
-    if (!$author_plugins)
-        return Tool::endWithJson([
-            "error" => "Cannot find author"
-        ]);
-    Tool::endWithJson($author_plugins->plugins()
-                                     ->with('versions', 'authors')
-                                     ->short()
-                                     ->withDownloads()
-                                     ->withAverageNote()
-                                     ->descWithLang(Tool::getRequestLang())
-                                     ->get());
+   $author_plugins = \API\Model\Author::find($id);
+   if (!$author_plugins)
+      return Tool::endWithJson([
+         "error" => "Cannot find author"
+      ]);
+   Tool::endWithJson($author_plugins->plugins()
+                                    ->with('versions', 'authors')
+                                    ->short()
+                                    ->withDownloads()
+                                    ->withAverageNote()
+                                    ->descWithLang(Tool::getRequestLang())
+                                    ->get());
 };
 
 // HTTP REST Map

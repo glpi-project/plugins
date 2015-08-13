@@ -1,22 +1,22 @@
 {
-    "name": "glpi-plugin-directory/api",
-    "description": "The Server-code for the API of glpi-plugin-directory",
-    "authors": [
-        {
-            "name": "Nelson Zamith",
-            "email": "nzamith@teclib.com"
-        }
-    ],
-    "require": {
-        "slim/slim": "~2.0",
-        "illuminate/database": "^5.1",
-        "illuminate/events": "^5.1",
-        "google/recaptcha": "^1.1"
-    },
-    "autoload": {
-        "psr-4": {
-            "API\\Core\\": "src/core",
-            "API\\Model\\": "src/models"
-        }
-    }
+   "name": "glpi-plugin-directory/api",
+   "description": "The Server-code for the API of glpi-plugin-directory",
+   "authors": [
+      {
+         "name": "Nelson Zamith",
+         "email": "nzamith@teclib.com"
+      }
+   ],
+   "require": {
+      "slim/slim": "~2.0",
+      "illuminate/database": "^5.1",
+      "illuminate/events": "^5.1",
+      "google/recaptcha": "^1.1"
+   },
+   "autoload": {
+      "psr-4": {
+         "API\\Core\\": "src/core",
+         "API\\Model\\": "src/models"
+      }
+   }
 }

@@ -26,8 +26,9 @@ class Author extends Model {
             ->leftJoin('plugin_author', 'author.id', '=', 'plugin_author.author_id')
             ->groupBy('author.name')
             ->orderBy('plugin_count', 'DESC');
-      if ($limit != false)
+      if ($limit != false) {
          $query->take($limit);
+      }
       return $query;
    }
 

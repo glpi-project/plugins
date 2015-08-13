@@ -19,10 +19,10 @@ $search = function() use($app) {
           $allowed_languages;
 
    $body = Tool::getBody();
-   if ( $body == NULL ||
+   if ($body == NULL ||
        !isset($body->query_string) ||
-       strlen($body->query_string) < $search_min_length )
-   {
+       strlen($body->query_string) < $search_min_length ) {
+
       return Tool::endWithJson([
          "error" => "Your search string needs to ".
                   "have at least ".$search_min_length." chars"
@@ -43,5 +43,4 @@ $search = function() use($app) {
 };
 
 $app->post('/search', $search);
-
 $app->options('/search', function(){});

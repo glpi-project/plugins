@@ -15,45 +15,46 @@ use \API\Model\Tag;
 use \Illuminate\Database\Capsule\Manager as DB;
 
 $tags_all = function() use ($app) {
-    $tags = Tag::withUsage()
-               ->orderBy('plugin_count', 'DESC')
-               ->get();
-    Tool::endWithJson($tags);
+   $tags = Tag::withUsage()
+            ->orderBy('plugin_count', 'DESC')
+            ->get();
+   Tool::endWithJson($tags);
 };
 
 $tags_top = function() use ($app) {
-    $tags = Tag::withUsage()
-               ->orderBy('plugin_count', 'DESC')
-               ->limit(10)
-               ->get();
-    Tool::endWithJson($tags);
+   $tags = Tag::withUsage()
+            ->orderBy('plugin_count', 'DESC')
+            ->limit(10)
+            ->get();
+   Tool::endWithJson($tags);
 };
 
 $tag_single = function($key) use($app) {
-  $tag = Tag::where('key', '=', $key)->first();
-  if ($tag == NULL)
-    return Tool::endWithJson([
+   $tag = Tag::where('key', '=', $key)->first();
+   if ($tag == NULL) {
+      return Tool::endWithJson([
             "error" => "Tag not found"
-        ], 400);
+         ], 400);
+   }
   Tool::endWithJson($tag);
 };
 
 $tag_plugins = function($key) use($app) {
-    $tag = Tag::where('key', '=', $key)->first();
-    if ($tag == NULL) {
-        return Tool::endWithJson([
-            "error" => "Tag not found"
-        ], 400);
-    }
+   $tag = Tag::where('key', '=', $key)->first();
+   if ($tag == NULL) {
+      return Tool::endWithJson([
+         "error" => "Tag not found"
+      ], 400);
+   }
 
-    $plugins = Plugin::with('versions', 'authors')
-                     ->short()
-                     ->withDownloads()
-                     ->withAverageNote()
-                     ->descWithLang(Tool::getRequestLang())
-                     ->withTag($tag)
-                     ->get();
-    Tool::endWithJson($plugins);
+   $plugins = Plugin::with('versions', 'authors')
+                ->short()
+                ->withDownloads()
+                ->withAverageNote()
+                ->descWithLang(Tool::getRequestLang())
+                ->withTag($tag)
+                ->get();
+   Tool::endWithJson($plugins);
 };
 
 // HTTP rest map
