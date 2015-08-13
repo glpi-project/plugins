@@ -35,9 +35,9 @@ class Tool {
     * url-friendly identifiers for tags
     */
    public static function getUrlSlug($free_string) {
-    $free_string = strtolower($free_string);
-    $free_string = mb_ereg_replace ( '[^a-z]' , '-' , $free_string);
-    return $free_string;
+      $free_string = strtolower($free_string);
+      $free_string = mb_ereg_replace ( '[^a-z]' , '-' , $free_string);
+      return $free_string;
    }
 
    /**
@@ -46,15 +46,14 @@ class Tool {
     * language for text
     */
    public static function getRequestLang() {
-    global $app;
-    if ($app->request->headers['x-lang']) {
-      if (in_array($app->request->headers['x-lang'],
-                    ['fr','en','es'])) {
-
-        return $app->request->headers['x-lang'];
+      global $app;
+      if ($app->request->headers['x-lang']) {
+         if (in_array($app->request->headers['x-lang'],
+                       ['fr','en','es'])) {
+            return $app->request->headers['x-lang'];
+         }
       }
-    }
-    return 'en';
+      return 'en';
    }
 
    /**
@@ -62,10 +61,10 @@ class Tool {
     */
    public static $config = null;
    public static function getConfig() {
-    if (!self::$config) {
-      require dirname(__FILE__) . '/../../config.php';
-      self::$config = $config;
-    }
-    return self::$config;
+      if (!self::$config) {
+         require dirname(__FILE__) . '/../../config.php';
+         self::$config = $config;
+      }
+      return self::$config;
    }
 }
