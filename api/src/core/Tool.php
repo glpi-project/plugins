@@ -67,4 +67,41 @@ class Tool {
       }
       return self::$config;
    }
+
+   /**
+    * Method to fetch X-Range header in a
+    * convenient way
+    */
+   public static function getRangeHeaders() {
+      global $app;
+      $default = [
+         "startindex" => 0,
+         "endindex" => Tool::getConfig()['default_max_number_of_resources']
+      ];
+
+      if (!$app->request->headers['x-range'])
+         return $default;
+
+      $start_end = explode('-', $app->request->headers['x-range']);
+      if (sizeof($start_end) != 2)
+         return $default;
+
+      return [
+         "startindex" => (int)$start_end[0],
+         "endindex" => (int)$start_end[1]
+      ];
+   }
+
+   /**
+    * Returns a base Eloquent Model with skip()
+    * and take() settings
+    */
+   public static function getCollectionPaginated($collection_name) {
+      $range_headers = Tool::getRangeHeaders();
+      $class_name = '\API\Model\\'.$collection_name;
+      $model = new $class_name;
+      $model = $model->skip($range_headers['startindex'])
+                     ->take($range_headers['endindex'] - $range_headers['startindex']);
+      return $model;
+   }
 }

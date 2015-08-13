@@ -45,15 +45,13 @@ $single = function($key) use($app) {
  * List of all plugins
  */
 $all = function() use($app) {
-   // Computing number of resources
-   $count = Plugin::count();
-
-   $all = Plugin::short()
-                 ->with('authors', 'versions', 'descriptions')
-                 ->withDownloads()
-                 ->withAverageNote()
-                 ->descWithLang(Tool::getRequestLang())
-                 ->get();
+   $all = Tool::getCollectionPaginated('Plugin')
+              ->short()
+              ->with('authors', 'versions', 'descriptions')
+              ->withDownloads()
+              ->withAverageNote()
+              ->descWithLang(Tool::getRequestLang())
+              ->get();
    Tool::endWithJson($all);
 };
 
