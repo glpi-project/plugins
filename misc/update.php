@@ -141,11 +141,13 @@ class DatabaseUpdater {
       // Refreshing versions
       $plugin->versions()->delete();
       foreach($xml->versions->children() as $_version) {
-         $version = new PluginVersion;
-         $version->num = (string)$_version->num;
-         $version->compatibility = (string)$_version->compatibility;
-         $version->plugin_id = $plugin->id;
-         $version->save();
+         foreach ($_version->compatibility as $compat) {
+            $version = new PluginVersion;
+            $version->num = (string)$_version->num;
+            $version->compatibility = (string)$compat;
+            $version->plugin_id = $plugin->id;
+            $version->save();
+         }
       }
 
       // Refreshing screenshots
