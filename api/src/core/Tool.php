@@ -56,4 +56,16 @@ class Tool {
     }
     return 'en';
    }
+
+   /**
+    * This method returns the configuration array
+    */
+   public static $config = null;
+   public static function getConfig() {
+    if (!self::$config) {
+      require dirname(__FILE__) . '/../../config.php';
+      self::$config = $config;
+    }
+    return self::$config;
+   }
 }
