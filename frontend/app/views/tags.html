@@ -4,8 +4,8 @@
       <md-list-item ng-repeat="tag in tags" class="result">
          <md-button ui-sref="tag({key: tag.key})">
             <h4>{{tag.tag}}</h4>
-            <md-tooltip md-direction="right">Tagged on {{tag.plugin_count}} plugins</md-tooltip>
          </md-button>
+         <span class="info">Tagged on {{tag.plugin_count}} plugins</span class="info">
       </md-list-item>
    </md-list>
 </div>
