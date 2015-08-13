@@ -19,11 +19,12 @@ use \ReCaptcha\ReCaptcha;
 
 require dirname(__FILE__) . '/../../config.php';
 
-$send = function() use($app, $recaptcha_secret, $msg_alerts) {
+$send = function() use($app) {
+    $msg_alerts_settings = Tool::getConfig()['msg_alerts'];
     $body = Tool::getBody();
     $fields = ['firstname', 'lastname', 'email', 'subject', 'message'];
 
-    $recaptcha = new ReCaptcha($recaptcha_secret);
+    $recaptcha = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
     $resp = $recaptcha->verify($body->recaptcha_response);
     if (!$resp->isSuccess()) {
        return  Tool::endWithJson([
@@ -40,7 +41,7 @@ $send = function() use($app, $recaptcha_secret, $msg_alerts) {
 
     // Preparing to send mail, making recipients string
     $recipients = ''; $i = 0;
-    foreach ($msg_alerts['recipients'] as $recipient) {
+    foreach ($msg_alerts_settings['recipients'] as $recipient) {
         if ($i > 0)
             $recipients .= ', ';
         $recipients .= $recipient;
@@ -49,7 +50,7 @@ $send = function() use($app, $recaptcha_secret, $msg_alerts) {
 
     // Sending mail
     mail($recipients,
-        $msg_alerts['subject_prefix'] . $body->contact->subject,
+        $msg_alerts_settings['subject_prefix'] . $body->contact->subject,
         $body->contact->message,
         "From: ".$body->contact->firstname." ".$body->contact->lastname." <".$body->contact->email.">");
 
