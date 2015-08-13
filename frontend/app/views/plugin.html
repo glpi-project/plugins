@@ -1,86 +1,84 @@
 <div layout="column" class="plugin">
-
-	<div layout="row" layout-wrap layout-align="start start" class="plugin_header">
-      <img class="icon" src="{{plugin.logo_url}}" flex-sm="10">
-
+   <div layout="row" layout-wrap layout-align="start start" class="plugin_header">
+      <img class="icon" src="{{plugin.logo_url}}" flex-sm="10" />
       <div class='plugin_name' flex-sm="45">
          <h2>{{plugin.name}}</h2>
-         <h4 class="inline-authors"><span>{{'BY'|translate}}</span><span inline-authors="plugin.authors"></span></h4>
+         <h4 class="inline-authors">
+            <span>{{'BY'|translate}}</span>
+            <span inline-authors="plugin.authors"></span>
+         </h4>
       </div>
-
       <div flex-sm="45" layout="row" layout-sm="column" layout-align="end end">
          <div class='pills'>
-            <span ng-repeat="version in plugin.versions | unique: 'compatibility' | subpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
-
-            <span ng-show="plugin.versions.length > 3">
+            <span ng-repeat="version in plugin.versions | unique: 'compatibility' | subpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
+            <span ng-show="plugin.versions.length >3">
                ...
                <md-tooltip class="versions_more">
                   <span ng-repeat="version in plugin.versions | unique: 'compatibility' | lastpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
                </md-tooltip>
             </span>
          </div>
-
          <rate-box current-note="plugin.note" disable-rating="rated" rate-method="ratePlugin" votes-number="plugin.n_votes"></rate-box>
       </div>
-
       <span class='download flex_right'>
-        <span class="downloads">
+         <span class="downloads">
             <span class='pill bg_red'>
                <span ng-bind-html='plugin.downloaded | nrFormat'></span>
                <md-tooltip>downloads</md-tooltip>
             </span>
-        </span>
-        <md-button class="md-fab md-primary md-raised" ng-click="download()">
+         </span>
+         <md-button class="md-fab md-primary md-raised" ng-click="download()">
             <i class="fa fa-2x fa-download white"></i>
             <md-tooltip>Download</md-tooltip>
          </md-button>
       </span>
-    </div>
-
-    <div layout="row" layout-wrap>
-        <md-content class='tabs' flex="50" flex-sm="100">
-            <md-tabs md-dynamic-height md-selected="selectedIndex">
-                <md-tab ng-repeat="description in plugin.descriptions" label="{{description.lang}}">
-                    <md-content class="md-padding description">
-                        <div btf-markdown="description.long_description">
-                        </div>
-                    </md-content>
-                </md-tab>
-            </md-tabs>
-        </md-content>
-
+   </div>
+   <div layout="row" layout-wrap>
+      <md-content class='tabs' flex="50" flex-sm="100">
+         <md-tabs md-dynamic-height md-selected="selectedIndex">
+            <md-tab ng-repeat="description in plugin.descriptions" label="{{description.lang}}">
+               <md-content class="md-padding description">
+                  <div btf-markdown="description.long_description"></div>
+               </md-content>
+            </md-tab>
+         </md-tabs>
+      </md-content>
       <div class='screenshots' flex="50" flex-sm="100">
          <ng-gallery images="screenshots"></ng-gallery>
       </div>
-    </div>
-    <div layout="row">
-        <md-content class="infos" flex="50">
-            <ul>
-                <li>
-                    <label>{{'VERSION'|translate}}</label>
-                    <span>{{plugin.versions[0].num}}</span
-                </li>
-                <li>
-                    <label>{{'COMPATIBLE_WITH'|translate}}</label>
-                    <span>GLPI Version {{plugin.compatible_with}}</span>
-                </li>
-                <li ng-show="plugin.homepage_url">
-                    <label>{{'HOMEPAGE'|translate}}</label>
-                    <span><a href="{{plugin.homepage_url}}">{{plugin.homepage_url}}</a></td>
-                </li>
-                <li ng-show="plugin.issues_url">
-                    <label>Issues</label>
-                    <span><a href="{{plugin.issues_url}}">{{plugin.issues_url}}</a></td>
-                </li>
-                <li>
-                    <label>{{'ADDED'|translate}}</label>
-                    <span>{{fromNow(plugin.date_added)}}</span
-                </li>
-                <li>
-                    <label>{{'UPDATED'|translate}}</label>
-                    <span>{{fromNow(plugin.date_updated)}}</span
-                </li>
-            </ul>
-        </md-content>
-    </div>
+   </div>
+   <div layout="row">
+      <md-content class="infos" flex="50">
+         <ul>
+            <li>
+               <label>{{'VERSION'|translate}}</label>
+               <span>{{plugin.versions[0].num}}</span>
+            </li>
+            <li>
+               <label>{{'COMPATIBLE_WITH'|translate}}</label>
+               <span>GLPI Version {{plugin.compatible_with}}</span>
+            </li>
+            <li ng-show="plugin.homepage_url">
+               <label>{{'HOMEPAGE'|translate}}</label>
+               <span>
+                  <a href="{{plugin.homepage_url}}">{{plugin.homepage_url}}</a>
+               </span>
+            </li>
+            <li ng-show="plugin.issues_url">
+               <label>Issues</label>
+               <span>
+                  <a href="{{plugin.issues_url}}">{{plugin.issues_url}}</a>
+               </span>
+            </li>
+            <li>
+               <label>{{'ADDED'|translate}}</label>
+               <span>{{fromNow(plugin.date_added)}}</span>
+            </li>
+            <li>
+               <label>{{'UPDATED'|translate}}</label>
+               <span>{{fromNow(plugin.date_updated)}}</span>
+            </li>
+         </ul>
+      </md-content>
+   </div>
 </div>

@@ -1,153 +1,149 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css(.) styles/vendor.css -->
-    <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
-    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
-    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
-    <link rel="stylesheet" href="bower_components/highlightjs/styles/default.css" />
-    <link rel="stylesheet" href="bower_components/flag-icon-css/css/flag-icon.min.css" />
-    <link rel="stylesheet" href="bower_components/ngGallery/src/css/ngGallery.css" />
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/ui.view.animate.css">
-    <!-- endbuild -->
-  </head>
-  <body ng-app="frontendApp">
-    <!--[if lte IE 8]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-
-    <div class="header" ng-controller="HeaderCtrl">
-       <div layout="row" layout-wrap>
-         <div flex="30" flex-sm="100" class='logo'>
-           <a class="sitename" href="#/">Glpi</a>
-           <h2>Plugins</h2>
-           <div class='legend'>{{'SLOGAN' | translate}}</div>
+   <head>
+      <meta charset="utf-8" />
+      <title></title>
+      <meta name="description" content="" />
+      <meta name="viewport" content="width=device-width" />
+      <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+      <!-- build:css(.) styles/vendor.css -->
+      <!-- bower:css -->
+      <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+      <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+      <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
+      <link rel="stylesheet" href="bower_components/highlightjs/styles/default.css" />
+      <link rel="stylesheet" href="bower_components/flag-icon-css/css/flag-icon.min.css" />
+      <link rel="stylesheet" href="bower_components/ngGallery/src/css/ngGallery.css" />
+      <!-- endbower -->
+      <!-- endbuild -->
+      <!-- build:css(.tmp) styles/main.css -->
+      <link rel="stylesheet" href="styles/main.css" />
+      <link rel="stylesheet" href="styles/ui.view.animate.css" />
+      <!-- endbuild -->
+   </head>
+   <body ng-app="frontendApp">
+      <!-- [if lte IE 8]>
+           <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+           <![endif] -->
+      <div class="header" ng-controller="HeaderCtrl">
+         <div layout="row" layout-wrap>
+            <div flex="30" flex-sm="100" class='logo'>
+               <a class="sitename" href="#/">Glpi</a>
+               <h2>Plugins</h2>
+               <div class='legend'>{{'SLOGAN' | translate}}</div>
+            </div>
+            <div flex="65" flex-sm="100">
+               <md-input-container class="searchbox picbox md-accent md-hue-3">
+                  <label>{{'SEARCHBAR_PLACEHOLDER'|translate}}</label>
+                  <input type="text" ng-model="search" class="search_bar" focus-me="$root.focusSearch" />
+               </md-input-container>
+            </div>
          </div>
-         <div flex="65" flex-sm="100">
-           <md-input-container class="searchbox picbox md-accent md-hue-3">
-             <label>{{'SEARCHBAR_PLACEHOLDER'|translate}}</label>
-             <input type="text" ng-model="search" class="search_bar" focus-me="$root.focusSearch">
-           </md-input-container>
+      </div>
+      <section class="main" layout="row" flex>
+         <md-content class="wrapper" flex>
+            <div class="container">
+               <div ui-view></div>
+            </div>
+         </md-content>
+         <div ng-controller="NavCtrl" class="sidebar">
+            <md-sidenav class="md-sidenav-right" md-component-id="side-menu" md-is-locked-open="$mdMedia('gt-md')">
+               <md-button ng-click="closeNavBar()" class="md-icon-button" aria-label="Close Menu" hide-gt-sm>
+                  <i class="fa fa-times-circle"></i>
+               </md-button>
+               <nav>
+                  <div class="lang-switcher" ng-controller="LangSwitcherCtrl">
+                     <md-select placeholder="Site Language" ng-model="lang">
+                        <md-option value="en">
+                           <span class="flag-icon flag-icon-gb"></span>English
+                        </md-option>
+                        <md-option value="fr">
+                           <span class="flag-icon flag-icon-fr"></span>French
+                        </md-option>
+                        <md-option value="es">
+                           <span class="flag-icon flag-icon-es"></span>Spanish
+                        </md-option>
+                     </md-select>
+                  </div>
+                  <a ui-sref="featured" ui-sref-active="active">{{'NAV_FEATURED'|translate}}</a>
+                  <a ui-sref="all" ui-sref-active="active">{{'NAV_ALLPLUGINS'|translate}}</a>
+                  <a ng-click="$root.focusSearch=true" ui-sref="search" ui-sref-active="active">{{'NAV_SEARCH'|translate}}</a>
+                  <a ui-sref="submit" ui-sref-active="active">{{'NAV_SUBMIT_A_PLUGIN'|translate}}</a>
+                  <a ui-sref="contact" ui-sref-active="active">{{'NAV_CONTACT'|translate}}</a>
+               </nav>
+            </md-sidenav>
+            <md-button class="md-icon-button toggle_menu" hide-gt-md aria-label="Toggle Menu" ng-click="toggleNavBar()">
+               <i class="fa fa-bars"></i>
+            </div>
+         </md-button>
+      </section>
+      <div class="footer">
+         <div class="container">
+            <p>&copy; 2015 Teclib</p>
          </div>
-       </div> 
-     </div>
-
-    <section class="main" layout="row" flex>
-      <md-content class="wrapper" flex>
-        <div class="container">
-          <div ui-view></div>
-        </div>
-      </md-content>
-
-      <div ng-controller="NavCtrl" class="sidebar">
-         <md-sidenav class="md-sidenav-right" md-component-id="side-menu" md-is-locked-open="$mdMedia('gt-md')">
-            <md-button ng-click="closeNavBar()" class="md-icon-button" aria-label="Close Menu" hide-gt-sm>
-               <i class="fa fa-times-circle"></i>  
-            </md-button>
-            <nav>
-               <div class="lang-switcher" ng-controller="LangSwitcherCtrl">
-                  <md-select placeholder="Site Language" ng-model="lang">
-                    <md-option value="en"><span class="flag-icon flag-icon-gb"></span> English</md-option>
-                    <md-option value="fr"><span class="flag-icon flag-icon-fr"></span> French</md-option>
-                    <md-option value="es"><span class="flag-icon flag-icon-es"></span> Spanish</md-option>
-                  </md-select>
-               </div>
-               <a ui-sref="featured" ui-sref-active="active">{{'NAV_FEATURED'|translate}}</a>
-               <a ui-sref="all" ui-sref-active="active">{{'NAV_ALLPLUGINS'|translate}}</a>
-               <a ng-click="$root.focusSearch=true" ui-sref="search" ui-sref-active="active">{{'NAV_SEARCH'|translate}}</a>
-               <a ui-sref="submit" ui-sref-active="active">{{'NAV_SUBMIT_A_PLUGIN'|translate}}</a>
-               <a ui-sref="contact" ui-sref-active="active">{{'NAV_CONTACT'|translate}}</a>
-            </nav>
-         </md-sidenav>
-         <md-button class="md-icon-button toggle_menu" hide-gt-md aria-label="Toggle Menu" ng-click="toggleNavBar()">
-            <i class="fa fa-bars"></i> 
       </div>
-
-      </md-button>
-    </section>
-
-    <div class="footer">
-      <div class="container">
-        <p>&copy; 2015 Teclib</p>
-      </div>
-    </div>
-
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-     <!--script>
-       !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
-       (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
-       r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
-       }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
-    </script-->
-
-    <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script>
-
-    <!-- build:js(.) scripts/vendor.js -->
-    <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-animate/angular-animate.js"></script>
-    <script src="bower_components/angular-aria/angular-aria.js"></script>
-    <script src="bower_components/angular-material/angular-material.js"></script>
-    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
-    <script src="bower_components/angular-recaptcha/release/angular-recaptcha.js"></script>
-    <script src="bower_components/highlightjs/highlight.pack.js"></script>
-    <script src="bower_components/angular-highlightjs/build/angular-highlightjs.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/moment/moment.js"></script>
-    <script src="bower_components/angular-translate/angular-translate.js"></script>
-    <script src="bower_components/ngGallery/src/js/ngGallery.js"></script>
-    <script src="bower_components/showdown/src/showdown.js"></script>
-    <script src="bower_components/angular-markdown-directive/markdown.js"></script>
-    <!-- endbower -->
-    <script src="bower_components/moment/locale/en-gb.js"></script>
-    <script src="bower_components/moment/locale/fr.js"></script>
-    <script src="bower_components/moment/locale/es.js"></script>
-    <!-- endbuild -->
-
-    <!-- build:js({.tmp,app}) scripts/scripts.js -->
-    <script src="scripts/app.js"></script>
-    <script src="scripts/translations/en.js"></script>
-    <script src="scripts/translations/fr.js"></script>
-    <script src="scripts/translations/es.js"></script>
-    <script src="scripts/conf.js"></script>
-    <script src="scripts/colors.js"></script>
-    <script src="scripts/routes.js"></script>
-    <script src="scripts/controllers/header.js"></script>
-    <script src="scripts/controllers/nav.js"></script>
-    <script src="scripts/controllers/search.js"></script>
-    <script src="scripts/controllers/featured.js"></script>
-    <script src="scripts/controllers/submit.js"></script>
-    <script src="scripts/controllers/contact.js"></script>
-    <script src="scripts/controllers/plugin.js"></script>
-    <script src="scripts/directives/ratebox.js"></script>
-    <script src="scripts/directives/focusme.js"></script>
-    <script src="scripts/filters/unsafe.js"></script>
-    <script src="scripts/filters/subpart.js"></script>
-    <script src="scripts/filters/unique.js"></script>
-    <script src="scripts/filters/nr_format.js"></script>
-    <script src="scripts/controllers/tag.js"></script>
-    <script src="scripts/controllers/author_plugins.js"></script>
-    <script src="scripts/controllers/author.js"></script>
-    <script src="scripts/directives/inlineauthors.js"></script>
-    <script src="scripts/controllers/langswitcher.js"></script>
-    <script src="scripts/controllers/all.js"></script>
-    <script src="scripts/controllers/authors.js"></script>
-    <script src="scripts/controllers/tags.js"></script>
-    <!-- endbuild -->
-</body>
+      <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+      <!-- script>
+           !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
+           (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
+           r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
+           }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+           ga('create', 'UA-XXXXX-X');
+           ga('send', 'pageview');
+           </script -->
+      <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script>
+      <!-- build:js(.) scripts/vendor.js -->
+      <!-- bower:js -->
+      <script src="bower_components/jquery/dist/jquery.js"></script>
+      <script src="bower_components/angular/angular.js"></script>
+      <script src="bower_components/angular-animate/angular-animate.js"></script>
+      <script src="bower_components/angular-aria/angular-aria.js"></script>
+      <script src="bower_components/angular-material/angular-material.js"></script>
+      <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+      <script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
+      <script src="bower_components/angular-recaptcha/release/angular-recaptcha.js"></script>
+      <script src="bower_components/highlightjs/highlight.pack.js"></script>
+      <script src="bower_components/angular-highlightjs/build/angular-highlightjs.js"></script>
+      <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+      <script src="bower_components/moment/moment.js"></script>
+      <script src="bower_components/angular-translate/angular-translate.js"></script>
+      <script src="bower_components/ngGallery/src/js/ngGallery.js"></script>
+      <script src="bower_components/showdown/src/showdown.js"></script>
+      <script src="bower_components/angular-markdown-directive/markdown.js"></script>
+      <!-- endbower -->
+      <script src="bower_components/moment/locale/en-gb.js"></script>
+      <script src="bower_components/moment/locale/fr.js"></script>
+      <script src="bower_components/moment/locale/es.js"></script>
+      <!-- endbuild -->
+      <!-- build:js({.tmp,app}) scripts/scripts.js -->
+      <script src="scripts/app.js"></script>
+      <script src="scripts/translations/en.js"></script>
+      <script src="scripts/translations/fr.js"></script>
+      <script src="scripts/translations/es.js"></script>
+      <script src="scripts/conf.js"></script>
+      <script src="scripts/colors.js"></script>
+      <script src="scripts/routes.js"></script>
+      <script src="scripts/controllers/header.js"></script>
+      <script src="scripts/controllers/nav.js"></script>
+      <script src="scripts/controllers/search.js"></script>
+      <script src="scripts/controllers/featured.js"></script>
+      <script src="scripts/controllers/submit.js"></script>
+      <script src="scripts/controllers/contact.js"></script>
+      <script src="scripts/controllers/plugin.js"></script>
+      <script src="scripts/directives/ratebox.js"></script>
+      <script src="scripts/directives/focusme.js"></script>
+      <script src="scripts/filters/unsafe.js"></script>
+      <script src="scripts/filters/subpart.js"></script>
+      <script src="scripts/filters/unique.js"></script>
+      <script src="scripts/filters/nr_format.js"></script>
+      <script src="scripts/controllers/tag.js"></script>
+      <script src="scripts/controllers/author_plugins.js"></script>
+      <script src="scripts/controllers/author.js"></script>
+      <script src="scripts/directives/inlineauthors.js"></script>
+      <script src="scripts/controllers/langswitcher.js"></script>
+      <script src="scripts/controllers/all.js"></script>
+      <script src="scripts/controllers/authors.js"></script>
+      <script src="scripts/controllers/tags.js"></script>
+      <!-- endbuild -->
+   </body>
 </html>

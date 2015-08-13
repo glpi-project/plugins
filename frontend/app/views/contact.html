@@ -1,44 +1,35 @@
 <h2>{{'QUESTION_SUGGESTION_PROBLEM'|translate}}</h2>
 <span class="legend">Please, send us a message.</span>
-
 <div layout="row" layout-wrap>
    <md-content layout-padding flex="60" flex-sm="100" flex-md="100">
-    <form name="contactForm">
-      <div layout layout-sm="column">
-        <md-input-container flex class='firstnamebox picbox'>
-          <label>{{'FIRSTNAME'|translate}}</label>
-          <input ng-model="contact.firstname">
-        </md-input-container>
-        <md-input-container flex class='realnamebox picbox'>
-          <label>{{'LASTNAME'|translate}}</label>
-          <input ng-model="contact.lastname">
-        </md-input-container>
-      </div>
-      <md-input-container flex  class='emailbox picbox'>
-        <label>{{'EMAIL'|translate}}</label>
-        <input ng-model="contact.email" type="email">
-      </md-input-container>
-      <md-input-container flex class='subjectbox picbox'>
-        <label>{{'SUBJECT'|translate}}</label>
-        <input ng-model="contact.subject">
-      </md-input-container>
-      <md-input-container flex class='messagebox picbox'>
-        <label>{{'YOUR_MESSAGE'|translate}}</label>
-        <textarea ng-model="contact.message" columns="1" md-maxlength="500"></textarea>
-      </md-input-container>
-      <input type="hidden">
-
-      <div vc-recaptcha
-           theme="light"
-           key="key"
-           on-create="setWidgetId(widgetId)"
-           on-success="setResponse(response)"
-           on-expire="cbExpiration()"></div>
-
-      <md-button class="md-raised md-primary submit-button" ng-click="submit()">
-         {{'SUBMIT'|translate}}
-         <i class="fa fa-paper-plane"></i>
-      </md-button>
-    </form>
+      <form name="contactForm">
+         <div layout layout-sm="column">
+            <md-input-container flex class='firstnamebox picbox'>
+               <label>{{'FIRSTNAME'|translate}}</label>
+               <input ng-model="contact.firstname" />
+            </md-input-container>
+            <md-input-container flex class='realnamebox picbox'>
+               <label>{{'LASTNAME'|translate}}</label>
+               <input ng-model="contact.lastname" />
+            </md-input-container>
+         </div>
+         <md-input-container flex class='emailbox picbox'>
+            <label>{{'EMAIL'|translate}}</label>
+            <input ng-model="contact.email" type="email" />
+         </md-input-container>
+         <md-input-container flex class='subjectbox picbox'>
+            <label>{{'SUBJECT'|translate}}</label>
+            <input ng-model="contact.subject" />
+         </md-input-container>
+         <md-input-container flex class='messagebox picbox'>
+            <label>{{'YOUR_MESSAGE'|translate}}</label>
+            <textarea ng-model="contact.message" columns="1" md-maxlength="500"></textarea>
+         </md-input-container>
+         <input type="hidden" />
+         <div vc-recaptcha theme="light" key="key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
+         <md-button class="md-raised md-primary submit-button" ng-click="submit()">{{'SUBMIT'|translate}}
+            <i class="fa fa-paper-plane"></i>
+         </md-button>
+      </form>
    </md-content>
 </div>

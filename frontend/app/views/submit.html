@@ -1,31 +1,18 @@
 <form class="submit">
    <h2>{{'SUBMIT_YOUR_PLUGIN'|translate}}</h2>
-   <span class="legend">
-      {{'SUB_SUBMIT_YOUR_PLUGIN'|translate}}
-   </span>
-
+   <span class="legend">{{'SUB_SUBMIT_YOUR_PLUGIN'|translate}}</span>
    <md-input-container class="urlbox picbox">
       <label>URL</label>
-      <input ng-model="url" type="url">
+      <input ng-model="url" type="url" />
    </md-input-container>
-
-   <div vc-recaptcha
-           theme="light"
-           key="key"
-           on-create="setWidgetId(widgetId)"
-           on-success="setResponse(response)"
-           on-expire="cbExpiration()"></div>
-
-   <md-button class="md-raised md-primary submit-button" ng-click="submit()">
-      {{'SUBMIT'|translate}}
+   <div vc-recaptcha theme="light" key="key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
+   <md-button class="md-raised md-primary submit-button" ng-click="submit()">{{'SUBMIT'|translate}}
       <i class="fa fa-paper-plane"></i>
    </md-button>
-
 </form>
-
 <div class="xml_description">
-<span class="legend">Your XML must be valid and respect this format :</span>
-<div hljs>
+   <span class="legend">Your XML must be valid and respect this format :</span>
+   <div hljs>
 <root>
    <name>Displayed name</name>
    <key>System name</key>
@@ -70,9 +57,8 @@
    <screenshots>
       <screenshot>http://link/to/your/screenshot</screenshot>
       <screenshot>http://link/to/your/screenshot</screenshot>
-      ...
+      <screenshot>...</screenshot>
    </screenshots>
 </root>
+   </div>
 </div>
-</div>
-
