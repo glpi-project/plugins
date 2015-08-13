@@ -19,26 +19,24 @@ use \API\Model\PluginStar;
 use \ReCaptcha\ReCaptcha;
 use \API\Core\ValidableXMLPluginDescription;
 
-require dirname(__FILE__) . '/../../config.php';
-
 /**
  * Fetching infos of a single plugin
  */
 $single = function($key) use($app) {
    $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots')
-                   ->select([])
-                   ->withAverageNote()
-                   ->withNumberOfVotes()
-                   ->withCurrentVersion()
-                   ->withDownloads()
-                   ->where('key', '=', $key)
-                   ->first();
+                  ->select([])
+                  ->withAverageNote()
+                  ->withNumberOfVotes()
+                  ->withCurrentVersion()
+                  ->withDownloads()
+                  ->where('key', '=', $key)
+                  ->first();
 
    if ($plugin) {
       Tool::endWithJson($plugin);
    } else {
       Tool::endWithJson([ 
-         'error' => 'No plugin has that key'
+       'error' => 'No plugin has that key'
       ], 400);
    }
 };
@@ -47,6 +45,9 @@ $single = function($key) use($app) {
  * List of all plugins
  */
 $all = function() use($app) {
+   // Computing number of resources
+   $count = Plugin::count();
+
    $all = Plugin::short()
                  ->with('authors', 'versions', 'descriptions')
                  ->withDownloads()
@@ -134,11 +135,11 @@ $star = function() use($app) {
 /**
  * Method called when an user submits a plugin
  */
-$submit = function() use($app, $recaptcha_secret) {
+$submit = function() use($app) {
     $body = Tool::getBody();
     $fields = ['plugin_url'];
 
-    $recaptcha = new ReCaptcha($recaptcha_secret);
+    $recaptcha = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
     $resp = $recaptcha->verify($body->recaptcha_response);
     if (!$resp->isSuccess()) {
        return  Tool::endWithJson([
@@ -166,16 +167,15 @@ $submit = function() use($app, $recaptcha_secret) {
       ]);
 
     $xml = new ValidableXMLPluginDescription($xml);
-    if (!$xml->isValid()) {
-      return  Tool::endWithJson([
+    if (!$xml->isValid())
+      return Tool::endWithJson([
           "error" => "Unreadable/Non validable XML.",
           "details" => $xml->errors
       ]);
-    }
     $xml = $xml->contents;
 
     if (Plugin::where('key', '=', $xml->key)->count() > 0)
-      return  Tool::endWithJson([
+      return Tool::endWithJson([
           "error" => "Your XML describe a plugin whose key already exists in our database."
       ]);
 
