@@ -8,20 +8,19 @@
  * /download/:plugin_id
  */
 
-
 use \API\Core\Tool;
 use \API\Model\Plugin;
 use \API\Model\PluginDownload;
 use \Illuminate\Database\Capsule\Manager as DB;
 
 $download = function($key) use($app) {
-	$plugin = Plugin::where('key', '=', $key)->first();
+   $plugin = Plugin::where('key', '=', $key)->first();
 
-	$plugin_download = new PluginDownload();
-	$plugin_download->downloaded_at = DB::raw('NOW()');
-	$plugin_download->plugin_id = $plugin->id;
-	$plugin_download->save();
-	$app->redirect($plugin->download_url, 301);
+   $plugin_download = new PluginDownload();
+   $plugin_download->downloaded_at = DB::raw('NOW()');
+   $plugin_download->plugin_id = $plugin->id;
+   $plugin_download->save();
+   $app->redirect($plugin->download_url, 301);
 };
 
 
