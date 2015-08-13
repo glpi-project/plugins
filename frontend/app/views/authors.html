@@ -3,7 +3,7 @@
      <md-subheader class='topic margin'>
         <a ui-sref="authors">{{'AUTHORS'|translate}}</a>
      </md-subheader>
-     <md-list-item ng-repeat="author in authors">
+     <md-list-item ng-repeat="author in authors" class="result">
         <md-button ui-sref="author({id: author.id})">
            <h4>{{author.name}}</h4>
            <md-tooltip md-direction="right">
