@@ -30,6 +30,7 @@ $single = function($key) use($app) {
                   ->withCurrentVersion()
                   ->withDownloads()
                   ->where('key', '=', $key)
+                  ->where('active', '=', 1)
                   ->first();
 
    if ($plugin) {
@@ -51,6 +52,7 @@ $all = function() use($app) {
               ->withDownloads()
               ->withAverageNote()
               ->descWithLang(Tool::getRequestLang())
+              ->where('active', '=', 1)
               ->get();
    Tool::endWithJson($all);
 };
@@ -60,6 +62,7 @@ $all = function() use($app) {
  */
 $popular = function() use($app) {
    $popular_plugins = Plugin::popularTop(10)
+                            ->where('active', '=', 1)
                             ->get();
    Tool::endWithJson($popular_plugins);
 };
@@ -70,6 +73,7 @@ $popular = function() use($app) {
  */
 $trending = function() use($app) {
    $trending_plugins = Plugin::trendingTop(10)
+                             ->where('active', '=', 1)
                              ->get();
    Tool::endWithJson($trending_plugins);
 };
@@ -80,6 +84,7 @@ $trending = function() use($app) {
  */
 $updated = function() use($app) {
    $updated_plugins = Plugin::updatedRecently(10)
+                            ->where('active', '=', 1)
                             ->get();
    Tool::endWithJson($updated_plugins);
 };
@@ -90,6 +95,7 @@ $updated = function() use($app) {
  */
 $new = function() use($app) {
   $new_plugins = Plugin::mostFreshlyAddedPlugins(10)
+                       ->where('active', '=', 1)
                        ->get();
   Tool::endWithJson($new_plugins);
 };
