@@ -47,13 +47,9 @@ class Plugin extends Model {
    }
 
    public function scopeDescWithLang($query, $lang) {
-      $query->addSelect(['plugin_description.short_description'])
+      $query->addSelect([DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(plugin_description.short_description ORDER BY FIELD(plugin_description.lang, \'en\', '.DB::connection()->getPdo()->quote($lang).') DESC SEPARATOR \'#*#*\'), \'#*#*\',1) as short_description')])
            ->leftJoin('plugin_description', 'plugin.id', '=', 'plugin_description.plugin_id')
-           ->groupBy('plugin.id')
-           ->where(function($query) use($lang) {
-              $query->where('plugin_description.lang', '=', $lang)
-                    ->orWhere('plugin_description.lang', '=', 'en');
-           });
+           ->groupBy('plugin.id');
       return $query;
    }
 
