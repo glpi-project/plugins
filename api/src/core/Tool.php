@@ -10,7 +10,19 @@ class Tool {
     */
    public static function endWithJson($json_value, $code = 200) {
       global $app;
-      $app->response->setStatus($code);
+      if (self::$paginationMode) {
+         $app->response->headers['content-range']  = self::$paginationRange['startindex'];
+         $app->response->headers['content-range'] .= '-' . (self::$paginationRange['startindex'] + sizeof($json_value));
+         $app->response->headers['content-range'] .= '/' . self::$paginationMax;
+         $app->response->headers['accept-range']   = 'model '.self::$paginationMax;
+         if (sizeof($json_value) == self::$paginationMax) {
+            $app->response->setStatus(200);
+         } else {
+            $app->response->setStatus(206);
+         }
+      } else {
+         $app->response->setStatus($code);
+      }
       $app->response->headers->set('Content-Type', 'application/json');
       echo json_encode($json_value);
    }
@@ -92,16 +104,23 @@ class Tool {
       ];
    }
 
+   public static $paginationMode = false;
+   public static $paginationRange = null;
+   public static $paginationMax = null;
+
    /**
     * Returns a base Eloquent Model with skip()
     * and take() settings
     */
    public static function getCollectionPaginated($collection_name) {
+      self::$paginationMode = true;
       $range_headers = Tool::getRangeHeaders();
+      self::$paginationRange = $range_headers;
       $class_name = '\API\Model\\'.$collection_name;
       $model = new $class_name;
-      $model = $model->skip($range_headers['startindex'])
+      self::$paginationMax = $model->count();
+      $queryBuilder = $model->skip($range_headers['startindex'])
                      ->take($range_headers['endindex'] - $range_headers['startindex']);
-      return $model;
+      return $queryBuilder;
    }
 }

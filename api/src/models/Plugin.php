@@ -51,8 +51,8 @@ class Plugin extends Model {
            ->leftJoin('plugin_description', 'plugin.id', '=', 'plugin_description.plugin_id')
            ->groupBy('plugin.id')
            ->where(function($query) use($lang) {
-            $query->where('plugin_description.lang', '=', $lang)
-                 ->orWhere('plugin_description.lang', '=', 'en');
+              $query->where('plugin_description.lang', '=', $lang)
+                    ->orWhere('plugin_description.lang', '=', 'en');
            });
       return $query;
    }
