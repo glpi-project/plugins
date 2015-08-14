@@ -18,18 +18,21 @@
                </md-tooltip>
             </span>
          </div>
-         <rate-box current-note="plugin.note" disable-rating="rated" rate-method="ratePlugin" votes-number="plugin.n_votes"></rate-box>
       </div>
-      <span class='download flex_right'>
+      <div class="flex_right">
+         <rate-box flex-sm="45" current-note="plugin.note" disable-rating="rated" rate-method="ratePlugin"></rate-box>
+         <md-tooltip md-direction="top">{{plugin.n_votes}} votes</md-tooltip>
+      </div>
+      <span class="download">
          <span class="downloads">
             <span class='pill bg_red'>
                <span ng-bind-html='plugin.downloaded | nrFormat'></span>
-               <md-tooltip>downloads</md-tooltip>
+               <md-tooltip  md-direction="top">downloads</md-tooltip>
             </span>
          </span>
          <md-button class="md-fab md-primary md-raised" ng-click="download()">
             <i class="fa fa-2x fa-download white"></i>
-            <md-tooltip>Download</md-tooltip>
+            <md-tooltip md-direction="top">Download</md-tooltip>
          </md-button>
       </span>
    </div>
