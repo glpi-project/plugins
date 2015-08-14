@@ -38,7 +38,7 @@
          <md-tabs md-dynamic-height md-selected="selectedIndex">
             <md-tab ng-repeat="description in plugin.descriptions" label="{{description.lang}}">
                <md-content class="md-padding description">
-                  <div btf-markdown="description.long_description"></div>
+                  <div btf-markdown="description.long_description" class="markdown"></div>
                </md-content>
             </md-tab>
          </md-tabs>
