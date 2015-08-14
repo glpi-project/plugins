@@ -7,7 +7,7 @@
  * the url and checksums.
  */
 
-require 'api/vendor/autoload.php';
+require __DIR__.'/../api/vendor/autoload.php';
 
 
 use \Illuminate\Database\Capsule\Manager as DB;
