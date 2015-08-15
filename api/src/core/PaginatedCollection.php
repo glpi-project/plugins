@@ -1,0 +1,106 @@
+<?php
+
+namespace API\Core;
+
+class PaginatedCollection {
+   private $queryBuilder;
+
+   private $responseStatus;
+   private $currentRange = null;
+   private $length;
+
+   private $payload;
+
+   public function __construct($queryBuilder) {
+      $this->queryBuilder = $queryBuilder;
+
+      // Clone the query builder to count
+      $clone = clone $this->queryBuilder;
+      // Change the selection to a constant,
+      // this way, the count query will cost
+      // less memory
+      $clone->select(\Illuminate\Database\Capsule\Manager::raw('1'));
+      $this->length = \Illuminate\Database\Capsule\Manager::table(
+                        \Illuminate\Database\Capsule\Manager::raw(
+                           "({$clone->toSql()}) as sub"))
+                              ->mergeBindings($clone->getQuery())
+                              ->count();
+      $this->parseRangeHeader();
+      if (!$this->currentRange) {
+         $this->payload = [];
+      } else {
+         $this->payload = $this->getPayload();
+      }
+   }
+
+   private function parseRangeHeader() {
+      global $app;
+      $requested = new \stdClass();
+      $returned = new \stdClass();
+
+      // Parsing requested header of fallback
+      // to a default value
+      if ($app->request->headers['x-range'] &&
+          preg_match('/^([0-9]+)-([0-9]+)$/',
+                    $app->request->headers['x-range'],
+                    $start_end)) {
+         array_splice($start_end, 0, 1);
+         $requested->startIndex = $start_end[0];
+         $requested->endIndex = $start_end[1];
+      } else {
+         if (!isset(Tool::getConfig()['default_number_of_models_per_page'])) {
+            $app->error(new \Exception('default_number_of_models_per_page is not set in config.php'));
+         }
+         $defaultLength = Tool::getConfig()['default_number_of_models_per_page'];
+         $requested->startIndex = 0;
+         $requested->endIndex = --$defaultLength;
+      }
+
+      if ($this->length == 0) {
+         $this->responseStatus = 200;
+         $this->payload = [];
+         return;
+      }
+      elseif ($requested->startIndex >= $this->length) {
+         $this->responseStatus = 400;
+         $this->payload = [
+            "error" => "Start at unexisting index"
+         ];
+         return;
+      }
+      elseif ($requested->endIndex >= $this->length) {
+         $returned->endIndex = $this->length -1;
+      } else {
+         $returned->endIndex = $requested->endIndex;
+      }
+      $returned->startIndex = $requested->startIndex;
+
+      $this->length = $returned->endIndex - $returned->startIndex + 1;
+      $this->responseStatus = 200;
+      $this->currentRange = $returned;
+   }
+
+   private function getPayload() {
+      return $this->queryBuilder
+                           ->skip($this->currentRange->startIndex )
+                           ->take($this->currentRange->endIndex
+                                  - $this->currentRange->startIndex
+                                  + 1)
+                            ->get();
+   }
+
+   public function setHeaders(&$response) {
+      $response->headers['accept-range']   = 'model '. $this->length;
+      $response->headers['content-range']  = $this->currentRange->startIndex;
+      $response->headers['content-range'] .= '-'.$this->currentRange->endIndex;
+      $response->headers['content-range'] .= '/'.$this->length;
+   }
+
+   public function setStatus(&$response) {
+      return $response->status($this->responseStatus);
+   }
+
+   public function get($rangeHeader) {
+      return $this->payload;
+   }
+} 
