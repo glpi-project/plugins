@@ -8,23 +8,23 @@ class Tool {
     * end with a JSON value from
     * an endpoint.
     */
-   public static function endWithJson($json_value, $code = 200) {
+   public static function endWithJson($_payload, $code = 200) {
       global $app;
-      if (self::$paginationMode) {
-         $app->response->headers['content-range']  = self::$paginationRange['startindex'];
-         $app->response->headers['content-range'] .= '-' . (self::$paginationRange['startindex'] + sizeof($json_value));
-         $app->response->headers['content-range'] .= '/' . self::$paginationMax;
-         $app->response->headers['accept-range']   = 'model '.self::$paginationMax;
-         if (sizeof($json_value) == self::$paginationMax) {
-            $app->response->setStatus(200);
-         } else {
-            $app->response->setStatus(206);
-         }
+      if ($_payload instanceof \API\Core\PaginatedCollection) {
+         $_payload->setStatus($app->response);
+         $_payload->setHeaders($app->response);
+         $payload = $_payload->get($app->request->headers['x-range']);
       } else {
+         $payload = &$_payload;
          $app->response->setStatus($code);
       }
       $app->response->headers->set('Content-Type', 'application/json');
-      echo json_encode($json_value);
+      echo json_encode($payload);
+   }
+
+   public static function log($v) {
+      $v = trim($v);
+      error_log('[glpi-plugin-directory] ' . $v, 0);
    }
 
    /**
@@ -81,46 +81,9 @@ class Tool {
    }
 
    /**
-    * Method to fetch X-Range header in a
-    * convenient way
+    * Shortcut to get a PaginatedCollection instance
     */
-   public static function getRangeHeaders() {
-      global $app;
-      $default = [
-         "startindex" => 0,
-         "endindex" => Tool::getConfig()['default_max_number_of_resources']
-      ];
-
-      if (!$app->request->headers['x-range'])
-         return $default;
-
-      $start_end = explode('-', $app->request->headers['x-range']);
-      if (sizeof($start_end) != 2)
-         return $default;
-
-      return [
-         "startindex" => (int)$start_end[0],
-         "endindex" => (int)$start_end[1]
-      ];
-   }
-
-   public static $paginationMode = false;
-   public static $paginationRange = null;
-   public static $paginationMax = null;
-
-   /**
-    * Returns a base Eloquent Model with skip()
-    * and take() settings
-    */
-   public static function getCollectionPaginated($collection_name) {
-      self::$paginationMode = true;
-      $range_headers = Tool::getRangeHeaders();
-      self::$paginationRange = $range_headers;
-      $class_name = '\API\Model\\'.$collection_name;
-      $model = new $class_name;
-      self::$paginationMax = $model->count();
-      $queryBuilder = $model->skip($range_headers['startindex'])
-                     ->take($range_headers['endindex'] - $range_headers['startindex']);
-      return $queryBuilder;
+   public static function paginateCollection($queryBuilder) {
+      return  new \API\Core\PaginatedCollection($queryBuilder);
    }
 }

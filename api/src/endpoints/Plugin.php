@@ -46,15 +46,14 @@ $single = function($key) use($app) {
  * List of all plugins
  */
 $all = function() use($app) {
-   $all = Tool::getCollectionPaginated('Plugin')
-              ->short()
-              ->with('authors', 'versions', 'descriptions')
-              ->withDownloads()
-              ->withAverageNote()
-              ->descWithLang(Tool::getRequestLang())
-              ->where('active', '=', 1)
-              ->get();
-   Tool::endWithJson($all);
+   $plugins = Tool::paginateCollection(
+                 Plugin::short()
+                       ->with('authors', 'versions', 'descriptions')
+                       ->withDownloads()
+                       ->withAverageNote()
+                       ->descWithLang(Tool::getRequestLang())
+                       ->where('active', '=', 1));
+   Tool::endWithJson($plugins);
 };
 
 /**
