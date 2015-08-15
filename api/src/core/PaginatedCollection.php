@@ -9,27 +9,33 @@ class PaginatedCollection {
    private $currentRange = null;
    private $length;
 
-   private $payload;
+   private $page;
 
    public function __construct($queryBuilder) {
       $this->queryBuilder = $queryBuilder;
 
-      // Clone the query builder to count
+      // Clone the query builder to compute
+      // Collection length with a subquery
       $clone = clone $this->queryBuilder;
-      // Change the selection to a constant,
-      // this way, the count query will cost
-      // less memory
+      // Select only 1 so the count query
+      // will cost less memory
       $clone->select(\Illuminate\Database\Capsule\Manager::raw('1'));
       $this->length = \Illuminate\Database\Capsule\Manager::table(
                         \Illuminate\Database\Capsule\Manager::raw(
                            "({$clone->toSql()}) as sub"))
                               ->mergeBindings($clone->getQuery())
                               ->count();
+
+      // Parse range headers and compute
+      // available range that is going
+      // to be returned
       $this->parseRangeHeader();
       if (!$this->currentRange) {
-         $this->payload = [];
+         $this->page = [];
       } else {
-         $this->payload = $this->getPayload();
+         // If parseRangeHeader() worked,
+         // we can fetch the page
+         $this->page = $this->getPage();
       }
    }
 
@@ -58,12 +64,12 @@ class PaginatedCollection {
 
       if ($this->length == 0) {
          $this->responseStatus = 200;
-         $this->payload = [];
+         $this->page = [];
          return;
       }
       elseif ($requested->startIndex >= $this->length) {
          $this->responseStatus = 400;
-         $this->payload = [
+         $this->page = [
             "error" => "Start at unexisting index"
          ];
          return;
@@ -80,7 +86,7 @@ class PaginatedCollection {
       $this->currentRange = $returned;
    }
 
-   private function getPayload() {
+   private function getPage() {
       return $this->queryBuilder
                            ->skip($this->currentRange->startIndex )
                            ->take($this->currentRange->endIndex
@@ -101,6 +107,6 @@ class PaginatedCollection {
    }
 
    public function get($rangeHeader) {
-      return $this->payload;
+      return $this->page;
    }
 } 
