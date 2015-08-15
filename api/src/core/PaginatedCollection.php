@@ -81,8 +81,12 @@ class PaginatedCollection {
       }
       $returned->startIndex = $requested->startIndex;
 
-      $this->length = $returned->endIndex - $returned->startIndex + 1;
-      $this->responseStatus = 200;
+      if ($returned->startIndex == 0 &&
+          $returned->endIndex == $this->length -1) {
+         $this->responseStatus = 200;
+      } else {
+         $this->responseStatus = 206;
+      }
       $this->currentRange = $returned;
    }
 
