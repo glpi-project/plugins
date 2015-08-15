@@ -21,5 +21,5 @@ $config = [
 		],
 		"subject_prefix" => "[GLPI PLUGINS : MSG] "
 	],
-	"default_max_number_of_resources" => 15
+	"default_n_models_per_page" => 15
 ];
