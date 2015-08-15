@@ -3,7 +3,14 @@
 require 'vendor/autoload.php';
 
 \API\Core\DB::initCapsule();
+use \API\Core\Tool;
 $app = new \Slim\Slim();
+
+$app->notFound(function() use ($app) {
+    Tool::endWithJson([
+        "error" => "invalid endpoint"
+    ], 404);
+});
 
 // Loading all REST modules
 // with their endpoints like that:
