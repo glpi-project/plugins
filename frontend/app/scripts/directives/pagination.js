@@ -62,8 +62,8 @@ angular.module('frontendApp')
    })
    .directive('pagination', function () {
     return {
-      template: '<div>'+
-                  '<md-button ng-show="collection.count > collection.modelsPerPage" ng-class="(collection.page == page.index)?\'active\':\'\'" ng-repeat="page in collection.pages" ng-click="collection.setPage(page.index);ctrl.changeUrl(page.index)"><p>{{page.index}}</p></md-button>' +
+      template: '<div ng-show="collection.count > collection.modelsPerPage">'+
+                  '<md-button ng-class="(collection.page == page.index)?\'active\':\'\'" ng-repeat="page in collection.pages" ng-click="collection.setPage(page.index);ctrl.changeUrl(page.index)"><p>{{page.index}}</p></md-button>' +
                 '</div>',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
