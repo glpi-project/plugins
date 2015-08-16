@@ -25,6 +25,7 @@ use \API\Core\ValidableXMLPluginDescription;
 $single = function($key) use($app) {
    $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots')
                   ->select([])
+                  ->short()
                   ->withAverageNote()
                   ->withNumberOfVotes()
                   ->withCurrentVersion()
