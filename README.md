@@ -98,6 +98,7 @@ This is a configuration example for Apache HTTPd :
        Header add Access-Control-Allow-Origin "*"
        Header add Access-Control-Allow-Headers "origin, x-requested-with, content-type, x-lang"
        Header add Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
+       Header add Access-Control-Expose-Headers "content-type, content-range, accept-range"
 
        RewriteCond %{REQUEST_FILENAME} !-f
        RewriteRule ^ index.php [QSA,L]
