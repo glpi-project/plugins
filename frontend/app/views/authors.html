@@ -1,11 +1,13 @@
 <div layout="column" class="authors">
+   <pagination collection="authors"></pagination>
    <md-list class="compact-list">
       <md-subheader class='topic margin'>{{'AUTHORS'|translate}}</md-subheader>
-      <md-list-item ng-repeat="author in authors" class="result">
+      <md-list-item ng-repeat="author in authors.currentPage" class="result">
          <md-button ui-sref="author({id: author.id})">
             <h4>{{author.name}}</h4>
          </md-button>
          <span class="info">Contributed to {{author.plugin_count}} plugins</span class="info">
       </md-list-item>
    </md-list>
+   <pagination collection="authors"></pagination>
 </div>

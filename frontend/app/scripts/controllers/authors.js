@@ -8,14 +8,21 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-   .controller('AuthorsCtrl', function(API_URL, $http, $scope) {
-      $http({
-         method: "GET",
-         url: API_URL + '/author'
-      })
-      .success(function(data) {
-         $scope.authors = data;
+   .controller('AuthorsCtrl', function(API_URL, $http, $scope, PaginatedCollection, $stateParams) {
+      $scope.authors = PaginatedCollection.getInstance();
+      $scope.authors.setRequest(function(from,to) {
+         return $http({
+            method: "GET",
+            url: API_URL + '/author',
+            headers: {
+            'X-Range': from+'-'+to
+         }
+         });
       });
-      
-      $scope.authors = [];
+
+      if ($stateParams.page) {
+         $scope.authors.setPage($stateParams.page);
+      } else {
+         $scope.authors.setPage(0);
+      }
    });

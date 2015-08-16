@@ -58,6 +58,11 @@ angular
             templateUrl: 'views/authors.html',
             controller: 'AuthorsCtrl'
          })
+         .state('authors_page', {
+            url: '/authors/:page',
+            templateUrl: 'views/authors.html',
+            controller: 'AuthorsCtrl'
+         })
          .state('author', {
             url: '/author/:id',
             templateUrl: 'views/author.html',
