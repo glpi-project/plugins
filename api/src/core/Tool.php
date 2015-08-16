@@ -22,6 +22,11 @@ class Tool {
       echo json_encode($payload);
    }
 
+   /**
+    * This methods logs to the path
+    * defined in the virtualhost
+    * as error log
+    */
    public static function log($v) {
       $v = trim($v);
       error_log('[glpi-plugin-directory] ' . $v, 0);
