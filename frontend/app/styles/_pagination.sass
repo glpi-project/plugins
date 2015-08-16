@@ -1,8 +1,11 @@
 pagination
    .md-button
+      background-color: lighten(#6F92BA, 18%)
+      color: #fff
       &.active
          background-color: #6F92BA
-         color: #fff
+      &:not([disabled]):hover
+         background-color: #6F92BA
       display: inline-block
       width: 20px
       min-width: 30px
