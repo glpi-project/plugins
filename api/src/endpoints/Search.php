@@ -30,15 +30,15 @@ $search = function() use($app) {
    }
    $query_string = $body->query_string;
 
-   $_search = \API\Model\Plugin::short()
+   $_search = Tool::paginateCollection(
+                    \API\Model\Plugin::short()
                                ->with('authors', 'versions', 'descriptions')
                                ->withDownloads()
                                ->withAverageNote()
                                ->descWithLang(Tool::getRequestLang())
                          ->where('name', 'LIKE', "%$query_string%")
                          ->orWhere('plugin_description.short_description', 'LIKE', "%$query_string%")
-                         ->orWhere('plugin_description.long_description', 'LIKE', "%$query_string%")
-                         ->get();
+                         ->orWhere('plugin_description.long_description', 'LIKE', "%$query_string%"));
    Tool::endWithJson($_search);
 };
 

@@ -33,6 +33,11 @@ angular
             templateUrl: "views/plugin_list.html",
             controller: "SearchCtrl"
          })
+         .state('search_page', {
+            url: '/search/:val/:page',
+            templateUrl: "views/plugin_list.html",
+            controller: "SearchCtrl"
+         })
          .state('tags', {
             url: '/tags',
             templateUrl: "views/tags.html",

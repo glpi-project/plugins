@@ -10,34 +10,31 @@
 
 angular.module('frontendApp')
 
-// This Search factory is used to search
-// for items using the REST endpoint
-// it returns the $http promise
-.factory('Search', function(API_URL, $http) {
-   return function(string) {
-      return $http({
-         method: "POST",
-         url: API_URL + '/search',
-         data: {
-            query_string: string
-         }
-      });
-   };
-})
-
 // This controller is created anytime the search
 // input's content is changed
-.controller('SearchCtrl', function($rootScope, $scope, $timeout, Search, $stateParams) {
+.controller('SearchCtrl', function(API_URL, $rootScope, $scope, $timeout, $stateParams, PaginatedCollection, $http) {
+   $scope.results = PaginatedCollection.getInstance();
+   $scope.results.setRequest(function(from,to) {
+      return $http({
+                  method: "POST",
+                  url: API_URL + '/search',
+                  data: {
+                     query_string: $stateParams.val
+                  },
+                  headers: {
+                     'X-Range': from+'-'+to
+                  }
+               });
+   });
+
    var doSearch = function() {
-      new Search($stateParams.val)
-         .success(function(data) {
-            // moving the results to the $scope
-            $scope.results = data;
-         });
+      if ($stateParams.page) {
+         $scope.results.setPage($stateParams.page);
+      } else {
+         $scope.results.setPage(0);
+      }
    };
 
-   // will store the results
-   $scope.results = [];
    // cancel the previous $timeout promise if there's any
    $timeout.cancel($rootScope.currentSearch);
    // delaying another request
