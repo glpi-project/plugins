@@ -32,7 +32,7 @@ angular
             BY: "Par",
             CONTRIBUTED_TO: "à contribué à",
             PLUGIN_CONTRIBUTED_TO: "à contribué/travaillé sur ces plugins",
-            TAGGED_WITH: "Taggé sur",
+            TAGGED_WITH: "taggé sur",
             PLUGIN_TAGGED_WITH: "Plugins taggés avec",
             QUESTION_SUGGESTION_PROBLEM: "Une question, suggestion, ou un problème ?",
             FIRSTNAME: "Prénom",
