@@ -69,7 +69,12 @@ angular
             controller: 'AuthorCtrl'
          })
          .state('author_plugins', {
-            url: '/author/:id/plugin',
+            url: '/author/:id/plugins',
+            templateUrl: "views/plugin_list.html",
+            controller: "AuthorPluginsCtrl"
+         })
+         .state('author_plugins_page', {
+            url: '/author/:id/plugins/:page',
             templateUrl: "views/plugin_list.html",
             controller: "AuthorPluginsCtrl"
          })

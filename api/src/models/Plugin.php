@@ -46,6 +46,12 @@ class Plugin extends Model {
       return $query;
    }
 
+   public function scopeWhereAuthor($query, $author_id) {
+    $query->where('plugin_author.author_id', '=', $author_id)
+          ->leftJoin('plugin_author', 'plugin.id', '=', 'plugin_author.plugin_id');
+    return $query;
+   }
+
    public function scopeDescWithLang($query, $lang) {
       $query->addSelect([DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(plugin_description.short_description ORDER BY FIELD(plugin_description.lang, \'en\', '.DB::connection()->getPdo()->quote($lang).') DESC SEPARATOR \'#*#*\'), \'#*#*\',1) as short_description')])
            ->leftJoin('plugin_description', 'plugin.id', '=', 'plugin_description.plugin_id')

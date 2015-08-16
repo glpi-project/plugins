@@ -34,13 +34,16 @@ $author_plugins = function($id) use($app) {
       return Tool::endWithJson([
          "error" => "Cannot find author"
       ]);
-   Tool::endWithJson($author_plugins->plugins()
-                                    ->with('versions', 'authors')
-                                    ->short()
-                                    ->withDownloads()
-                                    ->withAverageNote()
-                                    ->descWithLang(Tool::getRequestLang())
-                                    ->get());
+   Tool::endWithJson(Tool::paginateCollection(
+                        \API\Model\Plugin
+                                       ::with('versions', 'authors')
+                                       ->short()
+                                       ->withDownloads()
+                                       ->withAverageNote()
+                                       ->descWithLang(Tool::getRequestLang())
+                                       ->whereAuthor($author_plugins->id)
+                     )
+   );
 };
 
 // HTTP REST Map

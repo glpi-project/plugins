@@ -8,15 +8,24 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-   .controller('AuthorPluginsCtrl', function(API_URL, $scope, $http, $stateParams) {
-      var grabAuthorPlugins = function() {
-         $http({
-            method: "GET",
-            url: API_URL + '/author/' + $stateParams.id + '/plugin'
-         })
-         .success(function(data) {
-            $scope.results = data;
-         });
+   .controller('AuthorPluginsCtrl', function(API_URL, $scope, $http, $stateParams, PaginatedCollection) {
+      $scope.results = PaginatedCollection.getInstance();
+      $scope.results.setRequest(function(from, to) {
+         return $http({
+                     method: "GET",
+                     url: API_URL + '/author/' + $stateParams.id + '/plugin',
+                     headers: {
+                        'X-Range': from+'-'+to
+                     }
+                  });
+      });
+
+      var loadPage = function() {
+         if ($stateParams.page) {
+            $scope.results.setPage($stateParams.page);
+         } else {
+            $scope.results.setPage(0);
+         }
       };
 
       $http({
@@ -27,8 +36,6 @@ angular.module('frontendApp')
          $scope.author = data;
       });
 
-      $scope.results = [];
-
-      grabAuthorPlugins();
-      $scope.$on('languageChange', grabAuthorPlugins);
+      loadPage();
+      $scope.$on('languageChange', loadPage);
    });
