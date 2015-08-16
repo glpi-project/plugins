@@ -15,9 +15,8 @@ use \API\Model\Tag;
 use \Illuminate\Database\Capsule\Manager as DB;
 
 $tags_all = function() use ($app) {
-   $tags = Tag::withUsage()
-            ->orderBy('plugin_count', 'DESC')
-            ->get();
+   $tags = Tool::paginateCollection(Tag::withUsage()
+            ->orderBy('plugin_count', 'DESC'));
    Tool::endWithJson($tags);
 };
 

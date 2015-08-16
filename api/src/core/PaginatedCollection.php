@@ -19,7 +19,7 @@ class PaginatedCollection {
       $clone = clone $this->queryBuilder;
       // Select only 1 so the count query
       // will cost less memory
-      $clone->select(\Illuminate\Database\Capsule\Manager::raw('1'));
+      //$clone->select(\Illuminate\Database\Capsule\Manager::raw('1'));
       $this->length = \Illuminate\Database\Capsule\Manager::table(
                         \Illuminate\Database\Capsule\Manager::raw(
                            "({$clone->toSql()}) as sub"))
