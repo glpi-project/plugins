@@ -12,6 +12,7 @@ angular.module('frontendApp')
          this.page = 0;
          this.currentPage = [];
          this.pages = [];
+         this.count = 0;
       };
       PaginatedCollection.prototype.modelsPerPage = 15;
       PaginatedCollection.prototype.from = 0;
@@ -40,6 +41,7 @@ angular.module('frontendApp')
              .success(function(data, status, headers) {
                var contentRange = self.parseContentRange(headers()['content-range']);
                var pagesQuantity = Math.ceil(contentRange.length / self.modelsPerPage);
+               self.count = contentRange.length;
                self.pages = [];
                for (var i = 0 ; i < pagesQuantity ; i++) {
                   self.pages.push({
@@ -61,7 +63,7 @@ angular.module('frontendApp')
    .directive('pagination', function () {
     return {
       template: '<div>'+
-                  '<md-button ng-class="(collection.page == page.index)?\'active\':\'\'" ng-repeat="page in collection.pages" ng-click="collection.setPage(page.index);ctrl.changeUrl(page.index)"><p>{{page.index}}</p></md-button>' +
+                  '<md-button ng-show="collection.count > collection.modelsPerPage" ng-class="(collection.page == page.index)?\'active\':\'\'" ng-repeat="page in collection.pages" ng-click="collection.setPage(page.index);ctrl.changeUrl(page.index)"><p>{{page.index}}</p></md-button>' +
                 '</div>',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
