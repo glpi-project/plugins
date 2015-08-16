@@ -72,8 +72,13 @@ angular.module('frontendApp')
       },
       controller: function($stateParams, $state) {
          this.changeUrl = function(page) {
-            $stateParams.page = page; 
-            $state.go($state.current.name,$stateParams,{
+            $stateParams.page = page;
+            if (! /_page$/.exec($state.current.name)) {
+               var state = $state.current.name + '_page';
+            } else {
+               var state = $state.current.name;
+            }
+            $state.go(state,$stateParams,{
                notify:false,
                reload:false,
                location:'replace',

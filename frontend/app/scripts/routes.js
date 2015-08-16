@@ -18,6 +18,11 @@ angular
             templateUrl: 'views/plugin_list.html',
             controller: 'AllCtrl'
          })
+         .state('all_page', {
+            url: "/plugins/:page",
+            templateUrl: 'views/plugin_list.html',
+            controller: 'AllCtrl'
+         })
          .state('plugin', {
             url: '/plugin/:key',
             templateUrl: 'views/plugin.html',

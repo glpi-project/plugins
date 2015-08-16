@@ -42,7 +42,7 @@ class Plugin extends Model {
    }
 
    public function scopeShort($query) {
-      $query->select(['plugin.id', 'plugin.name', 'plugin.key']);
+      $query->select(['plugin.id', 'plugin.name', 'plugin.key', 'plugin.logo_url']);
       return $query;
    }
 

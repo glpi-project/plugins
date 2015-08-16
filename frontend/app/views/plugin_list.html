@@ -14,13 +14,9 @@
          <a href="" ng-click="orderBy=['downloaded','note'];reverse=true">Popularity</a>
       </p>
    </div>
-   <div class="pagination" layout="row">
-      <md-button ng-click="openPage(page.startIndex)" ng-repeat="page in pages">
-         <h4>{{page.n + 1}}</h4>
-      </md-button>
-   </div>
+   <pagination collection="results"></pagination>
    <div class="results">
-      <div class="result" ng-repeat="plugin in results | orderBy:orderBy:reverse track by $index">
+      <div class="result" ng-repeat="plugin in results.currentPage">
          <div layout="row" layout-wrap layout-align="left end">
             <img class="icon" ng-src="{{plugin.logo_url}}" />
             <div class='plugin_name' flex='45' flex-sm='30' >
@@ -55,5 +51,5 @@
          </div>
       </div>
    </div>
-   <div class="pagination"></div>
+   <pagination collection="results"></pagination>
 </div>
