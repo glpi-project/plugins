@@ -46,13 +46,12 @@ $tag_plugins = function($key) use($app) {
       ], 400);
    }
 
-   $plugins = Plugin::with('versions', 'authors')
+   $plugins = Tool::paginateCollection(Plugin::with('versions', 'authors')
                 ->short()
                 ->withDownloads()
                 ->withAverageNote()
                 ->descWithLang(Tool::getRequestLang())
-                ->withTag($tag)
-                ->get();
+                ->withTag($tag));
    Tool::endWithJson($plugins);
 };
 
