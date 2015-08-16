@@ -1,11 +1,15 @@
 <div layout="column">
+   <pagination collection="tags"></pagination>
+
    <md-list class="compact-list results">
       <md-subheader class='topic margin'>{{'TAGS'|translate}}</md-subheader>
-      <md-list-item ng-repeat="tag in tags" class="result">
+      <md-list-item ng-repeat="tag in tags.currentPage" class="result">
          <md-button ui-sref="tag({key: tag.key})">
             <h4>{{tag.tag}}</h4>
          </md-button>
          <span class="info">Tagged on {{tag.plugin_count}} plugins</span class="info">
       </md-list-item>
    </md-list>
+
+   <pagination collection="tags"></pagination>
 </div>
