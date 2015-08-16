@@ -27,6 +27,6 @@ angular.module('frontendApp')
       }
 
       $scope.$on('languageChange', function() {
-         $scope.results.setPage($scope.plugins.page);
+         $scope.results.setPage($stateParams.page - 1);
       });
    });
