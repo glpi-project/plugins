@@ -21,7 +21,7 @@ angular.module('frontendApp')
       });
 
       if ($stateParams.page) {
-         $scope.results.setPage($stateParams.page);
+         $scope.results.setPage($stateParams.page - 1);
       } else {
          $scope.results.setPage(0);
       }
