@@ -66,7 +66,7 @@ angular.module('frontendApp')
     return {
       template: '<div ng-show="collection.count > collection.modelsPerPage">'+
                   '<md-button ng-class="(collection.page == page.index)?\'active\':\'\'" ng-repeat="page in collection.pages" ng-click="collection.setPage(page.index);ctrl.changeUrl(page.index)"><p>{{page.index + 1}}</p></md-button>' +
-                  '<p class="count">{{collection.pageFrom + 1}}-{{collection.pageTo + 1}} / {{collection.count}}</p>'+
+                  '<p class="count">{{\'PAGINATION_RESULTS\'|translate}} <span>{{collection.pageFrom + 1}}</span> {{\'PAGINATION_TO\'|translate}} <span>{{collection.pageTo + 1}}</span> {{\'PAGINATION_ON\'|translate}} <span>{{collection.count}}</span></p>'+
                 '</div>',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {

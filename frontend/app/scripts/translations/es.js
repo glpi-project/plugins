@@ -41,6 +41,10 @@ angular
             SUBMIT: "Envoyer",
             SUBMIT_YOUR_PLUGIN: "Ajouter votre plugin!",
             SUB_SUBMIT_YOUR_PLUGIN: "Veuillez fournir une URL vers le fichier xml décrivant votre plugin",
-            GLPI_PLUGIN_CREATORS: "GLPI Plugin Creators"
+            GLPI_PLUGIN_CREATORS: "GLPI Plugin Creators",
+            PAGINATION_RESULTS: "Results",
+            PAGINATION_TO: "to",
+            PAGINATION_ON: "over",
+            PAGINATION_ELEMENTS: "elements"
          });
    });
