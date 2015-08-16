@@ -53,6 +53,11 @@ angular
             templateUrl: "views/plugin_list.html",
             controller: "TagCtrl"
          })
+         .state('tag_page', {
+            url: '/tag/:key/:page',
+            templateUrl: "views/plugin_list.html",
+            controller: "TagCtrl"
+         })
          .state('authors', {
             url: '/authors',
             templateUrl: 'views/authors.html',
