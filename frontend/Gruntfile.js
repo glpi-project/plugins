@@ -284,6 +284,19 @@ module.exports = function (grunt) {
       }
     },
 
+    uncss: {
+      dist: {
+        options: {
+          csspath: '../.tmp',
+          stylesheets: ['../.tmp/styles/main.css'], 
+          ignore: ['.ng-move', '.ng-enter', '.ng-leave', '.created_by_jQuery']
+        },
+        files: {
+          '.tmp/styles/main.css': ['<%= yeoman.dist %>/{,*/}*.html'], 
+        }
+      }
+    }, 
+
     // The following *-min tasks will produce minified files in the dist folder
     // By default, your `index.html`'s <!-- Usemin block --> will take care of
     // minification. These next options are pre-configured if you do not wish
@@ -502,7 +515,8 @@ module.exports = function (grunt) {
     'uglify',
     'filerev',
     'usemin',
-    'htmlmin'
+    'htmlmin',
+    'uncss'
   ]);
 
   grunt.registerTask('default', [
