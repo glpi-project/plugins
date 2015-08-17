@@ -3,6 +3,24 @@
 namespace API\Core;
 
 class Tool {
+
+   /**
+    * This template [...]
+    */
+   public static $prettyJSONTemplate =
+      '<!DOCTYPE html>'.
+      '<html>'.
+         '<head>'.
+            '<title></title>'.
+            '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css">'.
+            '<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>'.
+         '</head>'.
+         '<body>'.
+            '<pre><code class="json">$code</code></pre>'.
+            '<script>hljs.initHighlightingOnLoad();</script>'.
+         '</body>'.
+      '</html>';
+
    /**
     * You can use this method to
     * end with a JSON value from
@@ -10,16 +28,34 @@ class Tool {
     */
    public static function endWithJson($_payload, $code = 200) {
       global $app;
+
+      // Handling special case of PaginatedCollection
       if ($_payload instanceof \API\Core\PaginatedCollection) {
          $_payload->setStatus($app->response);
          $_payload->setHeaders($app->response);
          $payload = $_payload->get($app->request->headers['x-range']);
+      // Or serialize the payload as is
       } else {
          $payload = &$_payload;
          $app->response->setStatus($code);
       }
-      $app->response->headers->set('Content-Type', 'application/json');
-      echo json_encode($payload);
+
+      // Parsing Accept Header
+      if ($_SERVER['HTTP_ACCEPT'] == 'application/json') {
+         $acceptHtml = false;
+      }
+      else {
+         $acceptHtml = true;
+      }
+
+      if ($acceptHtml) {
+        $app->response->headers->set('Content-Type', 'text/html');
+        $code =  preg_replace('/\$code/', htmlentities(json_encode($payload, JSON_PRETTY_PRINT)), self::$prettyJSONTemplate);
+        echo($code);
+      } else {
+        $app->response->headers->set('Content-Type', 'application/json');
+        echo json_encode($payload);
+      }
    }
 
    /**

@@ -46,6 +46,7 @@ angular
 
    .config(function($httpProvider) {
       $httpProvider.defaults.headers.common['X-Lang'] = localStorage.getItem('lang');
+      $httpProvider.defaults.headers.common['Accept'] = 'application/json';
    })
 
    // Associating empty arrays to
