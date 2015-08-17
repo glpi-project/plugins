@@ -80,6 +80,26 @@ angular.module('frontendApp')
    });
 
    $scope.screenshots = [];
+   $scope.tags = [];
+
+   var filterTags = function(lang) {
+      var tags = [];
+      for (var i in $scope.plugin.tags) {
+         var tag = $scope.plugin.tags[i];
+         if (tag.lang == lang) {
+            tags.push(tag);
+         }
+      }
+      if (tags.length == 0 && lang != 'en') {
+         filterTags('en');
+      } else {
+         console.log(tags);
+         $scope.tags = tags;
+      }
+   };
+   $scope.$on('languageChange', function(evt, data) {
+      filterTags(data.newLang);
+   });
 
    $http({
       method: 'GET',
@@ -103,5 +123,6 @@ angular.module('frontendApp')
          });
       }
 
+      filterTags(localStorage.getItem('lang'));
    });
 });
