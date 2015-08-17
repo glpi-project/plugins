@@ -91,4 +91,13 @@ class Tool {
    public static function paginateCollection($queryBuilder) {
       return  new \API\Core\PaginatedCollection($queryBuilder);
    }
+
+   public static function preCountQuery($queryBuilder) {
+      $qb = clone $queryBuilder;
+      return \Illuminate\Database\Capsule\Manager::table(
+                  \Illuminate\Database\Capsule\Manager::raw(
+                     "({$qb->toSql()}) as sub"))
+                        ->mergeBindings($qb->getQuery())
+                        ->count();
+   }
 }
