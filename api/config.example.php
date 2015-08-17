@@ -12,12 +12,10 @@ $config = [
 		'prefix'    =>  ''
 	],
 	"log_queries" => true,
-	"recaptcha_secret" => '6LcnrwoTAAAAAEARsd1XMadhLthIibXeNZf4EeUZ',
+	"recaptcha_secret" => '--your recaptcha key here--',
 	"msg_alerts" => [
 		"recipients" => [
-			"Walid Nouh <wnouh@teclib.com>",
-			"Alexandre Delaunay <adelaunay@teclib.com>",
-			"Nelson Zamith <nzamith@teclib.com>"
+			"Fullname <mail@domain>"
 		],
 		"subject_prefix" => "[GLPI PLUGINS : MSG] "
 	],
