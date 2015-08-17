@@ -93,7 +93,6 @@ angular.module('frontendApp')
       if (tags.length == 0 && lang != 'en') {
          filterTags('en');
       } else {
-         console.log(tags);
          $scope.tags = tags;
       }
    };

@@ -165,7 +165,9 @@ class DatabaseUpdater {
       $plugin->tags()->detach();
       foreach($xml->tags->children() as $lang => $tags) {
          foreach($tags->children() as $_tag) {
-            $found = Tag::where('tag', '=', (string)$_tag)->first();
+            $found = Tag::where('tag', '=', (string)$_tag)
+                        ->where('lang', '=', $lang)
+                        ->first();
             if (sizeof($found) < 1) {
                $tag = new Tag;
                $tag->tag = (string)$_tag;
