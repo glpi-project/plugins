@@ -39,8 +39,8 @@
       </div>
       <div layout="row">
          <md-chips>
-            <md-chip ui-sref="tag({key: tag.key})" ng-repeat="tag in plugin.tags">{{tag.tag}}</md-chip>
-          </md-chips>
+            <md-chip ui-sref="tag({key: tag.key})" ng-show="tag.lang == currentLang" ng-repeat="tag in plugin.tags">{{tag.tag}}</md-chip>
+         </md-chips>
       </div>
    </div>
    <div layout="row" layout-wrap>

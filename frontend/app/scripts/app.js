@@ -23,7 +23,7 @@ angular
    ])
 
    // Determining current language
-   .run(function() {
+   .run(function($rootScope) {
       var langs = ['en', 'fr'];
 
       if (localStorage.getItem('lang') === null) {
@@ -34,6 +34,7 @@ angular
             localStorage.setItem('lang', 'en');
          }
       }
+      $rootScope.currentLang = localStorage.getItem('lang');
    })
 
    .config(function($translateProvider) {

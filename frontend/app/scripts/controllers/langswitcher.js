@@ -31,6 +31,7 @@ angular.module('frontendApp')
 
       UpdateHttpHeaderSettings();
 
+      $rootScope.currentLang = lang;
       // Broadcasting an event to every scope
       $rootScope.$broadcast('languageChange', {
          newLang: lang
