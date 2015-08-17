@@ -23,7 +23,7 @@ use \API\Core\ValidableXMLPluginDescription;
  * Fetching infos of a single plugin
  */
 $single = function($key) use($app) {
-   $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots')
+   $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots', 'tags')
                   ->short()
                   ->withAverageNote()
                   ->withNumberOfVotes()

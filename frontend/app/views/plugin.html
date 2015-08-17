@@ -1,40 +1,47 @@
 <div layout="column" class="plugin">
-   <div layout="row" layout-wrap layout-align="start start" class="plugin_header">
-      <img class="icon" src="{{plugin.logo_url}}" />
-      <div class='plugin_name' flex-sm="45">
-         <h2>{{plugin.name}}</h2>
-         <h4 class="inline-authors">
-            <span>{{'BY'|translate}}</span>
-            <span inline-authors="plugin.authors"></span>
-         </h4>
-      </div>
-      <div flex-sm="45" layout="row" layout-sm="column" layout-align="end end">
-         <div class='pills'>
-            <span ng-repeat="version in (unique_versions = (plugin.versions | unique: 'compatibility') | subpart:3)" class="pill bg_lightblue">{{version.compatibility}}</span>
-            <span ng-show="unique_versions.length > 3">
-               ...
-               <md-tooltip class="versions_more">
-                  <span ng-repeat="version in unique_versions | lastpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
-               </md-tooltip>
-            </span>
+   <div layout="column" class="plugin_header">
+      <div layout="row" layout-wrap layout-align="start start">
+         <img class="icon" src="{{plugin.logo_url}}" />
+         <div class='plugin_name' flex-sm="45">
+            <h2>{{plugin.name}}</h2>
+            <h4 class="inline-authors">
+               <span>{{'BY'|translate}}</span>
+               <span inline-authors="plugin.authors"></span>
+            </h4>
          </div>
-      </div>
-      <div class="flex_right">
-         <rate-box flex-sm="45" current-note="plugin.note" disable-rating="rated" rate-method="ratePlugin"></rate-box>
-         <md-tooltip md-direction="top">{{plugin.n_votes}} votes</md-tooltip>
-      </div>
-      <span class="download">
-         <span class="downloads">
-            <span class='pill bg_red'>
-               <span ng-bind-html='plugin.downloaded | nrFormat'></span>
-               <md-tooltip  md-direction="top">downloads</md-tooltip>
+         <div flex-sm="45" layout="row" layout-sm="column" layout-align="end end">
+            <div class='pills'>
+               <span ng-repeat="version in (unique_versions = (plugin.versions | unique: 'compatibility') | subpart:3)" class="pill bg_lightblue">{{version.compatibility}}</span>
+               <span ng-show="unique_versions.length > 3">
+                  ...
+                  <md-tooltip class="versions_more">
+                     <span ng-repeat="version in unique_versions | lastpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
+                  </md-tooltip>
+               </span>
+            </div>
+         </div>
+         <div class="flex_right">
+            <rate-box flex-sm="45" current-note="plugin.note" disable-rating="rated" rate-method="ratePlugin"></rate-box>
+            <md-tooltip md-direction="top">{{plugin.n_votes}} votes</md-tooltip>
+         </div>
+         <span class="download">
+            <span class="downloads">
+               <span class='pill bg_red'>
+                  <span ng-bind-html='plugin.downloaded | nrFormat'></span>
+                  <md-tooltip  md-direction="top">downloads</md-tooltip>
+               </span>
             </span>
+            <md-button class="md-fab md-primary md-raised" ng-click="download()">
+               <i class="fa fa-2x fa-download white"></i>
+               <md-tooltip md-direction="top">Download</md-tooltip>
+            </md-button>
          </span>
-         <md-button class="md-fab md-primary md-raised" ng-click="download()">
-            <i class="fa fa-2x fa-download white"></i>
-            <md-tooltip md-direction="top">Download</md-tooltip>
-         </md-button>
-      </span>
+      </div>
+      <div layout="row">
+         <md-chips>
+            <md-chip ui-sref="tag({key: tag.key})" ng-repeat="tag in plugin.tags">{{tag.tag}}</md-chip>
+          </md-chips>
+      </div>
    </div>
    <div layout="row" layout-wrap>
       <md-content class='tabs' flex="50" flex-sm="100">
