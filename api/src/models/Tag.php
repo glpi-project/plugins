@@ -15,6 +15,11 @@ class Tag extends Model {
      return $query;
    }
 
+   public function scopeWithLang($query, $lang) {
+      $query->where('tag.lang', '=', $lang);
+      return $query;
+   }
+
    public function plugins() {
    	return $this->belongsToMany('\API\Model\Plugin', 'plugin_tags');
    }

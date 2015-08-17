@@ -57,12 +57,18 @@ angular.module('frontendApp')
          }
 
          if ($rootScope.tags.length < 1) {
-            $http({
-               method: 'GET',
-               url: apiUrl + '/tags/top'
-            })
-            .success(function(data, status, headers, config) {
-               $rootScope.tags = data;
+            var getTags = function() {
+               $http({ 
+                  method: 'GET',
+                  url: apiUrl + '/tags/top'
+               })
+               .success(function(data, status, headers, config) {
+                  $rootScope.tags = data;
+               });
+            };
+            getTags();
+            $scope.$on('languageChange', function() {
+               getTags();
             });
          }
 

@@ -16,12 +16,14 @@ use \Illuminate\Database\Capsule\Manager as DB;
 
 $tags_all = function() use ($app) {
    $tags = Tool::paginateCollection(Tag::withUsage()
-            ->orderBy('plugin_count', 'DESC'));
+               ->withLang(Tool::getRequestLang())
+               ->orderBy('plugin_count', 'DESC'));
    Tool::endWithJson($tags);
 };
 
 $tags_top = function() use ($app) {
    $tags = Tag::withUsage()
+            ->withLang(Tool::getRequestLang())
             ->orderBy('plugin_count', 'DESC')
             ->limit(10)
             ->get();
