@@ -16,11 +16,16 @@ class PaginatedCollection {
 
       // Clone the query builder to compute
       // Collection length with a subquery
+
       $clone = clone $this->queryBuilder;
+      $query = ($clone instanceof \Illuminate\Database\Eloquent\Builder) ?
+               $clone->getQuery() :
+               $clone;
+
       $this->length = \Illuminate\Database\Capsule\Manager::table(
                         \Illuminate\Database\Capsule\Manager::raw(
                            "({$clone->toSql()}) as sub"))
-                              ->mergeBindings($clone->getQuery())
+                              ->mergeBindings($query)
                               ->count();
 
       // Parse range headers and compute
