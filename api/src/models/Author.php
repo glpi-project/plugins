@@ -21,6 +21,15 @@ class Author extends Model {
       return $query;
    }
 
+   public function scopeContributorsOnly($query) {
+      $newQuery = \Illuminate\Database\Capsule\Manager::table(
+                        \Illuminate\Database\Capsule\Manager::raw(
+                           "({$query->toSql()}) as sub"))
+                              ->mergeBindings($query->getQuery())
+                              ->where('plugin_count', '!=', '0');
+      return $newQuery;
+   }
+
    public function scopeMostActive($query, $limit = false) {
       $query->select(['author.id', 'author.name', DB::raw('COUNT(plugin_author.plugin_id) as plugin_count')])
             ->leftJoin('plugin_author', 'author.id', '=', 'plugin_author.author_id')
