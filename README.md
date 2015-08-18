@@ -1,5 +1,7 @@
 # GLPI Plugin Directory
 
+[![Join the chat at https://gitter.im/glpi-project/plugins](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/glpi-project/plugins?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This projects aims to serve the new GLPI plugin directory,
 for GLPI versions < 1 .
 
