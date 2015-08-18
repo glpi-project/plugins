@@ -28,14 +28,14 @@ on your machine.
 ## Dependencies installation
 
 ### Server-Side PHP packages fetching
-dans glpi-plugin-directory :
+
 ```
 cd api
 composer install
 ```
 
 ### Client-Side Angular modules fetching
-dans glpi-plugin-directory :
+
 ```
 cd frontend
 npm install
