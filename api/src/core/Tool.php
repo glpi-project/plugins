@@ -50,7 +50,7 @@ class Tool {
 
       if ($acceptHtml) {
         $app->response->headers->set('Content-Type', 'text/html');
-        $code =  preg_replace('/\$code/', htmlentities(json_encode($payload, JSON_PRETTY_PRINT)), self::$prettyJSONTemplate);
+        $code =  preg_replace('/\$code/', htmlentities(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)), self::$prettyJSONTemplate);
         echo($code);
       } else {
         $app->response->headers->set('Content-Type', 'application/json');
