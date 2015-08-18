@@ -3,18 +3,36 @@
 <head>
    <meta charset="UTF-8">
    <title></title>
+   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css">
    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
    <style>
-      .endpoints, .parameters {
+      body {
+         padding: 0 40px;
+      }
+      pre {
+         line-height: 0;
+      }
+      pre code {
+         line-height: 20px;
+      }
+      .endpoints, .parameters, .payload_parameters {
          list-style-type: none;
+      }
+      .parameters, .payload_parameters {
+         margin-bottom: 10px;
       }
       .endpoints li {
 
       }
       .endpoints li > span {
          display: block;
+      }
+      .endpoints li > span > span {
+         font-weight: 700;
+         min-width: 100px;
+         display: inline-block;
       }
    </style>
 </head>
@@ -34,17 +52,18 @@
    <p>
       The X-Lang header can be filled with language codes,
       that aren't ISO codes, but simple 'conventional' 2
-      letter codes.
+      letter codes which we will moderate one day.
+      Mostly used as of 2015 are 'fr', 'en' and 'es'.
+   </p>
 
-      Mostly used as of 2015 are 'fr', 'en' and 'es', but you're welcome on http://plugins.glpi-project.com/#/submit to read about the XML Glpi Description File specification, which allows you to declare tags to promote your plugin in your native language, and, to provide description of the plugin in as
-      many language as you want, anywhere you're from.
+   <p>
+      You're welcome on <a href="http://plugins.glpi-project.com/#/submit">http://plugins.glpi-project.com/#/submit</a> to read about the XML Glpi Description File specification, and here see how you can specify information in multiple languages (tags, description, ...)
+   </p>
 
+   <p>
       This header change some special properties of resources
       fetched, and will use translation if possible on specific
       fields.
-
-      An example is in /search , where short_description of plugin
-      will be given in the specified language, if available, in the plugin JSON object returned. A fallback to English ('en' code) is default behavior if no X-Lang is specified. On a lot of endpoints, X-Lang has no effect. It is also useful to mention that each time a plugin is requested via /plugin/&lt;id&gt;, all descriptions (in all languages) and all tags (in all languages) are sent, this means that the api user (being a software or a cURL user) needs to filter the data he needs. the X-Lang header then acts as a shortcut to have some specially translated properties added to the scope of the json object being returned.
    </p>
 
    <h2>Contributors</h2>
@@ -62,9 +81,10 @@
             </h4>
             <pre>
                <code class="http">
-                  GET /api/author HTTP/1.1
-                  X-Lang: en
-                  X-Range: 0-14
+GET /api/author HTTP/1.1
+Host: plugins.glpi-project.com
+X-Lang: en
+X-Range: 0-14
                </code>
             </pre>
          </span>
@@ -74,7 +94,7 @@
             </h4>
             <pre>
                <code class="bash">
-                  curl -X GET -H 'X-Lang: en' -H 'X-Range: 0-14' http://plugins.glpi-project.com/api/author
+curl -X GET -H 'X-Lang: en' -H 'X-Range: 0-14' http://plugins.glpi-project.com/api/author
                </code>
             </pre>
          </span>
@@ -98,8 +118,9 @@
             </h4>
             <pre>
                <code class="http">
-                  GET /api/author/3 HTTP/1.1
-                  X-Lang: en
+GET /api/author/3 HTTP/1.1
+Host: plugins.glpi-project.com
+X-Lang: en
                </code>
             </pre>
          </span>
@@ -109,7 +130,7 @@
             </h4>
             <pre>
                <code class="bash">
-                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/author/3
+curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/author/3
                </code>
             </pre>
          </span>
@@ -133,9 +154,10 @@
             </h4>
             <pre>
                <code class="http">
-                  GET /api/author/3/plugin HTTP/1.1
-                  X-Lang: en
-                  X-Range: 0-14
+GET /api/author/3/plugin HTTP/1.1
+Host: plugins.glpi-project.com
+X-Lang: en
+X-Range: 0-14
                </code>
             </pre>
          </span>
@@ -145,7 +167,7 @@
             </h4>
             <pre>
                <code class="bash">
-                  curl -X GET -H 'X-Lang: en' -H 'X-Range: 0-14' http://plugins.glpi-project.com/api/author/3/plugin
+curl -X GET -H 'X-Lang: en' -H 'X-Range: 0-14' http://plugins.glpi-project.com/api/author/3/plugin
                </code>
             </pre>
          </span>
@@ -158,14 +180,15 @@
       <li>
          <h3>Search</h3>
          <span class="url"><span>URL:</span> <a href="#">/search</a></span>
+         <span class="description"><span>Description:</span> The collection of all GLPI known plugins matching the query_string</span>
          <span class="method"><span>Method:</span> POST</span>
+         <h4>Parameters (JSON Payload)</h4>
          <ul class="payload_parameters">
             <li>
                <span class="name"><span>Name:</span> query_string</span>
                <span class="description"><span>Description:</span> Search string to query</span>
             </li>
          </ul>
-         <span class="description"><span>Description:</span> The collection of all GLPI known plugins matching the query_string</span>
          <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
          <span class="http-example">
             <h4>
@@ -173,12 +196,13 @@
             </h4>
             <pre>
                <code class="http">
-                  POST /api/search HTTP/1.1
-                  Content-Type: application/json
-                  X-Lang: en
-                  X-Range: 0-14
+POST /api/search HTTP/1.1
+Host: plugins.glpi-project.com
+Content-Type: application/json
+X-Lang: en
+X-Range: 0-14
 
-                  {"query_string": "additional"}
+{"query_string": "additional"}
                </code>
             </pre>
          </span>
@@ -188,7 +212,7 @@
             </h4>
             <pre>
                <code class="bash">
-                  curl -X POST -H 'X-Lang: en' -H 'X-Range: 0-14' -H 'Content-Type: application/json' -d '{"query_string": "additional"}' http://plugins.glpi-project.com/api/search
+curl -X POST -H 'X-Lang: en' -H 'X-Range: 0-14' -H 'Content-Type: application/json' -d '{"query_string": "additional"}' http://plugins.glpi-project.com/api/search
                </code>
             </pre>
          </span>
@@ -204,9 +228,10 @@
             </h4>
             <pre>
                <code class="http">
-                  GET /api/plugin HTTP/1.1
-                  X-Lang: en
-                  X-Range: 0-14
+GET /api/plugin HTTP/1.1
+Host: plugins.glpi-project.com
+X-Lang: en
+X-Range: 0-14
                </code>
             </pre>
          </span>
@@ -216,7 +241,7 @@
             </h4>
             <pre>
                <code class="bash">
-                  curl -X GET -H 'X-Lang: en' -H 'X-Range: 0-14' http://plugins.glpi-project.com/api/plugin
+curl -X GET -H 'X-Lang: en' -H 'X-Range: 0-14' http://plugins.glpi-project.com/api/plugin
                </code>
             </pre>
          </span>
@@ -232,8 +257,9 @@
             </h4>
             <pre>
                <code class="http">
-                  GET /api/plugin/trending HTTP/1.1
-                  X-Lang: en
+GET /api/plugin/trending HTTP/1.1
+Host: plugins.glpi-project.com
+X-Lang: en
                </code>
             </pre>
          </span>
@@ -243,7 +269,7 @@
             </h4>
             <pre>
                <code class="bash">
-                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/plugin/trending
+curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/plugin/trending
                </code>
             </pre>
          </span>
@@ -259,8 +285,9 @@
             </h4>
             <pre>
                <code class="http">
-                  GET /api/plugin/popular HTTP/1.1
-                  X-Lang: en
+GET /api/plugin/popular HTTP/1.1
+Host: plugins.glpi-project.com
+X-Lang: en
                </code>
             </pre>
          </span>
@@ -270,7 +297,7 @@
             </h4>
             <pre>
                <code class="bash">
-                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/plugin/popular
+curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/plugin/popular
                </code>
             </pre>
          </span>
@@ -286,8 +313,9 @@
             </h4>
             <pre>
                <code class="http">
-                  GET /api/plugin/updated HTTP/1.1
-                  X-Lang: en
+GET /api/plugin/updated HTTP/1.1
+Host: plugins.glpi-project.com
+X-Lang: en
                </code>
             </pre>
          </span>
@@ -297,7 +325,7 @@
             </h4>
             <pre>
                <code class="bash">
-                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/plugin/updated
+curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/plugin/updated
                </code>
             </pre>
          </span>
@@ -313,8 +341,9 @@
             </h4>
             <pre>
                <code class="http">
-                  GET /api/plugin/new HTTP/1.1
-                  X-Lang: en
+GET /api/plugin/new HTTP/1.1
+Host: plugins.glpi-project.com
+X-Lang: en
                </code>
             </pre>
          </span>
@@ -324,7 +353,7 @@
             </h4>
             <pre>
                <code class="bash">
-                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/plugin/new
+curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/plugin/new
                </code>
             </pre>
          </span>
@@ -348,8 +377,9 @@
             </h4>
             <pre>
                <code class="http">
-                  GET /api/plugin/mantis HTTP/1.1
-                  X-Lang: en
+GET /api/plugin/mantis HTTP/1.1
+Host: plugins.glpi-project.com
+X-Lang: en
                </code>
             </pre>
          </span>
@@ -359,7 +389,7 @@
             </h4>
             <pre>
                <code class="bash">
-                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/plugin/mantis
+curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/plugin/mantis
                </code>
             </pre>
          </span>
@@ -381,9 +411,10 @@
             </h4>
             <pre>
                <code class="http">
-                  GET /tags HTTP/1.1
-                  X-Lang: en
-                  X-Range: 0-14
+GET /tags HTTP/1.1
+Host: plugins.glpi-project.com
+X-Lang: en
+X-Range: 0-14
                </code>
             </pre>
          </span>
@@ -393,7 +424,7 @@
             </h4>
             <pre>
                <code class="bash">
-                  curl -X GET -H 'X-Lang: en' -H 'X-Range: 0-14' /tags
+curl -X GET -H 'X-Lang: en' -H 'X-Range: 0-14' /tags
                </code>
             </pre>
          </span>
@@ -417,9 +448,10 @@
             </h4>
             <pre>
                <code class="http">
-                  GET /tag/management/plugin HTTP/1.1
-                  X-Lang: en
-                  X-Range: 0-14
+GET /tag/management/plugin HTTP/1.1
+Host: plugins.glpi-project.com
+X-Lang: en
+X-Range: 0-14
                </code>
             </pre>
          </span>
@@ -429,7 +461,7 @@
             </h4>
             <pre>
                <code class="bash">
-                  curl -X GET -H 'X-Lang: en' -H 'X-Range: 0-14' /tag/management/plugin
+curl -X GET -H 'X-Lang: en' -H 'X-Range: 0-14' /tag/management/plugin
                </code>
             </pre>
          </span>
@@ -447,8 +479,9 @@
             </h4>
             <pre>
                <code class="http">
-                  GET /api/tags/top HTTP/1.1
-                  X-Lang: en
+GET /api/tags/top HTTP/1.1
+Host: plugins.glpi-project.com
+X-Lang: en
                </code>
             </pre>
          </span>
@@ -458,7 +491,7 @@
             </h4>
             <pre>
                <code class="bash">
-                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/tags/top
+curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/tags/top
                </code>
             </pre>
          </span>
@@ -484,8 +517,9 @@
             </h4>
             <pre>
                <code class="http">
-                  GET /api/tags/management HTTP/1.1
-                  X-Lang: en
+GET /api/tags/management HTTP/1.1
+Host: plugins.glpi-project.com
+X-Lang: en
                </code>
             </pre>
          </span>
@@ -495,7 +529,7 @@
             </h4>
             <pre>
                <code class="bash">
-                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/tags/management
+curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/tags/management
                </code>
             </pre>
          </span>
