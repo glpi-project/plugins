@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title></title>
+   <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+   <style>
+      .endpoints, .parameters {
+         list-style-type: none;
+      }
+      .endpoints li {
+
+      }
+      .endpoints li > span {
+         display: block;
+      }
+   </style>
+</head>
+<body>
+   <h1>Endpoints served by this API</h1>
+
+   <h2>Contributors</h2>
+
+   <ul class="endpoints">
+      <li>
+         <h3>Contributor list</h3>
+         <span class="url"><span>URL:</span> <a href="author">/author</a></span>
+         <span class="method"><span>Method:</span> GET</span>
+         <span class="description"><span>Description:</span> List of GLPI known contributors</span>
+         <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+      </li>
+      <li>
+         <h3>Contributor card</h3>
+         <span class="url"><span>URL:</span> <a href="author/3">/author/&lt;id&gt;</a></span>
+         <span class="method"><span>Method:</span> GET</span>
+         <span class="description"><span>Description:</span>Description of a GLPI contributor</span>
+         <h4>Parameters</h4>
+         <ul class="parameters">
+            <li>
+               <span class="name"><span>Name:</span> id</span>
+               <span class="description"><span>Description:</span> ID of the GLPI contributor to look at</span>
+            </li>
+         </ul>
+      </li>
+      <li>
+         <h3>Contributor plugin list</h3>
+         <span class="url"><span>URL:</span> <a href="author/3/plugin">/author/&lt;id&gt;</a></span>
+         <span class="method"><span>Method:</span> GET</span>
+         <span class="description"><span>Description:</span> Collection of plugins the contributor authored on</span>
+         <h4>Parameters</h4>
+         <ul class="parameters">
+            <li>
+               <span class="name"><span>Name:</span> id</span>
+               <span class="description"><span>Description:</span> ID of the GLPI contributor to look at</span>
+            </li>
+         </ul>
+      </li>
+   </ul>
+
+   <h2>Plugins</h2>
+
+   <ul class="endpoints">
+      <li>
+         <h3>Search</h3>
+         <span class="url"><span>URL:</span> <a href="#">/search</a></span>
+         <span class="method"><span>Method:</span> GET</span>
+         <span class="method"><span>Method:</span> POST</span>
+         <ul class="payload_parameters">
+            <li>
+               <span class="name"><span>Name:</span> query_string</span>
+               <span class="description"><span>Description:</span> Search string to query</span>
+            </li>
+         </ul>
+         <span class="description"><span>Description:</span> The collection of all GLPI known plugins matching the query_string</span>
+         <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+      </li>
+      <li>
+         <h3>Plugin list</h3>
+         <span class="url"><span>URL:</span> <a href="plugin">/plugin</a></span>
+         <span class="description"><span>Description:</span> The collection of all GLPI known plugins</span>
+         <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+      </li>
+      <li>
+         <h3>Trending Plugin list</h3>
+         <span class="url"><span>URL:</span> <a href="plugin">/plugin/trending</a></span>
+         <span class="description"><span>Description:</span> Top 10 downloaded in this month</span>
+         <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+      </li>
+      <li>
+         <h3>Popular Plugin list</h3>
+         <span class="url"><span>URL:</span> <a href="plugin/popular">/plugin/popular</a></span>
+         <span class="description"><span>Description:</span> Top 10 downloaded/voted plugins</span>
+         <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+      </li>
+      <li>
+         <h3>Updated Plugin list</h3>
+         <span class="url"><span>URL:</span> <a href="plugin/updated">/plugin/updated</a></span>
+         <span class="description"><span>Description:</span> Top 10 recently updated plugins (by change of XML Plugin Description file)</span>
+         <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+      </li>
+      <li>
+         <h3>New Plugin list</h3>
+         <span class="url"><span>URL:</span> <a href="plugin/new">/plugin/new</a></span>
+         <span class="description"><span>Description:</span> The collection of all GLPI known plugins</span>
+         <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+      </li>
+      <li>
+         <h3>Plugin card</h3>
+         <span class="url"><span>URL:</span> <a href="plugin/1">/plugin/&lt;id&gt;</a></span>
+         <span class="method"><span>Method:</span> GET</span>
+         <span class="description"><span>Description:</span>Description of a GLPI contributor</span>
+         <h4>Parameters</h4>
+         <ul class="parameters">
+            <li>
+               <span class="name"><span>Name:</span> id</span>
+               <span class="description"><span>Description:</span> ID of the GLPI plugin to look at</span>
+            </li>
+         </ul>
+      </li>
+   </ul>
+
+   <h2>Tags</h2>
+
+   <ul class="endpoints">
+      <li>
+         <h3>Tag list</h3>
+         <span class="url"><span>URL:</span> <a href="tag">/tags</a></span>
+         <span class="method"><span>Method:</span> GET</span>
+         <span class="description"><span>Description:</span> The collection of all known plugin tags</span>
+         <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+      </li>
+      <li>
+         <h3>Tag card</h3>
+         <span class="url"><span>URL:</span> <a href="tags/management">/tags/&lt;key&gt;</a></span>
+         <span class="method"><span>Method:</span> GET</span>
+         <span class="description"><span>Description:</span> Description infos of a tag</span>
+         <h4>Parameters</h4>
+         <ul class="parameters">
+            <li>
+               <span class="name"><span>Name:</span> key</span>
+               <span class="description"><span>Description:</span> identified name of the tag</span>
+            </li>
+         </ul>
+      </li>
+   </ul>
+</body>
+</html>

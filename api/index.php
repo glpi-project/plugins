@@ -6,7 +6,6 @@ require 'vendor/autoload.php';
 use \API\Core\Tool;
 $app = new \Slim\Slim();
 
-
 // Loading all REST modules
 // with their endpoints like that:
 // inside 'src/endoints'
@@ -34,6 +33,11 @@ $app->notFound(function() {
     Tool::endWithJson([
         "error" => "invalid endpoint"
     ], 404);
+});
+
+// Welcoming browsers when they reach /api
+$app->get('/', function() use($app) {
+   echo file_get_contents(__DIR__.'/welcome.html');
 });
 
 // Ready to serve with Slim

@@ -5,7 +5,12 @@ namespace API\Core;
 class Tool {
 
    /**
-    * This template [...]
+    * This template aims to deliver an API response
+    * with syntaxic coloration of JSON, in case the
+    * browser asks something else than pure
+    * application/json (in other words, in case the
+    * user directly points his browser to an API
+    * endpoint)
     */
    public static $prettyJSONTemplate =
       '<!DOCTYPE html>'.
