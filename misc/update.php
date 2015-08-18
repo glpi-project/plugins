@@ -32,13 +32,15 @@ class DatabaseUpdater {
 
       // Going to compare checksums
       // for each of these plugins
+      $n = 0;
       foreach($plugins as $num => $plugin) {
+         $n++;
          // Defaults not to update
          $update = false;
          // fetching via http
          $xml = @file_get_contents($plugin->xml_url);
          if (!$xml) {
-            echo('Plugin (' . $plugin->id . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Cannot get XML file via HTTP, Skipping.\n");
+            echo('Plugin (' . $n . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Cannot get XML file via HTTP, Skipping.\n");
             continue;
          }
          $crc = md5($xml); // compute crc
@@ -50,14 +52,14 @@ class DatabaseUpdater {
             // update that one
          }
          else {
-            echo('Plugin (' . $plugin->id . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Already updated, Skipping.\n");
+            echo('Plugin (' . $n . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Already updated, Skipping.\n");
             continue;
          }
 
          // loading XML OO-style with simplemxl
          $xml = new ValidableXMLPluginDescription($xml);
          if (!$xml->isValid()) {
-            echo('Plugin (' . $plugin->id . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Unreadable/Non validable XML, Skipping.\n");
+            echo('Plugin (' . $n . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Unreadable/Non validable XML, Skipping.\n");
             echo("Errors: \n");
             foreach ($xml->errors as $error)
                echo (" - ".$error."\n");
@@ -65,7 +67,7 @@ class DatabaseUpdater {
          }
          $xml = $xml->contents;
 
-         echo('Plugin (' . $plugin->id . '/'. sizeof($plugins) .'): Updating ... ');
+         echo('Plugin (' . $n . '/'. sizeof($plugins) .'): Updating ... ');
          $this->updatePlugin($plugin, $xml, $crc);
       }
    }
