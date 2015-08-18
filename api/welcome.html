@@ -4,6 +4,8 @@
    <meta charset="UTF-8">
    <title></title>
    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css">
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>
    <style>
       .endpoints, .parameters {
          list-style-type: none;
@@ -19,6 +21,32 @@
 <body>
    <h1>Endpoints served by this API</h1>
 
+   <h2>General notes</h2>
+
+   <p>
+      Anytime 'Paginated' is mentionned as true,
+      This means, that the request needs the X-Range
+      Header to be specified with the start and end
+      included indexes specifying the range that API
+      user needs to fetch from given collection.
+   </p>
+
+   <p>
+      The X-Lang header can be filled with language codes,
+      that aren't ISO codes, but simple 'conventional' 2
+      letter codes.
+
+      Mostly used as of 2015 are 'fr', 'en' and 'es', but you're welcome on http://plugins.glpi-project.com/#/submit to read about the XML Glpi Description File specification, which allows you to declare tags to promote your plugin in your native language, and, to provide description of the plugin in as
+      many language as you want, anywhere you're from.
+
+      This header change some special properties of resources
+      fetched, and will use translation if possible on specific
+      fields.
+
+      An example is in /search , where short_description of plugin
+      will be given in the specified language, if available, in the plugin JSON object returned. A fallback to English ('en' code) is default behavior if no X-Lang is specified. On a lot of endpoints, X-Lang has no effect. It is also useful to mention that each time a plugin is requested via /plugin/&lt;id&gt;, all descriptions (in all languages) and all tags (in all languages) are sent, this means that the api user (being a software or a cURL user) needs to filter the data he needs. the X-Lang header then acts as a shortcut to have some specially translated properties added to the scope of the json object being returned.
+   </p>
+
    <h2>Contributors</h2>
 
    <ul class="endpoints">
@@ -28,6 +56,28 @@
          <span class="method"><span>Method:</span> GET</span>
          <span class="description"><span>Description:</span> List of GLPI known contributors</span>
          <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+         <span class="http-example">
+            <h4>
+               Example usage (HTTP Session)
+            </h4>
+            <pre>
+               <code class="http">
+                  GET /api/author HTTP/1.1
+                  X-Lang: en
+                  X-Range: 0-14
+               </code>
+            </pre>
+         </span>
+         <span class="curl-example">
+            <h4>
+               Example usage (cURL call)
+            </h4>
+            <pre>
+               <code class="bash">
+                  curl -X GET -H 'X-Lang: en' -H 'X-Range: 0-14' http://plugins.glpi-project.com/api/author
+               </code>
+            </pre>
+         </span>
       </li>
       <li>
          <h3>Contributor card</h3>
@@ -41,10 +91,32 @@
                <span class="description"><span>Description:</span> ID of the GLPI contributor to look at</span>
             </li>
          </ul>
+         <span class="paginated"><span>Paginated:</span> false</span>
+         <span class="http-example">
+            <h4>
+               Example usage (HTTP Session)
+            </h4>
+            <pre>
+               <code class="http">
+                  GET /api/author/3 HTTP/1.1
+                  X-Lang: en
+               </code>
+            </pre>
+         </span>
+         <span class="curl-example">
+            <h4>
+               Example usage (cURL call)
+            </h4>
+            <pre>
+               <code class="bash">
+                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/author/3
+               </code>
+            </pre>
+         </span>
       </li>
       <li>
          <h3>Contributor plugin list</h3>
-         <span class="url"><span>URL:</span> <a href="author/3/plugin">/author/&lt;id&gt;</a></span>
+         <span class="url"><span>URL:</span> <a href="author/3/plugin">/author/&lt;id&gt;/plugin</a></span>
          <span class="method"><span>Method:</span> GET</span>
          <span class="description"><span>Description:</span> Collection of plugins the contributor authored on</span>
          <h4>Parameters</h4>
@@ -54,6 +126,29 @@
                <span class="description"><span>Description:</span> ID of the GLPI contributor to look at</span>
             </li>
          </ul>
+         <span class="paginated"><span>Paginated:</span> true</span>
+         <span class="http-example">
+            <h4>
+               Example usage (HTTP Session)
+            </h4>
+            <pre>
+               <code class="http">
+                  GET /api/author/3/plugin HTTP/1.1
+                  X-Lang: en
+                  X-Range: 0-14
+               </code>
+            </pre>
+         </span>
+         <span class="curl-example">
+            <h4>
+               Example usage (cURL call)
+            </h4>
+            <pre>
+               <code class="bash">
+                  curl -X GET -H 'X-Lang: en' -H 'X-Range: 0-14' http://plugins.glpi-project.com/api/author/3/plugin
+               </code>
+            </pre>
+         </span>
       </li>
    </ul>
 
@@ -63,7 +158,6 @@
       <li>
          <h3>Search</h3>
          <span class="url"><span>URL:</span> <a href="#">/search</a></span>
-         <span class="method"><span>Method:</span> GET</span>
          <span class="method"><span>Method:</span> POST</span>
          <ul class="payload_parameters">
             <li>
@@ -73,49 +167,202 @@
          </ul>
          <span class="description"><span>Description:</span> The collection of all GLPI known plugins matching the query_string</span>
          <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+         <span class="http-example">
+            <h4>
+               Example usage (HTTP Session)
+            </h4>
+            <pre>
+               <code class="http">
+                  POST /api/search HTTP/1.1
+                  Content-Type: application/json
+                  X-Lang: en
+                  X-Range: 0-14
+
+                  {"query_string": "additional"}
+               </code>
+            </pre>
+         </span>
+         <span class="curl-example">
+            <h4>
+               Example usage (cURL call)
+            </h4>
+            <pre>
+               <code class="bash">
+                  curl -X POST -H 'X-Lang: en' -H 'X-Range: 0-14' -H 'Content-Type: application/json' -d '{"query_string": "additional"}' http://plugins.glpi-project.com/api/search
+               </code>
+            </pre>
+         </span>
       </li>
       <li>
          <h3>Plugin list</h3>
          <span class="url"><span>URL:</span> <a href="plugin">/plugin</a></span>
          <span class="description"><span>Description:</span> The collection of all GLPI known plugins</span>
          <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+         <span class="http-example">
+            <h4>
+               Example usage (HTTP Session)
+            </h4>
+            <pre>
+               <code class="http">
+                  GET /api/plugin HTTP/1.1
+                  X-Lang: en
+                  X-Range: 0-14
+               </code>
+            </pre>
+         </span>
+         <span class="curl-example">
+            <h4>
+               Example usage (cURL call)
+            </h4>
+            <pre>
+               <code class="bash">
+                  curl -X GET -H 'X-Lang: en' -H 'X-Range: 0-14' http://plugins.glpi-project.com/api/plugin
+               </code>
+            </pre>
+         </span>
       </li>
       <li>
          <h3>Trending Plugin list</h3>
-         <span class="url"><span>URL:</span> <a href="plugin">/plugin/trending</a></span>
+         <span class="url"><span>URL:</span> <a href="plugin/trending">/plugin/trending</a></span>
          <span class="description"><span>Description:</span> Top 10 downloaded in this month</span>
-         <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+         <span class="paginated"><span>Paginated:</span> false</span>
+         <span class="http-example">
+            <h4>
+               Example usage (HTTP Session)
+            </h4>
+            <pre>
+               <code class="http">
+                  GET /api/plugin/trending HTTP/1.1
+                  X-Lang: en
+               </code>
+            </pre>
+         </span>
+         <span class="curl-example">
+            <h4>
+               Example usage (cURL call)
+            </h4>
+            <pre>
+               <code class="bash">
+                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/plugin/trending
+               </code>
+            </pre>
+         </span>
       </li>
       <li>
          <h3>Popular Plugin list</h3>
          <span class="url"><span>URL:</span> <a href="plugin/popular">/plugin/popular</a></span>
          <span class="description"><span>Description:</span> Top 10 downloaded/voted plugins</span>
-         <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+         <span class="paginated"><span>Paginated:</span> false (answers 206 Partial Content)</span>
+         <span class="http-example">
+            <h4>
+               Example usage (HTTP Session)
+            </h4>
+            <pre>
+               <code class="http">
+                  GET /api/plugin/popular HTTP/1.1
+                  X-Lang: en
+               </code>
+            </pre>
+         </span>
+         <span class="curl-example">
+            <h4>
+               Example usage (cURL call)
+            </h4>
+            <pre>
+               <code class="bash">
+                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/plugin/popular
+               </code>
+            </pre>
+         </span>
       </li>
       <li>
-         <h3>Updated Plugin list</h3>
+         <h3>Updated plugins</h3>
          <span class="url"><span>URL:</span> <a href="plugin/updated">/plugin/updated</a></span>
          <span class="description"><span>Description:</span> Top 10 recently updated plugins (by change of XML Plugin Description file)</span>
-         <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+         <span class="paginated"><span>Paginated:</span> false</span>
+         <span class="http-example">
+            <h4>
+               Example usage (HTTP Session)
+            </h4>
+            <pre>
+               <code class="http">
+                  GET /api/plugin/updated HTTP/1.1
+                  X-Lang: en
+               </code>
+            </pre>
+         </span>
+         <span class="curl-example">
+            <h4>
+               Example usage (cURL call)
+            </h4>
+            <pre>
+               <code class="bash">
+                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/plugin/updated
+               </code>
+            </pre>
+         </span>
       </li>
       <li>
-         <h3>New Plugin list</h3>
+         <h3>Most recent plugins</h3>
          <span class="url"><span>URL:</span> <a href="plugin/new">/plugin/new</a></span>
          <span class="description"><span>Description:</span> The collection of all GLPI known plugins</span>
-         <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+         <span class="paginated"><span>Paginated:</span> false</span>
+         <span class="http-example">
+            <h4>
+               Example usage (HTTP Session)
+            </h4>
+            <pre>
+               <code class="http">
+                  GET /api/plugin/new HTTP/1.1
+                  X-Lang: en
+               </code>
+            </pre>
+         </span>
+         <span class="curl-example">
+            <h4>
+               Example usage (cURL call)
+            </h4>
+            <pre>
+               <code class="bash">
+                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/plugin/new
+               </code>
+            </pre>
+         </span>
       </li>
       <li>
          <h3>Plugin card</h3>
-         <span class="url"><span>URL:</span> <a href="plugin/1">/plugin/&lt;id&gt;</a></span>
+         <span class="url"><span>URL:</span> <a href="plugin/mantis">/plugin/&lt;key&gt;</a></span>
          <span class="method"><span>Method:</span> GET</span>
          <span class="description"><span>Description:</span>Description of a GLPI contributor</span>
+         <span class="paginated"><span>Paginated:</span> false</span>
          <h4>Parameters</h4>
          <ul class="parameters">
             <li>
-               <span class="name"><span>Name:</span> id</span>
-               <span class="description"><span>Description:</span> ID of the GLPI plugin to look at</span>
+               <span class="name"><span>Name:</span> key</span>
+               <span class="description"><span>Description:</span> key of the GLPI plugin to look at</span>
             </li>
          </ul>
+         <span class="http-example">
+            <h4>
+               Example usage (HTTP Session)
+            </h4>
+            <pre>
+               <code class="http">
+                  GET /api/plugin/mantis HTTP/1.1
+                  X-Lang: en
+               </code>
+            </pre>
+         </span>
+         <span class="curl-example">
+            <h4>
+               Example usage (cURL call)
+            </h4>
+            <pre>
+               <code class="bash">
+                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/plugin/mantis
+               </code>
+            </pre>
+         </span>
       </li>
    </ul>
 
@@ -124,16 +371,39 @@
    <ul class="endpoints">
       <li>
          <h3>Tag list</h3>
-         <span class="url"><span>URL:</span> <a href="tag">/tags</a></span>
+         <span class="url"><span>URL:</span> <a href="tags">/tags</a></span>
          <span class="method"><span>Method:</span> GET</span>
          <span class="description"><span>Description:</span> The collection of all known plugin tags</span>
          <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
+         <span class="http-example">
+            <h4>
+               Example usage (HTTP Session)
+            </h4>
+            <pre>
+               <code class="http">
+                  GET /tags HTTP/1.1
+                  X-Lang: en
+                  X-Range: 0-14
+               </code>
+            </pre>
+         </span>
+         <span class="curl-example">
+            <h4>
+               Example usage (cURL call)
+            </h4>
+            <pre>
+               <code class="bash">
+                  curl -X GET -H 'X-Lang: en' -H 'X-Range: 0-14' /tags
+               </code>
+            </pre>
+         </span>
       </li>
       <li>
-         <h3>Tag card</h3>
-         <span class="url"><span>URL:</span> <a href="tags/management">/tags/&lt;key&gt;</a></span>
+         <h3>Tag plugin list</h3>
+         <span class="url"><span>URL:</span> <a href="tags/management/plugin">/tag/&lt;key&gt;/plugin</a></span>
          <span class="method"><span>Method:</span> GET</span>
-         <span class="description"><span>Description:</span> Description infos of a tag</span>
+         <span class="description"><span>Description:</span> Collection of plugins that are tagged with this tag</span>
+         <span class="paginated"><span>Paginated:</span> true (answers 206 Partial Content)</span>
          <h4>Parameters</h4>
          <ul class="parameters">
             <li>
@@ -141,7 +411,96 @@
                <span class="description"><span>Description:</span> identified name of the tag</span>
             </li>
          </ul>
+         <span class="http-example">
+            <h4>
+               Example usage (HTTP Session)
+            </h4>
+            <pre>
+               <code class="http">
+                  GET /tag/management/plugin HTTP/1.1
+                  X-Lang: en
+                  X-Range: 0-14
+               </code>
+            </pre>
+         </span>
+         <span class="curl-example">
+            <h4>
+               Example usage (cURL call)
+            </h4>
+            <pre>
+               <code class="bash">
+                  curl -X GET -H 'X-Lang: en' -H 'X-Range: 0-14' /tag/management/plugin
+               </code>
+            </pre>
+         </span>
+      </li>
+      <li>
+         <h3>Most used tags</h3>
+         <span class="url"><span>URL:</span> <a href="tags/top">/tags/top</a></span>
+         <span class="method"><span>Method:</span> GET</span>
+         <span class="description"><span>Description:</span> Most used tags collection</span>
+         <span class="paginated"><span>Paginated:</span> false</span>
+
+         <span class="http-example">
+            <h4>
+               Example usage (HTTP Session)
+            </h4>
+            <pre>
+               <code class="http">
+                  GET /api/tags/top HTTP/1.1
+                  X-Lang: en
+               </code>
+            </pre>
+         </span>
+         <span class="curl-example">
+            <h4>
+               Example usage (cURL call)
+            </h4>
+            <pre>
+               <code class="bash">
+                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/tags/top
+               </code>
+            </pre>
+         </span>
+      </li>
+      <li>
+         <h3>Tag card</h3>
+         <span class="url"><span>URL:</span> <a href="tags/management">/tags/&lt;key&gt;</a></span>
+         <span class="method"><span>Method:</span> GET</span>
+         <span class="description"><span>Description:</span> Description infos of a tag</span>
+         <span class="paginated"><span>Paginated:</span> false</span>
+         <h4>Parameters</h4>
+
+         <ul class="parameters">
+            <li>
+               <span class="name"><span>Name:</span> key</span>
+               <span class="description"><span>Description:</span> identified name of the tag</span>
+            </li>
+         </ul>
+
+         <span class="http-example">
+            <h4>
+               Example usage (HTTP Session)
+            </h4>
+            <pre>
+               <code class="http">
+                  GET /api/tags/management HTTP/1.1
+                  X-Lang: en
+               </code>
+            </pre>
+         </span>
+         <span class="curl-example">
+            <h4>
+               Example usage (cURL call)
+            </h4>
+            <pre>
+               <code class="bash">
+                  curl -X GET -H 'X-Lang: en' http://plugins.glpi-project.com/api/tags/management
+               </code>
+            </pre>
+         </span>
       </li>
    </ul>
+   <script>hljs.initHighlightingOnLoad();</script>
 </body>
 </html>
