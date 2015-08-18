@@ -3,9 +3,6 @@
 This projects aims to serve the new GLPI plugin directory,
 for GLPI versions < 1 .
 
-This project is fully managed by, and used only by Teclib'
-and won't be shared on Teclib's github (or I don't think so).
-
 ## Demo / Vagrantfile
 
 If you want to type the-less-possible-set  
