@@ -13,7 +13,10 @@ use \API\Core\Tool;
 use \Illuminate\Database\Capsule\Manager as DB;
 
 $all = function() use($app) {
-   $all = Tool::paginateCollection(\API\Model\Author::mostActive());
+   $all = Tool::paginateCollection(
+            \API\Model\Author::mostActive()
+                             ->contributorsOnly());
+
    Tool::endWithJson($all);
 };
 
