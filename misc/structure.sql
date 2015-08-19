@@ -104,16 +104,6 @@ CREATE TABLE plugin_screenshot(
 ) ENGINE=InnoDB;
 CREATE INDEX idx_plugin_screenshot_plugin ON plugin_screenshot(plugin_id);
 
--- CREATE TABLE plugin_view(
---    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
---    plugin_id INT,
---    `date` DATE,
---    FOREIGN KEY (plugin_id)
---       REFERENCES plugin(id)
---       ON DELETE CASCADE
--- ) ENGINE=InnoDB;
--- CREATE INDEX idx_plugin_view_plugin ON plugin_description(plugin_id);
-
 CREATE TABLE message(
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    first_name VARCHAR(40),
