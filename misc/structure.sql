@@ -22,6 +22,15 @@ CREATE TABLE author(
    name TEXT
 ) ENGINE=InnoDB;
 
+CREATE TABLE user(
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   email VARCHAR(255),
+   password VARCHAR(60),
+   realname TEXT,
+   location VARCHAR(80),
+   website VARCHAR(255)
+) ENGINE=InnoDB;
+
 CREATE TABLE plugin_download (
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    plugin_id INT NOT NULL,
