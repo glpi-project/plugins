@@ -96,9 +96,47 @@ $register = function() use ($app) {
  * Login endpoint
  */
 $login = function() use ($app) {
+   $body = Tool::getBody();
+   $ok = null;
 
+   if (!isset($body->login) ||
+       !isset($body->password)) {
+      $ok = false;
+   } else {
+      $user = User::where(function($q) use($body) {
+                     return $q->where('email', '=', $body->login)
+                              ->orWhere('username', '=', $body->login);
+                  });
+
+      $count = $user->count();
+      if ($count < 1) {
+         $ok = false;
+      }
+      if ($count > 1) {
+         Tool::log('Dangerous, query result count > 1 when user tried'.
+                   ' to log with username "'.$body->login.'" '.
+                   'and password "'.$body->password.'"');
+         $ok = false;
+      } else {
+         $user = $user->first();
+         if ($user->assertPasswordIs($body->password)) {
+            $ok = true;
+         }
+      }
+   }
+
+   if (!$ok) {
+      return Tool::endWithJson([
+         "error" => "Wrong email/username and/or password"
+      ], 400);
+   } else {
+      // Deliver JWT
+      return Tool::endWithJson([
+         "error" => "You are successfully logged in"
+      ], 200);
+   }
 };
 
 // HTTP REST Map
 $app->post('/user', $register);
-// $app->post('/user/login', $login);
+$app->post('/user/login', $login);
