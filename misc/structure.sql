@@ -25,6 +25,7 @@ CREATE TABLE author(
 CREATE TABLE user(
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    email VARCHAR(255),
+   username VARCHAR(28),
    password VARCHAR(60),
    realname TEXT,
    location VARCHAR(80),

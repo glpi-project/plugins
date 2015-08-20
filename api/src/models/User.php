@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class User extends Model {
    protected $table = 'user';
+   public $timestamps = false;
 
    public function setPassword($password) {
       $this->password = password_hash($password, PASSWORD_BCRYPT);
