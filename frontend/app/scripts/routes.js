@@ -8,6 +8,11 @@ angular
       // For any unmatched url, redirect to /
       $urlRouterProvider.otherwise("/");
       $stateProvider
+         .state('panel', {
+            url: "/panel",
+            templateUrl: "views/panel.html",
+            controller: "PanelCtrl"
+         })
          .state('featured', {
             url: "/",
             templateUrl: "views/featured.html",

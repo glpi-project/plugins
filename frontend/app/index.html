@@ -32,12 +32,13 @@
                <h2>Plugins</h2>
                <div class='legend'>{{'SLOGAN' | translate}}</div>
             </div>
-            <div flex="65" flex-sm="100">
+            <div flex="55" flex-sm="100">
                <md-input-container class="searchbox picbox md-accent md-hue-3">
                   <label>{{'SEARCHBAR_PLACEHOLDER'|translate}}</label>
                   <input type="text" ng-model="search" class="search_bar" focus-me="$root.focusSearch" />
                </md-input-container>
             </div>
+            <div flex="15" user-menu></div>
          </div>
       </div>
       <section class="main" layout="row" flex>
@@ -137,6 +138,8 @@
       <script src="scripts/controllers/tags.js"></script>
       <script src="scripts/controllers/version.js"></script>
       <script src="scripts/services/fixindepnet.js"></script>
+      <script src="scripts/directives/usermenu.js"></script>
+      <script src="scripts/controllers/panel.js"></script>
       <!-- endbuild -->
 
       <script>
