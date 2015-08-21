@@ -130,4 +130,10 @@ class Plugin extends Model {
          ->where('tag.id', '=', $tag->id);
       return $query;
    }
+
+   public function scopeWithGlpiVersion($query, $version) {
+      $query->join('plugin_version', 'plugin.id', '=', 'plugin_version.plugin_id')
+            ->where('plugin_version.compatibility', '=', $version);
+      return $query;
+   }
 }
