@@ -145,8 +145,8 @@ class DatabaseUpdater {
       foreach($xml->versions->children() as $_version) {
          foreach ($_version->compatibility as $compat) {
             $version = new PluginVersion;
-            $version->num = (string)$_version->num;
-            $version->compatibility = (string)$compat;
+            $version->num = trim((string)$_version->num);
+            $version->compatibility = trim((string)$compat);
             $version->plugin_id = $plugin->id;
             $version->save();
          }
