@@ -11,11 +11,11 @@
          </div>
          <div flex-sm="45" layout="row" layout-sm="column" layout-align="end end">
             <div class='pills'>
-               <span ng-repeat="version in (unique_versions = (plugin.versions | unique: 'compatibility') | subpart:3)" class="pill bg_lightblue">{{version.compatibility}}</span>
+               <span ng-repeat="version in (unique_versions = (plugin.versions | unique: 'compatibility') | subpart:3)" class="pill bg_lightblue" ui-sref="version({version: version.compatibility})">{{version.compatibility}}</span>
                <span ng-show="unique_versions.length > 3">
                   ...
                   <md-tooltip class="versions_more">
-                     <span ng-repeat="version in unique_versions | lastpart:3" class="pill bg_lightblue">{{version.compatibility}}</span>
+                     <span ng-repeat="version in unique_versions | lastpart:3" class="pill bg_lightblue" ui-sref="version({version: version.compatibility})">{{version.compatibility}}</span>
                   </md-tooltip>
                </span>
             </div>

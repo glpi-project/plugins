@@ -38,6 +38,11 @@ angular
             templateUrl: "views/plugin_list.html",
             controller: "SearchCtrl"
          })
+         .state('version', {
+            url: '/version/:version/plugins',
+            templateUrl: "views/plugin_list.html",
+            controller: "VersionCtrl"
+         })
          .state('tags', {
             url: '/tags',
             templateUrl: "views/tags.html",
