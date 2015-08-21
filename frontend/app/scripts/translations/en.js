@@ -6,7 +6,7 @@ angular
       $translateProvider
          .translations('en', {
             ON: "on",
-            SLOGAN: "Extend your GLPI with plugins",
+            SLOGAN: "Extend GLPI with Plugins",
             TRENDING: "Trending",
             TRENDING_SUB: "Often downloaded this month",
             NEW: "New",
