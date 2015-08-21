@@ -1,5 +1,6 @@
 CREATE TABLE plugin (
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   active INT(1),
    xml_url TEXT,
    xml_crc VARCHAR(32),
    name TEXT,
@@ -10,7 +11,6 @@ CREATE TABLE plugin (
    issues_url TEXT,
    readme_url TEXT,
    license VARCHAR(255),
-   active INT(1),
    date_added DATE,
    date_updated DATE,
    UNIQUE KEY `ix_plugin` (`key`)
