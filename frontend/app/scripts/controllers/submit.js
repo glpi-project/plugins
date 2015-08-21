@@ -47,10 +47,12 @@ angular.module('frontendApp')
                }, 3800);
 
             } else {
-               $mdToast.show($mdToast.simple()
+               var toast = $mdToast.simple()
                   .capsule(true)
                   .content("Error: " + data.error)
-                  .position('top'));
+                  .position('top right');
+               toast._options.parent =  angular.element(document.getElementById('submit_form'));
+               $mdToast.show(toast);
                vcRecaptchaService.reload($scope.widgetId);
             }
          });
