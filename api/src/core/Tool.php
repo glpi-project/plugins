@@ -5,7 +5,7 @@ namespace API\Core;
 class Tool {
 
    /**
-    * This template aims to deliver an API response
+    * This template is used to deliver an API response
     * with syntaxic coloration of JSON, in case the
     * browser asks something else than pure
     * application/json (in other words, in case the
@@ -19,7 +19,29 @@ class Tool {
             '<title></title>'.
             '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/github.min.css">'.
             '<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>'.
-            '<style> .hljs { word-break: break-word;} </style>'.
+            '<style>'.
+               '.hljs '.
+               '{'.
+                  'word-break: break-word;'.
+               '}'.
+               'body'.
+               '{'.
+                  'padding: 0;'.
+                  'margin: 0;'.
+                  'background-color: #f8f8f8;'.
+               '}'.
+               'pre'.
+               '{'.
+                  'margin: 0;'.
+                  'padding: 0;'.
+               '}'.
+               'pre code'.
+               '{'.
+                  'padding: 0 80px;'.
+                  'max-width: 1000px;'.
+                  'margin: 0 auto;'.
+                '}'.
+            '</style>'.
          '</head>'.
          '<body>'.
             '<pre><code class="json">$code</code></pre>'.
