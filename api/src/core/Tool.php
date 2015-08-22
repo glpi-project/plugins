@@ -17,7 +17,7 @@ class Tool {
       '<html>'.
          '<head>'.
             '<title></title>'.
-            '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css">'.
+            '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/github.min.css">'.
             '<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>'.
             '<style> .hljs { word-break: break-word;} </style>'.
          '</head>'.
