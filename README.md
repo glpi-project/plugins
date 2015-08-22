@@ -108,3 +108,43 @@ This is a configuration example for Apache HTTPd :
     CustomLog "/usr/local/var/log/apache2/glpiplugindirectory.access.log" common
 </VirtualHost>
 ```
+## Configuration (Via NGINX)
+
+This is a configuration example for NGINX :
+
+```nginx
+upstream php {
+    server unix:/var/run/php-fpm/php-fpm.sock;
+}
+
+server {
+    listen 80;
+    server_name glpiplugindirectory;
+
+    root /path/to/glpi-plugin-directory/frontend/dist;
+    index index.html;
+}
+
+server {
+    listen 80;
+    server_name api.glpiplugindirectory;
+
+    root /path/to/glpi-plugin-directory/api;
+
+    add_header Access-Control-Allow-Origin "*";
+    add_header Access-Control-Allow-Headers "origin, x-requested-with, content-type, x-lang, x-range, accept";
+    add_header Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS";
+    add_header Access-Control-Expose-Headers "content-type, content-range, accept-range";
+
+    try_files $uri $uri/ /index.php?$args;
+    index index.php;
+
+    location ~ \.php$ {
+             #NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
+             include fastcgi.conf;
+             fastcgi_intercept_errors on;
+             fastcgi_pass php;
+    }
+}
+
+```
