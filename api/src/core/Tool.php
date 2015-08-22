@@ -19,6 +19,7 @@ class Tool {
             '<title></title>'.
             '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/styles/default.min.css">'.
             '<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.7/highlight.min.js"></script>'.
+            '<style> .hljs { word-break: break-word;} </style>'.
          '</head>'.
          '<body>'.
             '<pre><code class="json">$code</code></pre>'.
