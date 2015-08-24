@@ -5,33 +5,7 @@
 This is the server side and webapp of GLPI Plugin Directory.  
 It is the future of http://plugins.glpi-project.org
 
-## Have a quick preview of glpi-plugin-directory with Vagrant
-
-THIS IS NOT UP TO DATE
-
-If you want to type the smallest set 
-of commands to just, see the plugin
-directory run locally, let's go with Vagrant :
-
-```bash
-apt-get install vagrant virtualbox
-```
-
-followed by
-
-```bash
-git clone git@github.com:glpi-project/plugins.git glpi-plugin-directory
-cd glpi-plugin-directory
-vagrant up
-```
-
-If everything went fine, you're done, go visit  
-http://localhost:8080
-you should see a running local-copy, or a local running-copy of glpi-plugin-directory  
-on your machine.
-
-
-## Install on a machine
+## Installation on a machine
 
 ### First
 
