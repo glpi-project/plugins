@@ -70,7 +70,7 @@ in the folder where you cloned this repo, run
 ```bash
 mysql -u <usercreated> -p<password> <database> < misc/structure.sql
 ```
-be sure to replace &gt;usercreated&lt; &gt;password&lt; and &gt;databasecreated&lt;
+be sure to replace &lt;usercreated&gt; &lt;password&gt; and &lt;databasecreated&gt;
 with the database and user you created previously.
 
 ## Create config files
