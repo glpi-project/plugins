@@ -66,7 +66,7 @@ grunt build
 ## Create MySQL database
 
 First, create a MySQL database, and user,
-which you grant rights on the database.
+which you grant CRUD and CREATE rights on the database.
 
 in the folder where you cloned this repo, run
 
