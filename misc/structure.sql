@@ -32,6 +32,16 @@ CREATE TABLE user(
    website VARCHAR(255)
 ) ENGINE=InnoDB;
 
+CREATE TABLE user_oauth_token(
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   user_id INT NOT NULL,
+   token VARCHAR(60),
+   service VARCHAR(40),
+   FOREIGN KEY (user_id)
+      REFERENCES user(id)
+) ENGINE=InnoDB;
+CREATE INDEX idx_user_oauth_token_user_id ON user_oauth_token(user_id);
+
 CREATE TABLE plugin_download (
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    plugin_id INT NOT NULL,

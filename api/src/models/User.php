@@ -9,6 +9,10 @@ class User extends Model {
    protected $table = 'user';
    public $timestamps = false;
 
+   public function tokens() {
+      return $this->hasMany('\API\Model\OAuthToken');
+   }
+
    public function setPassword($password) {
       $this->password = password_hash($password, PASSWORD_BCRYPT);
    }

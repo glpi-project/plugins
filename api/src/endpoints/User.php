@@ -13,6 +13,7 @@ use \API\Core\Tool;
 use \Illuminate\Database\Capsule\Manager as DB;
 
 use \API\Model\User;
+use \API\Model\OAuthToken;
 
 /**
  * Registers new user
@@ -137,6 +138,44 @@ $login = function() use ($app) {
    }
 };
 
+/**
+ * OAuth callback
+ */
+$oAuthCallback = function($service) use($app) {
+   $oAuth = new API\Core\OAuthConnection($service);
+   $token = $oAuth->getAuthorization($app->request->get('code'));
+   $oauth_user = $oAuth->user->toArray();
+
+   $known = OAuthToken::where('token', '=', $token)
+                      ->where('service', '=', $service)
+                      ->first();
+
+   if (sizeof($known) > 0) {
+      $user = $known->user;
+
+      echo 'known user !';
+   } else {
+      $user = new User;
+      $user->realname = $oauth_user['name'];
+      $user->username = $oauth_user['login'];
+      $user->email = $oAuth->getEmail($token);
+      $user->location = $oauth_user['location'];
+      $user->save();
+
+      $oauth_token = new OAuthToken;
+      $oauth_token->token = $token;
+      $oauth_token->service = $service;
+
+      $user->tokens()->save($oauth_token);
+   }
+
+};
+
 // HTTP REST Map
 $app->post('/user', $register);
 $app->post('/user/login', $login);
+$app->get('/oauthcallback/:service', $oAuthCallback);
+
+$app->options('/user', function() {});
+$app->options('/user/login', function() {});
+$app->options('/oauthcallback/:service', function() {});
