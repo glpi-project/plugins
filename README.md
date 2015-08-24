@@ -5,7 +5,7 @@
 This is the server side and webapp of GLPI Plugin Directory.  
 It is the future of http://plugins.glpi-project.org
 
-## Installation on a machine
+## Installation
 
 ### First
 
