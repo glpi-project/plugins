@@ -68,7 +68,6 @@ which you grant rights on the database.
 in the folder where you cloned this repo, run
 
 ```bash
-cd 
 mysql -u <usercreated> -p<password> <database> < misc/structure.sql
 ```
 be sure to replace <usercreated> <password> and <databasecreated>
