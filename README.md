@@ -79,7 +79,7 @@ php misc/update.php
 
 This is a configuration example for Apache HTTPd :
 
-```
+```apache
 <VirtualHost *:80>
     ServerName glpiplugindirectory
     DocumentRoot "/path/to/frontend/dist"
