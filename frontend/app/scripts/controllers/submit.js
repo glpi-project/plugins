@@ -38,10 +38,13 @@ angular.module('frontendApp')
          })
          .success(function(data) {
             if (data.success) {
-               $mdToast.show($mdToast.simple()
+               var toast = $mdToast.simple()
                   .capsule(true)
                   .content('Thanks for your time ! We are going to verify the plugin you have submitted.')
-                  .position('top'));
+                  .position('top');
+               toast._options.parent =  angular.element(document.getElementById('submit_form'));
+               $mdToast.show(toast);
+
                $timeout(function() {
                   $state.go('featured');
                }, 3800);
