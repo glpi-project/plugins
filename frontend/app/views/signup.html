@@ -1,0 +1,45 @@
+<div layout="row" class="register">
+   <div flex="33">
+      <h2>Register Manually</h2>
+
+      <form>
+         <md-input-container>
+            <label>Last Name</label>
+            <input type="text">
+         </md-input-container>
+         <md-input-container>
+            <label>First Name</label>
+            <input type="text">
+         </md-input-container>
+         <md-input-container>
+            <label>Real Name</label>
+            <input type="text">
+         </md-input-container>
+         <md-input-container>
+            <label>Email</label>
+            <input type="text">
+         </md-input-container>
+         <md-input-container>
+            <label>Website</label>
+            <input type="text">
+         </md-input-container>
+         <md-input-container>
+            <label>Password</label>
+            <input type="text">
+         </md-input-container>
+         <md-input-container>
+            <label>Confirm password</label>
+            <input type="text">
+         </md-input-container>
+      </form>
+         <md-button class="md-raised md-primary">Update</md-button>
+   </div>
+   <div flex="66" class="link-your-account">
+      <h2>Or link your account</h2>
+
+      <md-button ng-click="authenticate('github')"><i class="fa fa-github"></i></md-button>
+      <md-button><i class="fa fa-google"></i></md-button>
+      <md-button><i class="fa fa-facebook"></i></md-button>
+      <md-button><i class="fa fa-twitter"></i></md-button>
+   </div>
+</div>

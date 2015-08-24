@@ -13,6 +13,11 @@ angular
             templateUrl: "views/panel.html",
             controller: "PanelCtrl"
          })
+         .state('signup', {
+            url: "/signup",
+            templateUrl: "views/signup.html",
+            controller: "SignupCtrl"
+         })
          .state('featured', {
             url: "/",
             templateUrl: "views/featured.html",

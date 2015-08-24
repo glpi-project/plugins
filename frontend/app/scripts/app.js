@@ -19,7 +19,8 @@ angular
       'ngSanitize',
       'pascalprecht.translate',
       'jkuri.gallery',
-      'btford.markdown'
+      'btford.markdown',
+      'satellizer'
    ])
 
    // Determining current language
@@ -63,4 +64,14 @@ angular
       $rootScope.updated = [];
       $rootScope.tags = [];
       $rootScope.authors = [];
-   });
+   })
+
+   .config(function(API_URL, $authProvider) {
+
+       $authProvider.github({
+         clientId: '58b0aebf84896b64ed1e',
+         redirectUri: API_URL+'/oauthcallback/github',
+         scope: ['user', 'user:email']
+       });
+
+     });
