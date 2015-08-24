@@ -96,8 +96,10 @@ Both of them have example provided that you can use to start a new one.
 
 ## Loading Indepnet data from CSV file (Optional)
 
+in the folder where you cloned this repo, run
+
 ```bash
-php misc/loadcsv.php -h hostname -d database -u username -p password -f csv_path
+php misc/loadcsv.php -h hostname -d database -u username -p password -f misc/indepnet.csv
 ```
 
 you can give the indepnet.csv file provided in misc
