@@ -5,7 +5,7 @@
 This projects aims to serve the new GLPI plugin directory,
 for GLPI versions < 1 .
 
-## Demo / Vagrantfile
+## Have a quick preview of glpi-plugin-directory with Vagrant
 
 If you want to type the-less-possible-set  
 of commands, let's go with Vagrant :
@@ -17,6 +17,7 @@ apt-get install vagrant virtualbox
 followed by
 
 ```bash
+git clone git@github.com:glpi-project/plugins.git glpi-plugin-directory
 cd glpi-plugin-directory
 vagrant up
 ```
@@ -27,16 +28,30 @@ you should see a running local-copy, or a local running-copy of glpi-plugin-dire
 on your machine.
 
 
-## Dependencies installation
+## Install on a machine
 
-### Server-Side PHP packages fetching
+### First
+
+clone this repository where you are able to serve it via
+PHP and a webserver.
 
 ```bash
-cd api
+cd somewhere
+git clone git@github.com:glpi-project/plugins.git glpi-plugin-directory
+```
+
+### Then, Fetch PHP Components used by server side
+
+in the folder where you cloned this repo, run
+
+```bash
+cd glpiapi
 composer install
 ```
 
-### Client-Side Angular modules fetching
+### Fetch frontend libraries / Build web application
+
+in the folder where you cloned this repo, run
 
 ```bash
 cd frontend
@@ -45,17 +60,27 @@ bower install
 grunt build
 ```
 
-### Client-Side Developers
+## Create MySQL database
+
+First, create a MySQL database, and user,
+which you grant rights on the database.
+
+in the folder where you cloned this repo, run
 
 ```bash
-cd frontend
-grunt serve
+cd 
+mysql -u <usercreated> -p<password> <database> < misc/structure.sql
 ```
+be sure to replace <usercreated> <password> and <databasecreated>
+with the database and user you created previously.
 
-## Configuration (Mandatory)
+## Create config files
 
- + Create a database that you would like to use
- + Load structure.sql
+You must create api/config.php file and frontend/app/scripts/conf.js
+Both of them have example provided that you can use to start a new one.
+
+ + api/config.example.php
+ + frontend/app/scripts/conf.example.js
 
 ## Loading Indepnet data from CSV file (Optional)
 
@@ -66,14 +91,18 @@ php misc/loadcsv.php -h hostname -d database -u username -p password -f csv_path
 you can give the indepnet.csv file provided in misc
 with the -f command line option shown in the example before.
 
-## Parse plugins xml 
+## Grab plugin information 
 
-You must have a api/config.php file (see api/config.example.php)
+### Manually 
 
 ```bash
 php misc/update.php
 ```
 
+### With crontab
+
+It is up to you to use a crontab entry to run this script,
+per example once every hour.
 
 ## Configuration (Via Apache HTTPd)
 
@@ -147,4 +176,13 @@ server {
     }
 }
 
+```
+
+## Start a built-in development server in javascript
+
+This is if you develop locally on the frontend side of glpi-plugin-directory
+
+```bash
+cd frontend
+grunt serve
 ```
