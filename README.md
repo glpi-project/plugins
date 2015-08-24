@@ -48,7 +48,7 @@ git clone git@github.com:glpi-project/plugins.git glpi-plugin-directory
 in the folder where you cloned this repo, run
 
 ```bash
-cd glpiapi
+cd api
 composer install
 ```
 
