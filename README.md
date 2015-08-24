@@ -7,8 +7,9 @@ for GLPI versions < 1 .
 
 ## Have a quick preview of glpi-plugin-directory with Vagrant
 
-If you want to type the-less-possible-set  
-of commands, let's go with Vagrant :
+If you want to type the smallest set 
+of commands to just, see the plugin
+directory run locally, let's go with Vagrant :
 
 ```bash
 apt-get install vagrant virtualbox
