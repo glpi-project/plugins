@@ -96,6 +96,12 @@ Both of them have example provided that you can use to start a new one.
 
 ## Loading Indepnet data from CSV file (Optional)
 
+This is the original list of XML Plugin declaration
+files Indepnet was tracking, it is the the data on which
+we built this new plugin directory.
+We added a way to copy that original list into a fresh
+database, described here
+
 in the folder where you cloned this repo, run
 
 ```bash
