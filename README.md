@@ -68,11 +68,21 @@ grunt build
 First, create a MySQL database, and user,
 which you grant CRUD and CREATE rights on the database.
 
+```bash
+mysql -u <usercreated> -p<password> <database>
+```
+
+```sql
+CREATE DATABASE <database> CHARACTER SET utf8 COLLATE utf8_general_ci;
+GRANT ALL PRIVILEGES ON glpiplugindirectory.* TO '<usercreated>'@'localhost' IDENTIFIED BY '<password>'
+```
+
 in the folder where you cloned this repo, run
 
 ```bash
 mysql -u <usercreated> -p<password> <database> < misc/structure.sql
 ```
+
 be sure to replace &lt;usercreated&gt; &lt;password&gt; and &lt;databasecreated&gt;
 with the database and user you created previously.
 
