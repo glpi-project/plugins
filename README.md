@@ -16,7 +16,7 @@ apt-get install vagrant virtualbox
 
 followed by
 
-```
+```bash
 cd glpi-plugin-directory
 vagrant up
 ```
@@ -31,14 +31,14 @@ on your machine.
 
 ### Server-Side PHP packages fetching
 
-```
+```bash
 cd api
 composer install
 ```
 
 ### Client-Side Angular modules fetching
 
-```
+```bash
 cd frontend
 npm install
 bower install
@@ -47,7 +47,7 @@ grunt build
 
 ### Client-Side Developers
 
-```
+```bash
 cd frontend
 grunt serve
 ```
@@ -59,7 +59,7 @@ grunt serve
 
 ## Loading Indepnet data from CSV file (Optional)
 
-```
+```bash
 php misc/loadcsv.php -h hostname -d database -u username -p password -f csv_path
 ```
 
@@ -70,7 +70,7 @@ with the -f command line option shown in the example before.
 
 You must have a api/config.php file (see api/config.example.php)
 
-```
+```bash
 php misc/update.php
 ```
 
