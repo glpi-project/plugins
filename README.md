@@ -7,6 +7,8 @@ It is the future of http://plugins.glpi-project.org
 
 ## Have a quick preview of glpi-plugin-directory with Vagrant
 
+THIS IS NOT UP TO DATE
+
 If you want to type the smallest set 
 of commands to just, see the plugin
 directory run locally, let's go with Vagrant :
