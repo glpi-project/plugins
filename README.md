@@ -76,11 +76,11 @@ with the database and user you created previously.
 
 ## Create config files
 
-You must create api/config.php file and frontend/app/scripts/conf.js
+You must create `api/config.php` file and `frontend/app/scripts/conf.js`
 Both of them have example provided that you can use to start a new one.
 
- + api/config.example.php
- + frontend/app/scripts/conf.example.js
+ + `api/config.example.php`
+ + `frontend/app/scripts/conf.example.js`
 
 ## Loading Indepnet data from CSV file (Optional)
 
