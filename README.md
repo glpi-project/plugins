@@ -3,8 +3,7 @@
 [![Join the chat at https://gitter.im/glpi-project/plugins](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/glpi-project/plugins?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This is the server side and webapp of GLPI Plugin Directory.  
-This is the future of http://plugins.glpi-project.org
-migration is upcoming.
+It is the future of http://plugins.glpi-project.org
 
 ## Have a quick preview of glpi-plugin-directory with Vagrant
 
