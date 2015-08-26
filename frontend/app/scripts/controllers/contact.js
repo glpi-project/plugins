@@ -40,7 +40,8 @@ angular.module('frontendApp')
             if (data.success) {
                $mdToast.show($mdToast.simple()
                   .capsule(true)
-                  .content('Thanks for your message ! Be certain we will love reading it'));
+                  .content('Thanks for your message ! Be certain we will love reading it'))
+                  .position('top');
                $timeout(function() {
                   $state.go('featured');
                }, 3800);
