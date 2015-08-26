@@ -73,8 +73,10 @@ class DatabaseUpdater {
    }
 
    public function updatePlugin($plugin, $xml, $new_crc) {
-      if (strlen($plugin->name) == 0)
+      if (strlen($plugin->name) == 0) {
          echo "first time update, found name \"".$xml->name."\"...";
+         $firstTimeUpdate = true;
+      }
       else {
          if ($plugin->name != $xml->name)
             echo "\"".$plugin->name."\" going to become \"".$xml->name."\" ...";
@@ -186,7 +188,9 @@ class DatabaseUpdater {
       // new crc
       $plugin->xml_crc = $new_crc;
       // new timestamp
-      $plugin->date_updated = DB::raw('NOW()');
+      if (!isset($firstTimeUpdate)) {
+         $plugin->date_updated = DB::raw('NOW()');
+      }
       $plugin->save();
       echo " OK\n";
    }
