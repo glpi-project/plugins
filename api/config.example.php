@@ -17,7 +17,7 @@ $config = [
 		"recipients" => [
 			"Fullname <mail@domain>"
 		],
-		"subject_prefix" => "[GLPI PLUGINS : MSG] "
+		"subject_prefix" => "[GLPI PLUGINS] "
 	],
 	"default_number_of_models_per_page" => 15
 ];
