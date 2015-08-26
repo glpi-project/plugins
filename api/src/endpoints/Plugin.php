@@ -188,6 +188,21 @@ $submit = function() use($app) {
     $plugin->active = false;
     $plugin->save();
 
+
+   $msg_alerts_settings = Tool::getConfig()['msg_alerts'];
+   $recipients = ''; $i = 0;
+   foreach ($msg_alerts_settings['recipients'] as $recipient) {
+      if ($i > 0)
+         $recipients .= ', ';
+      $recipients .= $recipient;
+      $i++;
+   }
+
+   mail($recipients,
+      $msg_alerts_settings['subject_prefix'].'[PLUGIN SUBMISSION] '.$xml->name.' ('.$xml->key.')',
+      'A new plugin "'.$xml->name.'" with key "'.$xml->key.'" has been submitted and is awaiting to be verified. It has db id #'.$plugin->id,
+      "From: GLPI Plugins <plugins@glpi-project.org>");
+
     return Tool::endWithJson([
         "success" => true
     ]);

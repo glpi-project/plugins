@@ -49,7 +49,7 @@ $send = function() use($app) {
 
    // Sending mail
    mail($recipients,
-      $msg_alerts_settings['subject_prefix'] . $body->contact->subject,
+      $msg_alerts_settings['subject_prefix'] . '[MSG] '. $body->contact->subject,
       $body->contact->message,
       "From: ".$body->contact->firstname." ".$body->contact->lastname." <".$body->contact->email.">");
 
