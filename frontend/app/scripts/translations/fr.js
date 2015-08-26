@@ -16,7 +16,7 @@ angular
             UPDATED: "Mis à jour",
             UPDATED_SUB: "Derniers mis à jours",
             TAGS: "Tags",
-            TAGS_SUB: "Aux plugins les plus nombreux",
+            TAGS_SUB: "Les plus attribués",
             AUTHORS: "Auteurs",
             AUTHORS_SUB: "Plus gros contributeurs",
             NAV_FEATURED: "À la une",
