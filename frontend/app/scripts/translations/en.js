@@ -8,7 +8,7 @@ angular
             ON: "on",
             SLOGAN: "Extend GLPI with Plugins",
             TRENDING: "Trending",
-            TRENDING_SUB: "Often downloaded this month",
+            TRENDING_SUB: "Popular this month",
             NEW: "New",
             NEW_SUB: "Most recent in the catalog",
             POPULAR: "Popular",
