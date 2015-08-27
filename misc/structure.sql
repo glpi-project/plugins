@@ -143,11 +143,21 @@ CREATE TABLE apps(
    redirect_uri  VARCHAR(140)
 ) ENGINE=InnoDB;
 
+INSERT INTO apps(name, secret, redirect_uri)
+VALUES  ('webapp',      '9677873f8fb70251ce10616b2160be6c06fedcd9', 'http://'),
+        ('glpidefault', '7ebc7ee84a9989aa839a7db2f57bcfe9117e22df', 'http://');
+
 CREATE TABLE scopes(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    identifier    VARCHAR(40),
    description   VARCHAR(100)
 ) ENGINE=InnoDB;
+
+INSERT INTO scopes(identifier, description)
+VALUES  ('plugins', 'View all known plugins'),
+        ('tags', 'View all known attributed tags'),
+        ('authors', 'View all known contributors'),
+        ('tags', 'View all tags available');
 
 CREATE TABLE sessions(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
