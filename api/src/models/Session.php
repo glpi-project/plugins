@@ -5,11 +5,11 @@ namespace API\Model;
 use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Eloquent\Model;
 
-class OAuthToken extends Model {
-   protected $table = 'user_oauth_token';
+class Session extends Model {
+   protected $table = "sessions";
    public $timestamps = false;
 
-   public function user() {
-      return $this->belongsTo('\API\Model\User');
+   public function scopes() {
+      return $this->belongsToMany('\API\Model\Scope');
    }
 }

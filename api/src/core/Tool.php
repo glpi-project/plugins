@@ -164,4 +164,16 @@ class Tool {
                         ->mergeBindings($qb->getQuery())
                         ->count();
    }
+
+   public static function randomSha1() {
+      $characters  = '0123456789';
+      $characters .= 'abcdefghijklmnopqrstuvwxyz';
+      $characters .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      $len = strlen($characters);
+      $out = '';
+      for ($i = 0; $i < 20; $i++) {
+         $out .= $characters[rand(0, $len - 1)];
+      }
+      return sha1($out . date('Ymdhms'));
+   }
 }

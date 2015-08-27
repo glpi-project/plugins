@@ -13,10 +13,18 @@ use \API\Core\Tool;
 use \Illuminate\Database\Capsule\Manager as DB;
 
 use \API\Model\User;
-use \API\Model\OAuthToken;
+use \API\Model\UserExternalAccount;
 
 /**
- * Registers new user
+ * Register a new user
+ *
+ * minimal infos are:
+ *  + realname
+ *  + username
+ *  + password
+ *  + email
+ *  + location
+ *  + website
  */
 $register = function() use ($app) {
    $body = Tool::getBody();
@@ -71,7 +79,6 @@ $register = function() use ($app) {
    }
 
    if (!isset($body->password) ||
-       !isset($body->password_repeat) ||
        strlen($body->password) < 6 ||
        strlen($body->password) > 26) {
       return Tool::endWithJson([
@@ -80,7 +87,8 @@ $register = function() use ($app) {
       ], 400);
    }
 
-   if ($body->password != $body->password_repeat) {
+   if (!isset($body->password_repeat) ||
+       $body->password != $body->password_repeat) {
       return Tool::endWithJson([
          "error" => "Your password and password verification doesn't match"
       ], 400);
@@ -96,59 +104,62 @@ $register = function() use ($app) {
 /**
  * Login endpoint
  */
-$login = function() use ($app) {
-   $body = Tool::getBody();
-   $ok = null;
+// $login = function() use ($app) {
+//    $body = Tool::getBody();
+//    $ok = null;
 
-   if (!isset($body->login) ||
-       !isset($body->password)) {
-      $ok = false;
-   } else {
-      $user = User::where(function($q) use($body) {
-                     return $q->where('email', '=', $body->login)
-                              ->orWhere('username', '=', $body->login);
-                  });
+//    if (!isset($body->login) ||
+//        !isset($body->password)) {
+//       $ok = false;
+//    } else {
+//       $user = User::where(function($q) use($body) {
+//                      return $q->where('email', '=', $body->login)
+//                               ->orWhere('username', '=', $body->login);
+//                   });
 
-      $count = $user->count();
-      if ($count < 1) {
-         $ok = false;
-      }
-      if ($count > 1) {
-         Tool::log('Dangerous, query result count > 1 when user tried'.
-                   ' to log with username "'.$body->login.'" '.
-                   'and password "'.$body->password.'"');
-         $ok = false;
-      } else {
-         $user = $user->first();
-         if ($user->assertPasswordIs($body->password)) {
-            $ok = true;
-         }
-      }
-   }
+//       $count = $user->count();
+//       if ($count < 1) {
+//          $ok = false;
+//       }
+//       if ($count > 1) {
+//          Tool::log('Dangerous, query result count > 1 when user tried'.
+//                    ' to log with username "'.$body->login.'" '.
+//                    'and password "'.$body->password.'"');
+//          $ok = false;
+//       } elseif ($count == 0) {
+        
+//       } else {
+//          $user = $user->first();
+//          var_dump($user);
+//          if ($user->assertPasswordIs($body->password)) {
+//             $ok = true;
+//          }
+//       }
+//    }
 
-   if (!$ok) {
-      return Tool::endWithJson([
-         "error" => "Wrong email/username and/or password"
-      ], 400);
-   } else {
-      // Deliver JWT
-      return Tool::endWithJson([
-         "error" => "You are successfully logged in"
-      ], 200);
-   }
-};
+//    if (!$ok) {
+//       return Tool::endWithJson([
+//          "error" => "Wrong email/username and/or password"
+//       ], 400);
+//    } else {
+//       // Deliver JWT
+//       return Tool::endWithJson([
+//          "error" => "You are successfully logged in"
+//       ], 200);
+//    }
+// };
 
 /**
  * OAuth callback
  */
 $oAuthCallback = function($service) use($app) {
-   $oAuth = new API\Core\OAuthConnection($service);
+   $oAuth = new API\Core\OAuthClient($service);
    $token = $oAuth->getAuthorization($app->request->get('code'));
    $oauth_user = $oAuth->user->toArray();
 
-   $known = OAuthToken::where('token', '=', $token)
-                      ->where('service', '=', $service)
-                      ->first();
+   $known = UserExternalAccount::where('token', '=', $token)
+                               ->where('service', '=', $service)
+                               ->first();
 
    if (sizeof($known) > 0) {
       $user = $known->user;
@@ -162,7 +173,7 @@ $oAuthCallback = function($service) use($app) {
       $user->location = $oauth_user['location'];
       $user->save();
 
-      $oauth_token = new OAuthToken;
+      $oauth_token = new UserExternalAccount;
       $oauth_token->token = $token;
       $oauth_token->service = $service;
 

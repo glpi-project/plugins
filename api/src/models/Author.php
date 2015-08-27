@@ -11,7 +11,7 @@ class Author extends Model {
    public $timestamps = false;
 
    public function plugins() {
-      return $this->belongsToMany('\API\Model\Plugin', 'plugin_author');;
+      return $this->belongsToMany('\API\Model\Plugin', 'plugin_author');
    }
 
    public function scopeWithPluginCount($query) {

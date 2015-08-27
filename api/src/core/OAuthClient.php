@@ -2,7 +2,7 @@
 
 namespace API\Core;
 
-class OAuthConnection {
+class OAuthClient {
    private $provider;
 
    public function __construct($provider) {

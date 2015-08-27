@@ -13,12 +13,14 @@
       "illuminate/events": "^5.1",
       "google/recaptcha": "^1.1",
       "league/oauth2-client": "^1.0",
-      "league/oauth2-github": "^0.2.0"
+      "league/oauth2-github": "^0.2.0",
+      "league/oauth2-server": "^4.1"
    },
    "autoload": {
       "psr-4": {
          "API\\Core\\": "src/core",
-         "API\\Model\\": "src/models"
+         "API\\Model\\": "src/models",
+         "API\\OAuthServer\\": "src/oauthserver"
       }
    }
 }

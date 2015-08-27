@@ -10,7 +10,7 @@ class User extends Model {
    public $timestamps = false;
 
    public function tokens() {
-      return $this->hasMany('\API\Model\OAuthToken');
+      return $this->hasMany('\API\Model\UserExternalAccount');
    }
 
    public function setPassword($password) {

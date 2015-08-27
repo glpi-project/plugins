@@ -32,13 +32,14 @@ CREATE TABLE user(
    website VARCHAR(255)
 ) ENGINE=InnoDB;
 
-CREATE TABLE user_oauth_token(
+CREATE TABLE user_external_account(
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    user_id INT NOT NULL,
    token VARCHAR(60),
    service VARCHAR(40),
    FOREIGN KEY (user_id)
       REFERENCES user(id)
+      ON DELETE CASCADE
 ) ENGINE=InnoDB;
 CREATE INDEX idx_user_oauth_token_user_id ON user_oauth_token(user_id);
 
@@ -133,4 +134,58 @@ CREATE TABLE message(
    subject VARCHAR(200),
    sent DATETIME,
    message TEXT
+) ENGINE=InnoDB;
+
+CREATE TABLE apps(
+   id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   name          VARCHAR(35),
+   secret        VARCHAR(40),
+   redirect_uri  VARCHAR(140)
+) ENGINE=InnoDB;
+
+CREATE TABLE scopes(
+   id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   identifier    VARCHAR(40),
+   description   VARCHAR(100)
+) ENGINE=InnoDB;
+
+CREATE TABLE sessions(
+   id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   owner_type    ENUM('app', 'enduser'),
+   owner_id      INT NOT NULL,
+   app_id        INT NOT NULL,
+   FOREIGN KEY (app_id)
+      REFERENCES apps(id)
+      ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE sessions_scopes(
+   id               INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   session_id       INT NOT NULL,
+   scope_id         INT NOT NULL,
+   FOREIGN KEY (session_id)
+      REFERENCES sessions(id)
+      ON DELETE CASCADE,
+   FOREIGN KEY (scope_id)
+      REFERENCES scopes(id)
+      ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE access_tokens(
+   id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   token         VARCHAR(40),
+   session_id    INT NOT NULL,
+   expire_time   DATETIME,
+   FOREIGN KEY (session_id)
+      REFERENCES sessions(id)
+      ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE auth_codes(
+   id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   auth_code     VARCHAR(40),
+   session_id    INT NOT NULL,
+   expire_time   DATETIME,
+   FOREIGN KEY (session_id)
+      REFERENCES sessions(id)
 ) ENGINE=InnoDB;
