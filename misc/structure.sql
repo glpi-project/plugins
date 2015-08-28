@@ -162,8 +162,11 @@ VALUES  ('plugins', 'View all known plugins'),
 CREATE TABLE sessions(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    owner_type    ENUM('app', 'enduser'),
-   owner_id      INT NOT NULL,
+   owner_id      INT,
    app_id        INT NOT NULL,
+   FOREIGN KEY (owner_id)
+      REFERENCES user(id)
+      ON DELETE CASCADE,
    FOREIGN KEY (app_id)
       REFERENCES apps(id)
       ON DELETE CASCADE
