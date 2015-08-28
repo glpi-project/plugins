@@ -30,11 +30,23 @@ class AccessTokenStorage extends AbstractStorage implements AccessTokenInterface
 
    public function getScopes(AccessTokenEntity $token) {
       $scopes = Scope::select(['scopes.identifier', 'scopes.description'])
+                     ->join('sessions_scopes', 'sessions_scopes.scope_id', '=', 'scopes.id')
+                     ->join('sessions', 'sessions.id', '=', 'sessions_scopes.session_id')
                      ->join('access_tokens', 'access_tokens.session_id', '=', 'sessions.id')
-                     ->join('sessions')
-                     ->join('sessions_scopes')
                      ->where('access_tokens.token', '=', $token->getId())
+                     ->get();
 
+      $response = [];
+
+      foreach($scopes as $scope) {
+         $scope = (new ScopeEntity($this->server))->hydrate([
+            'id' => $scope->identifier,
+            'description' => $scope->description
+         ]);
+         $response[] = $scope;
+      }
+
+      return $response;
    }
 
    public function create($token, $expireTime, $sessionId) {

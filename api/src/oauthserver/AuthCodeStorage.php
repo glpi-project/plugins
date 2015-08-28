@@ -28,6 +28,6 @@ class AuthCodeStorage extends AbstractStorage implements AuthCodeInterface
    }
 
    public function delete(AuthCodeEntity $token) {
-      
+
    }
 }
