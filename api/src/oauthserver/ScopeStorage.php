@@ -9,5 +9,7 @@ use League\OAuth2\Server\Storage\ScopeInterface;
 
 class ScopeStorage extends AbstractStorage implements ScopeInterface
 {
-
+   public function get($scope, $grantType = null, $clientId = null) {
+      
+   }
 }

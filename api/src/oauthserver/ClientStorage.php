@@ -10,5 +10,13 @@ use League\OAuth2\Server\Storage\ClientInterface;
 
 class ClientStorage extends AbstractStorage implements ClientInterface
 {
+   public function get($clientId, $clientSecret = null, $redirectUri = null, $grantType = null) {
 
+   }
+
+   public function getBySession(SessionEntity $session) {
+
+   }
+
+   
 }

@@ -10,5 +10,24 @@ use League\OAuth2\Server\Storage\AuthCodeInterface;
 
 class AuthCodeStorage extends AbstractStorage implements AuthCodeInterface
 {
+   public function get($code) {
 
+   }
+
+   public function create($token, $expireTime, $sessionId, $redirectUri) {
+
+   }
+
+   public function getScopes(AuthCodeEntity $token)
+   {
+
+   }
+
+   public function associateScope(AuthCodeEntity $token, ScopeEntity $scope) {
+
+   }
+
+   public function delete(AuthCodeEntity $token) {
+      
+   }
 }
