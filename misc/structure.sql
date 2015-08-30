@@ -137,15 +137,15 @@ CREATE TABLE message(
 ) ENGINE=InnoDB;
 
 CREATE TABLE apps(
-   id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   id            VARCHAR(40) NOT NULL PRIMARY KEY,
    name          VARCHAR(35),
    secret        VARCHAR(40),
    redirect_uri  VARCHAR(140)
 ) ENGINE=InnoDB;
 
-INSERT INTO apps(name, secret, redirect_uri)
-VALUES  ('webapp',      '9677873f8fb70251ce10616b2160be6c06fedcd9', 'http://'),
-        ('glpidefault', '7ebc7ee84a9989aa839a7db2f57bcfe9117e22df', 'http://');
+INSERT INTO apps(id, name, secret, redirect_uri)
+VALUES  ('webapp', 'Main HTTP Site', '9677873f8fb70251ce10616b2160be6c06fedcd9', 'http://'),
+        ('glpidefault', 'Entry point for GLPI Update Manager', '7ebc7ee84a9989aa839a7db2f57bcfe9117e22df', 'http://');
 
 CREATE TABLE scopes(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -161,9 +161,9 @@ VALUES  ('plugins', 'View all known plugins'),
 
 CREATE TABLE sessions(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   owner_type    ENUM('app', 'enduser'),
+   owner_type    ENUM('app', 'user'),
    owner_id      INT,
-   app_id        INT NOT NULL,
+   app_id        VARCHAR(40) NOT NULL,
    FOREIGN KEY (owner_id)
       REFERENCES user(id)
       ON DELETE CASCADE,
