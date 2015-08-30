@@ -184,7 +184,7 @@ $oAuthCallback = function($service) use($app) {
 
 // HTTP REST Map
 $app->post('/user', $register);
-$app->post('/user/login', $login);
+//$app->post('/user/login', $login);
 $app->get('/oauthcallback/:service', $oAuthCallback);
 
 $app->options('/user', function() {});
