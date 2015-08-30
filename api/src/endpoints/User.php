@@ -5,7 +5,7 @@
  * This REST module hooks on
  * following URLs :
  *
- * 
+ *
  */
 
 
@@ -14,6 +14,8 @@ use \Illuminate\Database\Capsule\Manager as DB;
 
 use \API\Model\User;
 use \API\Model\UserExternalAccount;
+
+use \API\OAuthServer\AuthorizationServer;
 
 /**
  * Register a new user
@@ -127,7 +129,7 @@ $register = function() use ($app) {
 //                    'and password "'.$body->password.'"');
 //          $ok = false;
 //       } elseif ($count == 0) {
-        
+
 //       } else {
 //          $user = $user->first();
 //          var_dump($user);
@@ -149,10 +151,7 @@ $register = function() use ($app) {
 //    }
 // };
 
-/**
- * OAuth callback
- */
-$oAuthCallback = function($service) use($app) {
+$associateExternalAccount = function($service) use($app) {
    $oAuth = new API\Core\OAuthClient($service);
    $token = $oAuth->getAuthorization($app->request->get('code'));
    $oauth_user = $oAuth->user->toArray();
@@ -182,11 +181,26 @@ $oAuthCallback = function($service) use($app) {
 
 };
 
+$authorize = function() use($app) {
+  $authorizationServer = new AuthorizationServer();
+
+  try {
+    Tool::endWithJson($authorizationServer->issueAccessToken(), 200);
+  }
+  catch (\Exception $e) {
+    Tool::endWithJson([
+      "error" => $e->getMessage(),
+      "desc" => $e->getTraceAsString()
+    ]);
+  }
+};
+
 // HTTP REST Map
 $app->post('/user', $register);
 //$app->post('/user/login', $login);
-$app->get('/oauthcallback/:service', $oAuthCallback);
+$app->get('/oauth/associate/:service', $associateExternalAccount);
+$app->post('/oauth/authorize', $authorize);
 
 $app->options('/user', function() {});
-$app->options('/user/login', function() {});
-$app->options('/oauthcallback/:service', function() {});
+$app->options('/oauth/authorize', function() {});
+$app->options('/oauth/associate/:service', function() {});
