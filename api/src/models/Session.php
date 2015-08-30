@@ -9,7 +9,11 @@ class Session extends Model {
    protected $table = "sessions";
    public $timestamps = false;
 
-   public function scopes() {
-      return $this->belongsToMany('\API\Model\Scope');
+   public function user() {
+      return $this->belongsTo('\API\Model\User', 'owner_id');
+   }
+
+   public function app() {
+      return $this->belongsTo('\API\Model\App');
    }
 }
