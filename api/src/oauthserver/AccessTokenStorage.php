@@ -50,11 +50,16 @@ class AccessTokenStorage extends AbstractStorage implements AccessTokenInterface
    }
 
    public function create($token, $expireTime, $sessionId) {
-
+      $accessToken = new AccessToken();
+      $accessToken->token = $token;
+      $accessToken->session_id = $sessionId;
+      $accessToken->expire_time = Capsule::raw('FROM_UNIXTIME('.$expireTime.')');
+      $accessToken->save();
    }
 
    public function associateScope(AccessTokenEntity $token, ScopeEntity $scope) {
-
+      $token = Token::where('token', '=', $token->getId())->first();
+      $scope = Scope::where('identifier', '=', $scope->getId())->first();
    }
 
    public function delete(AccessTokenEntity $token)
