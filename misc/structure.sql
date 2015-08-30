@@ -41,7 +41,7 @@ CREATE TABLE user_external_account(
       REFERENCES user(id)
       ON DELETE CASCADE
 ) ENGINE=InnoDB;
-CREATE INDEX idx_user_oauth_token_user_id ON user_oauth_token(user_id);
+CREATE INDEX idx_user_external_acount_user_id ON user_external_account(user_id);
 
 CREATE TABLE plugin_download (
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
