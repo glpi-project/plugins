@@ -52,6 +52,12 @@ angular
             PAGINATION_ELEMENTS: "elements",
             NO_RESULTS: "No result",
             NEVER_UPDATED: "never updated since first publication",
-            LOADING: "Loading"
+            LOADING: "Loading",
+            NEVER_UPDATED: "never updated since first publication",
+            LOGIN: "Connexion",
+            USER_PANEL: "Réglages Profil",
+            DISCONNECT: "Déconnexion",
+            SIGNIN: "Connexion",
+            SIGNUP: "S'enregistrer"
          });
    });

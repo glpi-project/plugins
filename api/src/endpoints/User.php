@@ -103,54 +103,6 @@ $register = function() use ($app) {
    Tool::endWithJson([], 200);
 };
 
-/**
- * Login endpoint
- */
-// $login = function() use ($app) {
-//    $body = Tool::getBody();
-//    $ok = null;
-
-//    if (!isset($body->login) ||
-//        !isset($body->password)) {
-//       $ok = false;
-//    } else {
-//       $user = User::where(function($q) use($body) {
-//                      return $q->where('email', '=', $body->login)
-//                               ->orWhere('username', '=', $body->login);
-//                   });
-
-//       $count = $user->count();
-//       if ($count < 1) {
-//          $ok = false;
-//       }
-//       if ($count > 1) {
-//          Tool::log('Dangerous, query result count > 1 when user tried'.
-//                    ' to log with username "'.$body->login.'" '.
-//                    'and password "'.$body->password.'"');
-//          $ok = false;
-//       } elseif ($count == 0) {
-
-//       } else {
-//          $user = $user->first();
-//          var_dump($user);
-//          if ($user->assertPasswordIs($body->password)) {
-//             $ok = true;
-//          }
-//       }
-//    }
-
-//    if (!$ok) {
-//       return Tool::endWithJson([
-//          "error" => "Wrong email/username and/or password"
-//       ], 400);
-//    } else {
-//       // Deliver JWT
-//       return Tool::endWithJson([
-//          "error" => "You are successfully logged in"
-//       ], 200);
-//    }
-// };
-
 $associateExternalAccount = function($service) use($app) {
    $oAuth = new API\Core\OAuthClient($service);
    $token = $oAuth->getAuthorization($app->request->get('code'));
@@ -182,16 +134,34 @@ $associateExternalAccount = function($service) use($app) {
 };
 
 $authorize = function() use($app) {
+  if (isset($_POST['client_id']) &&
+      isset($_POST['grant_type']) &&
+      $_POST['grant_type'] == 'password' &&
+      $_POST['client_id'] == "webapp") {
+    $password_webapp_auth = true;
+  } else {
+    $password_webapp_auth = false;
+  }
+
+  if ($password_webapp_auth) {
+    $_POST['client_secret'] = Tool::getConfig()['oauth_webapp_secret'];
+  }
+
   $authorizationServer = new AuthorizationServer();
 
   try {
     Tool::endWithJson($authorizationServer->issueAccessToken(), 200);
   }
-  catch (\Exception $e) {
+  catch (\League\OAuth2\Server\Exception\OAuthException $e) {
     Tool::endWithJson([
-      "error" => $e->getMessage(),
-      "desc" => $e->getTraceAsString()
-    ]);
+      "error" => $e->getMessage()
+    ], $e->httpStatusCode);
+  }
+  catch (\Exception $e) {
+    Tool::log('PHP error: '.$e->getMessage());
+    Tool::endWithJson([
+      "error" => "Service error"
+    ], 500);
   }
 };
 

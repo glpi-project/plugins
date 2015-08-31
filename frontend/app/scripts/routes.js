@@ -18,6 +18,12 @@ angular
             templateUrl: "views/signup.html",
             controller: "SignupCtrl"
          })
+         .state('signin', {
+            url: "/signin",
+            templateUrl: "views/signin.html",
+            controller: "SigninCtrl",
+            controllerAs: "ctrl"
+         })
          .state('featured', {
             url: "/",
             templateUrl: "views/featured.html",

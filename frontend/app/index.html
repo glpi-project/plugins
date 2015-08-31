@@ -38,7 +38,7 @@
                   <input type="text" ng-model="search" class="search_bar" focus-me="$root.focusSearch" />
                </md-input-container>
             </div>
-            <div flex="15" user-menu authed="false"></div>
+            <div flex="15" user-menu authed="authed"></div>
          </div>
       </div>
       <section class="main" layout="row" flex>
@@ -81,7 +81,7 @@
       <div class="footer">
          <p><a href="http://www.teclib.com">&copy; 2015 Teclib</a></p>
       </div>
-      
+
       <!-- build:js(.) scripts/vendor.js -->
       <!-- bower:js -->
       <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -143,6 +143,8 @@
       <script src="scripts/directives/usermenu.js"></script>
       <script src="scripts/controllers/panel.js"></script>
       <script src="scripts/controllers/version.js"></script>
+      <script src="scripts/controllers/signin.js"></script>
+      <script src="scripts/services/auth.js"></script>
       <!-- endbuild -->
 
       <script>

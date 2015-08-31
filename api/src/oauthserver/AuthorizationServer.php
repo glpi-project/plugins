@@ -23,8 +23,6 @@ class AuthorizationServer extends \League\OAuth2\Server\AuthorizationServer {
 
       $passwordGrant = new PasswordGrant();
       $passwordGrant->setVerifyCredentialsCallback(function($login, $password) {
-         $ok = null;
-
          $user = User::where(function($q) use($login) {
             return $q->where('email', '=', $login)
                      ->orWhere('username', '=', $login);
@@ -32,24 +30,23 @@ class AuthorizationServer extends \League\OAuth2\Server\AuthorizationServer {
 
          $count = $user->count();
          if ($count < 1) {
-            $ok = false;
+            return false;
          }
          if ($count > 1) {
             Tool::log('Dangerous, query result count > 1 when user tried'.
             ' to log with login "'.$login.'" '.
             'and password "'.$password.'"');
-            $ok = false;
+            return false;
          } elseif ($count == 0) {
-
+            return false;
          } else {
             $user = $user->first();
             if ($user->assertPasswordIs($password)) {
-               $ok = true;
                return $user->id;
+            } else {
+               return false;
             }
          }
-
-         return $ok;
       });
 
       $this->addGrantType($passwordGrant);

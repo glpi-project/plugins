@@ -74,4 +74,4 @@ angular
          scope: ['user', 'user:email']
        });
 
-     });
+   });

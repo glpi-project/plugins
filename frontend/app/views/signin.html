@@ -1,0 +1,17 @@
+<div layout="row" id="signin">
+   <div flex="33" offset="33">
+      <h2>Connecting with GLPI Plugins Account</h2>
+
+      <form>
+         <md-input-container>
+            <label>Username or Email</label>
+            <input type="text" ng-model="login">
+         </md-input-container>
+         <md-input-container>
+            <label>Password</label>
+            <input type="password" ng-model="password">
+         </md-input-container>
+      </form>
+      <md-button class="md-raised md-primary" ng-click="ctrl.loginAttempt()">Login</md-button>
+   </div>
+</div>
