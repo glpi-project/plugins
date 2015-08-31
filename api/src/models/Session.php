@@ -16,4 +16,8 @@ class Session extends Model {
    public function app() {
       return $this->belongsTo('\API\Model\App');
    }
+
+   public function scopes() {
+      return $this->belongsToMany('\API\Model\Scope', 'sessions_scopes', 'session_id', 'scope_id');
+   }
 }
