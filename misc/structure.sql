@@ -155,9 +155,10 @@ CREATE TABLE scopes(
 
 INSERT INTO scopes(identifier, description)
 VALUES  ('plugins', 'View all known plugins'),
+        ('plugin', 'Get card of a single plugin'),
         ('tags', 'View all known attributed tags'),
-        ('authors', 'View all known contributors'),
-        ('tags', 'View all tags available');
+        ('tag', 'View card of a single tag'),
+        ('authors', 'View all known contributors');
 
 CREATE TABLE sessions(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
