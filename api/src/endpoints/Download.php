@@ -12,8 +12,11 @@ use \API\Core\Tool;
 use \API\Model\Plugin;
 use \API\Model\PluginDownload;
 use \Illuminate\Database\Capsule\Manager as DB;
+use \API\OAuthServer\OAuthHelper;
 
 $download = function($key) use($app) {
+   OAuthHelper::needsScopes(['plugin:download']);
+
    $plugin = Plugin::where('key', '=', $key)->first();
 
    $plugin->download_count = DB::raw('download_count + 1');
