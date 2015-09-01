@@ -16,10 +16,13 @@ use \API\Core\Tool;
 use \Illuminate\Database\Capsule\Manager as DB;
 use \API\Model\Message;
 use \ReCaptcha\ReCaptcha;
+use \API\OAuthServer\OAuthHelper;
 
 require dirname(__FILE__) . '/../../config.php';
 
 $send = function() use($app) {
+   OAuthHelper::needsScopes(['message:send']);
+
    $msg_alerts_settings = Tool::getConfig()['msg_alerts'];
    $body = Tool::getBody();
    $fields = ['firstname', 'lastname', 'email', 'subject', 'message'];
