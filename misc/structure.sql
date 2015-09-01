@@ -154,11 +154,18 @@ CREATE TABLE scopes(
 ) ENGINE=InnoDB;
 
 INSERT INTO scopes(identifier, description)
-VALUES  ('plugins', 'View all known plugins'),
-        ('plugin', 'Get card of a single plugin'),
+VALUES  ('plugins', 'Read lists of plugins (all, popular, trending, new, updated, ...)'),
+        ('plugins:search', 'Search into of plugins'),
+        ('plugin:card', 'Get card of specific plugin'),
+        ('plugin:star', 'View card of a single tag'),
+        ('plugin:submit', 'Grants right to note a plugin'),
+        ('plugin:download', 'Grants right to download a plugin'),
         ('tags', 'View all known attributed tags'),
-        ('tag', 'View card of a single tag'),
-        ('authors', 'View all known contributors');
+        ('tag', 'View card of a single tags'),
+        ('authors', 'Read lists of authors'),
+        ('author', 'Get card of specific author'),
+        ('version', 'Get card of a specific GLPI Version'),
+        ('message', 'Send a message to our wonderful team');
 
 CREATE TABLE sessions(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
