@@ -13,8 +13,11 @@ use \API\Core\Tool;
 use \API\Model\Plugin;
 use \API\Model\Tag;
 use \Illuminate\Database\Capsule\Manager as DB;
+use \API\OAuthServer\OAuthHelper;
 
 $tags_all = function() use ($app) {
+   OAuthHelper::needsScopes(['tags']);
+
    $tags = Tool::paginateCollection(Tag::withUsage()
                ->orderBy('plugin_count', 'DESC'));
    $tags = Tag::withUsage()
@@ -30,6 +33,8 @@ $tags_all = function() use ($app) {
 };
 
 $tags_top = function() use ($app) {
+   OAuthHelper::needsScopes(['tags']);
+
    $tags = Tag::withUsage()
             ->orderBy('plugin_count', 'DESC')
             ->limit(10);
@@ -45,6 +50,8 @@ $tags_top = function() use ($app) {
 };
 
 $tag_single = function($key) use($app) {
+   OAuthHelper::needsScopes(['tag']);
+
    $tag = Tag::where('key', '=', $key)->first();
    if ($tag == NULL) {
       return Tool::endWithJson([
@@ -55,6 +62,8 @@ $tag_single = function($key) use($app) {
 };
 
 $tag_plugins = function($key) use($app) {
+   OAuthHelper::needsScopes(['tag', 'plugins']);
+
    $tag = Tag::where('key', '=', $key)->first();
    if ($tag == NULL) {
       return Tool::endWithJson([
