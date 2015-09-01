@@ -19,11 +19,14 @@ use \API\Model\PluginStar;
 use \ReCaptcha\ReCaptcha;
 use \API\Core\ValidableXMLPluginDescription;
 use \API\Exception\ResourceNotFound;
+use \API\OAuthServer\OAuthHelper;
 
 /**
  * Fetching infos of a single plugin
  */
-$single = function($key) use($app) {
+$single = function($key) use($app, $resourceServer) {
+   OAuthHelper::needsScopes(['plugin']);
+
    $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots', 'tags')
                    ->short()
                    ->withAverageNote()
@@ -43,6 +46,8 @@ $single = function($key) use($app) {
  * List of all plugins
  */
 $all = function() use($app) {
+   OAuthHelper::needsScopes(['plugins']);
+
    $plugins = Tool::paginateCollection(
                  Plugin::short()
                        ->with('authors', 'versions', 'descriptions')
@@ -56,6 +61,8 @@ $all = function() use($app) {
  * Most popular plugins
  */
 $popular = function() use($app) {
+   OAuthHelper::needsScopes(['plugins']);
+
    $popular_plugins = Plugin::popularTop(10)
                             ->where('active', '=', 1)
                             ->get();
@@ -67,6 +74,8 @@ $popular = function() use($app) {
  *  most popular the 2 last weeks
  */
 $trending = function() use($app) {
+   OAuthHelper::needsScopes(['plugins']);
+
    $trending_plugins = Plugin::trendingTop(10)
                              ->where('active', '=', 1)
                              ->get();
@@ -78,6 +87,8 @@ $trending = function() use($app) {
  *  most recently updated plugins
  */
 $updated = function() use($app) {
+   OAuthHelper::needsScopes(['plugins']);
+
    $updated_plugins = Plugin::updatedRecently(10)
                             ->where('active', '=', 1)
                             ->get();
@@ -89,32 +100,37 @@ $updated = function() use($app) {
  *  most recently added plugins
  */
 $new = function() use($app) {
-  $new_plugins = Plugin::mostFreshlyAddedPlugins(10)
+   OAuthHelper::needsScopes(['plugins']);
+
+   $new_plugins = Plugin::mostFreshlyAddedPlugins(10)
                        ->where('active', '=', 1)
                        ->get();
-  Tool::endWithJson($new_plugins);
+   Tool::endWithJson($new_plugins);
 };
 
 /**
  * Remote procedure to star a plugin
  */
 $star = function() use($app) {
+   OAuthHelper::needsScopes(['plugin:star']);
    $body = Tool::getBody();
 
    if (!isset($body->plugin_id) ||
        !isset($body->note) ||
        !is_numeric($body->plugin_id) ||
-       !is_numeric($body->note))
+       !is_numeric($body->note)) {
       return Tool::endWithJson([
          "error" => "plugin_id and note should be provided as integer"
       ], 400);
+   }
 
    $plugin = Plugin::find($body->plugin_id);
 
-   if ($plugin == NULL)
+   if ($plugin == NULL) {
       return Tool::endWithJson([
          "error" => "you try to note a plugin that doesn't exists"
       ], 400);
+   }
 
 
    $plugin_star = new PluginStar();
@@ -135,56 +151,61 @@ $star = function() use($app) {
  * Method called when an user submits a plugin
  */
 $submit = function() use($app) {
-    $body = Tool::getBody();
-    $fields = ['plugin_url'];
+   OAuthHelper::needsScopes(['plugin:submit']);
 
-    $recaptcha = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
-    $resp = $recaptcha->verify($body->recaptcha_response);
-    if (!$resp->isSuccess()) {
-       return  Tool::endWithJson([
-            "error" => "Recaptcha not validated"
-        ]);
-    }
+   $body = Tool::getBody();
+   $fields = ['plugin_url'];
 
-    foreach($fields as $prop) {
-        if (!property_exists($body, $prop))
-            return  Tool::endWithJson([
-                "error" => "Missing ". $prop
-            ]);
-    }
+   $recaptcha = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
+   $resp = $recaptcha->verify($body->recaptcha_response);
+   if (!$resp->isSuccess()) {
+      return  Tool::endWithJson([
+         "error" => "Recaptcha not validated"
+      ]);
+   }
 
-    // Quickly validating
-    if (Plugin::where('xml_url', '=', $body->plugin_url)->count() > 0)
+   foreach($fields as $prop) {
+     if (!property_exists($body, $prop)) {
+         return  Tool::endWithJson([
+             "error" => "Missing ". $prop
+         ]);
+     }
+   }
+
+   // Quickly validating
+   if (Plugin::where('xml_url', '=', $body->plugin_url)->count() > 0) {
       return  Tool::endWithJson([
           "error" => "That plugin XML URL has already been submitted."
       ]);
+   }
 
-    $xml = @file_get_contents($body->plugin_url);
-    if (!$xml)
-      return  Tool::endWithJson([
+   $xml = @file_get_contents($body->plugin_url);
+   if (!$xml) {
+      return Tool::endWithJson([
           "error" => "We cannot fetch that URL."
       ]);
+   }
 
-    $xml = new ValidableXMLPluginDescription($xml);
-    if (!$xml->isValid())
+   $xml = new ValidableXMLPluginDescription($xml);
+   if (!$xml->isValid()) {
       return Tool::endWithJson([
           "error" => "Unreadable/Non validable XML.",
           "details" => $xml->errors
       ]);
-    $xml = $xml->contents;
+   }
+   $xml = $xml->contents;
 
-    if (Plugin::where('key', '=', $xml->key)->count() > 0)
+   if (Plugin::where('key', '=', $xml->key)->count() > 0) {
       return Tool::endWithJson([
           "error" => "Your XML describe a plugin whose key already exists in our database."
       ]);
+   }
 
-    $plugin = new Plugin;
-    $plugin->xml_url = $body->plugin_url;
-    $plugin->date_added = DB::raw('NOW()');
-    $plugin->active = false;
-    $plugin->download_count = 0;
-    $plugin->save();
-
+   $plugin = new Plugin;
+   $plugin->xml_url = $body->plugin_url;
+   $plugin->date_added = DB::raw('NOW()');
+   $plugin->active = false;
+   $plugin->download_count = 0;
 
    $msg_alerts_settings = Tool::getConfig()['msg_alerts'];
    $recipients = ''; $i = 0;
@@ -196,13 +217,13 @@ $submit = function() use($app) {
    }
 
    mail($recipients,
-      $msg_alerts_settings['subject_prefix'].'[PLUGIN SUBMISSION] '.$xml->name.' ('.$xml->key.')',
-      'A new plugin "'.$xml->name.'" with key "'.$xml->key.'" has been submitted and is awaiting to be verified. It has db id #'.$plugin->id,
-      "From: GLPI Plugins <plugins@glpi-project.org>");
+        $msg_alerts_settings['subject_prefix'].'[PLUGIN SUBMISSION] '.$xml->name.' ('.$xml->key.')',
+        'A new plugin "'.$xml->name.'" with key "'.$xml->key.'" has been submitted and is awaiting to be verified. It has db id #'.$plugin->id,
+        "From: GLPI Plugins <plugins@glpi-project.org>");
 
-    return Tool::endWithJson([
-        "success" => true
-    ]);
+   return Tool::endWithJson([
+      "success" => true
+   ]);
 };
 
 // HTTP REST Map
