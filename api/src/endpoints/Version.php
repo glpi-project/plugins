@@ -4,7 +4,11 @@ use \Illuminate\Database\Capsule\Manager as DB;
 use \API\Core\Tool;
 use \API\Model\Plugin;
 
+use \API\OAuthServer\OAuthHelper;
+
 $version_plugins = function($version) {
+   OAuthHelper::needsScopes(['version', 'plugins']);
+
    $plugins = Tool::paginateCollection(Plugin::short()
                                              ->with('authors', 'versions', 'descriptions')
                                              ->withAverageNote()
