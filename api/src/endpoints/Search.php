@@ -10,23 +10,26 @@
 
 use \API\Core\Tool;
 use \Illuminate\Database\Capsule\Manager as DB;
+use \API\OAuthServer\OAuthHelper;
 
 // Minimal length of search string
 $search_min_length = 2;
 
 $search = function() use($app) {
+   OAuthHelper::needsScopes(['plugins:search']);
+
    global $search_min_length,
-          $allowed_languages;
+         $allowed_languages;
 
    $body = Tool::getBody();
    if ($body == NULL ||
-       !isset($body->query_string) ||
-       strlen($body->query_string) < $search_min_length ) {
+      !isset($body->query_string) ||
+      strlen($body->query_string) < $search_min_length ) {
 
-      return Tool::endWithJson([
-         "error" => "Your search string needs to ".
-                  "have at least ".$search_min_length." chars"
-      ], 400);
+     return Tool::endWithJson([
+        "error" => "Your search string needs to ".
+                 "have at least ".$search_min_length." chars"
+     ], 400);
    }
    $query_string = $body->query_string;
 
