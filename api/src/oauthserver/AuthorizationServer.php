@@ -14,11 +14,11 @@ class AuthorizationServer extends \League\OAuth2\Server\AuthorizationServer {
 
    public function __construct() {
       parent::__construct();
-      $this->setSessionStorage(new SessionStorage());
-      $this->setAccessTokenStorage(new AccessTokenStorage());
+      $this->setSessionStorage(OAuthHelper::getSessionStorage());
+      $this->setAccessTokenStorage(OAuthHelper::getAccessTokenStorage());
       //$authorizationServer->setRefreshTokenStorage(new RefreshTokenStorage);
-      $this->setClientStorage(new ClientStorage());
-      $this->setScopeStorage(new ScopeStorage());
+      $this->setClientStorage(OAuthHelper::getClientStorage());
+      $this->setScopeStorage(OAuthHelper::getScopeStorage());
       $this->setAuthCodeStorage(new AuthCodeStorage());
 
       $passwordGrant = new PasswordGrant();

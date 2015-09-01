@@ -1,10 +1,20 @@
 <?php
 
 require 'vendor/autoload.php';
+use \API\Core\Tool;
+use API\OAuthServer\OAuthHelper;
 
 \API\Core\DB::initCapsule();
-use \API\Core\Tool;
 $app = new \Slim\Slim();
+
+
+// Instantiating the Resource Server
+$resourceServer = new \League\OAuth2\Server\ResourceServer(
+  OAuthHelper::getSessionStorage(),
+  OAuthHelper::getAccessTokenStorage(),
+  OAuthHelper::getClientStorage(),
+  OAuthHelper::getScopeStorage()
+);
 
 // Loading all REST modules
 // with their endpoints like that:
