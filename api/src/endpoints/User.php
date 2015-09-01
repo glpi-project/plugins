@@ -150,16 +150,16 @@ $authorize = function() use($app) {
   $authorizationServer = new AuthorizationServer();
 
   try {
-    Tool::endWithJson($authorizationServer->issueAccessToken(), 200);
+    return Tool::endWithJson($authorizationServer->issueAccessToken(), 200);
   }
   catch (\League\OAuth2\Server\Exception\OAuthException $e) {
-    Tool::endWithJson([
+    return Tool::endWithJson([
       "error" => $e->getMessage()
     ], $e->httpStatusCode);
   }
   catch (\Exception $e) {
     Tool::log('PHP error: '.$e->getMessage());
-    Tool::endWithJson([
+    return Tool::endWithJson([
       "error" => "Service error"
     ], 500);
   }
