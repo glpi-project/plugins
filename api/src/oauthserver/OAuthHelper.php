@@ -48,4 +48,25 @@ class OAuthHelper {
       }
       return self::$sessionStorage;
    }
+
+   /**
+    * This function is useful to help
+    * limit usage of a specific endpoint to
+    * a list of specified scope, and at the same
+    * time it requires the user-agent to pass it's
+    * access token
+    */
+   public static function needsScopes(Array $scopes = []) {
+      global $resourceServer;
+
+      try {
+         return $resourceServer->isValidRequest();
+      }
+      catch (\League\OAuth2\Server\Exception\OAuthException $e) {
+         self::endWithJon([
+            "error" => $e->getMessage()
+         ], $e->httpStatusCode);
+         exit;
+      }
+   }
 }
