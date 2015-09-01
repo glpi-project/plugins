@@ -16,15 +16,17 @@ class AccessTokenStorage extends AbstractStorage implements AccessTokenInterface
    public function get($token) {
       $token = AccessToken::where('token', '=', $token);
 
-      if ($token-->count() != 1) {
+      if ($token->count() != 1) {
          return;
       } else {
          $token = $token->first();
       }
 
+      $expireTime = (new \DateTime($token->expire_time))->getTimestamp();
+
       $token = (new AccessTokenEntity($this->server))
                   ->setId($token->token)
-                  ->setExpireTime($token->expire_time);
+                  ->setExpireTime($expireTime);
       return $token;
    }
 
