@@ -25,7 +25,7 @@ use \API\OAuthServer\OAuthHelper;
  * Fetching infos of a single plugin
  */
 $single = function($key) use($app, $resourceServer) {
-   OAuthHelper::needsScopes(['plugin']);
+   OAuthHelper::needsScopes(['plugin:card']);
 
    $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots', 'tags')
                    ->short()
