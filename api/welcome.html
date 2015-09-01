@@ -19,6 +19,9 @@
          font-weight: 700;
          margin: 5px 0 12px 0;
       }
+      th {
+         font-weight: 700;
+      }
       pre {
          line-height: 0;
       }
@@ -53,9 +56,8 @@
    </style>
 </head>
 <body>
-   <h1>Endpoints served by this API</h1>
-
-   <h2>General notes</h2>
+   
+   <h1>General notes</h1>
 
    <p>
       Anytime 'Paginated' is mentionned as true,
@@ -81,6 +83,39 @@
       fetched, and will use translation if possible on specific
       fields.
    </p>
+
+   <h1>Limitation of usage</h1>
+
+   <h2>Scopes</h2>
+
+   <table class="table">
+      <tr>
+         <th>Name</th><th>Description</th>
+      </tr>
+      <tr>
+         <td>plugins</td><td>View all known plugins</td>
+      </tr>
+      <tr>
+         <td>plugin</td><td>Get card of a single plugin</td>
+      </tr>
+      <tr>
+         <td>plugin:star</td><td>Grants right to note a plugin</td>
+      </tr>
+      <tr>
+         <td>plugin:submit</td><td>Grants right to post a new plugin</td>
+      </tr>
+      <tr>
+         <td>tags</td><td>View all known attributed tags</td>
+      </tr>
+      <tr>
+         <td>tag</td><td>View card of a single tags</td>
+      </tr>
+      <tr>
+         <td>authors</td><td>View all known contributors</td>
+      </tr>
+   </table>
+
+   <h1>Endpoints served by this API</h1>
 
    <h2>Contributors</h2>
 
