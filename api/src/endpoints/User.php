@@ -17,6 +17,8 @@ use \API\Model\UserExternalAccount;
 
 use \API\OAuthServer\AuthorizationServer;
 
+use \API\OAuthServer\OAuthHelper;
+
 /**
  * Register a new user
  *
