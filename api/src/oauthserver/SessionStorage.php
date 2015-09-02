@@ -34,7 +34,18 @@ class SessionStorage extends AbstractStorage implements SessionInterface
    }
 
    public function getScopes(SessionEntity $session) {
+      $session = Session::where('id', '=', $session->getId);
+      $_scopes = $session->scopes()->get();
 
+      $scopes = [];
+      foreach ($_scopes as $scope) {
+         $scopes[] = (new ScopeEntity($this->server))->hydrate([
+            "id"             =>    $scope['identifier'],
+            "description"    =>    $scope['description']
+         ]);
+      }
+
+      return $scopes;
    }
 
    public function create($ownerType, $ownerId, $clientId, $clientRedirectUri = null) {
