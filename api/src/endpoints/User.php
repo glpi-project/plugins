@@ -160,7 +160,7 @@ $authorize = function() use($app) {
     ], $e->httpStatusCode);
   }
   catch (\Exception $e) {
-    Tool::log('PHP error: '.$e->getMessage());
+    Tool::log('PHP error, file '.$e->getFile().' , line '.$e->getLine().' : '.$e->getMessage());
     return Tool::endWithJson([
       "error" => "Service error"
     ], 500);
