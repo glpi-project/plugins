@@ -27,7 +27,8 @@ angular.module('frontendApp')
                   grant_type: "password",
                   client_id: "webapp",
                   username: $scope.login,
-                  password: $scope.password
+                  password: $scope.password,
+                  scope: 'plugins plugins:search plugin:card plugin:star plugin:submit plugin:download tags tag authors author version message'
                }),
                // Those parameters are passed via
                // an urlencoded string
