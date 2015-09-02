@@ -12,4 +12,8 @@ class AccessToken extends Model {
    public function session() {
       return $this->belongsTo('sessions');
    }
+
+   public function scopes() {
+      return $this->belongsToMany('\API\Model\Scope', 'access_tokens_scopes', 'access_token_id', 'scope_id');
+   }
 }

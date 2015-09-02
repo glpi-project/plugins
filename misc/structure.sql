@@ -202,6 +202,18 @@ CREATE TABLE access_tokens(
       ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE access_tokens_scopes(
+   id               INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   access_token_id  INT NOT NULL,
+   scope_id         INT NOT NULL,
+   FOREIGN KEY (access_token_id)
+      REFERENCES access_tokens(id)
+      ON DELETE CASCADE,
+   FOREIGN KEY (scope_id)
+      REFERENCES scopes(id)
+      ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 CREATE TABLE auth_codes(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    auth_code     VARCHAR(40),
