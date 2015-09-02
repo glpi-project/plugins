@@ -11,13 +11,14 @@ use League\OAuth2\Server\Storage\AbstractStorage;
 use League\OAuth2\Server\Storage\SessionInterface;
 
 use API\Model\Session;
+use API\Model\Scope;
 use API\Model\App;
 
 class SessionStorage extends AbstractStorage implements SessionInterface
 {
    public function getByAccessToken(AccessTokenEntity $accessToken) {
-      $_session = Session::join('access_tokens', 'access_token.session_id', '=', 'session.id')
-                        ->where('access_token.token', '=', $accessToken)
+      $_session = Session::join('access_tokens', 'access_tokens.session_id', '=', 'sessions.id')
+                        ->where('access_tokens.token', '=', $accessToken->getId())
                         ->first();
 
       if ($_session) {
@@ -34,15 +35,18 @@ class SessionStorage extends AbstractStorage implements SessionInterface
    }
 
    public function getScopes(SessionEntity $session) {
-      $session = Session::where('id', '=', $session->getId);
-      $_scopes = $session->scopes()->get();
+      $session = Session::where('id', '=', $session->getId())->first();
 
       $scopes = [];
-      foreach ($_scopes as $scope) {
-         $scopes[] = (new ScopeEntity($this->server))->hydrate([
-            "id"             =>    $scope['identifier'],
-            "description"    =>    $scope['description']
-         ]);
+
+      if ($session) {
+         $_scopes = $session->scopes()->get();
+         foreach ($_scopes as $scope) {
+            $scopes[] = (new ScopeEntity($this->server))->hydrate([
+               "id"             =>    $scope['identifier'],
+               "description"    =>    $scope['description']
+            ]);
+         }
       }
 
       return $scopes;
@@ -61,6 +65,11 @@ class SessionStorage extends AbstractStorage implements SessionInterface
    }
 
    public function associateScope(SessionEntity $session, ScopeEntity $scope) {
+      $session = Session::where('id', '=', $session->getId())->first();
+      $scope   = Scope::where('identifier', '=', $scope->getId())->first();
 
+      if ($session && $scope) {
+         $session->scopes()->attach($scope);
+      }
    }
 }

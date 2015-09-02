@@ -8,6 +8,8 @@ use League\OAuth2\Server\Entity\ScopeEntity;
 use League\OAuth2\Server\Storage\AbstractStorage;
 use League\OAuth2\Server\Storage\AccessTokenInterface;
 
+use \API\OAuthServer\OAuthHelper;
+
 use \API\Model\AccessToken;
 use \API\Model\Scope;
 
@@ -31,24 +33,21 @@ class AccessTokenStorage extends AbstractStorage implements AccessTokenInterface
    }
 
    public function getScopes(AccessTokenEntity $token) {
-      $scopes = Scope::select(['scopes.identifier', 'scopes.description'])
-                     ->join('sessions_scopes', 'sessions_scopes.scope_id', '=', 'scopes.id')
-                     ->join('sessions', 'sessions.id', '=', 'sessions_scopes.session_id')
-                     ->join('access_tokens', 'access_tokens.session_id', '=', 'sessions.id')
-                     ->where('access_tokens.token', '=', $token->getId())
-                     ->get();
+      $token = AccessToken::where('id', '=', $token->getId())->first();
 
-      $response = [];
+      $scopes = [];
 
-      foreach($scopes as $scope) {
-         $scope = (new ScopeEntity($this->server))->hydrate([
-            'id' => $scope->identifier,
-            'description' => $scope->description
-         ]);
-         $response[] = $scope;
+      if ($token) {
+         $_scopes = $token->scopes()->get();
+         foreach ($_scopes as $scope) {
+            $scopes[] = (new ScopeEntity($this->server))->hydrate([
+               "id"             =>    $scope['identifier'],
+               "description"    =>    $scope['description']
+            ]);
+         }
       }
 
-      return $response;
+      return $scopes;
    }
 
    public function create($token, $expireTime, $sessionId) {
@@ -60,8 +59,12 @@ class AccessTokenStorage extends AbstractStorage implements AccessTokenInterface
    }
 
    public function associateScope(AccessTokenEntity $token, ScopeEntity $scope) {
-      $token = Token::where('token', '=', $token->getId())->first();
+      $token = AccessToken::where('token', '=', $token->getId())->first();
       $scope = Scope::where('identifier', '=', $scope->getId())->first();
+
+      if ($token && $scope) {
+         $token->scopes()->attach($scope);
+      }
    }
 
    public function delete(AccessTokenEntity $token)
