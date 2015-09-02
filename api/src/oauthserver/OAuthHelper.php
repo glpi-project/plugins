@@ -2,6 +2,17 @@
 
 namespace API\OAuthServer;
 
+use \API\Core\Tool;
+use \League\OAuth2\Server\Exception\AccessDeniedException;
+
+/**
+ * This class helps retrieving part
+ * of the OAuth subsystem as instances
+ *
+ * @todo : add methods to fetch singleton
+ *         of authorization and resource
+ *         servers
+ */
 class OAuthHelper {
    private static $accessTokenStorage = null;
    private static $clientStorage = null;
@@ -60,10 +71,15 @@ class OAuthHelper {
       global $resourceServer;
 
       try {
-         return $resourceServer->isValidRequest();
+         $resourceServer->isValidRequest();
+         foreach ($scopes as $scope) {
+            if (!$resourceServer->getAccessToken()->hasScope($scope)) {
+               throw new AccessDeniedException();
+            }
+         }
       }
       catch (\League\OAuth2\Server\Exception\OAuthException $e) {
-         self::endWithJon([
+         Tool::endWithJson([
             "error" => $e->getMessage()
          ], $e->httpStatusCode);
          exit;
