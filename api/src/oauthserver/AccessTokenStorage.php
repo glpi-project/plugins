@@ -33,7 +33,7 @@ class AccessTokenStorage extends AbstractStorage implements AccessTokenInterface
    }
 
    public function getScopes(AccessTokenEntity $token) {
-      $token = AccessToken::where('id', '=', $token->getId())->first();
+      $token = AccessToken::where('token', '=', $token->getId())->first();
 
       $scopes = [];
 
