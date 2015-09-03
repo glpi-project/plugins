@@ -8,7 +8,8 @@ class OAuthClient {
    public function __construct($provider) {
       if (!isset(Tool::getConfig()['oauth'][$provider])) {
          Tool::log('OAuth settings not configured for provider \''.$provider.'\' in config.php');
-         return Tool::endWithJson([], 500);
+         Tool::endWithJson([], 500);
+         exit;
       }
       $config = Tool::getConfig()['oauth'][$provider];
 
@@ -83,4 +84,4 @@ class OAuthClient {
          return $email;
       }
    }
-} 
+}
