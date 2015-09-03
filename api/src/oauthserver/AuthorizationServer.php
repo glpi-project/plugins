@@ -8,6 +8,7 @@ use \API\OAuthServer\ClientStorage;
 use \API\OAuthServer\ScopeStorage;
 use \API\OAuthServer\SessionStorage;
 use \League\OAuth2\Server\Grant\PasswordGrant;
+use \League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use \API\Model\User;
 
 class AuthorizationServer extends \League\OAuth2\Server\AuthorizationServer {
@@ -21,6 +22,7 @@ class AuthorizationServer extends \League\OAuth2\Server\AuthorizationServer {
       $this->setScopeStorage(OAuthHelper::getScopeStorage());
       $this->setAuthCodeStorage(new AuthCodeStorage());
 
+      // Adding the password grant to able users to login by themselves
       $passwordGrant = new PasswordGrant();
       $passwordGrant->setVerifyCredentialsCallback(function($login, $password) {
          $user = User::where(function($q) use($login) {
@@ -48,8 +50,10 @@ class AuthorizationServer extends \League\OAuth2\Server\AuthorizationServer {
             }
          }
       });
-
       $this->addGrantType($passwordGrant);
+
+      $appGrant = new ClientCredentialsGrant;
+      $this->addGrantType($appGrant);
    }
 
 }

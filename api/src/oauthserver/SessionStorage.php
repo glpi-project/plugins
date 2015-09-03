@@ -57,8 +57,14 @@ class SessionStorage extends AbstractStorage implements SessionInterface
       if ($app) {
          $session = new Session();
          $session->owner_type = $ownerType;
-         $session->owner_id = $ownerId;
          $session->app_id = $app->id;
+
+         if ($ownerType == 'client') {
+            $session->owner_id = null;
+         } else { // ($ownerType == 'user') assumed anyway
+            $session->owner_id = $ownerId;
+         }
+
          $session->save();
          return $session->id;
       }

@@ -16,71 +16,60 @@ angular.module('frontendApp')
          }
          $rootScope.search = '';
 
-         if ($rootScope.trending.length < 1) {
+         $http({
+            method: 'GET',
+            url: apiUrl + '/plugin/trending'
+         })
+         .success(function(data, status, headers, config) {
+            $scope.trending = data;
+         });
+
+         $http({
+            method: 'GET',
+            url: apiUrl + '/plugin/popular'
+         })
+         .success(function(data, status, headers, config) {
+            $scope.popular = data;
+         });
+
+         $http({
+            method: 'GET',
+            url: apiUrl + '/plugin/updated'
+         })
+         .success(function(data, status, headers, config) {
+            $scope.updated = data;
+         });
+
+         $http({
+            method: 'GET',
+            url: apiUrl + '/plugin/new'
+         })
+         .success(function(data, status, headers, config) {
+            $scope.new = data;
+         });
+
+         var getTags = function() {
             $http({
                method: 'GET',
-               url: apiUrl + '/plugin/trending'
+               url: apiUrl + '/tags/top'
             })
             .success(function(data, status, headers, config) {
-               $rootScope.trending = data;
+               $scope.tags = data;
             });
-         }
-
-         if ($rootScope.popular.length < 1) {
-            $http({
-               method: 'GET',
-               url: apiUrl + '/plugin/popular'
-            })
-            .success(function(data, status, headers, config) {
-               $rootScope.popular = data;
-            });
-         }
-
-         if ($rootScope.updated.length < 1) {
-            $http({
-               method: 'GET',
-               url: apiUrl + '/plugin/updated'
-            })
-            .success(function(data, status, headers, config) {
-               $rootScope.updated = data;
-            });
-         }
-
-         if ($rootScope.new.length < 1) {
-            $http({
-               method: 'GET',
-               url: apiUrl + '/plugin/new'
-            })
-            .success(function(data, status, headers, config) {
-               $rootScope.new = data;
-            });
-         }
-
-         if ($rootScope.tags.length < 1) {
-            var getTags = function() {
-               $http({ 
-                  method: 'GET',
-                  url: apiUrl + '/tags/top'
-               })
-               .success(function(data, status, headers, config) {
-                  $rootScope.tags = data;
-               });
-            };
+         };
+         getTags();
+         $scope.$on('languageChange', function() {
             getTags();
-            $scope.$on('languageChange', function() {
-               getTags();
-            });
-         }
+         });
 
-         if ($rootScope.authors.length < 1) {
-            $http({
-               method: 'GET',
-               url: apiUrl + '/author/top'
-            })
-            .success(function(data, status, headers, config) {
-               $rootScope.authors = data;
-            });
-         }
+         $http({
+            method: 'GET',
+            url: apiUrl + '/author/top'
+         })
+         .success(function(data, status, headers, config) {
+            $scope.authors = data;
+         });
+
 
          $scope.fromNow = function(date) {
             return moment(date).fromNow();

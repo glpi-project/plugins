@@ -169,7 +169,7 @@ VALUES  ('plugins', 'Read lists of plugins (all, popular, trending, new, updated
 
 CREATE TABLE sessions(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   owner_type    ENUM('app', 'user'),
+   owner_type    ENUM('client', 'user'),
    owner_id      INT,
    app_id        VARCHAR(40) NOT NULL,
    FOREIGN KEY (owner_id)
