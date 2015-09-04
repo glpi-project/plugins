@@ -107,7 +107,7 @@ $register = function() use ($app) {
 
 $associateExternalAccount = function($service) use($app) {
    $oAuth = new API\Core\OAuthClient($service);
-   $token = $oAuth->getAuthorization($app->request->get('code'));
+   $token = $oAuth->getAccessToken($app->request->get('code'));
    $oauth_user = $oAuth->user->toArray();
 
    $known = UserExternalAccount::where('token', '=', $token)

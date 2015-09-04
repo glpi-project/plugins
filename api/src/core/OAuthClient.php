@@ -28,7 +28,7 @@ class OAuthClient {
       }
    }
 
-   public function getAuthorization($code) {
+   public function getAccessToken($code) {
       global $app;
 
       if (!$code) {
