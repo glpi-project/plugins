@@ -45,7 +45,8 @@ class Plugin extends Model {
       $query->select(['plugin.id', 'plugin.name', 'plugin.key', 'plugin.logo_url',
                       'plugin.xml_url', 'plugin.homepage_url',
                       'plugin.download_url', 'plugin.issues_url', 'plugin.readme_url',
-                      'plugin.license', 'plugin.date_added', 'plugin.date_updated']);
+                      'plugin.license', 'plugin.date_added', 'plugin.date_updated',
+                      'plugin.download_count']);
       return $query;
    }
 
@@ -69,24 +70,16 @@ class Plugin extends Model {
       return $query;
    }
 
-   public function scopeWithDownloads($query, $limit = false) {
-      $query->addSelect([DB::raw('(SELECT COUNT(*) FROM plugin_download where plugin_download.plugin_id = plugin.id) as downloaded')])
-                ->leftJoin('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
-                ->groupBy('plugin.name');
-      return $query;
-   }
-
    public function scopeWithNumberOfVotes($query) {
       $query->addSelect([DB::raw('(SELECT COUNT(*) FROM plugin_stars where plugin_stars.plugin_id = plugin.id) as n_votes')]);
       return $query;
    }
 
    public function scopePopularTop($query, $limit = 10) {
-      $query->select(['plugin.id', 'plugin.name','plugin.key',
-                  DB::raw('(SELECT COUNT(*) FROM plugin_download where plugin_download.plugin_id = plugin.id) as downloaded'),
+      $query->select(['plugin.id', 'plugin.name','plugin.key', 'download_count',
                   DB::raw('(SELECT COUNT(*) FROM plugin_stars where plugin_stars.plugin_id = plugin.id) as n_votes'),
                   DB::raw('(select AVG(plugin_stars.note) AS avg_note FROM plugin_stars WHERE plugin_stars.plugin_id = plugin.id) AS note')])
-                ->orderBy('downloaded', 'DESC')
+                ->orderBy('download_count', 'DESC')
                 ->orderBy('note', 'DESC')
                 ->orderBy('n_votes', 'DESC')
                 ->take(10);
@@ -101,12 +94,12 @@ class Plugin extends Model {
    }
 
    public function scopeTrendingTop($query, $limit = 10) {
-      $query->select(['plugin.id', 'plugin.name', 'plugin.key',
-                        DB::raw('COUNT(name) as downloaded')])
+      $query->select(['plugin.id', 'plugin.name', 'plugin.key', 'plugin.download_count',
+                        DB::raw('COUNT(name) as recent_downloads')])
                 ->join('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
                 ->where('downloaded_at', '>', DB::raw('NOW() - INTERVAL 1 MONTH'))
                 ->groupBy('plugin.name')
-                ->orderBy('downloaded', 'DESC')
+                ->orderBy('recent_downloads', 'DESC')
                ->take($limit);
       return $query;
    }

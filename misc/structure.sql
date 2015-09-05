@@ -13,6 +13,7 @@ CREATE TABLE plugin (
    license VARCHAR(255),
    date_added DATE,
    date_updated DATE,
+   download_count INT,
    UNIQUE KEY `ix_plugin` (`key`)
 ) ENGINE=InnoDB;
 

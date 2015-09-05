@@ -28,7 +28,6 @@ $single = function($key) use($app) {
                   ->withAverageNote()
                   ->withNumberOfVotes()
                   ->withCurrentVersion()
-                  ->withDownloads()
                   ->where('key', '=', $key)
                   ->where('active', '=', 1)
                   ->first();
@@ -36,7 +35,7 @@ $single = function($key) use($app) {
    if ($plugin) {
       Tool::endWithJson($plugin);
    } else {
-      Tool::endWithJson([ 
+      Tool::endWithJson([
        'error' => 'No plugin has that key'
       ], 400);
    }
@@ -49,7 +48,6 @@ $all = function() use($app) {
    $plugins = Tool::paginateCollection(
                  Plugin::short()
                        ->with('authors', 'versions', 'descriptions')
-                       ->withDownloads()
                        ->withAverageNote()
                        ->descWithLang(Tool::getRequestLang())
                        ->where('active', '=', 1));

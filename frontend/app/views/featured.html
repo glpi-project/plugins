@@ -8,7 +8,7 @@
          <md-list-item ng-repeat="plugin in trending">
             <md-button ui-sref="plugin({key: plugin.key})">
                <h4>{{plugin.name}}</h4>
-               <md-tooltip md-direction="right">Downloaded {{plugin.downloaded}} times</md-tooltip>
+               <md-tooltip md-direction="right">Downloaded {{plugin.download_count}} times</md-tooltip>
             </md-button>
          </md-list-item>
       </md-list>
@@ -36,7 +36,7 @@
          <md-list-item ng-repeat="plugin in popular">
             <md-button ui-sref="plugin({key: plugin.key})">
                <h4>{{plugin.name}}</h4>
-               <md-tooltip md-direction="right">Downloaded {{plugin.downloaded}} times</md-tooltip>
+               <md-tooltip md-direction="right">Downloaded {{plugin.download_count}} times</md-tooltip>
             </md-button>
          </md-list-item>
       </md-list>

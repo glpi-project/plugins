@@ -16,6 +16,9 @@ use \Illuminate\Database\Capsule\Manager as DB;
 $download = function($key) use($app) {
    $plugin = Plugin::where('key', '=', $key)->first();
 
+   $plugin->download_count = DB::raw('download_count + 1');
+   $plugin->save();
+
    $plugin_download = new PluginDownload();
    $plugin_download->downloaded_at = DB::raw('NOW()');
    $plugin_download->plugin_id = $plugin->id;
