@@ -41,7 +41,6 @@ $author_plugins = function($id) use($app) {
                         \API\Model\Plugin
                                        ::with('versions', 'authors')
                                        ->short()
-                                       ->withDownloads()
                                        ->withAverageNote()
                                        ->descWithLang(Tool::getRequestLang())
                                        ->whereAuthor($author_plugins->id)
