@@ -7,7 +7,6 @@ use \API\Model\Plugin;
 $version_plugins = function($version) {
    $plugins = Tool::paginateCollection(Plugin::short()
                                              ->with('authors', 'versions', 'descriptions')
-                                             ->withDownloads()
                                              ->withAverageNote()
                                              ->descWithLang(Tool::getRequestLang())
                                              ->withGlpiVersion($version));
