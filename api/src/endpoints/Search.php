@@ -33,7 +33,6 @@ $search = function() use($app) {
    $_search = Tool::paginateCollection(
                     \API\Model\Plugin::short()
                                ->with('authors', 'versions', 'descriptions')
-                               ->withDownloads()
                                ->withAverageNote()
                                ->descWithLang(Tool::getRequestLang())
                          ->where('name', 'LIKE', "%$query_string%")
