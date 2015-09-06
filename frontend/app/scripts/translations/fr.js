@@ -47,6 +47,7 @@ angular
             PAGINATION_RESULTS: "Résultats",
             PAGINATION_TO: "à",
             PAGINATION_ON: "sur un total de",
-            PAGINATION_ELEMENTS: "elements"
+            PAGINATION_ELEMENTS: "elements",
+            NEVER_UPDATED: "jamais mis à jour depuis la première publication"
          });
    });

@@ -9,7 +9,7 @@
  */
 angular.module('frontendApp')
 
-.controller('PluginCtrl', function(API_URL, $scope, $http, $stateParams, $window) {
+.controller('PluginCtrl', function(API_URL, $scope, $http, $stateParams, $window, $filter, $state, $mdToast, $timeout) {
    $scope.plugin = {
       authors: {},
       downloaded: 0
@@ -40,6 +40,10 @@ angular.module('frontendApp')
    };
 
    $scope.fromNow = function(date) {
+      if (date === undefined ||
+          date === null) {
+         return $filter('translate')('NEVER_UPDATED');
+      }
       return moment(date).fromNow();
    };
 
@@ -123,5 +127,15 @@ angular.module('frontendApp')
       }
 
       filterTags(localStorage.getItem('lang'));
+   }).error(function() {
+      var toast = $mdToast.simple()
+                  .capsule(true)
+                  .content('Oops... it look\'s like it\'s a 404 ... No plugin named `'+$stateParams.key+'` in the database')
+                  .position('top');
+               toast._options.parent =  angular.element(document.getElementById('submit_form'));
+               $mdToast.show(toast);
+      $timeout(function() {
+         $state.go('featured');
+      }, 3000);
    });
 });

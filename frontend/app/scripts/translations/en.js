@@ -47,6 +47,7 @@ angular
             PAGINATION_RESULTS: "Results",
             PAGINATION_TO: "to",
             PAGINATION_ON: "over",
-            PAGINATION_ELEMENTS: "elements"
+            PAGINATION_ELEMENTS: "elements",
+            NEVER_UPDATED: "never updated since first publication"
          });
    });
