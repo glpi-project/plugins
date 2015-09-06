@@ -64,7 +64,6 @@ $tag_plugins = function($key) use($app) {
 
    $plugins = Tool::paginateCollection(Plugin::with('versions', 'authors')
                 ->short()
-                ->withDownloads()
                 ->withAverageNote()
                 ->descWithLang(Tool::getRequestLang())
                 ->withTag($tag));
