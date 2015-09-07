@@ -12,15 +12,25 @@ angular.module('frontendApp')
     var rootScope, mdToast, state, timeout, http;
     var AuthManager = function() {};
 
+    /**
+     * This method sets the current token
+     */
     AuthManager.prototype.setToken = function(t, expires_in, auth) {
+      // Bet we want to authenticate by default
       if (typeof(auth) === 'undefined') {
          var auth = true;
       }
+
+      // Going to set the token anyway
       localStorage.setItem('access_token', t);
       localStorage.setItem('access_token_expires_in', expires_in);
       $httpProvider.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
+
       if (auth) {
+         // if real auth (with credentials) is requested,
+         // we also set 'authed' in the localStorage
          localStorage.setItem('authed', true);
+         // and authed in the $rootScope
          rootScope.authed = true;
          var toast = mdToast.simple()
              .capsule(true)
@@ -32,16 +42,23 @@ angular.module('frontendApp')
            state.go('featured');
          }, 1500);
       } else {
-         timeout(function() {
-           state.go('featured');
-         }, 400);
+        state.go('featured', {}, {
+          reload: true
+        });
       }
     };
 
+    /**
+     * This methods returns the current token
+     * or null (localStorage behaviour)
+     */
     AuthManager.prototype.getToken = function() {
       return localStorage.getItem('access_token');
     };
 
+    /**
+     * This methods destroys the current token
+     */
     AuthManager.prototype.destroyToken = function() {
       localStorage.removeItem('access_token');
       localStorage.removeItem('access_token_expires_in');
@@ -57,6 +74,10 @@ angular.module('frontendApp')
       this.getAnonymousToken();
     };
 
+    /**
+     * This methods is used to make a real login attempt
+     * (auth attempt) via glpi-plugins account
+     */
     AuthManager.prototype.loginAttempt = function(options) {
          var self = this, param = {};
 
@@ -101,6 +122,10 @@ angular.module('frontendApp')
 
     };
 
+    /**
+     * This method is used to request an anonymous token
+     * for immediate usage of the API via the webapp
+     */
     AuthManager.prototype.getAnonymousToken = function() {
       this.loginAttempt({
          anonymous: true
@@ -108,25 +133,36 @@ angular.module('frontendApp')
     };
 
     this.$get = function ($injector) {
+      // We need $injector to fetch some
+      // angular components in this provider
       rootScope = $injector.get('$rootScope');
       mdToast = $injector.get('$mdToast');
       state = $injector.get('$state');
       timeout = $injector.get('$timeout');
       http = $injector.get('$http');
+
+      // We'll get this AuthManager instance
       return new AuthManager();
     };
   })
 
   .config(function($httpProvider) {
+    // if an access_token is set, we use it to provide
+    // authorization token in headers, being it an anonymous
+    // one or being it a real one
     if (localStorage.getItem('access_token') !== null) {
       $httpProvider.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
     }
   })
 
   .run(function($rootScope, Auth) {
+    // when the full js app loads, if we are declared as really authed
+    // (user logged in with credentials or external account), we set
+    // 'authed' in the rootScope
     $rootScope.authed = (localStorage.getItem('authed') === null) ? false : true;
-
-    if (!$rootScope.authed) {
+    // at this point, if we don't have any access token,
+    // we request an anonymous authorization token
+    if (!localStorage.getItem('access_token')) {
       Auth.getAnonymousToken();
     }
   });

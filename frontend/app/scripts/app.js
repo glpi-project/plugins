@@ -67,11 +67,9 @@ angular
    })
 
    .config(function(API_URL, $authProvider) {
-
        $authProvider.github({
          clientId: '58b0aebf84896b64ed1e',
-         redirectUri: API_URL+'/oauthcallback/github',
+         redirectUri: API_URL+'/oauth/associate/github',
          scope: ['user', 'user:email']
        });
-
    });
