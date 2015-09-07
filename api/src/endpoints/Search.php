@@ -37,7 +37,10 @@ $search = function() use($app) {
                                ->descWithLang(Tool::getRequestLang())
                          ->where('name', 'LIKE', "%$query_string%")
                          ->orWhere('plugin_description.short_description', 'LIKE', "%$query_string%")
-                         ->orWhere('plugin_description.long_description', 'LIKE', "%$query_string%"));
+                         ->orWhere('plugin_description.long_description', 'LIKE', "%$query_string%")
+                         ->orderBy('download_count', 'DESC')
+                         ->orderBy('note', 'DESC')
+                         ->orderBy('name', 'ASC'));
    Tool::endWithJson($_search);
 };
 
