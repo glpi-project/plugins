@@ -5,6 +5,10 @@ namespace API\Core;
 class OAuthClient {
    private $provider;
 
+   /**
+    * Prepare the object to retrieve access token for
+    * specific driver
+    */
    public function __construct($provider) {
       if (!isset(Tool::getConfig()['oauth'][$provider])) {
          Tool::log('OAuth settings not configured for provider \''.$provider.'\' in config.php');
@@ -17,8 +21,7 @@ class OAuthClient {
       if ($provider == 'github') {
          $this->provider = new \League\OAuth2\Client\Provider\Github([
             'clientId' => $config['clientId'],
-            'clientSecret' => $config['clientSecret'],
-            'redirectUri' => Tool::getConfig()['api_url']."/oauthcallback/github"
+            'clientSecret' => $config['clientSecret']
          ]);
       } else {
          Tool::endWithJson([
@@ -28,17 +31,19 @@ class OAuthClient {
       }
    }
 
+   /**
+    * Once the object is instanciated this
+    * method can be used to retrieve the
+    * access token with an authorization code
+    */
    public function getAccessToken($code) {
       global $app;
 
       if (!$code) {
-          // If we don't have an authorization code then get one
-          $authUrl = $this->provider->getAuthorizationUrl([
-               'scope' => ['user', 'user:email']
-          ]);
-          // $_SESSION['oauth2state'] = $this->provider->getState();
-          $app->redirect($authUrl, 302);
-          exit;
+         Tool::endWithJson([
+            "error" => "There is no authorization code provided"
+         ], 400);
+         exit;
       }
       else {
           // Try to get an access token (using the authorization code grant)
@@ -46,42 +51,42 @@ class OAuthClient {
               'code' => $code
           ]);
 
-          // Optional: Now you have a token you can look up a users profile data
-          try {
-              // We got an access token, let's now get the user's details
-              $this->user = $this->provider->getResourceOwner($token);
-          } catch (Exception $e) {
-               Tool::endWithJson([
-                  "error" => "Unhandled exception"
-               ], 500);
-               exit;
-          }
-
-          // Use this to interact with an API on the users behalf
           return $token->getToken();
       }
    }
 
-   public function getEmail($token) {
-      if ($this->service == 'github') {
-         $guzzleClient = new \GuzzleHttp\Client();
+   /**
+    * This methods fetches the unique id of the
+    * external account
+    */
+   public function getUserId() {
 
+   }
+
+   /**
+    * This method can fetch the emails associated with
+    * the external account and returns only the one
+    * that are verified
+    */
+   public function getEmails($token) {
+      $guzzleClient = new \GuzzleHttp\Client();
+
+      if ($this->service == 'github') {
          $emails = $guzzleClient->get('https://api.github.com/user/emails', [
             "headers" => [
-             "Authorization" => 'token '.$token
+             "Authorization" => 'Bearer '.$token
             ]
          ]);
-         $emails = json_decode((string)$emails->getBody());
+         $_emails = json_decode((string)$emails->getBody());
 
-         foreach($emails as $email) {
-            if ($email->primary) {
-               if ($email->verified) {
-                $email = $email->email;
-                break;
-               }
+         $emails = [];
+         foreach($_emails as $email) {
+            if ($email->verified) {
+             $email = $email->email;
+             $emails[] = $email;
             }
          }
-         return $email;
+         return $emails;
       }
    }
 }
