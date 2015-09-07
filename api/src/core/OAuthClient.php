@@ -56,11 +56,40 @@ class OAuthClient {
    }
 
    /**
-    * This methods fetches the unique id of the
-    * external account
+    * This methods fetches the infos
+    * provided by the external accounts
     */
-   public function getUserId() {
+   public function getInfos($token) {
+      $guzzleClient = new \GuzzleHttp\Client();
 
+      if ($this->service == 'github') {
+         $user = $guzzleClient->get('https://api.github.com/user', [
+            "headers" => [
+               "Authorization" => "Bearer ".$token
+            ]
+         ]);
+         $user = json_decode((string)$user->getBody());
+
+         $out = [];
+
+         if (isset($user->id)) {
+            $out['id'] = $user->id;
+         }
+
+         if (isset($user->location)) {
+            $out['location'] = $user->location;
+         }
+
+         if (isset($user->name)) {
+            $out['realname'] = $user->name;
+         }
+
+         if (isset($user->blog)) {
+            $out['website'] = $user->blog;
+         }
+
+         return $out;
+      }
    }
 
    /**

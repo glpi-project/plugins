@@ -8,9 +8,40 @@
  * Provider in the frontendApp.
  */
 angular.module('frontendApp')
-  .provider('Auth', function ($httpProvider, $injector, API_URL, WEBAPP_SECRET) {
+  .provider('Auth', function ($httpProvider, $authProvider, $injector, API_URL, WEBAPP_SECRET) {
     var rootScope, mdToast, state, timeout, http;
     var AuthManager = function() {};
+
+    AuthManager.prototype.addAccessTokenToRedirectUris = function(access_token) {
+      var addAccessToken = function(url, accessToken) {
+        if (url.split('%3F').length > 1) {
+          url = url.split('%3F')[0];
+        }
+        url += '%3Faccess_token%3D' + accessToken;
+        return url;
+      };
+
+      // Github
+      var githubConfig = $authProvider.github();
+      $authProvider.github({
+        redirectUri: addAccessToken(githubConfig.redirectUri, access_token)
+      });
+    };
+
+    AuthManager.prototype.removeAccessTokenFromRedirectUris = function() {
+      var removeAccesstoken = function(url) {
+        if (url.split('%3F').length > 1) {
+          url = url.split('%3F')[0];
+        }
+        return url;
+      };
+
+      // Github
+      var githubConfig = $authProvider.github();
+      $authProvider.github({
+        redirectUri: removeAccesstoken(githubConfig.redirectUri)
+      });
+    };
 
     /**
      * This method sets the current token
@@ -32,12 +63,16 @@ angular.module('frontendApp')
          localStorage.setItem('authed', true);
          // and authed in the $rootScope
          rootScope.authed = true;
+
+         // Showing a toast
          var toast = mdToast.simple()
              .capsule(true)
              .content("You are now successfully logged in")
              .position('top');
          toast._options.parent = angular.element('#signin');
          mdToast.show(toast);
+
+         this.addAccessTokenToRedirectUris(t);
          timeout(function() {
            state.go('featured');
          }, 1500);
@@ -72,6 +107,7 @@ angular.module('frontendApp')
       toast._options.parent =  angular.element('body');
       mdToast.show(toast);
       this.getAnonymousToken();
+      this.removeAccessTokenFromRedirectUris();
     };
 
     /**
@@ -164,5 +200,7 @@ angular.module('frontendApp')
     // we request an anonymous authorization token
     if (!localStorage.getItem('access_token')) {
       Auth.getAnonymousToken();
+    } else if (localStorage.getItem('authed')) {
+      Auth.addAccessTokenToRedirectUris(localStorage.getItem('access_token'));
     }
   });

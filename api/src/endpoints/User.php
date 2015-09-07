@@ -105,34 +105,57 @@ $register = function() use ($app) {
    Tool::endWithJson([], 200);
 };
 
-$associateExternalAccount = function($service) use($app) {
+$associateExternalAccount = function($service) use($app, $resourceServer) {
    $oAuth = new API\Core\OAuthClient($service);
    $token = $oAuth->getAccessToken($app->request->get('code'));
-   $oauth_user = $oAuth->user->toArray();
 
-   $known = UserExternalAccount::where('token', '=', $token)
-                               ->where('service', '=', $service)
-                               ->first();
-
-   if (sizeof($known) > 0) {
-      $user = $known->user;
-
-      echo 'known user !';
+   if ($app->request->get('access_token')) {
+      $resourceServer->isValidRequest(false);
+      $alreadyAuthed = true;
+      $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
    } else {
-      $user = new User;
-      $user->realname = $oauth_user['name'];
-      $user->username = $oauth_user['login'];
-      $user->email = $oAuth->getEmail($token);
-      $user->location = $oauth_user['location'];
-      $user->save();
-
-      $oauth_token = new UserExternalAccount;
-      $oauth_token->token = $token;
-      $oauth_token->service = $service;
-
-      $user->tokens()->save($oauth_token);
+      $alreadyAuthed = false;
    }
 
+   $external_account_infos = $oAuth->getInfos($token);
+
+   if ($alreadyAuthed) {
+
+   } else {
+      $user = new User;
+      var_dump($external_account_infos);
+   }
+
+   // $externalAccount = UserExternalAccount::where('service', '=', $service)
+   //                                       ->where('user_id', '=', $external_account_id)
+   //                                       ->first();
+
+   // if (!$externalAccount) {
+   //    $externalAccount = new UserExternalAccount
+   // }
+
+   //var_dump($oAuth->getEmails($token));
+   //var_dump($token);
+
+   //$oauth_user = $oAuth->user->toArray();
+   // $known = UserExternalAccount::where('token', '=', $token)
+   //                             ->where('service', '=', $service)
+   //                             ->first();
+   // if (sizeof($known) > 0) {
+   //    $user = $known->user;
+   //    echo 'known user !';
+   // } else {
+   //    $user = new User;
+   //    $user->realname = $oauth_user['name'];
+   //    $user->username = $oauth_user['login'];
+   //    $user->email = $oAuth->getEmail($token);
+   //    $user->location = $oauth_user['location'];
+   //    $user->save();
+   //    $oauth_token = new UserExternalAccount;
+   //    $oauth_token->token = $token;
+   //    $oauth_token->service = $service;
+   //    $user->tokens()->save($oauth_token);
+   // }
 };
 
 $authorize = function() use($app) {
