@@ -10,13 +10,17 @@
 
 
 use \API\Core\Tool;
+use API\Core\OAuthClient;
 use \Illuminate\Database\Capsule\Manager as DB;
+use League\OAuth2\Server\Util\SecureKey;
 
 use \API\Model\User;
 use \API\Model\UserExternalAccount;
+use \API\Model\Session;
+use \API\Model\AccessToken;
+use \API\Model\Scope;
 
 use \API\OAuthServer\AuthorizationServer;
-
 use \API\OAuthServer\OAuthHelper;
 
 /**
@@ -106,9 +110,10 @@ $register = function() use ($app) {
 };
 
 $associateExternalAccount = function($service) use($app, $resourceServer) {
-   $oAuth = new API\Core\OAuthClient($service);
+   $oAuth = new OAuthClient($service);
    $token = $oAuth->getAccessToken($app->request->get('code'));
    $authorizationServer = new AuthorizationServer();
+   $data = [];
 
    if ($app->request->get('access_token')) {
       $resourceServer->isValidRequest(false);
@@ -121,48 +126,87 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
    $external_account_infos = $oAuth->getInfos($token);
 
    if ($alreadyAuthed) {
+      $user = User::where('id', '=', $user_id)->first();
+      if (!$user) {
+         Tool::log('StrangeError : Session has unexisting user_id');
+         $data['error'] = 'Service error';
+      }
 
+      $externalAccount = $user->externalAccounts()
+               ->where('external_user_id', '=', $external_account_infos['id'])
+               ->where('service', '=', $service)
+               ->first();
+
+      if (!$externalAccount) {
+         $externalAccount = new UserExternalAccount;
+         $externalAccount->external_user_id = $external_account_infos['id'];
+         $externalAccount->token = $token;
+         $externalAccount->service = $service;
+         $user->externalAccounts()->save($externalAccount);
+
+         $data['external_account_linked'] = true;
+      } else {
+         $data['error'] = 'You are already authed, and your '.$service.' account is already linked';
+      }
    } else {
-      $user = new User;
-      $_POST['grant_type'] = 'client_credentials';
-      $_POST['client_id'] = 'webapp';
-      $_POST['client_secret'] = '9677873f8fb70251ce10616b2160be6c06fedcd9';
-      $access_token = json_encode($access_token = $authorizationServer->issueAccessToken());
-      echo '<!DOCTYPE html><html><head></head><body><script type="text/javascript">'.
-              'var token = \''.$access_token.'\'; var i = 0 ; var interval = setInterval(function(){  if (i == 250) {clearInterval(interval);} i++; window.postMessage(token, "*");}, 70);'.
-           '</script></body>';
+         // Creating the User account locally
+         $user = new User;
+         $user->active = 0; // Notice it is created as non active
+         $user->username = $external_account_infos['username'];
+         if (isset($external_account_infos['realname'])) {
+            $user->realname = $external_account_infos['realname'];
+         }
+         if (isset($external_account_infos['location'])) {
+            $user->location = $external_account_infos['location'];
+         }
+         if (isset($external_account_infos['website'])) {
+            $user->location = $external_account_infos['location'];
+         }
+         $user->save();
+         $data['account_created'] = true;
+
+         // Associating external user account
+         $externalAccount = new UserExternalAccount;
+         $externalAccount->external_user_id = $external_account_infos['id'];
+         $externalAccount->token = $token;
+         $externalAccount->service = $service;
+         $user->externalAccounts()->save($externalAccount);
+         $data['external_account_linked'] = true;
+
+         $session = new Session;
+         $session->owner_type = 'user';
+         $session->owner_id = $user->id;
+         $session->app_id = 'webapp';
+         $session->save();
+
+
+         $accessToken = new AccessToken;
+         $accessToken->session_id = $session->id;
+         $accessToken->token = SecureKey::generate();
+         $accessToken->expire_time = $authorizationServer->getAccessTokenTTL() + time();
+         $accessToken->save();
+
+         // Allowing the user scope for now
+         $userScope = Scope::where('identifier', '=', 'user')->first();
+         $session->scopes()->attach($userScope);
+         $accessToken->scopes()->attach($userScope);
+
+         $data['access_token'] = $accessToken->token;
+         $data['access_token_expires_in'] = $authorizationServer->getAccessTokenTTL();
    }
 
-   // $externalAccount = UserExternalAccount::where('service', '=', $service)
-   //                                       ->where('user_id', '=', $external_account_id)
-   //                                       ->first();
+   if (isset($data['error'])) {
+      // Before we make
+      if ($data['error'] == 'Service error') {
+         $app->response->setStatus(500);
+      } else {
+         $app->response->setStatus(400);
+      }
+   }
 
-   // if (!$externalAccount) {
-   //    $externalAccount = new UserExternalAccount
-   // }
-
-   //var_dump($oAuth->getEmails($token));
-   //var_dump($token);
-
-   //$oauth_user = $oAuth->user->toArray();
-   // $known = UserExternalAccount::where('token', '=', $token)
-   //                             ->where('service', '=', $service)
-   //                             ->first();
-   // if (sizeof($known) > 0) {
-   //    $user = $known->user;
-   //    echo 'known user !';
-   // } else {
-   //    $user = new User;
-   //    $user->realname = $oauth_user['name'];
-   //    $user->username = $oauth_user['login'];
-   //    $user->email = $oAuth->getEmail($token);
-   //    $user->location = $oauth_user['location'];
-   //    $user->save();
-   //    $oauth_token = new UserExternalAccount;
-   //    $oauth_token->token = $token;
-   //    $oauth_token->service = $service;
-   //    $user->tokens()->save($oauth_token);
-   // }
+   echo '<!DOCTYPE html><html><head></head><body><script type="text/javascript">'.
+           'var data = \''.json_encode($data).'\'; var i = 0 ; var interval = setInterval(function(){  if (i == 250) {clearInterval(interval);} i++; window.postMessage(data, "*");}, 70);'.
+        '</script></body>';
 };
 
 $authorize = function() use($app) {
@@ -197,9 +241,49 @@ $authorize = function() use($app) {
   }
 };
 
+$oauth_external_emails = function() use($app, $resourceServer) {
+   OAuthHelper::needsScopes(['user']);
+
+   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+   $user = User::where('id', '=', $user_id)->first();
+
+   $externalAccounts = $user->externalAccounts()->get();
+
+   $emails = [];
+   foreach ($externalAccounts as $externalAccount) {
+      $oAuth = new OAuthClient($externalAccount->service);
+      $_emails = $oAuth->getEmails($externalAccount->token);
+      foreach ($_emails as $email) {
+         $emails[] = ["email" => $email,
+                      "service" => $externalAccount->service];
+      }
+   }
+
+   Tool::endWithJson($emails);
+};
+
+$profile_view = function() use($app, $resourceServer) {
+   OAuthHelper::needsScopes(['user']);
+
+   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+   $user = User::where('id', '=', $user_id)->first();
+
+   Tool::endWithJson($user, 200);
+};
+
+$profile_edit = function() use($app) {
+
+};
+
 // HTTP REST Map
-$app->post('/user', $register);
+//$app->post('/user', $register);
 //$app->post('/user/login', $login);
+
+$app->get('/user', $profile_view);
+$app->put('/user', $profile_edit);
+
+$app->get('/oauth/available_emails', $oauth_external_emails);
+
 $app->get('/oauth/associate/:service', $associateExternalAccount);
 $app->post('/oauth/authorize', $authorize);
 

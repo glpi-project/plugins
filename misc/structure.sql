@@ -24,6 +24,7 @@ CREATE TABLE author(
 
 CREATE TABLE user(
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   active INT(1),
    email VARCHAR(255),
    username VARCHAR(28),
    password VARCHAR(60),
@@ -35,6 +36,7 @@ CREATE TABLE user(
 CREATE TABLE user_external_account(
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    user_id INT NOT NULL,
+   external_user_id INT NOT NULL,
    token VARCHAR(60),
    service VARCHAR(40),
    FOREIGN KEY (user_id)
@@ -165,7 +167,8 @@ VALUES  ('plugins', 'Read lists of plugins (all, popular, trending, new, updated
         ('authors', 'Read lists of authors'),
         ('author', 'Get card of specific author'),
         ('version', 'Get card of a specific GLPI Version'),
-        ('message', 'Send a message to our wonderful team');
+        ('message', 'Send a message to our wonderful team')
+        ('user', 'Allow logged user to modify his profile');
 
 CREATE TABLE sessions(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

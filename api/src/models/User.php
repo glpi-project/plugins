@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Model {
    protected $table = 'user';
    public $timestamps = false;
+   protected $visible = ['id', 'email', 'username',
+                         'realname', 'location', 'website'];
 
-   public function tokens() {
+   public function externalAccounts() {
       return $this->hasMany('\API\Model\UserExternalAccount');
    }
 

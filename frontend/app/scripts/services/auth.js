@@ -8,45 +8,71 @@
  * Provider in the frontendApp.
  */
 angular.module('frontendApp')
-  .provider('Auth', function ($httpProvider, $authProvider, $injector, API_URL, WEBAPP_SECRET) {
-    var rootScope, mdToast, state, timeout, http;
+  .provider('Auth', function ($httpProvider, $authProvider, $injector,
+                              API_URL, WEBAPP_SECRET,
+                              GITHUB_CLIENT_ID) {
+    var rootScope, mdToast, state, timeout, http, $window;
     var AuthManager = function() {};
 
-    AuthManager.prototype.addAccessTokenToRedirectUris = function(access_token) {
-      var addAccessToken = function(url, accessToken) {
-        if (url.split('%3F').length > 1) {
-          url = url.split('%3F')[0];
-        }
-        url += '%3Faccess_token%3D' + accessToken;
-        return url;
-      };
+    AuthManager.prototype.linkAccount = function(service) {
+      var redirect_uri = API_URL + '/oauth/associate/';
+      var authorization_endpoint;
 
-      // Github
-      var githubConfig = $authProvider.github();
-      $authProvider.github({
-        redirectUri: addAccessToken(githubConfig.redirectUri, access_token)
-      });
-    };
+      if (service == 'github') {
+         redirect_uri += 'github';
+         authorization_endpoint = 'https://github.com/login/oauth/authorize';
+      }
 
-    AuthManager.prototype.removeAccessTokenFromRedirectUris = function() {
-      var removeAccesstoken = function(url) {
-        if (url.split('%3F').length > 1) {
-          url = url.split('%3F')[0];
-        }
-        return url;
-      };
+      if (localStorage.getItem('authed') &&
+          localStorage.getItem('access_token')) {
+         var access_token = localStorage.getItem('access_token');
+         var url = authorization_endpoint + '?' + jQuery.param({
+            client_id: GITHUB_CLIENT_ID,
+            redirect_uri: redirect_uri + '?access_token=' + access_token
+         });
+      } else {
+         var url = authorization_endpoint + '?' + jQuery.param({
+            client_id: GITHUB_CLIENT_ID
+         });
+      }
 
-      // Github
-      var githubConfig = $authProvider.github();
-      $authProvider.github({
-        redirectUri: removeAccesstoken(githubConfig.redirectUri)
-      });
+      var authorizationRequestWindow = window.open(url, 'Associate your external account', {
+         width: 400,
+         height: 400,
+         left: $window.screenX + (($window.outerWidth - 400) / 2),
+         top: $window.screenY + (($window.outerHeight - 400) / 2.5)
+       });
+
+      var i = 0;
+      var self = this;
+      var pollPopupForToken = setInterval(function() {
+         if (i == 250) {
+            clearInterval(pollPopupForToken);
+         }
+         i++;
+
+         try {
+            var location = authorizationRequestWindow.location.href;
+            if (location.split(API_URL).length > 1) {
+               authorizationRequestWindow.addEventListener('message', function(e) {
+                  var data = JSON.parse(e.data);
+                  self.setToken(data.access_token, data.access_token_expires_in, true,
+                                (data.account_created ?
+                                'finishactivateaccount' :
+                                'featured'));
+                  authorizationRequestWindow.close();
+               });
+               clearInterval(pollPopupForToken);
+            }
+         }
+         catch (e) {}
+      }, 70);
     };
 
     /**
      * This method sets the current token
      */
-    AuthManager.prototype.setToken = function(t, expires_in, auth) {
+    AuthManager.prototype.setToken = function(t, expires_in, auth, goToState) {
       // Bet we want to authenticate by default
       if (typeof(auth) === 'undefined') {
          var auth = true;
@@ -72,9 +98,8 @@ angular.module('frontendApp')
          toast._options.parent = angular.element('#signin');
          mdToast.show(toast);
 
-         this.addAccessTokenToRedirectUris(t);
          timeout(function() {
-           state.go('featured');
+           state.go(goToState);
          }, 1500);
       } else {
         state.go('featured', {}, {
@@ -107,7 +132,6 @@ angular.module('frontendApp')
       toast._options.parent =  angular.element('body');
       mdToast.show(toast);
       this.getAnonymousToken();
-      this.removeAccessTokenFromRedirectUris();
     };
 
     /**
@@ -153,7 +177,7 @@ angular.module('frontendApp')
               'Content-Type': 'application/x-www-form-urlencoded'
            }
          }).success(function(data) {
-           self.setToken(data.access_token, data.expires_in, auth);
+           self.setToken(data.access_token, data.expires_in, auth, 'featured');
          });
 
     };
@@ -176,6 +200,7 @@ angular.module('frontendApp')
       state = $injector.get('$state');
       timeout = $injector.get('$timeout');
       http = $injector.get('$http');
+      $window = $injector.get('$window');
 
       // We'll get this AuthManager instance
       return new AuthManager();
@@ -200,7 +225,5 @@ angular.module('frontendApp')
     // we request an anonymous authorization token
     if (!localStorage.getItem('access_token')) {
       Auth.getAnonymousToken();
-    } else if (localStorage.getItem('authed')) {
-      Auth.addAccessTokenToRedirectUris(localStorage.getItem('access_token'));
     }
   });

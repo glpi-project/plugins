@@ -72,6 +72,10 @@ class OAuthClient {
 
          $out = [];
 
+         if (isset($user->login)) {
+            $out['username'] = $user->login;
+         }
+
          if (isset($user->id)) {
             $out['id'] = $user->id;
          }

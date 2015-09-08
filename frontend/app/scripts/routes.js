@@ -113,5 +113,10 @@ angular
             url: '/contact',
             templateUrl: 'views/contact.html',
             controller: 'ContactCtrl'
+         })
+         .state('finishactivateaccount', {
+            url: '/finishactivateaccount',
+            templateUrl: 'views/finishactivateaccount.html',
+            controller: 'FinishActivateAccountCtrl'
          });
    });
