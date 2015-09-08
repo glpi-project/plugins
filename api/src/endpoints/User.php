@@ -108,6 +108,7 @@ $register = function() use ($app) {
 $associateExternalAccount = function($service) use($app, $resourceServer) {
    $oAuth = new API\Core\OAuthClient($service);
    $token = $oAuth->getAccessToken($app->request->get('code'));
+   $authorizationServer = new AuthorizationServer();
 
    if ($app->request->get('access_token')) {
       $resourceServer->isValidRequest(false);
@@ -123,7 +124,13 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
 
    } else {
       $user = new User;
-      var_dump($external_account_infos);
+      $_POST['grant_type'] = 'client_credentials';
+      $_POST['client_id'] = 'webapp';
+      $_POST['client_secret'] = '9677873f8fb70251ce10616b2160be6c06fedcd9';
+      $access_token = json_encode($access_token = $authorizationServer->issueAccessToken());
+      echo '<!DOCTYPE html><html><head></head><body><script type="text/javascript">'.
+              'var token = \''.$access_token.'\'; var i = 0 ; var interval = setInterval(function(){  if (i == 250) {clearInterval(interval);} i++; window.postMessage(token, "*");}, 70);'.
+           '</script></body>';
    }
 
    // $externalAccount = UserExternalAccount::where('service', '=', $service)
