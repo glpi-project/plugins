@@ -4,6 +4,13 @@ namespace API\OAuthServer;
 
 use \API\Core\Tool;
 use \League\OAuth2\Server\Exception\AccessDeniedException;
+use \Illuminate\Database\Capsule\Manager as DB;
+use League\OAuth2\Server\Util\SecureKey;
+
+use \API\Model\User;
+use \API\Model\AccessToken;
+use \API\Model\Session;
+use \API\Model\Scope;
 
 /**
  * This class helps retrieving part
@@ -84,5 +91,45 @@ class OAuthHelper {
          ], $e->httpStatusCode);
          exit;
       }
+   }
+
+   /**
+    * It creates an access token, a session, and links
+    * scopes mentionned in $scopes to the session and
+    * access token, it finally returns the new access token
+    *
+    * It associates the 'webapp' app
+    */
+   public static function createAccessTokenFromUserId($user_id, $scopes, $ttl = 3600) {
+      $user = User::where('id', '=', $user_id)->first();
+
+      if (!$user) {
+         return false;
+      }
+
+      $session = new Session;
+      $session->owner_type = 'user';
+      $session->owner_id = $user->id;
+      $session->app_id = 'webapp';
+      $session->save();
+
+      $accessToken = new AccessToken;
+      $accessToken->session_id = $session->id;
+      $accessToken->token = SecureKey::generate();
+      $accessToken->expire_time = DB::raw('FROM_UNIXTIME('.($ttl + time()).')');
+      $accessToken->save();
+
+      foreach ($scopes as $_scope) {
+         $scope = Scope::where('identifier', '=', $_scope)->first();
+         if ($scope) {
+            $session->scopes()->attach($scope);
+            $accessToken->scopes()->attach($scope);
+         }
+      }
+
+      return [
+         "token" => $accessToken->token,
+         "ttl"   => $ttl
+      ];
    }
 }

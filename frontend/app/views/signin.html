@@ -12,6 +12,16 @@
             <input type="password" ng-model="password">
          </md-input-container>
       </form>
+
       <md-button class="md-raised md-primary" ng-click="ctrl.loginAttempt()">Login</md-button>
+
+      <h2>Or connect with an external account</h2>
+
+      <div>
+         <md-button ng-click="ctrl.linkAccount('github')"><i class="fa fa-github social-icon"></i></md-button>
+         <md-button><i class="fa fa-google social-icon"></i></md-button>
+         <md-button><i class="fa fa-facebook social-icon"></i></md-button>
+         <md-button><i class="fa fa-twitter social-icon"></i></md-button>
+      </div>
    </div>
 </div>

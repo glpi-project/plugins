@@ -106,13 +106,22 @@ $register = function() use ($app) {
 
    $new_user->save();
 
-   Tool::endWithJson([], 200);
+   $accessToken = OAuthHelper::createAccessTokenFromUserId(
+      $user->id,
+      ['plugins', 'plugins:search', 'plugin:card', 'plugin:star',
+       'plugin:submit', 'plugin:download', 'tags', 'tag', 'authors',
+       'author', 'version', 'message', 'user']
+   );
+
+   Tool::endWithJson([
+      "access_token" => $accessToken['token'],
+      "access_token_expires_in" => $accessToken['ttl']
+   ], 200);
 };
 
 $associateExternalAccount = function($service) use($app, $resourceServer) {
    $oAuth = new OAuthClient($service);
    $token = $oAuth->getAccessToken($app->request->get('code'));
-   $authorizationServer = new AuthorizationServer();
    $data = [];
 
    if ($app->request->get('access_token')) {
@@ -128,8 +137,10 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
    if ($alreadyAuthed) {
       $user = User::where('id', '=', $user_id)->first();
       if (!$user) {
-         Tool::log('StrangeError : Session has unexisting user_id');
-         $data['error'] = 'Service error';
+         Tool::log('warning: session has unexisting user_id '.$user_id);
+         Tool::endWithJson([
+            "error" => "Service error"
+         ], 400);
       }
 
       $externalAccount = $user->externalAccounts()
@@ -149,7 +160,22 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
          $data['error'] = 'You are already authed, and your '.$service.' account is already linked';
       }
    } else {
-         // Creating the User account locally
+      $externalAccount = UserExternalAccount::where('external_user_id', '=', $external_account_infos['id'])->first();
+
+      // If we know that external account
+      if ($externalAccount) {
+         $user = $externalAccount->user;
+
+         $accessToken = OAuthHelper::createAccessTokenFromUserId(
+            $user->id,
+            ['plugins', 'plugins:search', 'plugin:card', 'plugin:star',
+             'plugin:submit', 'plugin:download', 'tags', 'tag', 'authors',
+             'author', 'version', 'message', 'user']
+         );
+      }
+      else { // Else we're creating a new
+         // local account, and are associating the external one
+         // to that new local one
          $user = new User;
          $user->active = 0; // Notice it is created as non active
          $user->username = $external_account_infos['username'];
@@ -173,30 +199,16 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
          $user->externalAccounts()->save($externalAccount);
          $data['external_account_linked'] = true;
 
-         $session = new Session;
-         $session->owner_type = 'user';
-         $session->owner_id = $user->id;
-         $session->app_id = 'webapp';
-         $session->save();
-
-
-         $accessToken = new AccessToken;
-         $accessToken->session_id = $session->id;
-         $accessToken->token = SecureKey::generate();
-         $accessToken->expire_time = DB::raw('FROM_UNIXTIME('.($authorizationServer->getAccessTokenTTL() + time()).')');
-         $accessToken->save();
-
-         // Allowing the user scope for now
-         $userScope = Scope::where('identifier', '=', 'user')->first();
-         $session->scopes()->attach($userScope);
-         $accessToken->scopes()->attach($userScope);
-
-         $data['access_token'] = $accessToken->token;
-         $data['access_token_expires_in'] = $authorizationServer->getAccessTokenTTL();
+         $accessToken = OAuthHelper::createAccessTokenFromUserId(
+            $user->id,
+            ['user']
+         );
+      }
+      $data['access_token'] = $accessToken['token'];
+      $data['access_token_expires_in'] = $accessToken['ttl'];
    }
 
    if (isset($data['error'])) {
-      // Before we make
       if ($data['error'] == 'Service error') {
          $app->response->setStatus(500);
       } else {
@@ -206,7 +218,7 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
 
    echo '<!DOCTYPE html><html><head></head><body><script type="text/javascript">'.
            'var data = \''.json_encode($data).'\'; var i = 0 ; var interval = setInterval(function(){  if (i == 250) {clearInterval(interval);} i++; window.postMessage(data, "*");}, 70);'.
-        '</script></body>';
+        '</script></body></html>';
 };
 
 $authorize = function() use($app) {
@@ -309,9 +321,8 @@ $profile_edit = function() use($app, $resourceServer) {
 };
 
 // HTTP REST Map
-//$app->post('/user', $register);
-//$app->post('/user/login', $login);
 
+$app->post('/user', $register);
 $app->get('/user', $profile_view);
 $app->put('/user', $profile_edit);
 

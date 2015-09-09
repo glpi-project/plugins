@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('SigninCtrl', function (API_URL, Auth, $scope, $http, $rootScope, $state, $mdToast) {
+  .controller('SigninCtrl', function (API_URL, Auth, $scope, $http, $rootScope, $state, $mdToast, $window) {
       if ($rootScope.authed) {
          $state.go('featured');
       }
@@ -32,5 +32,9 @@ angular.module('frontendApp')
                $mdToast.show(toast);
             });
          }
+      };
+
+      this.linkAccount = function(provider) {
+         Auth.linkAccount(provider);
       };
   });

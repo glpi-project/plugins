@@ -4,35 +4,27 @@
 
       <form>
          <md-input-container>
-            <label>Last Name</label>
-            <input type="text">
-         </md-input-container>
-         <md-input-container>
-            <label>First Name</label>
-            <input type="text">
-         </md-input-container>
-         <md-input-container>
             <label>Real Name</label>
-            <input type="text">
+            <input ng-model="scope.user.realname" type="text">
          </md-input-container>
          <md-input-container>
             <label>Email</label>
-            <input type="text">
+            <input ng-model="scope.user.email" type="text">
          </md-input-container>
          <md-input-container>
             <label>Website</label>
-            <input type="text">
+            <input ng-model="scope.user.website" type="text">
          </md-input-container>
          <md-input-container>
             <label>Password</label>
-            <input type="text">
+            <input ng-model="scope.user.password" type="password">
          </md-input-container>
          <md-input-container>
             <label>Confirm password</label>
-            <input type="text">
+            <input ng-model="scope.user.password_repeat" type="password">
          </md-input-container>
+         <md-button class="md-raised md-primary" ng-click="signUp()">Sign-Up !</md-button>
       </form>
-         <md-button class="md-raised md-primary">Update</md-button>
    </div>
    <div flex="66" class="link-your-account">
       <h2>Or link your account</h2>
