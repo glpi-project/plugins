@@ -12,7 +12,7 @@
          <md-input-container>
             <label>Select a primary email from one of your external account</label>
             <md-select ng-model="email" ng-show="user.email === null">
-               <md-option ng-repeat="email in available_emails">{{email.email}} ({{email.service}})</md-option>
+               <md-option ng-repeat="email in available_emails" value="{{email.email}}">{{email.email}} ({{email.service}})</md-option>
             </md-select>
          </md-input-container>
 

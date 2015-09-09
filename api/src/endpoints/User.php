@@ -183,7 +183,7 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
          $accessToken = new AccessToken;
          $accessToken->session_id = $session->id;
          $accessToken->token = SecureKey::generate();
-         $accessToken->expire_time = $authorizationServer->getAccessTokenTTL() + time();
+         $accessToken->expire_time = DB::raw('FROM_UNIXTIME('.($authorizationServer->getAccessTokenTTL() + time()).')');
          $accessToken->save();
 
          // Allowing the user scope for now
@@ -271,8 +271,41 @@ $profile_view = function() use($app, $resourceServer) {
    Tool::endWithJson($user, 200);
 };
 
-$profile_edit = function() use($app) {
+$profile_edit = function() use($app, $resourceServer) {
+   OAuthHelper::needsScopes(['user']);
 
+   $body = Tool::getBody();
+
+   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+   $user = User::where('id', '=', $user_id)->first();
+
+   if (isset($body->email)) {
+      $externalAccounts = $user->externalAccounts()->get();
+
+      $email_found = false;
+      foreach ($externalAccounts as $externalAccount) {
+         $oAuth = new OAuthClient($externalAccount->service);
+         $emails = $oAuth->getEmails($externalAccount->token);
+         foreach ($emails as $_email) {
+            if ($_email == $body->email) {
+               $email_found = true;
+               break;
+            }
+         }
+         if ($email_found) {
+            break;
+         }
+      }
+
+      if ($email_found) {
+         $user->active = true;
+         $user->email = $body->email;
+      }
+   }
+
+   $user->save();
+
+   Tool::endWithJson($user, 200);
 };
 
 // HTTP REST Map
