@@ -12,7 +12,7 @@ angular.module('frontendApp')
       template: '<md-menu md-offset="0 92px">'+
                   '<md-button ng-click="ctrl.openMenu($mdOpenMenu, $event)">'+
                      '<i class="fa fa-user"></i>'+
-                     '<span>{{(authed) ? \'Me\' :  \'LOGIN\'|translate}}</span>'+
+                     '<span>{{(authed) ? username :  \'LOGIN\'|translate}}</span>'+
                   '</md-button>'+
                   '<md-menu-content width="4">'+
                      '<md-menu-item ng-show="authed">'+
@@ -32,8 +32,9 @@ angular.module('frontendApp')
       restrict: 'A',
       link: function postLink(scope, element, attrs) {
          element.addClass('user-menu');
+         scope.$watch();
       },
-      controller: function ($scope, Auth) {
+      controller: function ($rootScope, $scope, Auth, API_URL, $http) {
          this.openMenu = function($mdOpenMenu, ev) {
             $mdOpenMenu(ev);
           };
@@ -41,6 +42,17 @@ angular.module('frontendApp')
           this.disconnect = function() {
             Auth.destroyToken();
           };
+
+          $rootScope.$watch('authed', function(a) {
+            if (a) {
+              $http({
+                method: 'GET',
+                url: API_URL + '/user'
+              }).success(function(data) {
+                $scope.username = data.username;
+              });
+            }
+          });
       },
       controllerAs: 'ctrl',
       scope: {
