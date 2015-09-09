@@ -160,7 +160,7 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
             $user->location = $external_account_infos['location'];
          }
          if (isset($external_account_infos['website'])) {
-            $user->location = $external_account_infos['location'];
+            $user->website = $external_account_infos['website'];
          }
          $user->save();
          $data['account_created'] = true;
