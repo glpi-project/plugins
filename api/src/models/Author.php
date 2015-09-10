@@ -10,6 +10,10 @@ class Author extends Model {
    protected $visible = ['id', 'name', 'plugin_count'];
    public $timestamps = false;
 
+   public function user() {
+      return $this->hasOne('\API\Model\User');
+   }
+
    public function plugins() {
       return $this->belongsToMany('\API\Model\Plugin', 'plugin_author');
    }

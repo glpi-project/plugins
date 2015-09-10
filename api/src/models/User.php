@@ -11,6 +11,10 @@ class User extends Model {
    protected $visible = ['id', 'email', 'username',
                          'realname', 'location', 'website'];
 
+   public function author() {
+      return $this->belongsTo('\API\Model\Author');
+   }
+
    public function externalAccounts() {
       return $this->hasMany('\API\Model\UserExternalAccount');
    }
