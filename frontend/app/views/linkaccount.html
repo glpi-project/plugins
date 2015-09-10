@@ -1,14 +1,36 @@
-<md-dialog>
+<md-dialog class="linkaccount-dialog">
    <md-toolbar>
-      <h2>Truc</h2><span flex></span>
-      <md-button class="md-icon-button" ng-click="close()">
-        X
-      </md-button>
+      <div class="md-toolbar-tools">
+         <h2>Link an external social account</h2>
+         <span flex></span>
+         <md-button class="md-icon-button" ng-click="close()">
+           <i class="fa fa-times"></i>
+         </md-button>
+      </div>
    </md-toolbar>
-   <div>
+   <div class="link-new-account">
+      <h2>Link a new account</h2>
       <md-button ng-click="connect('github')"><i class="fa fa-github social-icon"></i></md-button>
       <md-button ng-click="connect('google')"><i class="fa fa-google social-icon"></i></md-button>
       <md-button ng-click="connect('facebook')"><i class="fa fa-facebook social-icon"></i></md-button>
       <md-button ng-click="connect('twitter')"><i class="fa fa-twitter social-icon"></i></md-button>
+   </div>
+   <div class="current-accounts">
+      <h2>Your external accounts</h2>
+      <md-list>
+         <md-list-item class="list-header">
+            <p>Service</p>
+            <p>User #ID</p>
+            <p>Unlink</p>
+         </md-list-item>
+
+         <md-list-item ng-repeat="account in external_accounts">
+            <p>{{account.service}}</p>
+            <p>{{account.external_user_id}}</p>
+            <md-button class="md-icon-button" ng-click="unlinkAccount(account.id)">
+               <i class="fa fa-times"></i>
+            </md-button>
+         </md-list-item>
+      </md-list>
    </div>
 </md-dialog>

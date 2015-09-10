@@ -10,7 +10,7 @@ class AccessToken extends Model {
    public $timestamps = false;
 
    public function session() {
-      return $this->belongsTo('sessions');
+      return $this->belongsTo('\API\Model\Session');
    }
 
    public function scopes() {

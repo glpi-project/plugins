@@ -170,7 +170,7 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
             $user->id,
             ['plugins', 'plugins:search', 'plugin:card', 'plugin:star',
              'plugin:submit', 'plugin:download', 'tags', 'tag', 'authors',
-             'author', 'version', 'message', 'user']
+             'author', 'version', 'message', 'user', 'user:externalaccounts']
          );
       }
       else { // Else we're creating a new
@@ -253,6 +253,24 @@ $authorize = function() use($app) {
   }
 };
 
+/**
+ * Return the complete list of external accounts for an
+ * authentified accounts
+ */
+$user_external_accounts = function() use ($app, $resourceServer) {
+   OAuthHelper::needsScopes(['user:externalaccounts']);
+
+   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+   $user = User::where('id', '=', $user_id)->first();
+
+   if (!$user) {
+      return Tool::endWithJson(null, 401);
+   }
+
+   $external_accounts = $user->externalAccounts()->get();
+   return Tool::endWithJson($external_accounts, 200);
+};
+
 $oauth_external_emails = function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user']);
 
@@ -325,12 +343,13 @@ $profile_edit = function() use($app, $resourceServer) {
 $app->post('/user', $register);
 $app->get('/user', $profile_view);
 $app->put('/user', $profile_edit);
+$app->get('/user/external_accounts', $user_external_accounts);
 
 $app->get('/oauth/available_emails', $oauth_external_emails);
-
 $app->get('/oauth/associate/:service', $associateExternalAccount);
 $app->post('/oauth/authorize', $authorize);
 
 $app->options('/user', function() {});
+$app->options('/user/external_accounts', function() {});
 $app->options('/oauth/authorize', function() {});
 $app->options('/oauth/associate/:service', function() {});

@@ -16,23 +16,33 @@ angular.module('frontendApp')
 
     AuthManager.prototype.linkAccount = function(service) {
       var redirect_uri = API_URL + '/oauth/associate/';
-      var authorization_endpoint;
+      var authorization_endpoint, scope;
 
       if (service == 'github') {
          redirect_uri += 'github';
          authorization_endpoint = 'https://github.com/login/oauth/authorize';
+         scope = 'user user:email';
       }
 
+      /**
+       * If we are actually authenticated, we include the
+       * the local access_token in the redirect_uri
+       * so then, the oauth authorize callback
+       * will know about authenticated user.
+       * we need to use the state token one day.
+       */
       if (localStorage.getItem('authed') &&
           localStorage.getItem('access_token')) {
          var access_token = localStorage.getItem('access_token');
          var url = authorization_endpoint + '?' + jQuery.param({
             client_id: GITHUB_CLIENT_ID,
-            redirect_uri: redirect_uri + '?access_token=' + access_token
+            redirect_uri: redirect_uri + '?access_token=' + access_token,
+            scope: scope
          });
       } else {
          var url = authorization_endpoint + '?' + jQuery.param({
-            client_id: GITHUB_CLIENT_ID
+            client_id: GITHUB_CLIENT_ID,
+            scope: scope
          });
       }
 

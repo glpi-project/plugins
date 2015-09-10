@@ -167,8 +167,9 @@ VALUES  ('plugins', 'Read lists of plugins (all, popular, trending, new, updated
         ('authors', 'Read lists of authors'),
         ('author', 'Get card of specific author'),
         ('version', 'Get card of a specific GLPI Version'),
-        ('message', 'Send a message to our wonderful team')
-        ('user', 'Allow logged user to modify his profile');
+        ('message', 'Send a message to our wonderful team'),
+        ('user', 'Allow logged user to modify his profile'),
+        ('user:externalaccounts', 'Allow logged user to view/delete his external accounts connection');
 
 CREATE TABLE sessions(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
