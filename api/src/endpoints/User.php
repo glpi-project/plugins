@@ -5,7 +5,6 @@
  * This REST module hooks on
  * following URLs :
  *
- *
  */
 
 
@@ -119,6 +118,10 @@ $register = function() use ($app) {
    ], 200);
 };
 
+/**
+ * RPC that serves as a callback for the OAuth2
+ * service
+ */
 $associateExternalAccount = function($service) use($app, $resourceServer) {
    $oAuth = new OAuthClient($service);
    $token = $oAuth->getAccessToken($app->request->get('code'));
@@ -221,6 +224,10 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
         '</script></body></html>';
 };
 
+/**
+ * Authorize an user, providing him an
+ * access token
+ */
 $authorize = function() use($app) {
   if (isset($_POST['client_id']) &&
       isset($_POST['grant_type']) &&
@@ -255,7 +262,7 @@ $authorize = function() use($app) {
 
 /**
  * Return the complete list of external accounts for an
- * authentified accounts
+ * authentified user
  */
 $user_external_accounts = function() use ($app, $resourceServer) {
    OAuthHelper::needsScopes(['user:externalaccounts']);
@@ -271,6 +278,11 @@ $user_external_accounts = function() use ($app, $resourceServer) {
    return Tool::endWithJson($external_accounts, 200);
 };
 
+/**
+ * Returns the complete list of emails
+ * that are available through the
+ * external accounts
+ */
 $oauth_external_emails = function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user']);
 
@@ -292,6 +304,9 @@ $oauth_external_emails = function() use($app, $resourceServer) {
    Tool::endWithJson($emails);
 };
 
+/**
+ * Returns the profile
+ */
 $profile_view = function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user']);
 
@@ -301,6 +316,10 @@ $profile_view = function() use($app, $resourceServer) {
    Tool::endWithJson($user, 200);
 };
 
+/**
+ * endpoint to edit the main profile
+ * of the logged user
+ */
 $profile_edit = function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user']);
 
