@@ -66,10 +66,20 @@ angular.module('frontendApp')
             if (location.split(API_URL).length > 1) {
                authorizationRequestWindow.addEventListener('message', function(e) {
                   var data = JSON.parse(e.data);
-                  self.setToken(data.access_token, data.access_token_expires_in, true,
-                                (data.account_created ?
-                                'finishactivateaccount' :
-                                'featured'));
+                  if (!data.error) {
+                     self.setToken(data.access_token, data.access_token_expires_in, true,
+                                   (data.account_created ?
+                                   'finishactivateaccount' :
+                                   'featured'));
+                  } else {
+                     // Showing a toast
+                     var toast = mdToast.simple()
+                         .capsule(true)
+                         .content(data.error)
+                         .position('top');
+                     toast._options.parent = angular.element('body');
+                     mdToast.show(toast);
+                  }
                   authorizationRequestWindow.close();
                });
                clearInterval(pollPopupForToken);

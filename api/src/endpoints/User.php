@@ -160,7 +160,7 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
 
          $data['external_account_linked'] = true;
       } else {
-         $data['error'] = 'You are already authed, and your '.$service.' account is already linked';
+         $data['error'] = 'You are already authed, and that '.$service.' account is already linked';
       }
    } else {
       $externalAccount = UserExternalAccount::where('external_user_id', '=', $external_account_infos['id'])->first();
