@@ -30,19 +30,10 @@ CREATE TABLE user(
    password VARCHAR(60),
    realname TEXT,
    location VARCHAR(80),
-   website VARCHAR(255)
-) ENGINE=InnoDB;
-
-CREATE TABLE user_author (
-   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   user_id INT,
+   website VARCHAR(255),
    author_id INT,
-   FOREIGN KEY(user_id)
-      REFERENCES user(id)
-      ON DELETE CASCADE,
    FOREIGN KEY(author_id)
       REFERENCES author(id)
-      ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE user_external_account(
