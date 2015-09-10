@@ -65,6 +65,9 @@ angular.module('frontendApp')
             $mdDialog.hide();
          };
 
+         /**
+          * scope method to unlink an external account
+          */
          $scope.unlinkAccount = function(external_account_id) {
             console.log(external_account_id);
          };
