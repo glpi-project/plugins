@@ -357,12 +357,31 @@ $profile_edit = function() use($app, $resourceServer) {
    Tool::endWithJson($user, 200);
 };
 
+/**
+ * Returns list of plugins for the current
+ * user if he has an associated author.
+ */
+$user_plugins = function() use($app, $resourceServer) {
+   OAuthHelper::needsScopes(['user', 'plugins']);
+
+   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+   $user = User::where('id', '=', $user_id)->first();
+
+   $author = $user->author;
+   if (!$author) {
+      Tool::endWithJson([], 200);
+   }
+
+   Tool::endWithJson($author->plugins()->get());
+};
+
 // HTTP REST Map
 
 $app->post('/user', $register);
 $app->get('/user', $profile_view);
 $app->put('/user', $profile_edit);
 $app->get('/user/external_accounts', $user_external_accounts);
+$app->get('/user/plugins', $user_plugins);
 
 $app->get('/oauth/available_emails', $oauth_external_emails);
 $app->get('/oauth/associate/:service', $associateExternalAccount);

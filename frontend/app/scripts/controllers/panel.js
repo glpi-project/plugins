@@ -18,7 +18,13 @@ angular.module('frontendApp')
          url: API_URL + '/user'
       }).success(function(data) {
          $scope.user = data;
-         console.log($scope.user);
+      });
+
+      $http({
+         method: "GET",
+         url: API_URL + '/user/plugins'
+      }).success(function(data) {
+         $scope.plugins = data;
       });
 
       /**

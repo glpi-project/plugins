@@ -56,21 +56,9 @@
       <h2>My plugins</h2>
 
       <md-list>
-         <md-list-item>
-            <md-button>
-               <h4>That plugin</h4>
-            </md-button>
-         </md-list-item>
-
-         <md-list-item>
-            <md-button>
-               <h4>And this one</h4>
-            </md-button>
-         </md-list-item>
-
-         <md-list-item>
-            <md-button>
-               <h4>Plus that one</h4>
+         <md-list-item ng-repeat="plugin in plugins">
+            <md-button ui-sref="plugin({key: plugin.key})">
+               <h4>{{plugin.name}}</h4>
             </md-button>
          </md-list-item>
       </md-list>
