@@ -33,6 +33,18 @@ CREATE TABLE user(
    website VARCHAR(255)
 ) ENGINE=InnoDB;
 
+CREATE TABLE user_author (
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   user_id INT,
+   author_id INT,
+   FOREIGN KEY(user_id)
+      REFERENCES user(id)
+      ON DELETE CASCADE,
+   FOREIGN KEY(author_id)
+      REFERENCES author(id)
+      ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 CREATE TABLE user_external_account(
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    user_id INT NOT NULL,
