@@ -2,7 +2,7 @@
    <div flex="33" offset="33">
       <h2>Connecting with GLPI Plugins Account</h2>
 
-      <form>
+      <form ng-submit="ctrl.loginAttempt()">
          <md-input-container>
             <label>Username or Email</label>
             <input type="text" ng-model="login">
@@ -11,9 +11,9 @@
             <label>Password</label>
             <input type="password" ng-model="password">
          </md-input-container>
+         <md-button class="md-raised md-primary" type="submit">Login</md-button>
       </form>
 
-      <md-button class="md-raised md-primary" ng-click="ctrl.loginAttempt()">Login</md-button>
 
       <h2>Or connect with an external account</h2>
 
