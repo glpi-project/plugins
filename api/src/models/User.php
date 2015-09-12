@@ -26,4 +26,12 @@ class User extends Model {
    public function assertPasswordIs($password) {
       return password_verify($password, $this->password);
    }
+
+   public static function isValidPassword($password) {
+      if (isset($password) && gettype($password) == 'string' &&
+          strlen($password) > 6 && strlen($password) < 26) {
+         return true;
+      }
+      return false;
+   }
 }

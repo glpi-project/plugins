@@ -56,7 +56,7 @@ angular.module('frontendApp')
       var i = 0;
       var self = this;
       var pollPopupForToken = setInterval(function() {
-         if (i == 250) {
+         if (i == 300) {
             clearInterval(pollPopupForToken);
          }
          i++;
@@ -100,7 +100,7 @@ angular.module('frontendApp')
             }
          }
          catch (e) {}
-      }, 70);
+      }, 750);
     };
 
     /**
@@ -186,7 +186,7 @@ angular.module('frontendApp')
          }
 
          param.client_id = "webapp";
-         param.scope = 'plugins plugins:search plugin:card plugin:star plugin:submit plugin:download tags tag authors author version message';
+         param.scope = 'plugins plugins:search plugin:card plugin:star plugin:submit plugin:download tags tag authors author version message user user:externalaccounts';
 
          if (!options.anonymous) {
             param.grant_type = "password";
@@ -215,15 +215,15 @@ angular.module('frontendApp')
                   type: 'GET',
                   url: API_URL+'/user'
                }).success(function(data) {
-                  if (!data.active) {
-                     var goToState = 'finishactivateaccount';
-                  } else {
-                     var goToState = 'featured';
-                  }
+                  // if (!data.active) {
+                  //    var goToState = 'finishactivateaccount';
+                  // } else {
+                  //    var goToState = 'featured';
+                  // }
 
-                  timeout(function() {
-                     state.go(goToState);
-                  }, 1500);
+                  // timeout(function() {
+                  //    state.go(goToState);
+                  // }, 1500);
                });
            });
          });

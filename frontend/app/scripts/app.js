@@ -20,7 +20,8 @@ angular
       'pascalprecht.translate',
       'jkuri.gallery',
       'btford.markdown',
-      'satellizer'
+      'satellizer',
+      'ngMessages'
    ])
 
    // Determining current language

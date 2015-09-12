@@ -9,6 +9,9 @@
  */
 angular.module('frontendApp')
   .controller('PanelCtrl', function (API_URL, $http, $scope, $mdDialog, Auth, $state) {
+      $scope.original_user = {};
+      $scope.user = {};
+
       /**
        * Query the user profile infos
        * via REST
@@ -21,6 +24,7 @@ angular.module('frontendApp')
           return $state.go('finishactivateaccount');
          }
          $scope.user = data;
+         $scope.original_user = jQuery.extend({}, $scope.user);
       });
 
       $http({
@@ -30,13 +34,31 @@ angular.module('frontendApp')
          $scope.plugins = data;
       });
 
+
       /**
        * scope method to update the profile
        * (i.e: change the user profile infos)
        */
       $scope.update = function() {
          console.log('update');
-         console.log($scope.user, $scope.password, $scope.password_repeat);
+
+         var payload = {};
+
+         if (typeof($scope.password) === 'string') {
+            payload.password = $scope.password;
+         }
+
+         if ($scope.user.website != $scope.original_user.website) {
+            payload.website = $scope.user.website;
+         }
+
+         $http({
+            type: 'PUT',
+            url: API_URL + '/user',
+            data: payload
+         }).success(function(data) {
+            console.log(data);
+         });
       };
 
       /**

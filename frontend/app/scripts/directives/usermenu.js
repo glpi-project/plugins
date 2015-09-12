@@ -50,9 +50,7 @@ angular.module('frontendApp')
                 url: API_URL + '/user'
               }).success(function(data) {
                 $scope.username = data.username;
-                if (!data.active) {
-                  $state.go('finishactivateaccount');
-                }
+                $state.go('featured');
               });
             }
           });

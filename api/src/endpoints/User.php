@@ -70,8 +70,8 @@ $register = function() use ($app) {
    }
 
    if (!isset($body->location) ||
-       strlen($body->location) < 4 ||
-       preg_match('[^a-zA-Z0-9éè ]', $body->location)) {
+       gettype($body->location) != 'string' ||
+       strlen($body->location) < 1) {
       $new_user->location = '';
    } else {
       $new_user->location = $body->location;
@@ -85,9 +85,7 @@ $register = function() use ($app) {
       $new_user->website = $body->website;
    }
 
-   if (!isset($body->password) ||
-       strlen($body->password) < 6 ||
-       strlen($body->password) > 26) {
+   if (!User::isValidPassword($body->password)) {
       return Tool::endWithJson([
          "error" => "Your password should have at least 6 characters, ".
                     "and a maximum of 26 characters"
@@ -220,7 +218,7 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
    }
 
    echo '<!DOCTYPE html><html><head></head><body><script type="text/javascript">'.
-           'var data = \''.json_encode($data).'\'; var i = 0 ; var interval = setInterval(function(){  if (i == 250) {clearInterval(interval);} i++; window.postMessage(data, "*");}, 70);'.
+           'var data = \''.json_encode($data).'\'; var i = 0 ; var interval = setInterval(function(){  if (i == 300) {clearInterval(interval);} i++; window.postMessage(data, "*");}, 750);'.
         '</script></body></html>';
 };
 
@@ -345,6 +343,13 @@ $profile_edit = function() use($app, $resourceServer) {
       }
    }
 
+   if (User::isValidPassword($body->password) &&
+       gettype($body->password_repeat) == 'string' &&
+       $body->password == $body->password_repeat) {
+
+      $user->setPassword($body->password);
+   }
+
    $user->save();
 
    Tool::endWithJson($user, 200);
@@ -360,12 +365,11 @@ $user_plugins = function() use($app, $resourceServer) {
    $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
    $user = User::where('id', '=', $user_id)->first();
 
-   $author = $user->author;
-   if (!$author) {
-      Tool::endWithJson([], 200);
+   if (!$user->author) {
+      return Tool::endWithJson([], 200);
    }
 
-   Tool::endWithJson($author->plugins()->get());
+   Tool::endWithJson($user->author->plugins()->get());
 };
 
 
