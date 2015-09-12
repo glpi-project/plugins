@@ -4,6 +4,10 @@
 
       <form id="profile-form" ng-submit="update()">
          <md-input-container>
+            <label>Username</label>
+            <input type="text" ng-model="user.username">
+         </md-input-container>
+         <md-input-container>
             <label>Real Name</label>
             <input type="text" ng-model="user.realname">
          </md-input-container>
