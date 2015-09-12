@@ -229,35 +229,28 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
  * access token
  */
 $authorize = function() use($app) {
-  if (isset($_POST['client_id']) &&
-      isset($_POST['grant_type']) &&
-      $_POST['grant_type'] == 'password' &&
-      $_POST['client_id'] == "webapp") {
-    $password_webapp_auth = true;
-  } else {
-    $password_webapp_auth = false;
-  }
+   if (isset($_POST['grant_type']) &&
+       isset($_POST['client_id']) &&
+       $_POST['client_id'] == 'webapp') {
+      $_POST['client_secret'] = '';
+   }
 
-  if ($password_webapp_auth) {
-    $_POST['client_secret'] = Tool::getConfig()['oauth_webapp_secret'];
-  }
+   $authorizationServer = new AuthorizationServer();
 
-  $authorizationServer = new AuthorizationServer();
-
-  try {
-    return Tool::endWithJson($authorizationServer->issueAccessToken(), 200);
-  }
-  catch (\League\OAuth2\Server\Exception\OAuthException $e) {
-    return Tool::endWithJson([
-      "error" => $e->getMessage()
-    ], $e->httpStatusCode);
-  }
-  catch (\Exception $e) {
-    Tool::log('PHP error, file '.$e->getFile().' , line '.$e->getLine().' : '.$e->getMessage());
-    return Tool::endWithJson([
-      "error" => "Service error"
-    ], 500);
-  }
+   try {
+      return Tool::endWithJson($authorizationServer->issueAccessToken(), 200);
+   }
+   catch (\League\OAuth2\Server\Exception\OAuthException $e) {
+      return Tool::endWithJson([
+         "error" => $e->getMessage()
+      ], $e->httpStatusCode);
+   }
+   catch (\Exception $e) {
+      Tool::log('PHP error, file '.$e->getFile().' , line '.$e->getLine().' : '.$e->getMessage());
+      return Tool::endWithJson([
+         "error" => "Service error"
+      ], 500);
+   }
 };
 
 /**
@@ -374,6 +367,7 @@ $user_plugins = function() use($app, $resourceServer) {
 
    Tool::endWithJson($author->plugins()->get());
 };
+
 
 // HTTP REST Map
 

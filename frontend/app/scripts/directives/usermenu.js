@@ -34,7 +34,7 @@ angular.module('frontendApp')
          element.addClass('user-menu');
          scope.$watch();
       },
-      controller: function ($rootScope, $scope, Auth, API_URL, $http) {
+      controller: function ($rootScope, $scope, Auth, API_URL, $http, $state) {
          this.openMenu = function($mdOpenMenu, ev) {
             $mdOpenMenu(ev);
           };
@@ -50,6 +50,9 @@ angular.module('frontendApp')
                 url: API_URL + '/user'
               }).success(function(data) {
                 $scope.username = data.username;
+                if (!data.active) {
+                  $state.go('finishactivateaccount');
+                }
               });
             }
           });

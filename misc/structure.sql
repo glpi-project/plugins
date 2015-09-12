@@ -149,7 +149,7 @@ CREATE TABLE apps(
 ) ENGINE=InnoDB;
 
 INSERT INTO apps(id, name, secret, redirect_uri)
-VALUES  ('webapp', 'Main HTTP Site', '9677873f8fb70251ce10616b2160be6c06fedcd9', 'http://'),
+VALUES  ('webapp', 'Main HTTP Site', '', 'http://'),
         ('glpidefault', 'Entry point for GLPI Update Manager', '7ebc7ee84a9989aa839a7db2f57bcfe9117e22df', 'http://');
 
 CREATE TABLE scopes(

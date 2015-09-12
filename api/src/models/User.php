@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Model {
    protected $table = 'user';
    public $timestamps = false;
-   protected $visible = ['id', 'email', 'username',
+   protected $visible = ['id', 'active', 'email', 'username',
                          'realname', 'location', 'website'];
 
    public function author() {

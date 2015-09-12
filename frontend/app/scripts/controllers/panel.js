@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('PanelCtrl', function (API_URL, $http, $scope, $mdDialog, Auth) {
+  .controller('PanelCtrl', function (API_URL, $http, $scope, $mdDialog, Auth, $state) {
       /**
        * Query the user profile infos
        * via REST
@@ -17,6 +17,9 @@ angular.module('frontendApp')
          method: "GET",
          url: API_URL + '/user'
       }).success(function(data) {
+         if (!data.active) {
+          return $state.go('finishactivateaccount');
+         }
          $scope.user = data;
       });
 

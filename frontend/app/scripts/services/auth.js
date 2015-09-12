@@ -9,12 +9,12 @@
  */
 angular.module('frontendApp')
   .provider('Auth', function ($httpProvider, $authProvider, $injector,
-                              API_URL, WEBAPP_SECRET,
+                              API_URL,
                               GITHUB_CLIENT_ID) {
     var rootScope, mdToast, state, timeout, http, $window;
     var AuthManager = function() {};
 
-    AuthManager.prototype.linkAccount = function(service) {
+    AuthManager.prototype.linkAccount = function(service, callback) {
       var redirect_uri = API_URL + '/oauth/associate/';
       var authorization_endpoint, scope;
 
@@ -64,13 +64,27 @@ angular.module('frontendApp')
          try {
             var location = authorizationRequestWindow.location.href;
             if (location.split(API_URL).length > 1) {
-               authorizationRequestWindow.addEventListener('message', function(e) {
+               var evl = authorizationRequestWindow.addEventListener('message', function(e) {
+                  authorizationRequestWindow.removeEventListener('message', evl);
                   var data = JSON.parse(e.data);
                   if (!data.error) {
                      self.setToken(data.access_token, data.access_token_expires_in, true,
-                                   (data.account_created ?
-                                   'finishactivateaccount' :
-                                   'featured'));
+                                   function() {
+                                       http({
+                                          type: 'GET',
+                                          url: API_URL+'/user'
+                                       }).success(function(data) {
+                                          if (!data.active) {
+                                             var goToState = 'finishactivateaccount';
+                                          } else {
+                                             var goToState = 'featured';
+                                          }
+
+                                          timeout(function() {
+                                             state.go(goToState);
+                                          }, 1500);
+                                       });
+                                   });
                   } else {
                      // Showing a toast
                      var toast = mdToast.simple()
@@ -92,7 +106,7 @@ angular.module('frontendApp')
     /**
      * This method sets the current token
      */
-    AuthManager.prototype.setToken = function(t, expires_in, auth, goToState) {
+    AuthManager.prototype.setToken = function(t, expires_in, auth, callback) {
       // Bet we want to authenticate by default
       if (typeof(auth) === 'undefined') {
          var auth = true;
@@ -117,10 +131,10 @@ angular.module('frontendApp')
              .position('top');
          toast._options.parent = angular.element('#signin');
          mdToast.show(toast);
-
-         timeout(function() {
-           state.go(goToState);
-         }, 1500);
+     
+         if (typeof(callback) === 'function') {
+            callback();
+         }
       } else {
         state.go('featured', {}, {
           reload: true
@@ -181,7 +195,6 @@ angular.module('frontendApp')
             var auth = true;
          } else {
             param.grant_type = "client_credentials";
-            param.client_secret = WEBAPP_SECRET;
             var auth = false;
          }
 
@@ -197,7 +210,22 @@ angular.module('frontendApp')
               'Content-Type': 'application/x-www-form-urlencoded'
            }
          }).success(function(data) {
-           self.setToken(data.access_token, data.expires_in, auth, 'featured');
+           self.setToken(data.access_token, data.expires_in, auth, function() {
+               http({
+                  type: 'GET',
+                  url: API_URL+'/user'
+               }).success(function(data) {
+                  if (!data.active) {
+                     var goToState = 'finishactivateaccount';
+                  } else {
+                     var goToState = 'featured';
+                  }
+
+                  timeout(function() {
+                     state.go(goToState);
+                  }, 1500);
+               });
+           });
          });
 
     };
