@@ -16,8 +16,6 @@ angular.module('frontendApp')
             $state.go('search', {
                val: $scope.search
             });
-         } else {
-            $state.go('featured');
          }
       });
    });

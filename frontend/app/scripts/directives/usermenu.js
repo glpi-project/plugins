@@ -50,7 +50,10 @@ angular.module('frontendApp')
                 url: API_URL + '/user'
               }).success(function(data) {
                 $scope.username = data.username;
-                $state.go('featured');
+                if ($state.current.name == 'signin' ||
+                    $state.current.name == 'signup') {
+                  $state.go('featured');
+                }
               });
             }
           });

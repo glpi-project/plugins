@@ -8,9 +8,57 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('PanelCtrl', function (API_URL, $http, $scope, $mdDialog, Auth, $state) {
+  .controller('PanelCtrl', function (API_URL, $http, $scope, $mdDialog, Auth, $state, Toaster) {
+      var self = this;
       $scope.original_user = {};
       $scope.user = {};
+      $scope.password = '';
+      $scope.password_repêat = '';
+
+      $scope.form = {
+        password: {
+          $error: {
+            tooshort: false,
+            toolong: false,
+            different: false
+          }
+        }
+      };
+
+      this.validateField = function(field) {
+        if (field == 'password') {
+          return function() {
+            $scope.form.password.$error = {
+              tooshort: false,
+              toolong: false,
+              different: false
+            };
+            if ($scope.password.length > 0) {
+              var password = $scope.password;
+              if ($scope.password.length < 6) {
+                $scope.form.password.$error.tooshort = true;
+              }
+              else if ($scope.password.length > 26) {
+                $scope.form.password.$error.toolong = true;
+              }
+              else {
+                if ($scope.password != $scope.password_repeat) {
+                  $scope.form.password.$error.different = true;
+                }
+              }
+              for (var scope in $scope.form.password.$error) {
+                if ($scope.form.password.$error[scope]) {
+                  return false;
+                }
+              }
+              return true;
+            }
+          };
+        }
+      };
+
+      $scope.$watch('password', this.validateField('password'));
+      $scope.$watch('password_repeat', this.validateField('password'));
 
       /**
        * Query the user profile infos
@@ -40,25 +88,39 @@ angular.module('frontendApp')
        * (i.e: change the user profile infos)
        */
       $scope.update = function() {
-         console.log('update');
-
          var payload = {};
+         var go = false;
 
-         if (typeof($scope.password) === 'string') {
-            payload.password = $scope.password;
+         if ($scope.password.length > 0) {
+          if (!self.validateField('password')($scope.password)){
+            Toaster.make('You must verify the password you entered, read the hint in red', 'profile-form');
+            return;
+          }
+          payload.password = $scope.password;
+          var go = true;
          }
 
          if ($scope.user.website != $scope.original_user.website) {
             payload.website = $scope.user.website;
+            var go = true;
          }
 
-         $http({
-            type: 'PUT',
-            url: API_URL + '/user',
-            data: payload
-         }).success(function(data) {
-            console.log(data);
-         });
+         if (go) {
+           $http({
+              method: 'PUT',
+              url: API_URL + '/user',
+              data: payload
+           }).success(function(data) {
+              $scope.password = '';
+              $scope.password_repeat = '';
+              if ($scope.user.website != $scope.original_user.website) {
+                $scope.original_user.website = $scope.user.website;
+              }
+              Toaster.make('Your profile was correctly updated according your desires', 'profile-form');
+           });
+         } else {
+          Toaster.make('Your profile was already saved with these settings', 'profile-form');
+         }
       };
 
       /**

@@ -80,9 +80,12 @@ angular.module('frontendApp')
                                              var goToState = 'featured';
                                           }
 
-                                          timeout(function() {
-                                             state.go(goToState);
-                                          }, 1500);
+                                          // if (state.current.name == 'signin' ||
+                                          //     state.current.name == 'signup') {
+                                          //   timeout(function() {
+                                          //      state.go(goToState);
+                                          //   }, 1500);
+                                          // }
                                        });
                                    });
                   } else {
@@ -131,7 +134,7 @@ angular.module('frontendApp')
              .position('top');
          toast._options.parent = angular.element('#signin');
          mdToast.show(toast);
-     
+
          if (typeof(callback) === 'function') {
             callback();
          }

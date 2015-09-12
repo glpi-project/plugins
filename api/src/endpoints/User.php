@@ -343,10 +343,8 @@ $profile_edit = function() use($app, $resourceServer) {
       }
    }
 
-   if (User::isValidPassword($body->password) &&
-       gettype($body->password_repeat) == 'string' &&
-       $body->password == $body->password_repeat) {
-
+   if (isset($body->password) &&
+       User::isValidPassword($body->password)) {
       $user->setPassword($body->password);
    }
 

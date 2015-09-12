@@ -2,7 +2,7 @@
    <div flex="33">
       <h2>My informations</h2>
 
-      <form>
+      <form id="profile-form" ng-submit="update()">
          <md-input-container>
             <label>Real Name</label>
             <input type="text" ng-model="user.realname">
@@ -19,8 +19,7 @@
             <label>Password</label>
             <input type="password" ng-model="password">
             <div ng-messages="form.password.$error">
-               <div ng-message="different">Password and Confirmation aren't the same
-               </div>
+               <div ng-message="different">Password and Confirmation aren't the same</div>
                <div ng-message="tooshort">Password must be at least 6 characters</div>
                <div ng-message="toolong">Password must not exceed 26 characters</div>
             </div>
@@ -29,30 +28,35 @@
             <label>Confirm password</label>
             <input type="password" ng-model="password_repeat">
          </md-input-container>
+         <md-button class="md-raised md-primary" type="submit">Update</md-button>
       </form>
-         <md-button class="md-raised md-primary" ng-click="update()">Update</md-button>
    </div>
    <div flex="33">
       <h2>Actions</h2>
 
       <md-list>
          <md-list-item>
-            <md-button ng-click="openLinkAccountDialog($event)">
+            <md-button class="md-raised">
+               <h4>Claim an authorship</h4>
+            </md-button>
+         </md-list-item>
+         <md-list-item>
+            <md-button ng-click="openLinkAccountDialog($event)" class="md-raised">
                <h4>Manage my external social accounts</h4>
             </md-button>
          </md-list-item>
          <md-list-item>
-            <md-button>
-               <h4>Manage notifications</h4>
+            <md-button class="md-raised">
+               <h4>Notifications settings</h4>
             </md-button>
          </md-list-item>
          <md-list-item>
-            <md-button>
-               <h4>Use Api (Register an application)</h4>
+            <md-button class="md-raised">
+               <h4>Manage API keys (and according Apps)</h4>
             </md-button>
          </md-list-item>
          <md-list-item>
-            <md-button>
+            <md-button class="md-raised">
                <h4>Please, delete my account</h4>
             </md-button>
          </md-list-item>
