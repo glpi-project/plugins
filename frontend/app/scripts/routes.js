@@ -13,6 +13,11 @@ angular
             templateUrl: "views/panel.html",
             controller: "PanelCtrl"
          })
+         .state('apikeys', {
+            url: '/panel/apikeys',
+            templateUrl: 'views/apikeys.html',
+            controller: 'ApiKeysCtrl'
+         })
          .state('signup', {
             url: "/signup",
             templateUrl: "views/signup.html",

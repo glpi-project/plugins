@@ -1,0 +1,41 @@
+<md-dialog class="dialog">
+   <md-toolbar>
+      <div class="md-toolbar-tools">
+         <h2>Edit your application settings</h2>
+         <span flex></span>
+         <md-button class="md-icon-button" ng-click="close()">
+           <i class="fa fa-times"></i>
+         </md-button>
+      </div>
+   </md-toolbar>
+
+   <div class="settings">
+      <h2>Settings</h2>
+      <form ng-submit="updateSettings()">
+         <md-input-container>
+            <label>Client ID</label>
+            <input type="text" ng-model="app.id" disabled>
+         </md-input-container>
+
+         <md-input-container>
+            <label>Client Secret</label>
+            <input type="text" ng-model="app.secret" disabled>
+         </md-input-container>
+
+         <md-input-container>
+            <label>Application name</label>
+            <input type="text" ng-model="app.name">
+         </md-input-container>
+
+         <md-input-container>
+            <label>Homepage URL (optional)</label>
+            <input type="text" ng-model="app.homepage_url">
+         </md-input-container>
+
+         <md-input-container>
+            <label>Application description (optional, example "my simple script" or "OAuth signup with GLPI plugins")</label>
+            <textarea name="" id="" rows="2" ng-model="app.description"></textarea>
+         </md-input-container>
+      </form>
+   </div>
+</md-dialog>

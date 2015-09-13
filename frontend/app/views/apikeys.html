@@ -1,0 +1,37 @@
+<div layout="row">
+   <div flex="50">
+      <h2>Declare a new OAuth2 Application</h2>
+
+      <h4>Register a new Application to gain API access</h4>
+
+      <form>
+         <md-input-container>
+            <label>Application name</label>
+            <input type="text">
+         </md-input-container>
+
+         <md-input-container>
+            <label>Homepage URL (optional)</label>
+            <input type="text">
+         </md-input-container>
+
+         <md-input-container>
+            <label>Application description (optional, example "my simple script" or "OAuth signup with GLPI plugins")</label>
+            <textarea name="" id="" rows="2"></textarea>
+         </md-input-container>
+
+         <md-button class="md-raised md-primary" type="submit">Create</md-button>
+      </form>
+   </div>
+   <div flex="50">
+      <h2>My applications</h2>
+
+      <md-list>
+         <md-list-item ng-repeat="app in apps">
+               <p>{{app.name}}</p>
+               <md-button aria-label="Settings" ng-click="openAppEditDialog($event, app.id)"><i class="fa fa-cog"></i></md-button>
+               <md-button aria-label="API Key" ng-click="openApiKeysDialog($event, app.id)"><i class="fa fa-key"></i></md-button>
+         </md-list-item>
+      </md-list>
+   </div>
+</div>

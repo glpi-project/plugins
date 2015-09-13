@@ -143,14 +143,20 @@ CREATE TABLE message(
 
 CREATE TABLE apps(
    id            VARCHAR(40) NOT NULL PRIMARY KEY,
+   user_id       INT,
    name          VARCHAR(35),
    secret        VARCHAR(40),
-   redirect_uri  VARCHAR(140)
+   homepage_url  VARCHAR(300),
+   description   TEXT,
+   redirect_uri  VARCHAR(140),
+   FOREIGN KEY(user_id)
+      REFERENCES user(id)
 ) ENGINE=InnoDB;
+CREATE INDEX idx_apps_user ON apps(user_id);
 
 INSERT INTO apps(id, name, secret, redirect_uri)
-VALUES  ('webapp', 'Main HTTP Site', '', 'http://'),
-        ('glpidefault', 'Entry point for GLPI Update Manager', '7ebc7ee84a9989aa839a7db2f57bcfe9117e22df', 'http://');
+VALUES  ('webapp', 'Main HTTP Site', '', NULL),
+        ('glpidefault', 'GLPI Update Manager', '', NULL);
 
 CREATE TABLE scopes(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -172,7 +178,8 @@ VALUES  ('plugins', 'Read lists of plugins (all, popular, trending, new, updated
         ('version', 'Get card of a specific GLPI Version'),
         ('message', 'Send a message to our wonderful team'),
         ('user', 'Allow logged user to modify his profile'),
-        ('user:externalaccounts', 'Allow logged user to view/delete his external accounts connection');
+        ('user:externalaccounts', 'Allow logged user to view/edit/delete his external social account connections'),
+        ('user:apps', 'Allow logged user to view/edit/delete his API Keys');
 
 CREATE TABLE sessions(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

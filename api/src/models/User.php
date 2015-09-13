@@ -19,6 +19,10 @@ class User extends Model {
       return $this->hasMany('\API\Model\UserExternalAccount');
    }
 
+   public function apps() {
+      return $this->hasMany('\API\Model\App');
+   }
+
    public function setPassword($password) {
       $this->password = password_hash($password, PASSWORD_BCRYPT);
    }

@@ -18,6 +18,7 @@ use \API\Model\UserExternalAccount;
 use \API\Model\Session;
 use \API\Model\AccessToken;
 use \API\Model\Scope;
+use \API\Model\App;
 
 use \API\OAuthServer\AuthorizationServer;
 use \API\OAuthServer\OAuthHelper;
@@ -171,7 +172,8 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
             $user->id,
             ['plugins', 'plugins:search', 'plugin:card', 'plugin:star',
              'plugin:submit', 'plugin:download', 'tags', 'tag', 'authors',
-             'author', 'version', 'message', 'user', 'user:externalaccounts']
+             'author', 'version', 'message', 'user', 'user:externalaccounts',
+             'user:apps']
          );
       }
       else { // Else we're creating a new
@@ -370,6 +372,82 @@ $user_plugins = function() use($app, $resourceServer) {
    Tool::endWithJson($user->author->plugins()->get());
 };
 
+$user_apps = function() use($app, $resourceServer) {
+  OAuthHelper::needsScopes(['user', 'user:apps']);
+
+  $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+  $user = User::where('id', '=', $user_id)->first();
+
+  Tool::endWithJson($user->apps()->get());
+};
+
+$user_app = function($id) use($app, $resourceServer) {
+  OAuthHelper::needsScopes(['user', 'user:apps']);
+
+  $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+  $user = User::where('id', '=', $user_id)->first();
+
+  $app = $user->apps()->where('id', '=', $id)->first();
+
+  if (!$app) {
+    return Tool::endWithJson([
+      "error" => "Unexisting app"
+    ], 400);
+  }
+
+  Tool::endWithJson($app);
+};
+
+$user_declare_app = function() use($app, $resourceServer) {
+  OAuthHelper::needsScopes(['user', 'user:apps']);
+  $body = Tool::getBody();
+
+  $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+  $user = User::where('id', '=', $user_id)->first();
+
+  $app = new App;
+
+  if (!isset($body->name) || !App::isValidName($body->name)) {
+    return Tool::endWithJson([
+      "error" => "You have to specify a correct name for your application"
+    ], 400);
+  } else if (App::where('user_id', '=', $user_id)
+                ->where('name', '=', $body->name)->first() != null) {
+    return Tool::endWithJson([
+      "error" => "You already have an app with that name"
+    ], 400);
+  }
+  else {
+    $app->name = $body->name;
+  }
+
+  if (isset($body->homepage_url)) {
+    if (!App::isValidUrl($body->homepage_url)) {
+      return Tool::endWithJson([
+        "error" => "The url you provided is not valid, better not specifying it or provide a correct one"
+      ], 400);
+    } else {
+      $app->homepage_url = $body->homepage_url;
+    }
+  }
+
+  if (isset($body->description)) {
+    if (!App::isValidDescription($body->description)) {
+      return Tool::endWithJson([
+        "error" => "The description you provided is too long"
+      ], 400);
+    } else {
+      $app->description = $body->description;
+    }
+  }
+
+  // If everything went ok
+  $app->setRandomClientId();
+  $app->setRandomSecret();
+
+  // Then save
+  $user->apps()->save($app);
+};
 
 // HTTP REST Map
 
@@ -378,12 +456,18 @@ $app->get('/user', $profile_view);
 $app->put('/user', $profile_edit);
 $app->get('/user/external_accounts', $user_external_accounts);
 $app->get('/user/plugins', $user_plugins);
+$app->get('/user/apps', $user_apps);
+$app->get('/user/apps/:id', $user_app);
+$app->post('/user/apps', $user_declare_app);
 
 $app->get('/oauth/available_emails', $oauth_external_emails);
 $app->get('/oauth/associate/:service', $associateExternalAccount);
 $app->post('/oauth/authorize', $authorize);
 
 $app->options('/user', function() {});
+$app->options('/user/plugins', function() {});
+$app->options('/user/apps', function() {});
+$app->options('/user/apps/:id', function($id) {});
 $app->options('/user/external_accounts', function() {});
 $app->options('/oauth/authorize', function() {});
 $app->options('/oauth/associate/:service', function() {});
