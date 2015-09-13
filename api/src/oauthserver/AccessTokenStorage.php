@@ -69,6 +69,6 @@ class AccessTokenStorage extends AbstractStorage implements AccessTokenInterface
 
    public function delete(AccessTokenEntity $token)
    {
-      Scope::where('id', '=', $token->getId())->delete();
+      AccessToken::where('token', '=', $token->getId())->delete();
    }
 }

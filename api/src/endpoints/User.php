@@ -108,11 +108,12 @@ $register = function() use ($app) {
       $user->id,
       ['plugins', 'plugins:search', 'plugin:card', 'plugin:star',
        'plugin:submit', 'plugin:download', 'tags', 'tag', 'authors',
-       'author', 'version', 'message', 'user']
+       'author', 'version', 'message', 'user', 'user:apps']
    );
 
    Tool::endWithJson([
       "access_token" => $accessToken['token'],
+      "refresh_token" => $accessToken['refresh_token'],
       "access_token_expires_in" => $accessToken['ttl']
    ], 200);
 };
@@ -208,14 +209,15 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
          );
       }
       $data['access_token'] = $accessToken['token'];
+      $data['refresh_token'] = $accessToken['refresh_token'];
       $data['access_token_expires_in'] = $accessToken['ttl'];
    }
 
    if (isset($data['error'])) {
       if ($data['error'] == 'Service error') {
-         $app->response->setStatus(500);
+         $app->response->status(500);
       } else {
-         $app->response->setStatus(400);
+         $app->response->status(400);
       }
    }
 

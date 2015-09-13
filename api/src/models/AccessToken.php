@@ -16,4 +16,8 @@ class AccessToken extends Model {
    public function scopes() {
       return $this->belongsToMany('\API\Model\Scope', 'access_tokens_scopes', 'access_token_id', 'scope_id');
    }
+
+   public function refreshToken() {
+      return $this->hasOne('\API\Model\RefreshToken');
+   }
 }

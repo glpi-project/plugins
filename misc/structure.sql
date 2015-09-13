@@ -210,10 +210,7 @@ CREATE TABLE access_tokens(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    token         VARCHAR(40),
    session_id    INT NOT NULL,
-   expire_time   DATETIME,
-   FOREIGN KEY (session_id)
-      REFERENCES sessions(id)
-      ON DELETE CASCADE
+   expire_time   DATETIME
 ) ENGINE=InnoDB;
 
 CREATE TABLE access_tokens_scopes(
@@ -227,6 +224,14 @@ CREATE TABLE access_tokens_scopes(
       REFERENCES scopes(id)
       ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+CREATE TABLE refresh_tokens(
+   id              INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   access_token_id INT NOT NULL,
+   token           VARCHAR(40),
+   expire_time     DATETIME
+) ENGINE=InnoDB;
+CREATE INDEX idx_refresh_tokens_access_token ON refresh_tokens(access_token_id);
 
 CREATE TABLE auth_codes(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

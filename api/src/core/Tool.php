@@ -65,7 +65,7 @@ class Tool {
       // Or serialize the payload as is
       } else {
          $payload = &$_payload;
-         $app->response->setStatus($code);
+         http_response_code($code);
       }
 
       // Parsing Accept Header

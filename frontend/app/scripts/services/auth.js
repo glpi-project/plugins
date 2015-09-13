@@ -8,15 +8,78 @@
  * Provider in the frontendApp.
  */
 angular.module('frontendApp')
-  .provider('Auth', function ($httpProvider, $authProvider, $injector,
-                              API_URL,
-                              GITHUB_CLIENT_ID) {
-    var rootScope, mdToast, state, timeout, http, $window;
+  .provider('Auth', function ($httpProvider, $authProvider, $injector, API_URL,
+                              GITHUB_CLIENT_ID, $provide) {
+    var authManager, rootScope, mdToast, state, timeout, http, $window;
     var AuthManager = function() {};
+
+    /**
+     * This methods is used to make a real login attempt
+     * (auth attempt) via glpi-plugins account
+     */
+    AuthManager.prototype.loginAttempt = function(options) {
+         var self = this, param = {};
+         var now = moment();
+
+         if (typeof(options.anonymous) === 'undefined') {
+            options.anonymous = false;
+         }
+         if (!options.anonymous) {
+            if (typeof(options.login) != 'string' ||
+                typeof(options.password) != 'string') {
+               return false;
+            }
+         }
+
+         param.client_id = "webapp";
+         param.scope = 'plugins plugins:search plugin:card plugin:star plugin:submit plugin:download tags tag authors author version message user user:externalaccounts user:apps';
+
+         if (!options.anonymous) {
+            param.grant_type = "password";
+            param.username = options.login;
+            param.password = options.password;
+            var auth = true;
+         } else {
+            param.grant_type = "client_credentials";
+            var auth = false;
+         }
+
+         return http({
+           method: "POST",
+           url: API_URL + "/oauth/authorize",
+           // Making use of jQuery.param
+           // to serialize parameters
+           data: jQuery.param(param),
+           // Those parameters are passed via
+           // an urlencoded string
+           headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+           }
+         }).success(function(data) {
+           self.setToken(data.access_token, now.unix() + data.expires_in, (options.anonymous ? null : data.refresh_token), auth, function() {
+               http({
+                  type: 'GET',
+                  url: API_URL+'/user'
+               }).success(function(data) {
+                  // if (!data.active) {
+                  //    var goToState = 'finishactivateaccount';
+                  // } else {
+                  //    var goToState = 'featured';
+                  // }
+
+                  // timeout(function() {
+                  //    state.go(goToState);
+                  // }, 1500);
+               });
+           });
+         });
+
+    };
 
     AuthManager.prototype.linkAccount = function(service, callback) {
       var redirect_uri = API_URL + '/oauth/associate/';
       var authorization_endpoint, scope;
+      var now = moment();
 
       if (service == 'github') {
          redirect_uri += 'github';
@@ -68,7 +131,7 @@ angular.module('frontendApp')
                   authorizationRequestWindow.removeEventListener('message', evl);
                   var data = JSON.parse(e.data);
                   if (!data.error) {
-                     self.setToken(data.access_token, data.access_token_expires_in, true,
+                     self.setToken(data.access_token, now.unix() + data.access_token_expires_in, data.refresh_token, true,
                                    function() {
                                        http({
                                           type: 'GET',
@@ -109,7 +172,7 @@ angular.module('frontendApp')
     /**
      * This method sets the current token
      */
-    AuthManager.prototype.setToken = function(t, expires_in, auth, callback) {
+    AuthManager.prototype.setToken = function(t, expires_at, refresh_token, auth, callback) {
       // Bet we want to authenticate by default
       if (typeof(auth) === 'undefined') {
          var auth = true;
@@ -117,7 +180,10 @@ angular.module('frontendApp')
 
       // Going to set the token anyway
       localStorage.setItem('access_token', t);
-      localStorage.setItem('access_token_expires_in', expires_in);
+      if (refresh_token != null) {
+        localStorage.setItem('refresh_token', refresh_token);
+      }
+      localStorage.setItem('access_token_expires_at', expires_at);
       $httpProvider.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
 
       if (auth) {
@@ -158,7 +224,8 @@ angular.module('frontendApp')
      */
     AuthManager.prototype.destroyToken = function() {
       localStorage.removeItem('access_token');
-      localStorage.removeItem('access_token_expires_in');
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('access_token_expires_at');
       localStorage.removeItem('authed');
       delete $httpProvider.defaults.headers.common['Authorization'];
       rootScope.authed = false;
@@ -171,66 +238,30 @@ angular.module('frontendApp')
       this.getAnonymousToken();
     };
 
-    /**
-     * This methods is used to make a real login attempt
-     * (auth attempt) via glpi-plugins account
-     */
-    AuthManager.prototype.loginAttempt = function(options) {
-         var self = this, param = {};
-
-         if (typeof(options.anonymous) === 'undefined') {
-            options.anonymous = false;
-         }
-         if (!options.anonymous) {
-            if (typeof(options.login) != 'string' ||
-                typeof(options.password) != 'string') {
-               return false;
-            }
-         }
-
-         param.client_id = "webapp";
-         param.scope = 'plugins plugins:search plugin:card plugin:star plugin:submit plugin:download tags tag authors author version message user user:externalaccounts user:apps';
-
-         if (!options.anonymous) {
-            param.grant_type = "password";
-            param.username = options.login;
-            param.password = options.password;
-            var auth = true;
-         } else {
-            param.grant_type = "client_credentials";
-            var auth = false;
-         }
-
-         return http({
-           method: "POST",
-           url: API_URL + "/oauth/authorize",
-           // Making use of jQuery.param
-           // to serialize parameters
-           data: jQuery.param(param),
-           // Those parameters are passed via
-           // an urlencoded string
-           headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-           }
-         }).success(function(data) {
-           self.setToken(data.access_token, data.expires_in, auth, function() {
-               http({
-                  type: 'GET',
-                  url: API_URL+'/user'
-               }).success(function(data) {
-                  // if (!data.active) {
-                  //    var goToState = 'finishactivateaccount';
-                  // } else {
-                  //    var goToState = 'featured';
-                  // }
-
-                  // timeout(function() {
-                  //    state.go(goToState);
-                  // }, 1500);
-               });
-           });
-         });
-
+    AuthManager.prototype.refreshToken = function(callback) {
+      var now = moment();
+      var promise = http({
+        method: "POST",
+        url: API_URL + '/oauth/authorize',
+        data: jQuery.param({
+          client_id: 'webapp',
+          grant_type: 'refresh_token',
+          refresh_token: localStorage.getItem('refresh_token'),
+          scope: 'plugins plugins:search plugin:card plugin:star plugin:submit plugin:download tags tag authors author version message user user:externalaccounts user:apps'
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+      promise.success(function(data) {
+        if (data) {
+          localStorage.setItem('access_token', data.access_token);
+          localStorage.setItem('refresh_token', data.refresh_token);
+          localStorage.setItem('access_token_expires_at', now.unix() + data.expires_in);
+          $httpProvider.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
+        }
+      });
+      return promise;
     };
 
     /**
@@ -253,9 +284,35 @@ angular.module('frontendApp')
       http = $injector.get('$http');
       $window = $injector.get('$window');
 
+
       // We'll get this AuthManager instance
-      return new AuthManager();
+      authManager = new AuthManager()
+      return authManager;
     };
+
+    $provide.factory('AccessTokenHttpInterceptor', function($q) {
+      var refreshAttempt = false;
+
+      return {
+        "responseError": function(response) {
+          if (moment.unix(localStorage.getItem('access_token_expires_at')) - moment() < 0) {
+            if (!refreshAttempt) {
+              refreshAttempt = authManager.refreshToken()
+                                          .success(function() {
+                                            refreshAttempt = false;
+                                          });
+            }
+            return refreshAttempt.then(function(refreshTokenResponse) {
+              var response_config = jQuery.extend({}, response.config);
+              response_config.headers.Authorization = 'Bearer ' + refreshTokenResponse.data.access_token;
+              return http(response_config);
+            });
+          }
+        }
+      }
+    });
+
+    $httpProvider.interceptors.push('AccessTokenHttpInterceptor');
   })
 
   .config(function($httpProvider) {
@@ -265,6 +322,8 @@ angular.module('frontendApp')
     if (localStorage.getItem('access_token') !== null) {
       $httpProvider.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
     }
+
+    // $httpProvider.interceptors.push('AccessTokenHttpInterceptor');
   })
 
   .run(function($rootScope, Auth) {

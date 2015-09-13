@@ -9,6 +9,7 @@ use \API\OAuthServer\ScopeStorage;
 use \API\OAuthServer\SessionStorage;
 use \League\OAuth2\Server\Grant\PasswordGrant;
 use \League\OAuth2\Server\Grant\ClientCredentialsGrant;
+use \League\OAuth2\Server\Grant\RefreshTokenGrant;
 use \API\Model\User;
 
 class AuthorizationServer extends \League\OAuth2\Server\AuthorizationServer {
@@ -17,7 +18,7 @@ class AuthorizationServer extends \League\OAuth2\Server\AuthorizationServer {
       parent::__construct();
       $this->setSessionStorage(OAuthHelper::getSessionStorage());
       $this->setAccessTokenStorage(OAuthHelper::getAccessTokenStorage());
-      //$authorizationServer->setRefreshTokenStorage(new RefreshTokenStorage);
+      $this->setRefreshTokenStorage(OAuthHelper::getRefreshTokenStorage());
       $this->setClientStorage(OAuthHelper::getClientStorage());
       $this->setScopeStorage(OAuthHelper::getScopeStorage());
       $this->setAuthCodeStorage(new AuthCodeStorage());
@@ -54,6 +55,9 @@ class AuthorizationServer extends \League\OAuth2\Server\AuthorizationServer {
 
       $appGrant = new ClientCredentialsGrant;
       $this->addGrantType($appGrant);
+
+      $refreshTokenGrant = new RefreshTokenGrant();
+      $this->addGrantType($refreshTokenGrant);
    }
 
 }

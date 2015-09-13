@@ -9,6 +9,7 @@ use League\OAuth2\Server\Util\SecureKey;
 
 use \API\Model\User;
 use \API\Model\AccessToken;
+use \API\Model\RefreshToken;
 use \API\Model\Session;
 use \API\Model\Scope;
 
@@ -22,6 +23,7 @@ use \API\Model\Scope;
  */
 class OAuthHelper {
    private static $accessTokenStorage = null;
+   private static $refreshTokenStorage = null;
    private static $clientStorage = null;
    private static $scopeStorage = null;
    private static $sessionStorage = null;
@@ -35,6 +37,16 @@ class OAuthHelper {
          self::$accessTokenStorage = new AccessTokenStorage;
       }
       return self::$accessTokenStorage;
+   }
+
+   /**
+    * Returns a singleton of the AccessTokenStorage
+    */
+   public static function getRefreshTokenStorage() {
+      if (!self::$refreshTokenStorage) {
+         self::$refreshTokenStorage = new RefreshTokenStorage;
+      }
+      return self::$refreshTokenStorage;
    }
 
    /**
@@ -127,8 +139,15 @@ class OAuthHelper {
          }
       }
 
+      $refreshToken = new RefreshToken;
+      $refreshToken->access_token_id = $accessToken->id;
+      $refreshToken->token = SecureKey::generate();
+      $refreshToken->expire_time = DB::raw('FROM_UNIXTIME('.(604800 + time()).')');
+      $refreshToken->save();
+
       return [
          "token" => $accessToken->token,
+         "refresh_token" => $refreshToken->token,
          "ttl"   => $ttl
       ];
    }

@@ -11,17 +11,16 @@ use League\OAuth2\Server\Storage\AbstractStorage;
 use League\OAuth2\Server\Storage\SessionInterface;
 
 use API\Model\Session;
+use API\Model\AccessToken;
 use API\Model\Scope;
 use API\Model\App;
 
 class SessionStorage extends AbstractStorage implements SessionInterface
 {
    public function getByAccessToken(AccessTokenEntity $accessToken) {
-      $_session = Session::join('access_tokens', 'access_tokens.session_id', '=', 'sessions.id')
-                        ->where('access_tokens.token', '=', $accessToken->getId())
-                        ->first();
-
-      if ($_session) {
+      $accessToken = AccessToken::where('token', '=', $accessToken->getId())->first();
+      if ($accessToken) {
+         $_session = $accessToken->session;
          $session = new SessionEntity($this->server);
          $session->setId($_session->id);
          $session->setOwner($_session->owner_type, $_session->owner_id);
