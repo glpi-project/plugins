@@ -55,25 +55,10 @@ angular.module('frontendApp')
            headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
            }
-         }).success(function(data) {
-           self.setToken(data.access_token, now.unix() + data.expires_in, (options.anonymous ? null : data.refresh_token), auth, function() {
-               http({
-                  type: 'GET',
-                  url: API_URL+'/user'
-               }).success(function(data) {
-                  // if (!data.active) {
-                  //    var goToState = 'finishactivateaccount';
-                  // } else {
-                  //    var goToState = 'featured';
-                  // }
-
-                  // timeout(function() {
-                  //    state.go(goToState);
-                  // }, 1500);
-               });
-           });
+         }).then(function(resp) {
+            var data = resp.data;
+            self.setToken(data.access_token, now.unix() + data.expires_in, (options.anonymous ? null : data.refresh_token), auth);
          });
-
     };
 
     AuthManager.prototype.linkAccount = function(service, callback) {
@@ -131,26 +116,7 @@ angular.module('frontendApp')
                   authorizationRequestWindow.removeEventListener('message', evl);
                   var data = JSON.parse(e.data);
                   if (!data.error) {
-                     self.setToken(data.access_token, now.unix() + data.access_token_expires_in, data.refresh_token, true,
-                                   function() {
-                                       http({
-                                          type: 'GET',
-                                          url: API_URL+'/user'
-                                       }).success(function(data) {
-                                          if (!data.active) {
-                                             var goToState = 'finishactivateaccount';
-                                          } else {
-                                             var goToState = 'featured';
-                                          }
-
-                                          // if (state.current.name == 'signin' ||
-                                          //     state.current.name == 'signup') {
-                                          //   timeout(function() {
-                                          //      state.go(goToState);
-                                          //   }, 1500);
-                                          // }
-                                       });
-                                   });
+                     self.setToken(data.access_token, now.unix() + data.access_token_expires_in, data.refresh_token, true);
                   } else {
                      // Showing a toast
                      var toast = mdToast.simple()
@@ -172,7 +138,12 @@ angular.module('frontendApp')
     /**
      * This method sets the current token
      */
-    AuthManager.prototype.setToken = function(t, expires_at, refresh_token, auth, callback) {
+    AuthManager.prototype.setToken = function(t, expires_at, refresh_token, auth) {
+      // if bad token provided we don't move
+      if (typeof t != 'string' || t.length != 40) {
+         return;
+      }
+
       // Bet we want to authenticate by default
       if (typeof(auth) === 'undefined') {
          var auth = true;
@@ -200,10 +171,6 @@ angular.module('frontendApp')
              .position('top');
          toast._options.parent = angular.element('#signin');
          mdToast.show(toast);
-
-         if (typeof(callback) === 'function') {
-            callback();
-         }
       } else {
         state.go('featured', {}, {
           reload: true
@@ -290,29 +257,29 @@ angular.module('frontendApp')
       return authManager;
     };
 
-    $provide.factory('AccessTokenHttpInterceptor', function($q) {
-      var refreshAttempt = false;
+    // $provide.factory('AccessTokenHttpInterceptor', function($q) {
+    //   var refreshAttempt = false;
 
-      return {
-        "responseError": function(response) {
-          if (moment.unix(localStorage.getItem('access_token_expires_at')) - moment() < 0) {
-            if (!refreshAttempt) {
-              refreshAttempt = authManager.refreshToken()
-                                          .success(function() {
-                                            refreshAttempt = false;
-                                          });
-            }
-            return refreshAttempt.then(function(refreshTokenResponse) {
-              var response_config = jQuery.extend({}, response.config);
-              response_config.headers.Authorization = 'Bearer ' + refreshTokenResponse.data.access_token;
-              return http(response_config);
-            });
-          }
-        }
-      }
-    });
+    //   return {
+    //     "responseError": function(response) {
+    //       if (moment.unix(localStorage.getItem('access_token_expires_at')) - moment() < 0) {
+    //         if (!refreshAttempt) {
+    //           refreshAttempt = authManager.refreshToken()
+    //                                       .success(function() {
+    //                                         refreshAttempt = false;
+    //                                       });
+    //         }
+    //         return refreshAttempt.then(function(refreshTokenResponse) {
+    //           var response_config = jQuery.extend({}, response.config);
+    //           response_config.headers.Authorization = 'Bearer ' + refreshTokenResponse.data.access_token;
+    //           return http(response_config);
+    //         });
+    //       }
+    //     }
+    //   }
+    // });
 
-    $httpProvider.interceptors.push('AccessTokenHttpInterceptor');
+    // $httpProvider.interceptors.push('AccessTokenHttpInterceptor');
   })
 
   .config(function($httpProvider) {
