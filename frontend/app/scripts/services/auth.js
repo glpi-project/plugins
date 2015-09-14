@@ -17,7 +17,7 @@ angular.module('frontendApp')
 
   .provider('Auth', function ($httpProvider, $authProvider, $injector, API_URL,
                               GITHUB_CLIENT_ID, $provide) {
-    var authManager, rootScope, mdToast, timeout, http, cookies, $window;
+    var authManager, rootScope, mdToast, timeout, http, cookies, Toaster, $window;
     var AuthManager = function() {};
 
     /**
@@ -123,15 +123,15 @@ angular.module('frontendApp')
                   authorizationRequestWindow.removeEventListener('message', evl);
                   var data = JSON.parse(e.data);
                   if (!data.error) {
-                     self.setToken(data.access_token, now.unix() + data.access_token_expires_in, data.refresh_token, true);
+                     if (data.access_token) {
+                        self.setToken(data.access_token, now.unix() + data.access_token_expires_in, data.refresh_token, true);
+                     }
+                     if (data.external_account_linked) {
+                        Toaster.make('You correctly linked a new external account !', 'body');
+                     }
                   } else {
                      // Showing a toast
-                     var toast = mdToast.simple()
-                         .capsule(true)
-                         .content(data.error)
-                         .position('top');
-                     toast._options.parent = angular.element('body');
-                     mdToast.show(toast);
+                     Toaster.make(data.error, 'body');
                   }
                   authorizationRequestWindow.close();
                });
@@ -253,6 +253,7 @@ angular.module('frontendApp')
       http = $injector.get('$http');
       $window = $injector.get('$window');
       cookies = $injector.get('$cookies');
+      Toaster = $injector.get('Toaster');
 
       // We'll get this AuthManager instance
       authManager = new AuthManager()
