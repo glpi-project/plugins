@@ -41,6 +41,7 @@ module.exports = function(config) {
       'bower_components/matchMedia/matchMedia.js',
       'bower_components/satellizer/satellizer.js',
       'bower_components/angular-messages/angular-messages.js',
+      'bower_components/angular-cookies/angular-cookies.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",

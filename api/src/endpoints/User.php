@@ -127,10 +127,19 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
    $token = $oAuth->getAccessToken($app->request->get('code'));
    $data = [];
 
-   if ($app->request->get('access_token')) {
-      $resourceServer->isValidRequest(false);
+
+   if (isset($_COOKIE['access_token'])) {
       $alreadyAuthed = true;
-      $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+
+      $accessToken = AccessToken::where('token', '=', $_COOKIE['access_token'])->first();
+      setcookie('access_token', '', 1, '/');
+      if (!$accessToken) {
+         return Tool::endWithJson([
+            "error" => "You provided a wrong access_token via cookie"
+         ]);
+      } else {
+         $user_id = $accessToken->session->user->id;
+      }
    } else {
       $alreadyAuthed = false;
    }

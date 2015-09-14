@@ -8,9 +8,16 @@
  * Provider in the frontendApp.
  */
 angular.module('frontendApp')
+  .config(function($cookiesProvider) {
+    $cookiesProvider.defaults = {
+      domain: document.domain,
+      path: '/'
+    };
+  })
+
   .provider('Auth', function ($httpProvider, $authProvider, $injector, API_URL,
                               GITHUB_CLIENT_ID, $provide) {
-    var authManager, rootScope, mdToast, state, timeout, http, $window;
+    var authManager, rootScope, mdToast, timeout, http, cookies, $window;
     var AuthManager = function() {};
 
     /**
@@ -44,7 +51,7 @@ angular.module('frontendApp')
             var auth = false;
          }
 
-         return http({
+         var call =  http({
            method: "POST",
            url: API_URL + "/oauth/authorize",
            // Making use of jQuery.param
@@ -55,10 +62,12 @@ angular.module('frontendApp')
            headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
            }
-         }).then(function(resp) {
+         });
+         call.then(function(resp) {
             var data = resp.data;
             self.setToken(data.access_token, now.unix() + data.expires_in, (options.anonymous ? null : data.refresh_token), auth);
          });
+         return call;
     };
 
     AuthManager.prototype.linkAccount = function(service, callback) {
@@ -82,17 +91,15 @@ angular.module('frontendApp')
       if (localStorage.getItem('authed') &&
           localStorage.getItem('access_token')) {
          var access_token = localStorage.getItem('access_token');
-         var url = authorization_endpoint + '?' + jQuery.param({
-            client_id: GITHUB_CLIENT_ID,
-            redirect_uri: redirect_uri + '?access_token=' + access_token,
-            scope: scope
-         });
-      } else {
-         var url = authorization_endpoint + '?' + jQuery.param({
-            client_id: GITHUB_CLIENT_ID,
-            scope: scope
+         cookies.put('access_token', access_token, {
+            path: '/'
          });
       }
+
+      var url = authorization_endpoint + '?' + jQuery.param({
+         client_id: GITHUB_CLIENT_ID,
+         scope: scope
+      });
 
       var authorizationRequestWindow = window.open(url, 'Associate your external account', {
          width: 400,
@@ -171,10 +178,6 @@ angular.module('frontendApp')
              .position('top');
          toast._options.parent = angular.element('#signin');
          mdToast.show(toast);
-      } else {
-        state.go('featured', {}, {
-          reload: true
-        });
       }
     };
 
@@ -246,11 +249,10 @@ angular.module('frontendApp')
       // angular components in this provider
       rootScope = $injector.get('$rootScope');
       mdToast = $injector.get('$mdToast');
-      state = $injector.get('$state');
       timeout = $injector.get('$timeout');
       http = $injector.get('$http');
       $window = $injector.get('$window');
-
+      cookies = $injector.get('$cookies');
 
       // We'll get this AuthManager instance
       authManager = new AuthManager()

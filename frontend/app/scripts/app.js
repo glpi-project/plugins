@@ -21,7 +21,8 @@ angular
       'jkuri.gallery',
       'btford.markdown',
       'satellizer',
-      'ngMessages'
+      'ngMessages',
+      'ngCookies'
    ])
 
    // Determining current language
