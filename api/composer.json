@@ -20,7 +20,8 @@
       "psr-4": {
          "API\\Core\\": "src/core",
          "API\\Model\\": "src/models",
-         "API\\OAuthServer\\": "src/oauthserver"
+         "API\\OAuthServer\\": "src/oauthserver",
+         "API\\Exception\\": "src/exceptions"
       }
    }
 }

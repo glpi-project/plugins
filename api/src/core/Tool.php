@@ -2,6 +2,19 @@
 
 namespace API\Core;
 
+// Those are the Exception Classes
+// that are thrown all across the app
+// controllers (endpoints)
+// when we want to reject a request
+// with an error response
+use \API\Exception\ErrorResponse;
+use \League\OAuth2\Server\Exception\OAuthException;
+
+/**
+ * this class has very wide scope,
+ * being a toolbox static class
+ * used in every endpoint
+ */
 class Tool {
 
    /**
@@ -76,11 +89,14 @@ class Tool {
          $acceptHtml = true;
       }
 
-      if ($acceptHtml) {
+      if ($acceptHtml) { // if Accept header is passed
+        // we use the Javascript prettyPrint
         $app->response->headers->set('Content-Type', 'text/html');
-        $code = preg_replace('/\$code/', htmlentities(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)), self::$prettyJSONTemplate);
+        $code = preg_replace('/\$code/',
+                             htmlentities(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)),
+                             self::$prettyJSONTemplate);
         echo($code);
-      } else {
+      } else { // else we just output
         $app->response->headers->set('Content-Type', 'application/json');
         echo json_encode($payload);
       }
@@ -94,6 +110,28 @@ class Tool {
    public static function log($v) {
       $v = trim($v);
       error_log('[glpi-plugin-directory] ' . $v, 0);
+   }
+
+   /**
+    * This decorates a lambda function that
+    * serves as an endpoint, it is used to
+    * make use of try{}catch{} to generate
+    * various responses
+    */
+   public static function makeEndpoint($callable) {
+      $decoratedEndpoint = function() use($callable) {
+         $args = func_get_args();
+         try {
+            call_user_func($callable, $args);
+         }
+         catch (ErrorResponse $e) {
+            Tool::log("[GlpiPlugins] [SUPERACCESSTOKENR4ND0M1337] (1332) ".$e->getRepresentation());
+            return Tool::endWithJson([
+               "error" => $e->getRepresentation(true)
+            ], $e->httpStatusCode);
+         }
+      };
+      return $decoratedEndpoint;
    }
 
    /**
@@ -156,6 +194,9 @@ class Tool {
       return  new \API\Core\PaginatedCollection($queryBuilder);
    }
 
+   /**
+    * This count the items returned by a SQL query
+    */
    public static function preCountQuery($queryBuilder) {
       $qb = clone $queryBuilder;
       return \Illuminate\Database\Capsule\Manager::table(
@@ -165,10 +206,13 @@ class Tool {
                         ->count();
    }
 
+   /**
+    * Generates a random sha1
+    */
    public static function randomSha1() {
-      $characters  = '0123456789';
-      $characters .= 'abcdefghijklmnopqrstuvwxyz';
-      $characters .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      $characters  = '0123456789'; // numeric
+      $characters .= 'abcdefghijklmnopqrstuvwxyz'; // lowercase
+      $characters .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // uppercase
       $len = strlen($characters);
       $out = '';
       for ($i = 0; $i < 20; $i++) {
