@@ -30,14 +30,14 @@ $send = function() use($app) {
    $recaptcha = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
    $resp = $recaptcha->verify($body->recaptcha_response);
    if (!$resp->isSuccess()) {
-      return  Tool::endWithJson([
+      Tool::endWithJson([
          "error" => "Recaptcha not validated"
       ]);
    }
 
    foreach($fields as $prop) {
       if (!property_exists($body->contact, $prop)) {
-         return  Tool::endWithJson(["error" => "Missing ". $prop]);
+         Tool::endWithJson(["error" => "Missing ". $prop]);
       }
    }
 
@@ -66,7 +66,7 @@ $send = function() use($app) {
    $message->sent = DB::raw('NOW()');
    $message->save();
 
-   return Tool::endWithJson([
+   Tool::endWithJson([
       "success" => true
    ]);
 };

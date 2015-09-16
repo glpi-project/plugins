@@ -92,13 +92,13 @@ class Tool {
       if ($acceptHtml) { // if Accept header is passed
         // we use the Javascript prettyPrint
         $app->response->headers->set('Content-Type', 'text/html');
-        $code = preg_replace('/\$code/',
+        $payload = preg_replace('/\$code/',
                              htmlentities(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)),
                              self::$prettyJSONTemplate);
-        echo($code);
+         $app->halt($code, $payload);
       } else { // else we just output
         $app->response->headers->set('Content-Type', 'application/json');
-        echo json_encode($payload);
+        $app->halt($code, json_encode($payload));
       }
    }
 

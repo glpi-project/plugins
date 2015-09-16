@@ -119,7 +119,7 @@ $star = function() use($app) {
        !isset($body->note) ||
        !is_numeric($body->plugin_id) ||
        !is_numeric($body->note)) {
-      return Tool::endWithJson([
+      Tool::endWithJson([
          "error" => "plugin_id and note should be provided as integer"
       ], 400);
    }
@@ -127,7 +127,7 @@ $star = function() use($app) {
    $plugin = Plugin::find($body->plugin_id);
 
    if ($plugin == NULL) {
-      return Tool::endWithJson([
+      Tool::endWithJson([
          "error" => "you try to note a plugin that doesn't exists"
       ], 400);
    }
@@ -159,14 +159,14 @@ $submit = function() use($app) {
    $recaptcha = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
    $resp = $recaptcha->verify($body->recaptcha_response);
    if (!$resp->isSuccess()) {
-      return  Tool::endWithJson([
+      Tool::endWithJson([
          "error" => "Recaptcha not validated"
       ]);
    }
 
    foreach($fields as $prop) {
      if (!property_exists($body, $prop)) {
-         return  Tool::endWithJson([
+         Tool::endWithJson([
              "error" => "Missing ". $prop
          ]);
      }
@@ -174,21 +174,21 @@ $submit = function() use($app) {
 
    // Quickly validating
    if (Plugin::where('xml_url', '=', $body->plugin_url)->count() > 0) {
-      return  Tool::endWithJson([
+      Tool::endWithJson([
           "error" => "That plugin XML URL has already been submitted."
       ]);
    }
 
    $xml = @file_get_contents($body->plugin_url);
    if (!$xml) {
-      return Tool::endWithJson([
+      Tool::endWithJson([
           "error" => "We cannot fetch that URL."
       ]);
    }
 
    $xml = new ValidableXMLPluginDescription($xml);
    if (!$xml->isValid()) {
-      return Tool::endWithJson([
+      Tool::endWithJson([
           "error" => "Unreadable/Non validable XML.",
           "details" => $xml->errors
       ]);
@@ -196,7 +196,7 @@ $submit = function() use($app) {
    $xml = $xml->contents;
 
    if (Plugin::where('key', '=', $xml->key)->count() > 0) {
-      return Tool::endWithJson([
+      Tool::endWithJson([
           "error" => "Your XML describe a plugin whose key already exists in our database."
       ]);
    }
@@ -221,7 +221,7 @@ $submit = function() use($app) {
         'A new plugin "'.$xml->name.'" with key "'.$xml->key.'" has been submitted and is awaiting to be verified. It has db id #'.$plugin->id,
         "From: GLPI Plugins <plugins@glpi-project.org>");
 
-   return Tool::endWithJson([
+   Tool::endWithJson([
       "success" => true
    ]);
 };

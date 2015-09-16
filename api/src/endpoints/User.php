@@ -42,7 +42,7 @@ $register = function() use ($app) {
        strlen($body->username) < 4 ||
        strlen($body->username) > 28 ||
        preg_match('[^a-zA-Z0-9]', $body->username)) {
-      return Tool::endWithJson([
+      Tool::endWithJson([
          "error" => "Your username should have at least 4 characters, ".
                     "and a maximum of 28 characters, and it should ".
                     "contains only alphanumeric characters"
@@ -55,7 +55,7 @@ $register = function() use ($app) {
        strlen($body->email) < 5 || // a@b.c
        strlen($body->email) > 255 ||
       !filter_var($body->email, FILTER_VALIDATE_EMAIL)) {
-      return Tool::endWithJson([
+      Tool::endWithJson([
          "error" => "The email you specified isn't valid"
       ], 400);
    } else {
@@ -87,7 +87,7 @@ $register = function() use ($app) {
    }
 
    if (!User::isValidPassword($body->password)) {
-      return Tool::endWithJson([
+      Tool::endWithJson([
          "error" => "Your password should have at least 6 characters, ".
                     "and a maximum of 26 characters"
       ], 400);
@@ -95,7 +95,7 @@ $register = function() use ($app) {
 
    if (!isset($body->password_repeat) ||
        $body->password != $body->password_repeat) {
-      return Tool::endWithJson([
+      Tool::endWithJson([
          "error" => "Your password and password verification doesn't match"
       ], 400);
    } else {
@@ -134,7 +134,7 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
       $accessToken = AccessToken::where('token', '=', $_COOKIE['access_token'])->first();
       setcookie('access_token', '', 1, '/');
       if (!$accessToken) {
-         return Tool::endWithJson([
+         Tool::endWithJson([
             "error" => "You provided a wrong access_token via cookie"
          ]);
       } else {
@@ -249,16 +249,16 @@ $authorize = function() use($app) {
    $authorizationServer = new AuthorizationServer();
 
    try {
-      return Tool::endWithJson($authorizationServer->issueAccessToken(), 200);
+      Tool::endWithJson($authorizationServer->issueAccessToken(), 200);
    }
    catch (\League\OAuth2\Server\Exception\OAuthException $e) {
-      return Tool::endWithJson([
+      Tool::endWithJson([
          "error" => $e->getMessage()
       ], $e->httpStatusCode);
    }
    catch (\Exception $e) {
       Tool::log('PHP error, file '.$e->getFile().' , line '.$e->getLine().' : '.$e->getMessage());
-      return Tool::endWithJson([
+      Tool::endWithJson([
          "error" => "Service error"
       ], 500);
    }
@@ -275,11 +275,11 @@ $user_external_accounts = function() use ($app, $resourceServer) {
    $user = User::where('id', '=', $user_id)->first();
 
    if (!$user) {
-      return Tool::endWithJson(null, 401);
+      Tool::endWithJson(null, 401);
    }
 
    $external_accounts = $user->externalAccounts()->get();
-   return Tool::endWithJson($external_accounts, 200);
+   Tool::endWithJson($external_accounts, 200);
 };
 
 /**
@@ -377,7 +377,7 @@ $user_plugins = function() use($app, $resourceServer) {
    $user = User::where('id', '=', $user_id)->first();
 
    if (!$user->author) {
-      return Tool::endWithJson([], 200);
+      Tool::endWithJson([], 200);
    }
 
    Tool::endWithJson($user->author->plugins()->get());
@@ -401,7 +401,7 @@ $user_app = function($id) use($app, $resourceServer) {
   $app = $user->apps()->where('id', '=', $id)->first();
 
   if (!$app) {
-    return Tool::endWithJson([
+    Tool::endWithJson([
       "error" => "Unexisting app"
     ], 400);
   }
@@ -419,12 +419,12 @@ $user_declare_app = function() use($app, $resourceServer) {
   $app = new App;
 
   if (!isset($body->name) || !App::isValidName($body->name)) {
-    return Tool::endWithJson([
+    Tool::endWithJson([
       "error" => "You have to specify a correct name for your application"
     ], 400);
   } else if (App::where('user_id', '=', $user_id)
                 ->where('name', '=', $body->name)->first() != null) {
-    return Tool::endWithJson([
+    Tool::endWithJson([
       "error" => "You already have an app with that name"
     ], 400);
   }
@@ -434,7 +434,7 @@ $user_declare_app = function() use($app, $resourceServer) {
 
   if (isset($body->homepage_url)) {
     if (!App::isValidUrl($body->homepage_url)) {
-      return Tool::endWithJson([
+      Tool::endWithJson([
         "error" => "The url you provided is not valid, better not specifying it or provide a correct one"
       ], 400);
     } else {
@@ -444,7 +444,7 @@ $user_declare_app = function() use($app, $resourceServer) {
 
   if (isset($body->description)) {
     if (!App::isValidDescription($body->description)) {
-      return Tool::endWithJson([
+      Tool::endWithJson([
         "error" => "The description you provided is too long"
       ], 400);
     } else {

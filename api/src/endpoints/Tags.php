@@ -54,9 +54,9 @@ $tag_single = function($key) use($app) {
 
    $tag = Tag::where('key', '=', $key)->first();
    if ($tag == NULL) {
-      return Tool::endWithJson([
+      Tool::endWithJson([
             "error" => "Tag not found"
-         ], 400);
+      ], 400);
    }
   Tool::endWithJson($tag);
 };
@@ -66,7 +66,7 @@ $tag_plugins = function($key) use($app) {
 
    $tag = Tag::where('key', '=', $key)->first();
    if ($tag == NULL) {
-      return Tool::endWithJson([
+      Tool::endWithJson([
          "error" => "Tag not found"
       ], 400);
    }

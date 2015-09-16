@@ -41,11 +41,12 @@ $single = function($id) use($app) {
 $author_plugins = function($id) use($app) {
    OAuthHelper::needsScopes(['author', 'plugins']);
 
-   $author_plugins = \API\Model\Author::find($id);
-   if (!$author_plugins)
-      return Tool::endWithJson([
+   $author = \API\Model\Author::find($id);
+   if (!$author)
+      Tool::endWithJson([
          "error" => "Cannot find author"
       ]);
+
    Tool::endWithJson(Tool::paginateCollection(
                         \API\Model\Plugin
                                        ::with('versions', 'authors')
