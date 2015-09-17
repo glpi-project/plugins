@@ -14,7 +14,7 @@ use \API\Model\PluginDownload;
 use \Illuminate\Database\Capsule\Manager as DB;
 use \API\OAuthServer\OAuthHelper;
 
-$download = function($key) use($app) {
+$download = Tool::makeEndpoint(function($key) use($app) {
    OAuthHelper::needsScopes(['plugin:download']);
 
    $plugin = Plugin::where('key', '=', $key)->first();
@@ -43,7 +43,7 @@ $download = function($key) use($app) {
    }
 
    $app->redirect($plugin->download_url, 301);
-};
+});
 
 
 // HTTP Rest Map
