@@ -8,13 +8,6 @@
  * Provider in the frontendApp.
  */
 angular.module('frontendApp')
-  .config(function($cookiesProvider) {
-    $cookiesProvider.defaults = {
-      domain: document.domain,
-      path: '/'
-    };
-  })
-
   .provider('Auth', function ($httpProvider, $authProvider, $injector, API_URL,
                               GITHUB_CLIENT_ID, $provide) {
     var authManager, rootScope, mdToast, timeout, http, cookies, Toaster, $window;
@@ -327,7 +320,7 @@ angular.module('frontendApp')
 
           return promiseResponse.promise;
         }
-      }
+      };
     });
 
     $httpProvider.interceptors.push('AccessTokenHttpInterceptor');
