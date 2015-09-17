@@ -126,8 +126,6 @@ class Tool {
                call_user_func($callable, $args);
             }
             catch (OAuthException $e) {
-               //var_dump(get_class($e));
-               //var_dump($e->getMessage());
                switch (get_class($e)) {
                   case 'League\OAuth2\Server\Exception\InvalidRequestException':
                      $parameter = explode('"', $e->getMessage())[1];
