@@ -89,19 +89,11 @@ class OAuthHelper {
    public static function needsScopes(Array $scopes = []) {
       global $resourceServer;
 
-      try {
-         $resourceServer->isValidRequest();
-         foreach ($scopes as $scope) {
-            if (!$resourceServer->getAccessToken()->hasScope($scope)) {
-               throw new AccessDeniedException();
-            }
+      $resourceServer->isValidRequest();
+      foreach ($scopes as $scope) {
+         if (!$resourceServer->getAccessToken()->hasScope($scope)) {
+            throw new AccessDeniedException();
          }
-      }
-      catch (\League\OAuth2\Server\Exception\OAuthException $e) {
-         Tool::endWithJson([
-            "error" => $e->getMessage()
-         ], $e->httpStatusCode);
-         exit;
       }
    }
 

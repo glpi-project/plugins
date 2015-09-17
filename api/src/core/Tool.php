@@ -122,7 +122,29 @@ class Tool {
       $decoratedEndpoint = function() use($callable) {
          $args = func_get_args();
          try {
-            call_user_func($callable, $args);
+            try {
+               call_user_func($callable, $args);
+            }
+            catch (OAuthException $e) {
+               //var_dump(get_class($e));
+               //var_dump($e->getMessage());
+               switch (get_class($e)) {
+                  case 'League\OAuth2\Server\Exception\InvalidRequestException':
+                     $parameter = explode('"', $e->getMessage())[1];
+                     switch ($parameter) {
+                        case 'client_secret':
+                           throw new \API\Exception\ClientSecretError;
+                           break;
+                        case 'access token':
+                           throw new \API\Exception\NoAccessToken;
+                           break;
+                     }
+                     break;
+                  case 'League\OAuth2\Server\Exception\AccessDeniedException':
+                     throw new \API\Exception\AccessDenied;
+                     break;
+               }
+            }
          }
          catch (ErrorResponse $e) {
             Tool::log("[GlpiPlugins] [SUPERACCESSTOKENR4ND0M1337] (1332) ".$e->getRepresentation());
@@ -130,6 +152,7 @@ class Tool {
                "error" => $e->getRepresentation(true)
             ], $e->httpStatusCode);
          }
+
       };
       return $decoratedEndpoint;
    }
