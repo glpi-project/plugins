@@ -222,7 +222,7 @@ angular.module('frontendApp')
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
-      })
+      });
       promise.success(function(data) {
         if (data) {
           localStorage.setItem('access_token', data.access_token);
@@ -255,34 +255,82 @@ angular.module('frontendApp')
       cookies = $injector.get('$cookies');
       Toaster = $injector.get('Toaster');
 
+
       // We'll get this AuthManager instance
       authManager = new AuthManager()
       return authManager;
     };
 
-    // $provide.factory('AccessTokenHttpInterceptor', function($q) {
-    //   var refreshAttempt = false;
+    $provide.factory('AccessTokenHttpInterceptor', function($q) {
+      var refreshAttempt = false;
 
-    //   return {
-    //     "responseError": function(response) {
-    //       if (moment.unix(localStorage.getItem('access_token_expires_at')) - moment() < 0) {
-    //         if (!refreshAttempt) {
-    //           refreshAttempt = authManager.refreshToken()
-    //                                       .success(function() {
-    //                                         refreshAttempt = false;
-    //                                       });
-    //         }
-    //         return refreshAttempt.then(function(refreshTokenResponse) {
-    //           var response_config = jQuery.extend({}, response.config);
-    //           response_config.headers.Authorization = 'Bearer ' + refreshTokenResponse.data.access_token;
-    //           return http(response_config);
-    //         });
-    //       }
-    //     }
-    //   }
-    // });
+      return {
+        "responseError": function(response) {
+          //var newResponse = $q.defer();
+          //newResponse.resolve(response.config);
+          // console.log(response);
+          // switch (response.data.error) {
+          //   case 'NO_ACCESS_TOKEN':
+          //      console.log('neau a cess teau kaine');
+          //      break;
+          // }
+          // if (moment.unix(localStorage.getItem('access_token_expires_at')) - moment() < 0) {
+          //   if (!refreshAttempt) {
+          //     refreshAttempt = authManager.refreshToken()
+          //                                 .success(function() {
+          //                                   refreshAttempt = false;
+          //                                 });
+          //   }
+          //   return refreshAttempt.then(function(refreshTokenResponse) {
+          //     var response_config = jQuery.extend({}, response.config);
+          //     response_config.headers.Authorization = 'Bearer ' + refreshTokenResponse.data.access_token;
+          //     return http(response_config);
+          //   });
+          // }
+          //return newResponse;
+          //return response;
+          //return $q.reject(response);
 
-    // $httpProvider.interceptors.push('AccessTokenHttpInterceptor');
+
+          // var promiseResponse = $q(function(resolve, reject) {
+          //   switch (response.data.error) {
+          //      case 'NO_ACCESS_TOKEN':
+          //         authManager.loginAttempt({
+          //            anonymous: true
+          //         }).then(function() {
+          //            console.log(arguments);
+          //         });
+          //         console.log('No Access Token');
+          //         break;
+          //   }
+          //   resolve(response);
+          // });
+          // return promiseResponse;
+
+          var promiseResponse = $q.defer();
+
+          timeout(function() {
+             switch (response.data.error) {
+               case 'NO_ACCESS_TOKEN':
+                  authManager.loginAttempt({
+                     anonymous: true
+                  }).then(function(authResponse) {
+                     if (authResponse.data.access_token) {
+                        response.config.headers.Authorization = authResponse.data.access_token;
+                        promiseResponse.resolve(http(response.config));
+                     }
+                     // else { $q.reject() }
+                  });
+                  break;
+             }
+          });
+
+          return promiseResponse.promise;
+        }
+      }
+    });
+
+    $httpProvider.interceptors.push('AccessTokenHttpInterceptor');
   })
 
   .config(function($httpProvider) {
@@ -303,7 +351,7 @@ angular.module('frontendApp')
     $rootScope.authed = (localStorage.getItem('authed') === null) ? false : true;
     // at this point, if we don't have any access token,
     // we request an anonymous authorization token
-    if (!localStorage.getItem('access_token')) {
-      Auth.getAnonymousToken();
-    }
+    // if (!localStorage.getItem('access_token')) {
+    //   Auth.getAnonymousToken();
+    // }
   });
