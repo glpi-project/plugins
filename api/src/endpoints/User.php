@@ -34,7 +34,7 @@ use \API\OAuthServer\OAuthHelper;
  *  + location
  *  + website
  */
-$register = function() use ($app) {
+$register = Tool::makeEndpoint(function() use ($app) {
    $body = Tool::getBody();
    $new_user = new User;
 
@@ -116,13 +116,13 @@ $register = function() use ($app) {
       "refresh_token" => $accessToken['refresh_token'],
       "access_token_expires_in" => $accessToken['ttl']
    ], 200);
-};
+});
 
 /**
  * RPC that serves as a callback for the OAuth2
  * service
  */
-$associateExternalAccount = function($service) use($app, $resourceServer) {
+$associateExternalAccount = Tool::makeEndpoint(function($service) use($app, $resourceServer) {
    $oAuth = new OAuthClient($service);
    $token = $oAuth->getAccessToken($app->request->get('code'));
    $data = [];
@@ -233,13 +233,13 @@ $associateExternalAccount = function($service) use($app, $resourceServer) {
    echo '<!DOCTYPE html><html><head></head><body><script type="text/javascript">'.
            'var data = \''.json_encode($data).'\'; var i = 0 ; var interval = setInterval(function(){  if (i == 300) {clearInterval(interval);} i++; window.postMessage(data, "*");}, 750);'.
         '</script></body></html>';
-};
+});
 
 /**
  * Authorize an user, providing him an
  * access token
  */
-$authorize = function() use($app) {
+$authorize = Tool::makeEndpoint(function() use($app) {
    if (isset($_POST['grant_type']) &&
        isset($_POST['client_id']) &&
        $_POST['client_id'] == 'webapp') {
@@ -248,27 +248,14 @@ $authorize = function() use($app) {
 
    $authorizationServer = new AuthorizationServer();
 
-   try {
-      Tool::endWithJson($authorizationServer->issueAccessToken(), 200);
-   }
-   catch (\League\OAuth2\Server\Exception\OAuthException $e) {
-      Tool::endWithJson([
-         "error" => $e->getMessage()
-      ], $e->httpStatusCode);
-   }
-   catch (\Exception $e) {
-      Tool::log('PHP error, file '.$e->getFile().' , line '.$e->getLine().' : '.$e->getMessage());
-      Tool::endWithJson([
-         "error" => "Service error"
-      ], 500);
-   }
-};
+   Tool::endWithJson($authorizationServer->issueAccessToken(), 200);
+});
 
 /**
  * Return the complete list of external accounts for an
  * authentified user
  */
-$user_external_accounts = function() use ($app, $resourceServer) {
+$user_external_accounts = Tool::makeEndpoint(function() use ($app, $resourceServer) {
    OAuthHelper::needsScopes(['user:externalaccounts']);
 
    $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
@@ -280,14 +267,14 @@ $user_external_accounts = function() use ($app, $resourceServer) {
 
    $external_accounts = $user->externalAccounts()->get();
    Tool::endWithJson($external_accounts, 200);
-};
+});
 
 /**
  * Returns the complete list of emails
  * that are available through the
  * external accounts
  */
-$oauth_external_emails = function() use($app, $resourceServer) {
+$oauth_external_emails = Tool::makeEndpoint(function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user']);
 
    $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
@@ -306,25 +293,25 @@ $oauth_external_emails = function() use($app, $resourceServer) {
    }
 
    Tool::endWithJson($emails);
-};
+});
 
 /**
  * Returns the profile
  */
-$profile_view = function() use($app, $resourceServer) {
+$profile_view = Tool::makeEndpoint(function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user']);
 
    $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
    $user = User::where('id', '=', $user_id)->first();
 
    Tool::endWithJson($user, 200);
-};
+});
 
 /**
  * endpoint to edit the main profile
  * of the logged user
  */
-$profile_edit = function() use($app, $resourceServer) {
+$profile_edit = Tool::makeEndpoint(function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user']);
 
    $body = Tool::getBody();
@@ -364,13 +351,13 @@ $profile_edit = function() use($app, $resourceServer) {
    $user->save();
 
    Tool::endWithJson($user, 200);
-};
+});
 
 /**
  * Returns list of plugins for the current
  * user if he has an associated author.
  */
-$user_plugins = function() use($app, $resourceServer) {
+$user_plugins = Tool::makeEndpoint(function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user', 'plugins']);
 
    $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
@@ -381,9 +368,9 @@ $user_plugins = function() use($app, $resourceServer) {
    }
 
    Tool::endWithJson($user->author->plugins()->get());
-};
+});
 
-$user_apps = function() use($app, $resourceServer) {
+$user_apps = Tool::makeEndpoint(function() use($app, $resourceServer) {
   OAuthHelper::needsScopes(['user', 'user:apps']);
 
   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
@@ -407,9 +394,9 @@ $user_app = function($id) use($app, $resourceServer) {
   }
 
   Tool::endWithJson($app);
-};
+});
 
-$user_declare_app = function() use($app, $resourceServer) {
+$user_declare_app = Tool::makeEndpoint(function() use($app, $resourceServer) {
   OAuthHelper::needsScopes(['user', 'user:apps']);
   $body = Tool::getBody();
 
@@ -458,7 +445,7 @@ $user_declare_app = function() use($app, $resourceServer) {
 
   // Then save
   $user->apps()->save($app);
-};
+});
 
 // HTTP REST Map
 
