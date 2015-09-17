@@ -20,7 +20,7 @@ use \API\OAuthServer\OAuthHelper;
 
 require dirname(__FILE__) . '/../../config.php';
 
-$send = function() use($app) {
+$send = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['message:send']);
 
    $msg_alerts_settings = Tool::getConfig()['msg_alerts'];
@@ -69,7 +69,7 @@ $send = function() use($app) {
    Tool::endWithJson([
       "success" => true
    ]);
-};
+});
 
 // HTTP REST Map
 $app->post('/message', $send);
