@@ -4,9 +4,10 @@ require 'vendor/autoload.php';
 use \API\Core\Tool;
 use API\OAuthServer\OAuthHelper;
 
+// Initialisation of Database (Illuminate)
+// and webapp global object
 \API\Core\DB::initCapsule();
 $app = new \Slim\Slim();
-
 
 // Instantiating the Resource Server
 $resourceServer = new \League\OAuth2\Server\ResourceServer(
@@ -18,7 +19,7 @@ $resourceServer = new \League\OAuth2\Server\ResourceServer(
 
 // Loading all REST modules
 // with their endpoints like that:
-// inside 'src/endoints'
+// inside 'src/endpoints'
 $dir_endpoints = opendir('src/endpoints');
 while ($ent = readdir($dir_endpoints)) {
    // For each .php file
