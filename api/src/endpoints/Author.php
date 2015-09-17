@@ -13,7 +13,7 @@ use \API\Core\Tool;
 use \Illuminate\Database\Capsule\Manager as DB;
 use \API\OAuthServer\OAuthHelper;
 
-$all = function() use($app) {
+$all = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['authors']);
 
    $all = Tool::paginateCollection(
@@ -21,24 +21,24 @@ $all = function() use($app) {
                              ->contributorsOnly());
 
    Tool::endWithJson($all);
-};
+});
 
-$top = function() use($app) {
+$top = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['authors']);
 
    $top = \API\Model\Author::mostActive(10)->get();
    Tool::endWithJson($top);
-};
+});
 
-$single = function($id) use($app) {
+$single = Tool::makeEndpoint(function($id) use($app) {
    OAuthHelper::needsScopes(['author']);
 
    $single = \API\Model\Author::withPluginCount()
                                   ->find($id);
    Tool::endWithJson($single);
-};
+});
 
-$author_plugins = function($id) use($app) {
+$author_plugins = Tool::makeEndpoint(function($id) use($app) {
    OAuthHelper::needsScopes(['author', 'plugins']);
 
    $author = \API\Model\Author::find($id);
@@ -53,7 +53,7 @@ $author_plugins = function($id) use($app) {
                                        ->short()
                                        ->withAverageNote()
                                        ->descWithLang(Tool::getRequestLang())
-                                       ->whereAuthor($author_plugins->id)
+                                       ->whereAuthor($author->id)
                      )
    );
 };
