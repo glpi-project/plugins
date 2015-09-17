@@ -24,7 +24,7 @@ use \API\OAuthServer\OAuthHelper;
 /**
  * Fetching infos of a single plugin
  */
-$single = function($key) use($app, $resourceServer) {
+$single = Tool::makeEndpoint(function($key) use($app, $resourceServer) {
    OAuthHelper::needsScopes(['plugin:card']);
 
    $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots', 'tags')
@@ -40,12 +40,12 @@ $single = function($key) use($app, $resourceServer) {
    }
 
    Tool::endWithJson($plugin);
-};
+});
 
 /**
  * List of all plugins
  */
-$all = function() use($app) {
+$all = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['plugins']);
 
    $plugins = Tool::paginateCollection(
@@ -55,63 +55,63 @@ $all = function() use($app) {
                        ->descWithLang(Tool::getRequestLang())
                        ->where('active', '=', 1));
    Tool::endWithJson($plugins);
-};
+});
 
 /**
  * Most popular plugins
  */
-$popular = function() use($app) {
+$popular = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['plugins']);
 
    $popular_plugins = Plugin::popularTop(10)
                             ->where('active', '=', 1)
                             ->get();
    Tool::endWithJson($popular_plugins);
-};
+});
 
 /**
  * Trending plugins
  *  most popular the 2 last weeks
  */
-$trending = function() use($app) {
+$trending = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['plugins']);
 
    $trending_plugins = Plugin::trendingTop(10)
                              ->where('active', '=', 1)
                              ->get();
    Tool::endWithJson($trending_plugins);
-};
+});
 
 /**
  * Updated plugins
  *  most recently updated plugins
  */
-$updated = function() use($app) {
+$updated = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['plugins']);
 
    $updated_plugins = Plugin::updatedRecently(10)
                             ->where('active', '=', 1)
                             ->get();
    Tool::endWithJson($updated_plugins);
-};
+});
 
 /**
  * New plugins
  *  most recently added plugins
  */
-$new = function() use($app) {
+$new = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['plugins']);
 
    $new_plugins = Plugin::mostFreshlyAddedPlugins(10)
                        ->where('active', '=', 1)
                        ->get();
    Tool::endWithJson($new_plugins);
-};
+});
 
 /**
  * Remote procedure to star a plugin
  */
-$star = function() use($app) {
+$star = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['plugin:star']);
    $body = Tool::getBody();
 
@@ -145,12 +145,12 @@ $star = function() use($app) {
    Tool::endWithJson([
       "new_average" => $plugin->note
    ]);
-};
+});
 
 /**
  * Method called when an user submits a plugin
  */
-$submit = function() use($app) {
+$submit = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['plugin:submit']);
 
    $body = Tool::getBody();
@@ -224,7 +224,7 @@ $submit = function() use($app) {
    Tool::endWithJson([
       "success" => true
    ]);
-};
+});
 
 // HTTP REST Map
 $app->get('/plugin', $all);
