@@ -15,7 +15,7 @@ use \API\OAuthServer\OAuthHelper;
 // Minimal length of search string
 $search_min_length = 2;
 
-$search = function() use($app) {
+$search = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['plugins:search']);
 
    global $search_min_length,
@@ -49,7 +49,7 @@ $search = function() use($app) {
                                      ->orderBy('note', 'DESC')
                                      ->orderBy('name', 'ASC'));
    Tool::endWithJson($_search);
-};
+});
 
 $app->post('/search', $search);
 $app->options('/search', function(){});
