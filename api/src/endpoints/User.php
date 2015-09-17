@@ -377,9 +377,9 @@ $user_apps = Tool::makeEndpoint(function() use($app, $resourceServer) {
   $user = User::where('id', '=', $user_id)->first();
 
   Tool::endWithJson($user->apps()->get());
-};
+});
 
-$user_app = function($id) use($app, $resourceServer) {
+$user_app = Tool::makeEndpoint(function($id) use($app, $resourceServer) {
   OAuthHelper::needsScopes(['user', 'user:apps']);
 
   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
