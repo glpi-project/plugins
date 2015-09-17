@@ -305,14 +305,19 @@ angular.module('frontendApp')
           timeout(function() {
              switch (response.data.error) {
                case 'NO_ACCESS_TOKEN':
-                  authManager.loginAttempt({
-                     anonymous: true
-                  }).then(function(authResponse) {
-                     if (authResponse.data.access_token) {
-                        response.config.headers.Authorization = authResponse.data.access_token;
-                        promiseResponse.resolve(http(response.config));
-                     }
-                     // else { $q.reject() }
+                  if (!refreshAttempt) {
+                     console.log('k');
+                     refreshAttempt = authManager.loginAttempt({
+                        anonymous: true
+                     }).then(function(authResponse) {
+                        var token = authResponse.data.access_token;
+                        return token;
+                     });
+                  }          
+
+                  refreshAttempt.then(function(token) {
+                     response.config.headers.Authorization = 'Bearer '+ token;
+                     promiseResponse.resolve(http(response.config));
                   });
                   break;
              }
