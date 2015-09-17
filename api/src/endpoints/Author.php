@@ -41,7 +41,7 @@ $single = Tool::makeEndpoint(function($id) use($app) {
 $author_plugins = Tool::makeEndpoint(function($id) use($app) {
    OAuthHelper::needsScopes(['author', 'plugins']);
 
-   $author = \API\Model\Author::find($id);
+   $author = \API\Model\Author::where('id', '=', $id)->first();
    if (!$author)
       Tool::endWithJson([
          "error" => "Cannot find author"
