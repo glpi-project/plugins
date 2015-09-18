@@ -35,6 +35,8 @@ angular
             TAGGED_WITH: "tagged on",
             PLUGIN_TAGGED_WITH: "Plugins tagged with",
             QUESTION_SUGGESTION_PROBLEM: "Any question, suggestion, problem ?",
+            PLEASE_SEND_US_A_MESSAGE: "Please, send us a message.",
+            PLEASE_USE_SUGGESTION_TRACKER: "If your message is a feature request for the GLPI software, you are strongly encouraged to use our suggestion tracker at",
             FIRSTNAME: "First name",
             LASTNAME: "Last name",
             EMAIL: "Email",

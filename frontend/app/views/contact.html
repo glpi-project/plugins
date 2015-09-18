@@ -1,8 +1,8 @@
 <h2>{{'QUESTION_SUGGESTION_PROBLEM'|translate}}</h2>
-<span class="legend">Please, send us a message.</span>
+<span class="legend">{{'PLEASE_SEND_US_A_MESSAGE'|translate}}</span>
 <div layout="row" layout-wrap>
-   <md-content layout-padding flex="60" flex-sm="100" flex-md="100">
-      <form name="contactForm">
+   <md-content layout-padding flex="65" flex-sm="100" flex-md="100">
+      <form name="contactForm" id="contactForm">
          <div layout layout-sm="column">
             <md-input-container flex class='firstnamebox picbox'>
                <label>{{'FIRSTNAME'|translate}}</label>
@@ -25,7 +25,9 @@
             <label>{{'YOUR_MESSAGE'|translate}}</label>
             <textarea ng-model="contact.message" columns="1" md-maxlength="500"></textarea>
          </md-input-container>
-         <input type="hidden" />
+         <div class="note">
+            <p><span>Note</span>: {{'PLEASE_USE_SUGGESTION_TRACKER'|translate}} <a href="http://suggest.glpi-project.org">http://suggest.glpi-project.org</a></p>
+         </div>
          <div vc-recaptcha theme="light" key="key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
          <md-button class="md-raised md-primary submit-button" ng-click="submit()">{{'SUBMIT'|translate}}
             <i class="fa fa-paper-plane"></i>
