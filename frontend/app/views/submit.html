@@ -6,6 +6,9 @@
       <input ng-model="url" type="url" />
    </md-input-container>
    <div vc-recaptcha theme="light" key="key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
+   <div class="note">
+      <p><span>Note</span>: If your message is a feature request for the GLPI software, you are strongly encouraged to use our suggestion tracker at <a href="http://suggest.glpi-project.org">http://suggest.glpi-project.org</a></p>
+   </div>
    <md-button class="md-raised md-primary submit-button" ng-click="submit()">{{'SUBMIT'|translate}}
       <i class="fa fa-paper-plane"></i>
    </md-button>
