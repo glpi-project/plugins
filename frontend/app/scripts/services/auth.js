@@ -224,7 +224,9 @@ angular.module('frontendApp')
           $httpProvider.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
         }
       });
-      return promise;
+      return promise.then(function(resp) {
+         return resp.data.access_token;
+      });
     };
 
     /**
@@ -303,24 +305,29 @@ angular.module('frontendApp')
           var promiseResponse = $q.defer();
 
           timeout(function() {
-             switch (response.data.error) {
-               case 'NO_ACCESS_TOKEN':
-                  if (!refreshAttempt) {
-                     console.log('k');
+            if (response.data.error == 'NO_ACCESS_TOKEN' ||
+                response.data.error == 'ACCESS_DENIED') {
+               if (!refreshAttempt) {
+                  if (!localStorage.getItem('refresh_token')) {
                      refreshAttempt = authManager.loginAttempt({
                         anonymous: true
                      }).then(function(authResponse) {
                         var token = authResponse.data.access_token;
                         return token;
                      });
-                  }          
+                  } else {
+                     refreshAttempt = authManager.refreshToken(function(token) {
+                        response.config.headers.Authorization = 'Bearer ' + token;
+                        promiseResponse.resolve(http(response.config));
+                     });
+                  }
+               }
 
-                  refreshAttempt.then(function(token) {
-                     response.config.headers.Authorization = 'Bearer '+ token;
-                     promiseResponse.resolve(http(response.config));
-                  });
-                  break;
-             }
+               refreshAttempt.then(function(token) {
+                  response.config.headers.Authorization = 'Bearer ' + token;
+                  promiseResponse.resolve(http(response.config));
+               })
+            }
           });
 
           return promiseResponse.promise;

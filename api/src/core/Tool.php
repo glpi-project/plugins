@@ -123,7 +123,7 @@ class Tool {
          $args = func_get_args();
          try {
             try {
-               call_user_func($callable, $args);
+               call_user_func_array($callable, $args);
             }
             catch (OAuthException $e) {
                switch (get_class($e)) {
