@@ -126,6 +126,7 @@ class Tool {
                call_user_func_array($callable, $args);
             }
             catch (\Exception $e) {
+               global $app;
                if (!preg_match('/^API\\\\Exception/', get_class($e))) {
                   switch (get_class($e)) {
                      case 'League\OAuth2\Server\Exception\InvalidRequestException':
@@ -150,7 +151,8 @@ class Tool {
                         throw new \API\Exception\InvalidScope($parameter);
                         break;
                      case 'League\OAuth2\Server\Exception\InvalidCredentialsException':
-                        throw new \API\Exception\InvalidCredentials;
+                        throw new \API\Exception\InvalidCredentials(($app->request->post('username') ? $app->request->post('username') : null),
+                                                                   ($app->request->post('password') ? strlen($app->request->post('password')) : 0));
                         break;
                      case 'Slim\Exception\Stop':
                        // we just let SLim halt() the app
