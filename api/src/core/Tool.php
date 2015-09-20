@@ -141,11 +141,18 @@ class Tool {
                   case 'League\OAuth2\Server\Exception\AccessDeniedException':
                      throw new \API\Exception\AccessDenied;
                      break;
+                  case 'League\OAuth2\Server\Exception\InvalidRefreshException':
+                     throw new \API\Exception\InvalidRefreshToken;
+                     break;
+                  case 'League\OAuth2\Server\Exception\InvalidScopeException':
+                     $parameter = explode('"', $e->getMessage())[1];
+                     throw new \API\Exception\InvalidScope($parameter);
+                     break;
                }
             }
          }
          catch (ErrorResponse $e) {
-            Tool::log("[GlpiPlugins] [SUPERACCESSTOKENR4ND0M1337] (1332) ".$e->getRepresentation());
+            Tool::log("[SUPERACCESSTOKENR4ND0M1337] (1332) ".$e->getRepresentation());
             return Tool::endWithJson([
                "error" => $e->getRepresentation(true)
             ], $e->httpStatusCode);

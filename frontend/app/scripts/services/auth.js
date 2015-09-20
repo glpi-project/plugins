@@ -171,6 +171,10 @@ angular.module('frontendApp')
              .position('top');
          toast._options.parent = angular.element('#signin');
          mdToast.show(toast);
+      } else {
+         localStorage.removeItem('authed');
+         localStorage.removeItem('refresh_token');
+         rootScope.authed = false;
       }
     };
 
@@ -201,7 +205,7 @@ angular.module('frontendApp')
       this.getAnonymousToken();
     };
 
-    AuthManager.prototype.refreshToken = function(callback) {
+    AuthManager.prototype.refreshToken = function() {
       var now = moment();
       var promise = http({
         method: "POST",
@@ -216,16 +220,20 @@ angular.module('frontendApp')
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
-      promise.success(function(data) {
-        if (data) {
-          localStorage.setItem('access_token', data.access_token);
-          localStorage.setItem('refresh_token', data.refresh_token);
-          localStorage.setItem('access_token_expires_at', now.unix() + data.expires_in);
-          $httpProvider.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
-        }
-      });
+
       return promise.then(function(resp) {
+          localStorage.setItem('access_token', resp.data.access_token);
+          localStorage.setItem('refresh_token', resp.data.refresh_token);
+          localStorage.setItem('access_token_expires_at', now.unix() + resp.data.expires_in);
+          $httpProvider.defaults.headers.common.Authorization = 'Bearer ' + localStorage.getItem('access_token');
          return resp.data.access_token;
+      }, function(resp) {
+         return authManager.loginAttempt({
+                        anonymous: true
+                     }).then(function(authResponse) {
+                        var token = authResponse.data.access_token;
+                        return token;
+                     });
       });
     };
 
@@ -261,52 +269,14 @@ angular.module('frontendApp')
 
       return {
         "responseError": function(response) {
-          //var newResponse = $q.defer();
-          //newResponse.resolve(response.config);
-          // console.log(response);
-          // switch (response.data.error) {
-          //   case 'NO_ACCESS_TOKEN':
-          //      console.log('neau a cess teau kaine');
-          //      break;
-          // }
-          // if (moment.unix(localStorage.getItem('access_token_expires_at')) - moment() < 0) {
-          //   if (!refreshAttempt) {
-          //     refreshAttempt = authManager.refreshToken()
-          //                                 .success(function() {
-          //                                   refreshAttempt = false;
-          //                                 });
-          //   }
-          //   return refreshAttempt.then(function(refreshTokenResponse) {
-          //     var response_config = jQuery.extend({}, response.config);
-          //     response_config.headers.Authorization = 'Bearer ' + refreshTokenResponse.data.access_token;
-          //     return http(response_config);
-          //   });
-          // }
-          //return newResponse;
-          //return response;
-          //return $q.reject(response);
-
-
-          // var promiseResponse = $q(function(resolve, reject) {
-          //   switch (response.data.error) {
-          //      case 'NO_ACCESS_TOKEN':
-          //         authManager.loginAttempt({
-          //            anonymous: true
-          //         }).then(function() {
-          //            console.log(arguments);
-          //         });
-          //         console.log('No Access Token');
-          //         break;
-          //   }
-          //   resolve(response);
-          // });
-          // return promiseResponse;
+          if (response.data.error === 'INVALID_REFRESH_TOKEN') {
+             return $q.reject(response);
+          }
 
           var promiseResponse = $q.defer();
-
           timeout(function() {
-            if (response.data.error == 'NO_ACCESS_TOKEN' ||
-                response.data.error == 'ACCESS_DENIED') {
+            if (response.data.error === 'NO_ACCESS_TOKEN' ||
+                response.data.error === 'ACCESS_DENIED') {
                if (!refreshAttempt) {
                   if (!localStorage.getItem('refresh_token')) {
                      refreshAttempt = authManager.loginAttempt({
@@ -316,17 +286,15 @@ angular.module('frontendApp')
                         return token;
                      });
                   } else {
-                     refreshAttempt = authManager.refreshToken(function(token) {
-                        response.config.headers.Authorization = 'Bearer ' + token;
-                        promiseResponse.resolve(http(response.config));
-                     });
+                     refreshAttempt = authManager.refreshToken();
                   }
                }
 
                refreshAttempt.then(function(token) {
                   response.config.headers.Authorization = 'Bearer ' + token;
                   promiseResponse.resolve(http(response.config));
-               })
+                  $httpProvider.interceptors = {};
+               });
             }
           });
 

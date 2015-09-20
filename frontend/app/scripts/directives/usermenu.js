@@ -49,10 +49,12 @@ angular.module('frontendApp')
                 method: 'GET',
                 url: API_URL + '/user'
               }).success(function(data) {
-                $scope.username = data.username;
-                if ($state.current.name == 'signin' ||
-                    $state.current.name == 'signup') {
-                  $state.go('featured');
+                if (data) {
+                   $scope.username = data.username;
+                   if ($state.current.name == 'signin' ||
+                       $state.current.name == 'signup') {
+                     $state.go('featured');
+                   }
                 }
               });
             }
