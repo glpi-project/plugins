@@ -71,14 +71,19 @@ class ErrorResponse extends \Exception {
 
    public function log() {
       global $resourceServer;
+      global $app;
       $accessToken = null;
       $userId = null;
+      $url = null;
+      try {
+        $url = $app->request->getResourceUri();
+      } catch (\Exception $e) {}
       try {
         $resourceServer->isValidRequest();
         $_accessToken = $resourceServer->getAccessToken();
         $accessToken = $_accessToken->getId();
         $userId = $_accessToken->getSession()->getOwnerId();
       } catch (\Exception $e) {}
-      Tool::log(($accessToken ? '['.$accessToken.'] ' : '').($userId ? '('.$userId.') ' : '').$this->getRepresentation());
+      Tool::log(($accessToken ? '['.$accessToken.'] ' : '').($userId ? '('.$userId.') ' : '').($url ? '['.$url.'] ' : '').$this->getRepresentation());
    }
 }
