@@ -7,7 +7,10 @@ class InvalidRefreshToken extends ErrorResponse {
 
    public $httpStatusCode = 400;
 
-   public function __construct() {
+   public function __construct($token) {
+      if ($token) {
+         $this->setInfo('token', $token);
+      }
       parent::__construct();
    }
 }

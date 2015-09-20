@@ -149,7 +149,12 @@ class Tool {
                         throw new \API\Exception\AccessDenied($token);
                         break;
                      case 'League\OAuth2\Server\Exception\InvalidRefreshException':
-                        throw new \API\Exception\InvalidRefreshToken;
+                        if ($app->request->post('refresh_token')) {
+                           $token = $app->request->post('refresh_token');
+                        } else {
+                           $token = null;
+                        }
+                        throw new \API\Exception\InvalidRefreshToken($token);
                         break;
                      case 'League\OAuth2\Server\Exception\InvalidScopeException':
                         $parameter = explode('"', $e->getMessage())[1];
