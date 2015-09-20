@@ -125,7 +125,7 @@ class Tool {
             try {
                call_user_func_array($callable, $args);
             }
-            catch (OAuthException $e) {
+            catch (\Exception $e) {
                switch (get_class($e)) {
                   case 'League\OAuth2\Server\Exception\InvalidRequestException':
                      $parameter = explode('"', $e->getMessage())[1];
@@ -151,11 +151,15 @@ class Tool {
                   case 'League\OAuth2\Server\Exception\InvalidCredentialsException':
                      throw new \API\Exception\InvalidCredentials;
                      break;
+                  case 'Slim\Exception\Stop':
+                    // we just let SLim halt() the app
+                    break;
                   default:
                      throw new \API\Exception\ServiceError;
                      break;
                }
             }
+
          }
          catch (ErrorResponse $e) {
             Tool::log("[SUPERACCESSTOKENR4ND0M1337] (1332) ".$e->getRepresentation());
