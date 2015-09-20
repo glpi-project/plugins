@@ -148,6 +148,9 @@ class Tool {
                      $parameter = explode('"', $e->getMessage())[1];
                      throw new \API\Exception\InvalidScope($parameter);
                      break;
+                  case 'League\OAuth2\Server\Exception\InvalidCredentialsException':
+                     throw new \API\Exception\InvalidCredentials;
+                     break;
                }
             }
          }

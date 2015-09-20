@@ -58,6 +58,7 @@ angular
             USER_PANEL: "User Panel",
             DISCONNECT: "Disconnect",
             SIGNIN: "Sign-In",
-            SIGNUP: "Sign-Up"
+            SIGNUP: "Sign-Up",
+            INVALID_CREDENTIALS: "Wrong credentials supplied. If you're not sure about the password please click 'I forgot my password'"
          });
    });

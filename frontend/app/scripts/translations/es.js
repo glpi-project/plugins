@@ -58,6 +58,7 @@ angular
             USER_PANEL: "Réglages Profil",
             DISCONNECT: "Déconnexion",
             SIGNIN: "Connexion",
-            SIGNUP: "S'enregistrer"
+            SIGNUP: "S'enregistrer",
+            INVALID_CREDENTIALS: "Wrong credentials supplied. If you're not sure about the password please click 'I forgot my password'"
          });
    });

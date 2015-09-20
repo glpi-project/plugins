@@ -58,6 +58,7 @@ angular
             USER_PANEL: "Réglages Profil",
             DISCONNECT: "Déconnexion",
             SIGNIN: "Connexion",
-            SIGNUP: "S'enregistrer"
+            SIGNUP: "S'enregistrer",
+            INVALID_CREDENTIALS: "Mauvais nom d'utilisateur/mot de passe. Si vous n'êtes plus sur cliquez sur 'J'ai oublié mon mot de passe'"
          });
    });

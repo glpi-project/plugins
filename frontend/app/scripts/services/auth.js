@@ -10,7 +10,7 @@
 angular.module('frontendApp')
   .provider('Auth', function ($httpProvider, $authProvider, $injector, API_URL,
                               GITHUB_CLIENT_ID, $provide) {
-    var authManager, rootScope, mdToast, timeout, http, cookies, Toaster, $window;
+    var authManager, rootScope, mdToast, timeout, http, cookies, Toaster, $window, filter;
     var AuthManager = function() {};
 
     /**
@@ -59,6 +59,8 @@ angular.module('frontendApp')
          call.then(function(resp) {
             var data = resp.data;
             self.setToken(data.access_token, now.unix() + data.expires_in, (options.anonymous ? null : data.refresh_token), auth);
+         }, function(resp) {
+            Toaster.make(filter('translate')(resp.data.error), 'body');
          });
          return call;
     };
@@ -124,7 +126,7 @@ angular.module('frontendApp')
                      }
                   } else {
                      // Showing a toast
-                     Toaster.make(data.error, 'body');
+                     Toaster.make(filter('translate')(data.error), 'body');
                   }
                   authorizationRequestWindow.close();
                });
@@ -163,14 +165,8 @@ angular.module('frontendApp')
          localStorage.setItem('authed', true);
          // and authed in the $rootScope
          rootScope.authed = true;
-
          // Showing a toast
-         var toast = mdToast.simple()
-             .capsule(true)
-             .content("You are now successfully logged in")
-             .position('top');
-         toast._options.parent = angular.element('#signin');
-         mdToast.show(toast);
+         Toaster.make('You are now successfully logged in', 'body');
       } else {
          localStorage.removeItem('authed');
          localStorage.removeItem('refresh_token');
@@ -196,12 +192,7 @@ angular.module('frontendApp')
       localStorage.removeItem('authed');
       delete $httpProvider.defaults.headers.common['Authorization'];
       rootScope.authed = false;
-      var toast = mdToast.simple()
-          .capsule(true)
-          .content("You are now disconnected")
-          .position('top');
-      toast._options.parent =  angular.element('body');
-      mdToast.show(toast);
+      Toaster.make("You are now disconnected", 'body');
       this.getAnonymousToken();
     };
 
@@ -228,6 +219,7 @@ angular.module('frontendApp')
           $httpProvider.defaults.headers.common.Authorization = 'Bearer ' + localStorage.getItem('access_token');
          return resp.data.access_token;
       }, function(resp) {
+         Toaster.make('You were de-authed, because offline for too long', 'body');
          return authManager.loginAttempt({
                         anonymous: true
                      }).then(function(authResponse) {
@@ -257,6 +249,7 @@ angular.module('frontendApp')
       $window = $injector.get('$window');
       cookies = $injector.get('$cookies');
       Toaster = $injector.get('Toaster');
+      filter = $injector.get('$filter');
 
 
       // We'll get this AuthManager instance
