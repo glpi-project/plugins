@@ -7,7 +7,13 @@ class ClientSecretError extends ErrorResponse {
 
    public $httpStatusCode = 400;
 
-   public function __construct() {
+   public function __construct($clientId, $clientSecret) {
+      if ($clientId) {
+         $this->setInfo('client_id', $clientId);
+      }
+      if ($clientSecret) {
+         $this->setInfo('client_secret', $clientSecret);
+      }
       parent::__construct();
    }
 }

@@ -243,7 +243,9 @@ $authorize = Tool::makeEndpoint(function() use($app) {
    if (isset($_POST['grant_type']) &&
        isset($_POST['client_id']) &&
        $_POST['client_id'] == 'webapp') {
-      $_POST['client_secret'] = '';
+      if (!isset($_POST['client_secret'])) {
+        $_POST['client_secret'] = '';
+      }
    }
 
    $authorizationServer = new AuthorizationServer();

@@ -133,12 +133,31 @@ class Tool {
                         $parameter = explode('"', $e->getMessage())[1];
                         switch ($parameter) {
                            case 'client_secret':
-                              throw new \API\Exception\ClientSecretError;
+                              $clientId = null;
+                              $clientSecret = null;
+                              if ($app->request->post('client_id')) {
+                                 $clientId = $app->request->post('client_id');
+                              }
+                              if ($app->request->post('client_secret')) {
+                                 $clientSecret = $app->request->post('client_secret');
+                              }
+                              throw new \API\Exception\ClientSecretError($clientId, $clientSecret);
                               break;
                            case 'access token':
                               throw new \API\Exception\NoAccessToken;
                               break;
                         }
+                        break;
+                     case 'League\OAuth2\Server\Exception\InvalidClientException':
+                        $clientId = null;
+                        $clientSecret = null;
+                        if ($app->request->post('client_id')) {
+                           $clientId = $app->request->post('client_id');
+                        }
+                        if ($app->request->post('client_secret')) {
+                           $clientSecret = $app->request->post('client_secret');
+                        }
+                        throw new \API\Exception\ClientSecretError($clientId, $clientSecret);
                         break;
                      case 'League\OAuth2\Server\Exception\AccessDeniedException':
                         if (isset($app->request->headers['authorization'])) {
