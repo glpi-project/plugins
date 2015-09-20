@@ -266,34 +266,47 @@ angular.module('frontendApp')
 
     $provide.factory('AccessTokenHttpInterceptor', function($q) {
       var refreshAttempt = false;
+      var resetPromise = false;
 
       return {
         "responseError": function(response) {
-          var tryRefreshToken = function() {
-               if (!refreshAttempt) {
-                  if (!localStorage.getItem('refresh_token')) {
-                     refreshAttempt = authManager.loginAttempt({
-                        anonymous: true
-                     }).then(function(authResponse) {
-                        var token = authResponse.data.access_token;
-                        return token;
-                     });
-                  } else {
-                     refreshAttempt = authManager.refreshToken();
-                  }
-               }
-
-               refreshAttempt.then(function(token) {
-                  response.config.headers.Authorization = 'Bearer ' + token;
-                  promiseResponse.resolve(http(response.config));
-                  $httpProvider.interceptors = {};
-               });
-          };
-
           if (response.data.error === 'NO_ACCESS_TOKEN' ||
                 response.data.error === 'ACCESS_DENIED') {
             var promiseResponse = $q.defer();
-            timeout(tryRefreshToken);
+            timeout(function() {
+             if (!refreshAttempt) {
+                if (!localStorage.getItem('refresh_token')) {
+                   refreshAttempt = authManager.loginAttempt({
+                      anonymous: true
+                   }).then(function(authResponse) {
+                      var token = authResponse.data.access_token;
+                      return token;
+                   });
+                } else {
+                   refreshAttempt = authManager.refreshToken();
+                }
+             }
+
+             refreshAttempt.then(function(token) {
+                response.config.headers.Authorization = 'Bearer ' + token;
+                promiseResponse.resolve(http(response.config));
+             });
+            // Make the requests than happen in less
+            // than 1500ms after this code use the same
+            // new access_token as the one that was
+            // retrieved for the previous request
+            //
+            // this is for the home, than trigger 6
+            // requests at once, we don't want to refresh
+            // the access_token 6 times for each of
+            // the 6 http calls
+            if (resetPromise) {
+              timeout.cancel(resetPromise);
+            }
+            resetPromise = timeout(function() {
+              refreshAttempt = false;
+            }, 500);
+            });
             return promiseResponse.promise;
           } else {
             return $q.reject(response);
