@@ -114,8 +114,8 @@ class Tool {
 
    /**
     * This decorates a lambda function that
-    * serves as an endpoint, it is used to
-    * make use of try{}catch{} to generate
+    * serves as an endpoint, it makes
+    * use of try{}catch{} to generate
     * various responses
     */
    public static function makeEndpoint($callable) {
