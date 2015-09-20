@@ -155,14 +155,20 @@ class Tool {
                     // we just let SLim halt() the app
                     break;
                   default:
-                     throw new \API\Exception\ServiceError;
+                     // ServiceError exception will use
+                     // file, line and exception message as private
+                     // data and send the simple code (without
+                     // critical information to the user)
+                     $serviceError = new \API\Exception\ServiceError($e->getFile(),$e->getLine(),$e->getMessage());
+                     throw $serviceError;
                      break;
                }
             }
 
          }
          catch (ErrorResponse $e) {
-            Tool::log("[SUPERACCESSTOKENR4ND0M1337] (1332) ".$e->getRepresentation());
+            //Tool::log("[SUPERACCESSTOKENR4ND0M1337] (1332) ".$e->getRepresentation());
+            $e->log();
             return Tool::endWithJson([
                "error" => $e->getRepresentation(true)
             ], $e->httpStatusCode);

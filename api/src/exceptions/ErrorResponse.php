@@ -2,6 +2,8 @@
 
 namespace API\Exception;
 
+use API\Core\Tool;
+
 /**
  * Base class for Error Response
  */
@@ -51,7 +53,7 @@ class ErrorResponse extends \Exception {
       }
       // And ends with the infos
       $argc = sizeof($this->infos);
-      if ($argc > 0) {
+      if ($d_argc > 0) {
          $repr .= '(';
          foreach ($this->infos as $info) {
             if ($info['scope'] == $scope || $scope == 'private') {
@@ -65,5 +67,9 @@ class ErrorResponse extends \Exception {
          $repr .= ')';
       }
       return $repr;
+   }
+
+   public function log() {
+      Tool::log('[SUPERACCESSTOKENR4ND0M1337] (1332) '.$this->getRepresentation());
    }
 }

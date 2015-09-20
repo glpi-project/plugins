@@ -7,7 +7,16 @@ class ServiceError extends ErrorResponse {
 
    public $httpStatusCode = 500;
 
-   public function __construct() {
+   public function __construct($file = null, $line = null, $message = null) {
+      if ($file) {
+         $this->setInfo('file', $file);
+      }
+      if ($line) {
+         $this->setInfo('line',  $line);
+      }
+      if ($message) {
+         $this->setInfo('message', $message);
+      }
       parent::__construct();
    }
 }
