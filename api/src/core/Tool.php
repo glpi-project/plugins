@@ -151,6 +151,9 @@ class Tool {
                   case 'League\OAuth2\Server\Exception\InvalidCredentialsException':
                      throw new \API\Exception\InvalidCredentials;
                      break;
+                  default:
+                     throw new \API\Exception\ServiceError;
+                     break;
                }
             }
          }
