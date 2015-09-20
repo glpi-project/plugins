@@ -292,7 +292,7 @@ angular.module('frontendApp')
                 promiseResponse.resolve(http(response.config));
              });
             // Make the requests than happen in less
-            // than 1500ms after this code use the same
+            // than 500ms after this code use the same
             // new access_token as the one that was
             // retrieved for the previous request
             //
