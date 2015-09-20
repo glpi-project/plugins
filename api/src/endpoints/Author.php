@@ -33,19 +33,23 @@ $top = Tool::makeEndpoint(function() use($app) {
 $single = Tool::makeEndpoint(function($id) use($app) {
    OAuthHelper::needsScopes(['author']);
 
-   $single = \API\Model\Author::withPluginCount()
+   $author = \API\Model\Author::withPluginCount()
                                   ->find($id);
-   Tool::endWithJson($single);
+
+   if (!$author) {
+      throw new \API\Exception\ResourceNotFound('Authed', $id);
+   }
+
+   Tool::endWithJson($author);
 });
 
 $author_plugins = Tool::makeEndpoint(function($id) use($app) {
    OAuthHelper::needsScopes(['author', 'plugins']);
 
    $author = \API\Model\Author::where('id', '=', $id)->first();
-   if (!$author)
-      Tool::endWithJson([
-         "error" => "Cannot find author"
-      ]);
+   if (!$author) {
+      throw new \API\Exception\ResourceNotFound('Author', $id);
+   }
 
    Tool::endWithJson(Tool::paginateCollection(
                         \API\Model\Plugin

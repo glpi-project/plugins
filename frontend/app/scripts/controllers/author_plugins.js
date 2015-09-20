@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-   .controller('AuthorPluginsCtrl', function(API_URL, $scope, $http, $stateParams, PaginatedCollection) {
+   .controller('AuthorPluginsCtrl', function(API_URL, $scope, $http, $stateParams, PaginatedCollection, $state, Toaster) {
       $scope.results = PaginatedCollection.getInstance();
       $scope.results.setRequest(function(from, to) {
          return $http({
@@ -34,8 +34,14 @@ angular.module('frontendApp')
       })
       .success(function(data) {
          $scope.author = data;
+         loadPage();
+      })
+      .error(function(data) {
+         if (data.error === 'RESOURCE_NOT_FOUND') {
+            $state.go('featured');
+            Toaster.make('This author does not exist', 'body');
+         }
       });
 
-      loadPage();
       $scope.$on('languageChange', loadPage);
    });
