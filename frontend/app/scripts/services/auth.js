@@ -269,14 +269,7 @@ angular.module('frontendApp')
 
       return {
         "responseError": function(response) {
-          if (response.data.error === 'INVALID_REFRESH_TOKEN') {
-             return $q.reject(response);
-          }
-
-          var promiseResponse = $q.defer();
-          timeout(function() {
-            if (response.data.error === 'NO_ACCESS_TOKEN' ||
-                response.data.error === 'ACCESS_DENIED') {
+          var tryRefreshToken = function() {
                if (!refreshAttempt) {
                   if (!localStorage.getItem('refresh_token')) {
                      refreshAttempt = authManager.loginAttempt({
@@ -295,10 +288,16 @@ angular.module('frontendApp')
                   promiseResponse.resolve(http(response.config));
                   $httpProvider.interceptors = {};
                });
-            }
-          });
+          };
 
-          return promiseResponse.promise;
+          if (response.data.error === 'NO_ACCESS_TOKEN' ||
+                response.data.error === 'ACCESS_DENIED') {
+            var promiseResponse = $q.defer();
+            timeout(tryRefreshToken);
+            return promiseResponse.promise;
+          } else {
+            return $q.reject(response);
+          }
         }
       };
     });
