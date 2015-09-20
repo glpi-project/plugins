@@ -54,9 +54,7 @@ $tag_single = Tool::makeEndpoint(function($key) use($app) {
 
    $tag = Tag::where('key', '=', $key)->first();
    if ($tag == NULL) {
-      Tool::endWithJson([
-            "error" => "Tag not found"
-      ], 400);
+      throw new \API\Exception\ResourceNotFound('Tag', $key);
    }
   Tool::endWithJson($tag);
 });
@@ -66,9 +64,7 @@ $tag_plugins = Tool::makeEndpoint(function($key) use($app) {
 
    $tag = Tag::where('key', '=', $key)->first();
    if ($tag == NULL) {
-      Tool::endWithJson([
-         "error" => "Tag not found"
-      ], 400);
+      throw new \API\Exception\ResourceNotFound('Tag', $key);
    }
 
    $plugins = Tool::paginateCollection(Plugin::with('versions', 'authors')

@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-   .controller('TagCtrl', function(API_URL, $scope, $http, $stateParams, PaginatedCollection, fixIndepnet) {
+   .controller('TagCtrl', function(API_URL, $scope, $http, $stateParams, PaginatedCollection, $state, Toaster) {
       $scope.results = PaginatedCollection.getInstance();
       $scope.loading = true;
       $scope.results.setRequest(function(from, to) {
@@ -35,6 +35,12 @@ angular.module('frontendApp')
       })
       .success(function(data) {
          $scope.tag = data;
+      })
+      .error(function(data) {
+         if (data.error === 'RESOURCE_NOT_FOUND') {
+            $state.go('featured');
+            Toaster.make('404 ! This tag doesn\'t exit', 'body');
+         }
       });
 
       var loadPage = function() {
