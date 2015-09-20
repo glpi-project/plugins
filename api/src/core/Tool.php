@@ -141,7 +141,12 @@ class Tool {
                         }
                         break;
                      case 'League\OAuth2\Server\Exception\AccessDeniedException':
-                        throw new \API\Exception\AccessDenied;
+                        if (isset($app->request->headers['authorization'])) {
+                           $token = $app->request->headers['authorization'];
+                        } else {
+                           $token = null;
+                        }
+                        throw new \API\Exception\AccessDenied($token);
                         break;
                      case 'League\OAuth2\Server\Exception\InvalidRefreshException':
                         throw new \API\Exception\InvalidRefreshToken;
