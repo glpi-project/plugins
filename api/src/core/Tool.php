@@ -126,48 +126,51 @@ class Tool {
                call_user_func_array($callable, $args);
             }
             catch (\Exception $e) {
-               switch (get_class($e)) {
-                  case 'League\OAuth2\Server\Exception\InvalidRequestException':
-                     $parameter = explode('"', $e->getMessage())[1];
-                     switch ($parameter) {
-                        case 'client_secret':
-                           throw new \API\Exception\ClientSecretError;
-                           break;
-                        case 'access token':
-                           throw new \API\Exception\NoAccessToken;
-                           break;
-                     }
-                     break;
-                  case 'League\OAuth2\Server\Exception\AccessDeniedException':
-                     throw new \API\Exception\AccessDenied;
-                     break;
-                  case 'League\OAuth2\Server\Exception\InvalidRefreshException':
-                     throw new \API\Exception\InvalidRefreshToken;
-                     break;
-                  case 'League\OAuth2\Server\Exception\InvalidScopeException':
-                     $parameter = explode('"', $e->getMessage())[1];
-                     throw new \API\Exception\InvalidScope($parameter);
-                     break;
-                  case 'League\OAuth2\Server\Exception\InvalidCredentialsException':
-                     throw new \API\Exception\InvalidCredentials;
-                     break;
-                  case 'Slim\Exception\Stop':
-                    // we just let SLim halt() the app
-                    break;
-                  default:
-                     // ServiceError exception will use
-                     // file, line and exception message as private
-                     // data and send the simple code (without
-                     // critical information to the user)
-                     $serviceError = new \API\Exception\ServiceError($e->getFile(),$e->getLine(),$e->getMessage());
-                     throw $serviceError;
-                     break;
+               if (!preg_match('/^API\\\\Exception/', get_class($e))) {
+                  switch (get_class($e)) {
+                     case 'League\OAuth2\Server\Exception\InvalidRequestException':
+                        $parameter = explode('"', $e->getMessage())[1];
+                        switch ($parameter) {
+                           case 'client_secret':
+                              throw new \API\Exception\ClientSecretError;
+                              break;
+                           case 'access token':
+                              throw new \API\Exception\NoAccessToken;
+                              break;
+                        }
+                        break;
+                     case 'League\OAuth2\Server\Exception\AccessDeniedException':
+                        throw new \API\Exception\AccessDenied;
+                        break;
+                     case 'League\OAuth2\Server\Exception\InvalidRefreshException':
+                        throw new \API\Exception\InvalidRefreshToken;
+                        break;
+                     case 'League\OAuth2\Server\Exception\InvalidScopeException':
+                        $parameter = explode('"', $e->getMessage())[1];
+                        throw new \API\Exception\InvalidScope($parameter);
+                        break;
+                     case 'League\OAuth2\Server\Exception\InvalidCredentialsException':
+                        throw new \API\Exception\InvalidCredentials;
+                        break;
+                     case 'Slim\Exception\Stop':
+                       // we just let SLim halt() the app
+                       break;
+                     default:
+                        // ServiceError exception will use
+                        // file, line and exception message as private
+                        // data and send the simple code (without
+                        // critical information to the user)
+                        $serviceError = new \API\Exception\ServiceError($e->getFile(),$e->getLine(),$e->getMessage());
+                        throw $serviceError;
+                        break;
+                  }
+               } else {
+                  throw $e;
                }
             }
 
          }
          catch (ErrorResponse $e) {
-            //Tool::log("[SUPERACCESSTOKENR4ND0M1337] (1332) ".$e->getRepresentation());
             $e->log();
             return Tool::endWithJson([
                "error" => $e->getRepresentation(true)
