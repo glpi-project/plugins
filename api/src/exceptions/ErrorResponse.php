@@ -84,6 +84,6 @@ class ErrorResponse extends \Exception {
         $accessToken = $_accessToken->getId();
         $userId = $_accessToken->getSession()->getOwnerId();
       } catch (\Exception $e) {}
-      Tool::log(($accessToken ? '['.$accessToken.'] ' : '').($userId ? '('.$userId.') ' : '').($url ? '['.$url.'] ' : '').$this->getRepresentation());
+      Tool::log((($accessToken && !$userId) ? '[anonymous]' : '').($accessToken ? '['.$accessToken.'] ' : '').($userId ? '('.$userId.') ' : '').($url ? '['.$url.'] ' : '').$this->getRepresentation());
    }
 }
