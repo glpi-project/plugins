@@ -31,20 +31,10 @@ while ($ent = readdir($dir_endpoints)) {
 }
 closedir($dir_endpoints);
 
-// Logs to error_log specified in virtualhost
-$app->error(function(\Exception $e) {
-   Tool::endWithJson([
-      "error" => "Server error"
-   ], 500);
-   Tool::log($e->getMessage());
-});
-
 // JSON 404 response
-$app->notFound(function() {
-    Tool::endWithJson([
-        "error" => "invalid endpoint"
-    ], 404);
-});
+$app->notFound(Tool::makeEndpoint(function() {
+   throw new \API\Exception\InvalidEndpoint;
+}));
 
 // Welcoming browsers when they reach /api
 $app->get('/', function() use($app) {

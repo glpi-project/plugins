@@ -46,6 +46,10 @@ class PaginatedCollection {
       $requested = new \stdClass();
       $returned = new \stdClass();
 
+      if (!isset(Tool::getConfig()['default_number_of_models_per_page'])) {
+         throw new \Exception('default_number_of_models_per_page is not set in config.php');
+      }
+
       // Parsing requested header of fallback
       // to a default value
       if ($app->request->headers['x-range'] &&
@@ -56,9 +60,6 @@ class PaginatedCollection {
          $requested->startIndex = $start_end[0];
          $requested->endIndex = $start_end[1];
       } else {
-         if (!isset(Tool::getConfig()['default_number_of_models_per_page'])) {
-            $app->error(new \Exception('default_number_of_models_per_page is not set in config.php'));
-         }
          $defaultLength = Tool::getConfig()['default_number_of_models_per_page'];
          $requested->startIndex = 0;
          $requested->endIndex = --$defaultLength;
