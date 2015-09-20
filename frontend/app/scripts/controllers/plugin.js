@@ -149,6 +149,7 @@ angular.module('frontendApp')
       }
 
       filterTags(localStorage.getItem('lang'));
+<<<<<<< HEAD
    }).error(function() {
       var toast = $mdToast.simple()
                   .capsule(true)
@@ -159,5 +160,13 @@ angular.module('frontendApp')
       $timeout(function() {
          $state.go('featured');
       }, 3000);
+=======
+   })
+   .error(function(data) {
+      if (data.error === 'RESOURCE_NOT_FOUND') {
+         Toaster.make('404 ! This plugin doesn\'t exit', 'body');
+         $state.go('featured');
+      }
+>>>>>>> client change state when 404 of a single plugin
    });
 });
