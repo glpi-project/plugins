@@ -164,8 +164,8 @@ angular.module('frontendApp')
    })
    .error(function(data) {
       if (data.error === 'RESOURCE_NOT_FOUND') {
-         Toaster.make('404 ! This plugin doesn\'t exit', 'body');
          $state.go('featured');
+         Toaster.make('404 ! This plugin doesn\'t exit', 'body');
       }
 >>>>>>> client change state when 404 of a single plugin
    });
