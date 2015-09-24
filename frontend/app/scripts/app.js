@@ -25,9 +25,12 @@ angular
    // Determining current language
    .run(function($rootScope) {
       var langs = ['en', 'fr'];
-
       if (localStorage.getItem('lang') === null) {
-         var lang = navigator.language.split('-')[0];
+         var lang = (navigator.language ?
+                     navigator.language :
+                     navigator.userLanguage);
+         var lang = lang.split('-')[0];
+
          if (langs.indexOf(lang) > 0) {
             localStorage.setItem('lang', lang);
          } else {
