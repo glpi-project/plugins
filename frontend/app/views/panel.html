@@ -4,12 +4,20 @@
 
       <form id="profile-form" ng-submit="update()">
          <md-input-container>
-            <label>Usernamep</label>
+            <label>Username</label>
             <input type="text" ng-model="user.username">
+            <div ng-messages="form.username.$error">
+               <div ng-message="tooshort">Your username needs to be at least 4 characters</div>
+               <div ng-message="toolong">Your username cannot exceed 28 characters</div>
+            </div>
          </md-input-container>
          <md-input-container>
             <label>Real Name</label>
             <input type="text" ng-model="user.realname">
+            <div ng-messages="form.realname.$error">
+               <div ng-message="tooshort">Your realname needs to be at least 4 characters</div>
+               <div ng-message="toolong">Your realname cannot exceed 28 characters</div>
+            </div>
          </md-input-container>
          <md-input-container>
             <label>Email</label>
@@ -17,7 +25,7 @@
          </md-input-container>
          <md-input-container>
             <label>Website</label>
-            <input type="text" ng-model="user.website">
+            <input type="url" ng-model="user.website">
          </md-input-container>
          <md-input-container>
             <label>Password</label>
