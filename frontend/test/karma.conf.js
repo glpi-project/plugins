@@ -38,6 +38,7 @@ module.exports = function(config) {
       'bower_components/ngGallery/src/js/ngGallery.js',
       'bower_components/showdown/src/showdown.js',
       'bower_components/angular-markdown-directive/markdown.js',
+      'bower_components/matchMedia/matchMedia.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",
