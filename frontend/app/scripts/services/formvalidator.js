@@ -23,8 +23,9 @@ angular.module('frontendApp')
          for (var index in errors) {
             if (errors[index]) {
                return false;
-            } else return true;
+            }
          }
+         return true;
       };
 
       /**
