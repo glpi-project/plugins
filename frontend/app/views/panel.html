@@ -6,7 +6,7 @@
          <md-input-container>
             <label>Username</label>
             <input type="text" ng-model="user.username">
-            <div ng-messages="form.username.$error">
+            <div ng-messages="form_errors.username">
                <div ng-message="tooshort">Your username needs to be at least 4 characters</div>
                <div ng-message="toolong">Your username cannot exceed 28 characters</div>
             </div>
@@ -14,7 +14,7 @@
          <md-input-container>
             <label>Real Name</label>
             <input type="text" ng-model="user.realname">
-            <div ng-messages="form.realname.$error">
+            <div ng-messages="form_errors.realname">
                <div ng-message="tooshort">Your realname needs to be at least 4 characters</div>
                <div ng-message="toolong">Your realname cannot exceed 28 characters</div>
             </div>
@@ -30,7 +30,7 @@
          <md-input-container>
             <label>Password</label>
             <input type="password" ng-model="password">
-            <div ng-messages="form.password.$error">
+            <div ng-messages="form_errors.password">
                <div ng-message="different">Password and Confirmation aren't the same</div>
                <div ng-message="tooshort">Password must be at least 6 characters</div>
                <div ng-message="toolong">Password must not exceed 26 characters</div>
