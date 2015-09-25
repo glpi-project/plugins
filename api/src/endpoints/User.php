@@ -350,6 +350,11 @@ $profile_edit = Tool::makeEndpoint(function() use($app, $resourceServer) {
       $user->setPassword($body->password);
    }
 
+   if (isset($body->realname) &&
+       User::isValidRealname(($body->realname))) {
+      $user->realname = $body->realname;
+   }
+
    $user->save();
 
    Tool::endWithJson($user, 200);
@@ -390,62 +395,52 @@ $user_app = Tool::makeEndpoint(function($id) use($app, $resourceServer) {
   $app = $user->apps()->where('id', '=', $id)->first();
 
   if (!$app) {
-    Tool::endWithJson([
-      "error" => "Unexisting app"
-    ], 400);
+      throw new \API\Exception\ResourceNotFound('app', $id);
   }
 
   Tool::endWithJson($app);
 });
 
 $user_declare_app = Tool::makeEndpoint(function() use($app, $resourceServer) {
-  OAuthHelper::needsScopes(['user', 'user:apps']);
-  $body = Tool::getBody();
+   OAuthHelper::needsScopes(['user', 'user:apps']);
+   $body = Tool::getBody();
 
-  $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
-  $user = User::where('id', '=', $user_id)->first();
+   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+   $user = User::where('id', '=', $user_id)->first();
 
-  $app = new App;
+   $app = new App;
 
-  if (!isset($body->name) || !App::isValidName($body->name)) {
-    Tool::endWithJson([
-      "error" => "You have to specify a correct name for your application"
-    ], 400);
-  } else if (App::where('user_id', '=', $user_id)
-                ->where('name', '=', $body->name)->first() != null) {
-    Tool::endWithJson([
-      "error" => "You already have an app with that name"
-    ], 400);
-  }
-  else {
-    $app->name = $body->name;
-  }
+   if (!isset($body->name) || !App::isValidName($body->name)) {
+      throw new \API\Exception\InvalidField('name');
+   } else if (App::where('user_id', '=', $user_id)
+                 ->where('name', '=', $body->name)->first() != null) {
+      throw new \API\Exception\UnavailableName('app', $name);
+   }
+   else {
+     $app->name = $body->name;
+   }
 
-  if (isset($body->homepage_url)) {
-    if (!App::isValidUrl($body->homepage_url)) {
-      Tool::endWithJson([
-        "error" => "The url you provided is not valid, better not specifying it or provide a correct one"
-      ], 400);
-    } else {
-      $app->homepage_url = $body->homepage_url;
-    }
-  }
+   if (isset($body->homepage_url)) {
+     if (!App::isValidUrl($body->homepage_url)) {
+       throw new \APi\Exception\InvalidField('url');
+     } else {
+       $app->homepage_url = $body->homepage_url;
+     }
+   }
 
-  if (isset($body->description)) {
-    if (!App::isValidDescription($body->description)) {
-      Tool::endWithJson([
-        "error" => "The description you provided is too long"
-      ], 400);
-    } else {
-      $app->description = $body->description;
-    }
-  }
+   if (isset($body->description)) {
+     if (!App::isValidDescription($body->description)) {
+       throw new \API\Exception\InvalidField('description');
+     } else {
+       $app->description = $body->description;
+     }
+   }
 
-  // If everything went ok
-  $app->setRandomClientId();
-  $app->setRandomSecret();
+   // If everything went ok
+   $app->setRandomClientId();
+   $app->setRandomSecret();
 
-  // Then save
+   // Then save
   $user->apps()->save($app);
 });
 
