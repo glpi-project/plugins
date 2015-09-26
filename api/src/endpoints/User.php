@@ -351,8 +351,13 @@ $profile_edit = Tool::makeEndpoint(function() use($app, $resourceServer) {
    }
 
    if (isset($body->realname) &&
-       User::isValidRealname(($body->realname))) {
+       User::isValidRealname($body->realname)) {
       $user->realname = $body->realname;
+   }
+
+   if (isset($body->website) &&
+       User::isValidWebsite($body->website)) {
+      $user->website = $body->website;
    }
 
    $user->save();

@@ -51,11 +51,19 @@ class User extends Model {
     * our specifications
     */
    public static function isValidPassword($password) {
-      if (isset($password) && gettype($password) == 'string' &&
+      if (gettype($password) == 'string' &&
           strlen($password) > 6 && strlen($password) < 26) {
          return true;
       }
       return false;
+   }
+
+   public static function isValidWebsite($website) {
+    if (gettype($website) == 'string' &&
+        filter_var($website, FILTER_VALIDATE_URL)) {
+      return true;
+    }
+    return false;
    }
 
    /**

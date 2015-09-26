@@ -85,6 +85,7 @@ angular.module('frontendApp')
       $scope.update = function() {
          var payload = {};
 
+         // Verifying password if provided
          if ($scope.password.length > 0) {
             if (!FormValidator.noError(FormValidator.getValidator('password')($scope.password,
                                                                               $scope.password_repeat))) {
@@ -101,6 +102,11 @@ angular.module('frontendApp')
             } else {
                payload.realname = $scope.user.realname;
             }
+         }
+
+         // Verifying email if provided
+         if ($scope.user.website != $scope.original_user.website) {
+            payload.website = $scope.user.website;
          }
 
          if (!FormValidator.payloadEmpty(payload)) {
