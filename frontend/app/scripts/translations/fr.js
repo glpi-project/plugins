@@ -59,6 +59,8 @@ angular
             DISCONNECT: "Déconnexion",
             SIGNIN: "Connexion",
             SIGNUP: "S'enregistrer",
-            INVALID_CREDENTIALS: "Mauvais nom d'utilisateur/mot de passe. Si vous n'êtes plus sur cliquez sur 'J'ai oublié mon mot de passe'"
+            INVALID_CREDENTIALS: "Mauvais nom d'utilisateur/mot de passe. Si vous n'êtes plus sur cliquez sur 'J'ai oublié mon mot de passe'",
+            FIELD_REQUIRED: "* Required",
+            EXTERNAL_ACCOUNT_ALREADY_PAIRED: "This external account has been already linked to another GLPI Plugins account."
          });
    });

@@ -10,7 +10,7 @@
 angular.module('frontendApp')
   .provider('Auth', function ($httpProvider, $authProvider, $injector, API_URL,
                               GITHUB_CLIENT_ID, $provide) {
-    var authManager, rootScope, mdToast, timeout, http, cookies, Toaster, $window, filter;
+    var authManager, rootScope, mdToast, timeout, http, cookies, Toaster, $window, filter, state;
     var AuthManager = function() {};
 
     /**
@@ -250,6 +250,7 @@ angular.module('frontendApp')
       cookies = $injector.get('$cookies');
       Toaster = $injector.get('Toaster');
       filter = $injector.get('$filter');
+      state = $injector.get('$state');
 
 
       // We'll get this AuthManager instance

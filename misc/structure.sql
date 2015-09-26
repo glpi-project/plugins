@@ -36,6 +36,15 @@ CREATE TABLE user(
       REFERENCES author(id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE user_validation_token (
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   token varchar(40) NOT NULL,
+   user_id INT NOT NULL,
+   FOREIGN KEY(user_id)
+      REFERENCES user(id)
+      ON DELETE CASCADE
+);
+
 CREATE TABLE user_external_account(
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    user_id INT NOT NULL,

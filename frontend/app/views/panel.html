@@ -5,7 +5,7 @@
       <form id="profile-form" ng-submit="update()">
          <md-input-container>
             <label>Username</label>
-            <input type="text" ng-model="user.username">
+            <input type="text" ng-model="user.username" disabled>
             <div ng-messages="form_errors.username">
                <div ng-message="tooshort">Your username needs to be at least 4 characters</div>
                <div ng-message="toolong">Your username cannot exceed 28 characters</div>
@@ -21,11 +21,18 @@
          </md-input-container>
          <md-input-container>
             <label>Email</label>
-            <input type="email" ng-model="user.email" disabled>
+            <input type="text" ng-model="user.email" disabled>
+            <div ng-messages="form_errors.email">
+               <div ng-message="required">{{'FIELD_REQUIRED'|translate}}</div>
+               <div ng-message="invalid">This is an invalid email</div>
+            </div>
          </md-input-container>
          <md-input-container>
             <label>Website</label>
-            <input type="url" ng-model="user.website">
+            <input type="text" ng-model="user.website">
+            <div ng-messages="form_errors.website">
+               <div ng-message="invalid">This is an invalid website</div>
+            </div>
          </md-input-container>
          <md-input-container>
             <label>Password</label>

@@ -10,7 +10,6 @@
 angular.module('frontendApp')
   .controller('PanelCtrl', function (API_URL, $http, $scope, FormValidator,
                                      $mdDialog, Auth, $state, Toaster) {
-      var self = this;
       $scope.original_user = {};
       $scope.user = {};
       $scope.password = '';
@@ -54,6 +53,15 @@ angular.module('frontendApp')
          $scope.form_errors.realname = (typeof $scope.user.realname === 'undefined' ? default_errors : ($scope.user.realname.length > 0 ?
                                         FormValidator.getValidator('realname')($scope.user.realname) :
                                         default_errors));
+      });
+
+      // Verifying user.realname on keydown
+      $scope.$watch('user.website', function() {
+         var default_errors = {
+            invalid: false
+         };
+         var website = typeof $scope.user.website == 'string' ? $scope.user.website : '';
+         $scope.form_errors.website = FormValidator.getValidator('website')(website);
       });
 
       /**
@@ -104,9 +112,14 @@ angular.module('frontendApp')
             }
          }
 
-         // Verifying email if provided
-         if ($scope.user.website != $scope.original_user.website) {
-            payload.website = $scope.user.website;
+
+         // Verifying website if provided
+         if ($scope.user.website && $scope.user.website.length > 0 && $scope.user.website != $scope.original_user.website) {
+            if (!FormValidator.noError(FormValidator.getValidator('website')($scope.user.website))) {
+               return Toaster.make('You must verify the website you entered, read the hints in red', 'profile-form');
+            } else {
+               payload.website = $scope.user.website;
+            }
          }
 
          if (!FormValidator.payloadEmpty(payload)) {
@@ -122,7 +135,7 @@ angular.module('frontendApp')
               Toaster.make('Your profile was correctly updated according your desires', 'profile-form');
            });
          } else {
-            Toaster.make('Your profile was already saved with these settings', 'profile-form');
+            Toaster.make('Your profile is already saved with those values', 'profile-form');
          }
       };
 

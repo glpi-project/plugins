@@ -52,7 +52,7 @@ class User extends Model {
     */
    public static function isValidPassword($password) {
       if (gettype($password) == 'string' &&
-          strlen($password) > 6 && strlen($password) < 26) {
+          strlen($password) >= 6 && strlen($password) <= 26) {
          return true;
       }
       return false;

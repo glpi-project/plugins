@@ -13,18 +13,20 @@ angular.module('frontendApp')
          method: "GET",
          url: API_URL + '/user'
       }).success(function(data) {
-         $scope.user = data;
-         $scope.original_username = $scope.user.username;
+         if (data) {
+            $scope.user = data;
+            $scope.original_username = $scope.user.username;
 
-         if ($scope.user.email === null) {
-            $http({
-               method: "GET",
-               url: API_URL + '/oauth/available_emails'
-            }).success(function(data) {
-               $scope.available_emails = data;
-            });
-         } else {
-            $state.go('panel');
+            if ($scope.user.email === null) {
+               $http({
+                  method: "GET",
+                  url: API_URL + '/oauth/available_emails'
+               }).success(function(data) {
+                  $scope.available_emails = data;
+               });
+            } else {
+               $state.go('panel');
+            }
          }
       });
 

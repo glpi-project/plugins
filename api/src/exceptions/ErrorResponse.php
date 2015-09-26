@@ -87,7 +87,7 @@ class ErrorResponse extends \Exception {
       Tool::log((($accessToken && !$userId) ? '[anonymous]' : '').
                 ($accessToken ? '['.$accessToken.'] ' : '').
                 ($userId ? '('.$userId.') ' : '').
-                ($url ? '['.$url.'] ' : '').
+                ($url ? '['.$app->request->getMethod().' '.$url.'] ' : '').
                 $this->getRepresentation());
    }
 }

@@ -12,11 +12,12 @@ angular.module('frontendApp')
     var mdToast;
 
     function Toaster() {};
-    Toaster.prototype.make = function(message, parent_id) {
+    Toaster.prototype.make = function(message, parent_id, position) {
+      if (typeof position === 'undefined') position = 'top';
        var toast = mdToast.simple()
               .capsule(true)
               .content(message)
-              .position('top');
+              .position(position);
        toast._options.parent = angular.element(document.getElementById(parent_id));
        mdToast.show(toast);
     };

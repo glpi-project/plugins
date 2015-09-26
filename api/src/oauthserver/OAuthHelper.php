@@ -143,4 +143,34 @@ class OAuthHelper {
          "ttl"   => $ttl
       ];
    }
+
+   public static function grantScopesToAccessToken($token, $scopes) {
+      $accessToken = AccessToken::where('token', '=', $token)->first();
+      if (!$accessToken) {
+         return false;
+      }
+
+      $current_scopes = $accessToken->scopes;
+      $hasScope = function($scope) use($current_scopes) {
+         foreach($current_scopes as $_scope) {
+            if ($_scope->identifier == $scope) {
+               return $_scope;
+            }
+         }
+         return false;
+      };
+
+      if ($accessToken) {
+         foreach ($scopes as $_scope) {
+            if (!$hasScope($_scope)) {
+               $scope = Scope::where('identifier', '=', $_scope)->first();
+               if ($scope) {
+                  $accessToken->scopes()->attach($scope);
+                  $session = $accessToken->session;
+                  $session->scopes()->attach($scope);
+               }
+            }
+         }
+      }
+   }
 }

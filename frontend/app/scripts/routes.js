@@ -29,6 +29,10 @@ angular
             controller: "SigninCtrl",
             controllerAs: "ctrl"
          })
+         .state('validatemail', {
+            url: "/validatemail/:token",
+            controller: "ValidatemailCtrl"
+         })
          .state('featured', {
             url: "/",
             templateUrl: "views/featured.html",

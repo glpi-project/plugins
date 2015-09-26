@@ -19,6 +19,11 @@ use \API\Model\Session;
 use \API\Model\AccessToken;
 use \API\Model\Scope;
 use \API\Model\App;
+use \API\Model\ValidationToken;
+
+use \API\Exception\UnavailableName;
+use \API\Exception\InvalidField;
+use \API\Exception\ExternalAccountAlreadyPaired;
 
 use \API\OAuthServer\AuthorizationServer;
 use \API\OAuthServer\OAuthHelper;
@@ -41,23 +46,18 @@ $register = Tool::makeEndpoint(function() use ($app) {
    if (!isset($body->username) ||
        strlen($body->username) < 4 ||
        strlen($body->username) > 28 ||
-       preg_match('[^a-zA-Z0-9]', $body->username)) {
-      Tool::endWithJson([
-         "error" => "Your username should have at least 4 characters, ".
-                    "and a maximum of 28 characters, and it should ".
-                    "contains only alphanumeric characters"
-      ], 400);
+       !preg_match('/^[a-zA-Z0-9]+$/', $body->username)) {
+      throw new InvalidField('username');
    } else {
+      if (User::where('username' , '=', $body->username)->first() != null) {
+         throw new UnavailableName('User', $body->username);
+      }
       $new_user->username = $body->username;
    }
 
    if (!isset($body->email) ||
-       strlen($body->email) < 5 || // a@b.c
-       strlen($body->email) > 255 ||
       !filter_var($body->email, FILTER_VALIDATE_EMAIL)) {
-      Tool::endWithJson([
-         "error" => "The email you specified isn't valid"
-      ], 400);
+      throw new InvalidField('email');
    } else {
       $new_user->email = $body->email;
    }
@@ -87,22 +87,26 @@ $register = Tool::makeEndpoint(function() use ($app) {
    }
 
    if (!User::isValidPassword($body->password)) {
-      Tool::endWithJson([
-         "error" => "Your password should have at least 6 characters, ".
-                    "and a maximum of 26 characters"
-      ], 400);
+      throw new InvalidField('password');
    }
+   $new_user->setPassword($body->password);
 
-   if (!isset($body->password_repeat) ||
-       $body->password != $body->password_repeat) {
-      Tool::endWithJson([
-         "error" => "Your password and password verification doesn't match"
-      ], 400);
-   } else {
-      $new_user->setPassword($body->password);
-   }
-
+   $new_user->active = false;
    $new_user->save();
+
+   $validationToken = new ValidationToken;
+   $validationToken->token = SecureKey::generate();
+   $validationToken->user_id = $new_user->id;
+   $validationToken->save();
+});
+
+$user_validate_mail = Tool::makeEndpoint(function($_validationToken) use($app) {
+  $validationToken = ValidationToken::where('token', '=', $_validationToken)->first();
+
+  if ($validationToken) {
+    $user = $validationToken->user;
+    $user->active = true;
+    $user->save();
 
    $accessToken = OAuthHelper::createAccessTokenFromUserId(
       $user->id,
@@ -111,18 +115,25 @@ $register = Tool::makeEndpoint(function() use ($app) {
        'author', 'version', 'message', 'user', 'user:apps']
    );
 
+   $validationToken->delete();
+
    Tool::endWithJson([
       "access_token" => $accessToken['token'],
       "refresh_token" => $accessToken['refresh_token'],
-      "access_token_expires_in" => $accessToken['ttl']
+      "expires_in" => $accessToken['ttl']
    ], 200);
+  }
+  else {
+    throw new \API\Exception\InvalidValidationToken($_validationToken);
+  }
+
 });
 
 /**
  * RPC that serves as a callback for the OAuth2
  * service
  */
-$associateExternalAccount = Tool::makeEndpoint(function($service) use($app, $resourceServer) {
+$user_associate_external_account = Tool::makeEndpoint(function($service) use($app, $resourceServer) {
    $oAuth = new OAuthClient($service);
    $token = $oAuth->getAccessToken($app->request->get('code'));
    $data = [];
@@ -161,13 +172,17 @@ $associateExternalAccount = Tool::makeEndpoint(function($service) use($app, $res
                ->first();
 
       if (!$externalAccount) {
-         $externalAccount = new UserExternalAccount;
-         $externalAccount->external_user_id = $external_account_infos['id'];
-         $externalAccount->token = $token;
-         $externalAccount->service = $service;
-         $user->externalAccounts()->save($externalAccount);
+         if ($_externalAccount = UserExternalAccount::where('external_user_id', '=', $external_account_infos['id'])->first()) {
+            $data['error'] = 'EXTERNAL_ACCOUNT_ALREADY_PAIRED';
+         } else {
+            $externalAccount = new UserExternalAccount;
+            $externalAccount->external_user_id = $external_account_infos['id'];
+            $externalAccount->token = $token;
+            $externalAccount->service = $service;
+            $user->externalAccounts()->save($externalAccount);
 
-         $data['external_account_linked'] = true;
+            $data['external_account_linked'] = true;
+         }
       } else {
          $data['error'] = 'You are already authed, and that '.$service.' account is already linked';
       }
@@ -340,6 +355,11 @@ $profile_edit = Tool::makeEndpoint(function() use($app, $resourceServer) {
       }
 
       if ($email_found) {
+         $access_token = $resourceServer->getAccessToken()->getId();
+         OAuthHelper::grantScopesToAccessToken($access_token, ['plugins', 'plugins:search', 'plugin:card', 'plugin:star',
+             'plugin:submit', 'plugin:download', 'tags', 'tag', 'authors',
+             'author', 'version', 'message', 'user:externalaccounts',
+             'user:apps']);
          $user->active = true;
          $user->email = $body->email;
       }
@@ -374,6 +394,10 @@ $user_plugins = Tool::makeEndpoint(function() use($app, $resourceServer) {
 
    $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
    $user = User::where('id', '=', $user_id)->first();
+
+   if (!$user) {
+      throw new ResourceNotFound('User', $user_id);
+   }
 
    if (!$user->author) {
       Tool::endWithJson([], 200);
@@ -457,11 +481,12 @@ $app->put('/user', $profile_edit);
 $app->get('/user/external_accounts', $user_external_accounts);
 $app->get('/user/plugins', $user_plugins);
 $app->get('/user/apps', $user_apps);
+$app->get('/user/validatemail/:token', $user_validate_mail);
 $app->get('/user/apps/:id', $user_app);
 $app->post('/user/apps', $user_declare_app);
 
 $app->get('/oauth/available_emails', $oauth_external_emails);
-$app->get('/oauth/associate/:service', $associateExternalAccount);
+$app->get('/oauth/associate/:service', $user_associate_external_account);
 $app->post('/oauth/authorize', $authorize);
 
 $app->options('/user', function() {});

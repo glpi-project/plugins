@@ -2,36 +2,63 @@
    <div flex="33">
       <h2>Register Manually</h2>
 
-      <form>
+      <form id="signup-form">
+         <md-input-container>
+            <label>User Name</label>
+            <input ng-model="user.username" type="text">
+            <div ng-messages="form_errors.username">
+               <div ng-message="required">{{'FIELD_REQUIRED'|translate}}</div>
+               <div ng-message="tooshort">Your username needs to be at least 4 characters</div>
+               <div ng-message="toolong">Your username cannot exceed 28 characters</div>
+               <div ng-message="badcharacters">Your username should contain only alphanumeric characters</div>
+            </div>
+         </md-input-container>
          <md-input-container>
             <label>Real Name</label>
-            <input ng-model="scope.user.realname" type="text">
+            <input ng-model="user.realname" type="text">
+            <div ng-messages="form_errors.realname">
+               <div ng-message="tooshort">Your realname needs to be at least 4 characters</div>
+               <div ng-message="toolong">Your realname cannot exceed 28 characters</div>
+            </div>
          </md-input-container>
          <md-input-container>
             <label>Email</label>
-            <input ng-model="scope.user.email" type="text">
+            <input ng-model="user.email" type="text">
+            <div ng-messages="form_errors.email">
+               <div ng-message="required">{{'FIELD_REQUIRED'|translate}}</div>
+               <div ng-message="invalid">This is an invalid email</div>
+            </div>
          </md-input-container>
          <md-input-container>
             <label>Website</label>
-            <input ng-model="scope.user.website" type="text">
+            <input ng-model="user.website" type="text">
+            <div ng-messages="form_errors.website">
+               <div ng-message="invalid">This is an invalid website</div>
+            </div>
          </md-input-container>
          <md-input-container>
             <label>Password</label>
-            <input ng-model="scope.user.password" type="password">
+            <input ng-model="password" type="password">
+            <div ng-messages="form_errors.password">
+               <div ng-message="required">{{'FIELD_REQUIRED'|translate}}</div>
+               <div ng-message="different">Password and Confirmation aren't the same</div>
+               <div ng-message="tooshort">Password must be at least 6 characters</div>
+               <div ng-message="toolong">Password must not exceed 26 characters</div>
+            </div>
          </md-input-container>
          <md-input-container>
             <label>Confirm password</label>
-            <input ng-model="scope.user.password_repeat" type="password">
+            <input ng-model="password_repeat" type="password">
          </md-input-container>
-         <md-button class="md-raised md-primary" ng-click="signUp()">Sign-Up !</md-button>
+         <md-button class="md-raised md-primary" ng-click="signUp()" id="signup-button">Sign-Up !</md-button>
       </form>
    </div>
    <div flex="66" class="link-your-account">
       <h2>Or link your account</h2>
 
       <md-button ng-click="authenticate('github')"><i class="fa fa-github"></i></md-button>
-      <md-button><i class="fa fa-google"></i></md-button>
+<!--       <md-button><i class="fa fa-google"></i></md-button>
       <md-button><i class="fa fa-facebook"></i></md-button>
-      <md-button><i class="fa fa-twitter"></i></md-button>
+      <md-button><i class="fa fa-twitter"></i></md-button> -->
    </div>
 </div>
