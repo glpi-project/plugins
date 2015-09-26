@@ -192,6 +192,7 @@ angular.module('frontendApp')
       localStorage.removeItem('authed');
       delete $httpProvider.defaults.headers.common['Authorization'];
       rootScope.authed = false;
+      state.go('featured');
       Toaster.make("You are now disconnected", 'body');
       this.getAnonymousToken();
     };

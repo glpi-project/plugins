@@ -53,7 +53,6 @@ angular.module('frontendApp')
                    $scope.username = data.username;
                    if ($state.current.name == 'signin' ||
                        $state.current.name == 'signup') {
-                     console.log('k');
                      if (data.active == 0) {
                         return $state.go('finishactivateaccount')
                      }
