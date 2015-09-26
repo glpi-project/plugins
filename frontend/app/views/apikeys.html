@@ -4,20 +4,20 @@
 
       <h4>Register a new Application to gain API access</h4>
 
-      <form>
+      <form ng-submit="newApp()">
          <md-input-container>
             <label>Application name</label>
-            <input type="text">
+            <input type="text" ng-model="appName">
          </md-input-container>
 
          <md-input-container>
             <label>Homepage URL (optional)</label>
-            <input type="text">
+            <input type="text" ng-model="homepage">
          </md-input-container>
 
          <md-input-container>
             <label>Application description (optional, example "my simple script" or "OAuth signup with GLPI plugins")</label>
-            <textarea name="" id="" rows="2"></textarea>
+            <textarea name="" id="" rows="2" ng-model="description"></textarea>
          </md-input-container>
 
          <md-button class="md-raised md-primary" type="submit">Create</md-button>

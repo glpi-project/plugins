@@ -13,6 +13,10 @@ angular.module('frontendApp')
          return $state.go('featured');
       }
 
+      $scope.appName = '';
+      $scope.homepage = '';
+      $scope.description = '';
+
       $http({
          method: 'GET',
          url: API_URL + '/user/apps'
@@ -65,4 +69,24 @@ angular.module('frontendApp')
             $scope.app = data;
          });
       }
+
+      $scope.newApp = function() {
+         $http({
+            method: 'POST',
+            url: API_URL + '/user/apps',
+            data: {
+               name: $scope.appName,
+               homepage: $scope.homepage,
+               description: $scope.description
+            }
+         }).success(function() {
+            $http({
+               method: 'GET',
+               url: API_URL + '/user/apps'
+            }).success(function(data) {
+               $scope.apps = data;
+               Toaster.make('Your app was successfully created');
+            });
+         });
+      };
   });
