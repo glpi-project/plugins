@@ -154,6 +154,20 @@ angular.module('frontendApp')
       };
 
       /**
+       * scope method to open the "link an account"
+       * dialog
+       */
+      $scope.openClaimAuthorshipDialog = function(ev) {
+        $mdDialog.show({
+          controller: ClaimAuthorshipDialogController,
+          templateUrl: 'views/claimauthorship.html',
+          parent: angular.element(document.body),
+          targetEvent: ev,
+          clickOutSideToClose: true
+        });
+      };
+
+      /**
        * "Link an Account" controller
        */
       function LinkAccountDialogController (API_URL, $scope, $http) {
@@ -191,5 +205,39 @@ angular.module('frontendApp')
          }).success(function(data) {
             $scope.external_accounts = data;
          });
+      }
+
+      function ClaimAuthorshipDialogController (API_URL, $scope, $http) {
+         /**
+          * scope method to actually link the account
+          */
+         $scope.claim = function() {
+            console.log('claim');
+            $http({
+               method: 'POST',
+               url: API_URL + '/claimauthorship',
+               data: {
+                  author: $scope.author
+               }
+            })
+         };
+
+         /**
+          * scope method to close the $mdDialog
+          */
+         $scope.close = function() {
+            $mdDialog.hide();
+         };
+
+         /**
+          * Fetch list of current external accounts
+          * when controller loads
+          */
+         // $http({
+         //    method: "GET",
+         //    url: API_URL + '/user/external_accounts'
+         // }).success(function(data) {
+         //    $scope.external_accounts = data;
+         // });
       }
   });
