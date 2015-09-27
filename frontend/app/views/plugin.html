@@ -36,8 +36,8 @@
                <md-tooltip md-direction="top">Download</md-tooltip>
             </md-button>
             <md-button ng-show="authed" class="md-fab md-primary md-raised watch-button" ng-click="watch()">
-               <i class="fa fa-2x fa-eye white"></i>
-               <md-tooltip md-direction="top">Watch</md-tooltip>
+               <i class="fa fa-2x white" ng-class="plugin.watched ? 'fa-eye-slash' : 'fa-eye'"></i>
+               <md-tooltip md-direction="top">{{plugin.watched ? 'Unwatch' : 'Watch'}}</md-tooltip>
             </md-button>
          </span>
       </div>

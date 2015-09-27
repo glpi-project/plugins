@@ -42,19 +42,30 @@ angular.module('frontendApp')
    };
 
    $scope.watch = function() {
-      $http({
-         method: 'POST',
-         url: API_URL + '/user/watchs',
-         data: {
-            plugin_key: $scope.plugin.key
-         }
-      }).then(function(resp) {
-         Toaster.make($filter('translate')('YOURE_NOW_WATCHING')+' '+$scope.plugin.key+'');
-      }, function(resp) {
-         if (resp.data.error == 'ALREADY_WATCHED') {
-            Toaster.make($filter('translate')('PLUGIN_ALREADY_WATCHED'));
-         }
-      });
+      if (!$scope.plugin.watched) {
+         $http({
+            method: 'POST',
+            url: API_URL + '/user/watchs',
+            data: {
+               plugin_key: $scope.plugin.key
+            }
+         }).then(function(resp) {
+            $scope.plugin.watched = true;
+            Toaster.make($filter('translate')('YOURE_NOW_WATCHING')+' '+$scope.plugin.key+'');
+         }, function(resp) {
+            if (resp.data.error == 'ALREADY_WATCHED') {
+               Toaster.make($filter('translate')('PLUGIN_ALREADY_WATCHED'));
+            }
+         });
+      } else {
+         $http({
+            method: 'DELETE',
+            url: API_URL + '/user/watchs/'+$scope.plugin.key
+         }).then(function(resp) {
+            $scope.plugin.watched = false;
+            Toaster.make($filter('translate')('PLUGIN_UNWATCHED')+' '+$scope.plugin.key+'');
+         });
+      }
    }
 
    $scope.fromNow = function(date) {
