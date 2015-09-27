@@ -14,6 +14,7 @@
 
 use \API\Core\Tool;
 use \Illuminate\Database\Capsule\Manager as DB;
+use \API\Model\User;
 use \API\Model\Plugin;
 use \API\Model\PluginStar;
 use \ReCaptcha\ReCaptcha;
@@ -27,19 +28,25 @@ use \API\OAuthServer\OAuthHelper;
 $single = Tool::makeEndpoint(function($key) use($app, $resourceServer) {
    OAuthHelper::needsScopes(['plugin:card']);
 
-   $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots', 'tags')
-                   ->short()
-                   ->withAverageNote()
-                   ->withNumberOfVotes()
-                   ->where('key', '=', $key)
-                   ->where('active', '=', 1)
-                   ->first();
 
-   if (!$plugin) {
+   $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots', 'tags')
+                  ->short()
+                  ->withAverageNote()
+                  ->withNumberOfVotes()
+                  ->where('key', '=', $key)
+                  ->where('active', '=', 1)
+                  ->first();
+
+   if ($plugin) {
+      if ($user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId()) {
+         $plugin = $plugin->toArray();
+         $user = User::where('id', '=', $user_id)->first();
+         $plugin['watched'] = $user->watchs()->where('plugin_id', '=', $plugin['id'])->count() > 0;
+      }
+      Tool::endWithJson($plugin);
+   } else {
       throw new \API\Exception\ResourceNotFound('Plugin', $key);
    }
-
-   Tool::endWithJson($plugin);
 });
 
 /**
