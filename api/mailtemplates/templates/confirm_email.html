@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block message %}
+<p>
+   Dear {{user.username}},
+</p>
+<p>
+   We're happy you created your GLPI Plugins account,
+</p>
+<p>
+   Welcome !
+</p>
+<p>
+   To finish your registration you simply need to follow <a href="{{client_url}}/#/validatemail/{{validation_token}}">This link</a>.
+</p>
+{% endblock %}
