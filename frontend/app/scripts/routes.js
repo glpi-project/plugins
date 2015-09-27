@@ -18,6 +18,11 @@ angular
             templateUrl: 'views/apikeys.html',
             controller: 'ApiKeysCtrl'
          })
+         .state('notifications', {
+            url: '/panel/notifications',
+            templateUrl: 'views/notifications.html',
+            controller: 'NotificationsCtrl'
+         })
          .state('signup', {
             url: "/signup",
             templateUrl: "views/signup.html",

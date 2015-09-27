@@ -1,0 +1,21 @@
+<div layout="row" id="notifications">
+   <div flex="100">
+      <h2>Plugins watched</h2>
+      <h3>You'll receive notifications on update</h3>
+
+      <md-list class="notifications-list">
+         <md-list-item ng-repeat="plugin in plugins_watched">
+            <p>{{plugin}}</p> <md-button class="md-raised" ng-click="unwatch(plugin)"><h4>unwatch</h4></md-button>
+         </md-list-item>
+      </md-list>
+
+      <p>You can also discover new plugins and subscribe to notifications from the plugin pages</p>
+      <p>Please check those trending plugins :</p>
+
+      <md-list>
+         <md-list-item ng-repeat="plugin in trending">
+            <a ui-sref="plugin({key: plugin.key})">{{plugin.key}}</a>
+         </md-list-item>
+      </md-list>
+   </div>
+ </div>

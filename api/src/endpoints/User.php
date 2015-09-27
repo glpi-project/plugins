@@ -21,10 +21,13 @@ use \API\Model\AccessToken;
 use \API\Model\Scope;
 use \API\Model\App;
 use \API\Model\ValidationToken;
+use \API\Model\Plugin;
+use \API\Model\PluginWatch;
 
 use \API\Exception\UnavailableName;
 use \API\Exception\InvalidField;
 use \API\Exception\ExternalAccountAlreadyPaired;
+use \API\Exception\AlreadyWatched;
 
 use \API\OAuthServer\AuthorizationServer;
 use \API\OAuthServer\OAuthHelper;
@@ -426,6 +429,85 @@ $user_plugins = Tool::makeEndpoint(function() use($app, $resourceServer) {
    Tool::endWithJson($user->author->plugins()->get());
 });
 
+$user_watchs = Tool::makeEndpoint(function() use($app, $resourceServer) {
+   OAuthHelper::needsScopes(['user', 'plugins']);
+
+   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+   $user = User::where('id', '=', $user_id)->first();
+
+   if (!$user) {
+      throw new ResourceNotFound('User', $user_id);
+   }
+
+   $plugins = [];
+   foreach ($user->watchs()->get() as $watch) {
+      $plugins[] = $watch->plugin->key;
+   }
+
+   Tool::endWithJson($plugins);
+});
+
+$user_add_watch = Tool::makeEndpoint(function() use($app, $resourceServer) {
+   OAuthHelper::needsScopes(['user', 'plugins']);
+   $body = Tool::getBody();
+
+   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+   $user = User::where('id', '=', $user_id)->first();
+
+   if (!$user) {
+      throw new ResourceNotFound('User', $user_id);
+   }
+
+   if (!isset($body->plugin_key) ||
+       gettype($body->plugin_key) != 'string') {
+      throw new InvalidField('plugin_key');
+   }
+
+   $plugin = Plugin::where('key', '=', $body->plugin_key)->first();
+   if (!$plugin) {
+      throw new ResourceNotFound('Plugin', $body->plugin_key);
+   }
+
+   $already = $user->watchs()->where('plugin_id', '=', $plugin->id)->count();
+
+   if ($already > 0) {
+      throw new AlreadyWatched($body->plugin_key);
+   }
+
+   $watch = new PluginWatch;
+   $watch->plugin_id = $plugin->id;
+   $user->watchs()->save($watch);
+
+   $app->halt(200);
+});
+
+$user_remove_watch = Tool::makeEndpoint(function ($key) use($app, $resourceServer) {
+   OAuthHelper::needsScopes(['user', 'plugins']);
+   $body = Tool::getBody();
+
+   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+   $user = User::where('id', '=', $user_id)->first();
+
+   if (!$user) {
+      throw new ResourceNotFound('User', $user_id);
+   }
+
+   $plugin = Plugin::where('key', '=', $key)->first();
+   if (!$plugin) {
+      throw new ResourceNotFound('Plugin', $key);
+   }
+
+   $watch = $user->watchs()->where('plugin_id', '=', $plugin->id)->first();
+
+   if ($watch) {
+      $watch->delete();
+   } else {
+      $app->halt(404);
+   }
+
+   $app->halt(200);
+});
+
 $user_apps = Tool::makeEndpoint(function() use($app, $resourceServer) {
   OAuthHelper::needsScopes(['user', 'user:apps']);
 
@@ -500,6 +582,9 @@ $app->get('/user', $profile_view);
 $app->put('/user', $profile_edit);
 $app->get('/user/external_accounts', $user_external_accounts);
 $app->get('/user/plugins', $user_plugins);
+$app->get('/user/watchs', $user_watchs);
+$app->post('/user/watchs', $user_add_watch);
+$app->delete('/user/watchs/:key', $user_remove_watch);
 $app->get('/user/apps', $user_apps);
 $app->get('/user/validatemail/:token', $user_validate_mail);
 $app->get('/user/apps/:id', $user_app);

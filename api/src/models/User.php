@@ -23,6 +23,9 @@ class User extends Model {
    public function apps() {
       return $this->hasMany('\API\Model\App');
    }
+   public function watchs() {
+      return $this->hasMany('\API\Model\PluginWatch');
+   }
 
    // Setters
 

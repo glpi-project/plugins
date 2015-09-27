@@ -41,6 +41,22 @@ angular.module('frontendApp')
       $window.location.href = API_URL + '/plugin/' + $scope.plugin.key + '/download';
    };
 
+   $scope.watch = function() {
+      $http({
+         method: 'POST',
+         url: API_URL + '/user/watchs',
+         data: {
+            plugin_key: $scope.plugin.key
+         }
+      }).then(function(resp) {
+         Toaster.make($filter('translate')('YOURE_NOW_WATCHING')+' '+$scope.plugin.key+'');
+      }, function(resp) {
+         if (resp.data.error == 'ALREADY_WATCHED') {
+            Toaster.make($filter('translate')('PLUGIN_ALREADY_WATCHED'));
+         }
+      });
+   }
+
    $scope.fromNow = function(date) {
       if (date === undefined ||
           date === null) {

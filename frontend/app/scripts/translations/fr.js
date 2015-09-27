@@ -61,6 +61,9 @@ angular
             SIGNUP: "S'enregistrer",
             INVALID_CREDENTIALS: "Mauvais nom d'utilisateur/mot de passe. Si vous n'êtes plus sur cliquez sur 'J'ai oublié mon mot de passe'",
             FIELD_REQUIRED: "* Required",
-            EXTERNAL_ACCOUNT_ALREADY_PAIRED: "This external account has been already linked to another GLPI Plugins account."
+            EXTERNAL_ACCOUNT_ALREADY_PAIRED: "This external account has been already linked to another GLPI Plugins account.",
+            PLUGIN_ALREADY_WATCHED: "You already watch that plugin",
+            YOURE_NOW_WATCHING: "You are now watching",
+            PLUGIN_UNWATCHED: "You unwatched"
          });
    });
