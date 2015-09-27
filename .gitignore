@@ -1,4 +1,5 @@
 api/vendor
+api/mailtemplates/cache
 npm-debug.log
 api/config.php
 *.swp
