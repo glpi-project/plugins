@@ -8,9 +8,10 @@
  */
 
 
-use \API\Core\Tool;
+use API\Core\Tool;
 use API\Core\OAuthClient;
-use \Illuminate\Database\Capsule\Manager as DB;
+use API\Core\Mailer;
+use Illuminate\Database\Capsule\Manager as DB;
 use League\OAuth2\Server\Util\SecureKey;
 
 use \API\Model\User;
@@ -98,6 +99,12 @@ $register = Tool::makeEndpoint(function() use ($app) {
    $validationToken->token = SecureKey::generate();
    $validationToken->user_id = $new_user->id;
    $validationToken->save();
+
+   $mailer = new Mailer;
+   $mailer->sendMail('confirm_email.html', [$new_user->email] ,
+                     'Please confirm your email account', ['stylesheet' => 'confirm_email.css',
+                                             'user' => $new_user->toArray(),
+                                             'validation_token' => $validationToken->token]);
 });
 
 $user_validate_mail = Tool::makeEndpoint(function($_validationToken) use($app) {
@@ -115,6 +122,10 @@ $user_validate_mail = Tool::makeEndpoint(function($_validationToken) use($app) {
        'author', 'version', 'message', 'user', 'user:apps']
    );
 
+   $mailer = new Mailer;
+   $mailer->sendMail('confirm_account.html', [$user->email] ,
+                     'Your email account is confirmed', ['stylesheet' => 'confirm_account.css',
+                                                         'user' => $user->toArray()]);
    $validationToken->delete();
 
    Tool::endWithJson([
