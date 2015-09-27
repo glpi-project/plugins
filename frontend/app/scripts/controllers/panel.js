@@ -207,19 +207,42 @@ angular.module('frontendApp')
          });
       }
 
-      function ClaimAuthorshipDialogController (API_URL, $scope, $http) {
+      function ClaimAuthorshipDialogController (API_URL, $scope, $http, RECAPTCHA_PUBLIC_KEY, vcRecaptchaService, Toaster) {
+         $scope.recaptcha_key = RECAPTCHA_PUBLIC_KEY;
+         $scope.recaptcha_response = null;
+         $scope.recaptacha_widgetId = null;
+
+         $scope.setResponse = function(response) {
+            $scope.recaptcha_response = response;
+         };
+         $scope.setWidgetId = function(widgetId) {
+            $scope.recaptcha_widgetId = widgetId;
+         };
+         $scope.cbExpiration = function() {
+            $mdToast.show($mdToast.simple()
+               .capsule(true)
+               .content('Captcha expired, please select "I\'m not a robot" again')
+               .position('top'));
+            $scope.recaptcha_response = null;
+         };
+
          /**
           * scope method to actually link the account
           */
          $scope.claim = function() {
-            console.log('claim');
             $http({
                method: 'POST',
                url: API_URL + '/claimauthorship',
                data: {
-                  author: $scope.author
+                  author: $scope.author,
+                  recaptcha_response: $scope.recaptcha_response
                }
-            })
+            }).then(function(resp) {
+               $mdDialog.hide();
+               Toaster.make('We ackownledged your request', 'body');
+            }, function(resp) {
+               vcRecaptchaService.reload($scope.widgetId);
+            });
          };
 
          /**

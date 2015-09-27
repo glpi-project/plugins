@@ -13,9 +13,10 @@
       <p class="explanations">If we accept the request (ie: make sure that you are the correct author), your user will be associated with all your plugins and you will be granted  with specific admin rights</p>
       <form ng-submit="claim()">
          <md-input-container>
-            <label>Author Name (as exactly mentionned in the concerned plugins XML files)</label>
+            <label>Author Name (as exactly mentionned in the &lt;author&gt; tag of the concerned plugins XML files)</label>
             <input type="text" ng-model="author">
          </md-input-container>
+         <div vc-recaptcha theme="light" key="recaptcha_key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
          <md-button class="md-raised md-primary" type="submit">Claim</md-button>
       </form>
    </div>

@@ -8,7 +8,9 @@ namespace API\Core;
 // when we want to reject a request
 // with an error response
 use \API\Exception\ErrorResponse;
+use \API\Exception\InvalidRecaptcha;
 use \League\OAuth2\Server\Exception\OAuthException;
+use \ReCaptcha\ReCaptcha;
 
 /**
  * this class has very wide scope,
@@ -223,6 +225,18 @@ class Tool {
       $json = $app->request->getBody();
       $json = json_decode($json);
       return $json;
+   }
+
+   /**
+    * This is used in endpoints to ask recaptcha
+    * to validate a specific recaptcha response
+    */
+   public static function assertRecaptchaValid($recaptcha_response) {
+      $recaptcha = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
+      if (!$recaptcha->verify($recaptcha_response)
+                     ->isSuccess()) {
+         throw new InvalidRecaptcha;
+      }
    }
 
    /**

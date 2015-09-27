@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block message %}
+<p>
+   Dear GLPI Plugins admin team :
+</p>
+<p>
+   An user of the website claimed an authorship on GLPi Plugins.
+</p>
+   He is user #{{user.id}} (known as {{user.username}}) in the database,<br /> and claims being author #{{author.id}} (known as {{author.name}}).
+</p>
+<p>
+   The user.author_id column need to be set in MySQL, type :
+</p>
+<p>
+   UPDATE user set author_id = {{author.id}} where id = {{user.id}};
+</p>
+{% endblock %}

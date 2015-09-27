@@ -9,7 +9,7 @@
  */
 angular.module('frontendApp')
    .controller('ContactCtrl', function(API_URL, RECAPTCHA_PUBLIC_KEY, $scope, vcRecaptchaService, $http, $mdToast, $timeout, $state) {
-      $scope.key = RECAPTCHA_PUBLIC_KEY
+      $scope.key = RECAPTCHA_PUBLIC_KEY;
       $scope.response = null;
       $scope.widgetId = null;
 
@@ -44,7 +44,7 @@ angular.module('frontendApp')
                       .position('top');
                toast._options.parent = angular.element(document.getElementById('contact_form'));
                $mdToast.show(toast);
-               
+
                $timeout(function() {
                   $state.go('featured');
                }, 3800);
