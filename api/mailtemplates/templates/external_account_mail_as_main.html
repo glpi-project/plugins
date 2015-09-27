@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block message %}
+<p>
+   Dear {{user.username}},
+</p>
+<p>
+   You choose to have {{user.email}} as primary email account for GLPi Plugins.
+</p>
+<p>
+   This email address is already validated by {{service}}.
+</p>
+<p>
+   You don't have anything to do to validate this email address.
+</p>
+{% endblock %}

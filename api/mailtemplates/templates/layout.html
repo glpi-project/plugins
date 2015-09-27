@@ -3,11 +3,13 @@
 <head>
    <meta charset="UTF-8">
    <style>{% include 'global.css' %}</style>
+   {% if stylesheet %}
    <style>{% include stylesheet %}</style>
+   {% endif %}
 </head>
 <body>
    <div class="header">
-      <div class="logo"><img src="http://glpiplugindirectory/app/images/logo-small.png"><h1>Plugins</h1></div>
+      <div class="logo"><img src="{{client_url}}/images/logo-small.png"><h1>Plugins</h1></div>
       <h2>{{subject}}</h2>
    </div>
 

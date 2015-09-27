@@ -60,6 +60,9 @@ $register = Tool::makeEndpoint(function() use ($app) {
       !filter_var($body->email, FILTER_VALIDATE_EMAIL)) {
       throw new InvalidField('email');
    } else {
+      if (User::where('email', '=', $body->email)->first() != null) {
+         throw new UnavailableName('Email', $body->email);
+      }
       $new_user->email = $body->email;
    }
 
@@ -373,6 +376,12 @@ $profile_edit = Tool::makeEndpoint(function() use($app, $resourceServer) {
              'user:apps']);
          $user->active = true;
          $user->email = $body->email;
+
+         $mailer = new Mailer;
+         $mailer->sendMail('external_account_mail_as_main.html', [$user->email] ,
+                           'Email address validated by '.$externalAccount->service.' used as main email on GLPi Plugins',
+                           ['user' => $user->toArray(),
+                            'service' => $externalAccount->service]);
       }
    }
 
