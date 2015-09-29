@@ -54,7 +54,88 @@ angular.module('frontendApp')
       /**
        * "Link an Account" controller
        */
-      function AppEditDialogController (API_URL, $scope, $http) {
+      function AppEditDialogController (API_URL, $scope, $http,
+                                        vcRecaptchaService,
+                                        RECAPTCHA_PUBLIC_KEY,
+                                        Toaster, FormValidator) {
+         // $scope.recaptcha_key = RECAPTCHA_PUBLIC_KEY;
+         // $scope.recaptcha_response = null;
+         // $scope.recaptcha_widgetId = null;
+
+         // $scope.setResponse = function(response) {
+         //    $scope.recaptcha_response = response;
+         // };
+         // $scope.setWidgetId = function(widgetId) {
+         //    $scope.recaptcha_widgetId = widgetId;
+         // };
+         // $scope.cbExpiration = function() {
+         //    Toaster.make('Captcha expired, please select "I\'m not a robot" again');
+         //    $scope.recaptcha_response = null;
+         // };
+
+         $scope.form_errors = {
+            name: {
+               tooshort: false,
+               toolong: false
+            },
+            homepage_url: {
+               invalid: false
+            },
+            description: {
+               toolong: false
+            }
+         };
+
+         $scope.$watch('app.name', function() {
+            if (!$scope.app) return;
+            $scope.form_errors.name = FormValidator.getValidator('appname')($scope.app.name);
+         });
+         $scope.$watch('app.homepage_url', function() {
+            if (!$scope.app) return;
+            $scope.form_errors.homepage_url = FormValidator.getValidator('website')($scope.app.homepage_url);
+         });
+         $scope.$watch('app.description', function() {
+            if (!$scope.app) return;
+            $scope.form_errors.description = FormValidator.getValidator('appdescription')($scope.app.description);
+         });
+
+         $scope.save = function() {
+            var payload = {};
+
+            if ($scope.original_app.name != $scope.app.name) {
+               payload.name = $scope.app.name;
+            }
+
+            if ($scope.original_app.homepage_url != $scope.app.homepage_url) {
+               payload.homepage_url = $scope.app.homepage_url;
+            }
+
+            if ($scope.original_app.description != $scope.app.description) {
+               payload.description = $scope.app.description;
+            }
+
+            for (var field in $scope.form_errors) {
+               for (var err_type in $scope.form_errors[field]) {
+                  if ($scope.form_errors[field][err_type]) {
+                     return Toaster.make('You have an error, please read the hints');
+                  }
+               }
+            }
+
+            if (FormValidator.payloadEmpty(payload)) {
+               return $mdDialog.hide();
+            }
+
+            $http({
+               method: 'PUT',
+               url: API_URL + '/user/apps/'+$scope.app.id,
+               data: payload
+            }).then(function(resp) {
+               Toaster.make('You modified your app settings !');
+               $mdDialog.hide();
+            });
+         };
+
          /**
           * scope method to close the $mdDialog
           */
@@ -67,6 +148,7 @@ angular.module('frontendApp')
             url: API_URL + '/user/apps/' + currentAppEdited
          }).success(function(data) {
             $scope.app = data;
+            $scope.original_app = jQuery.extend({}, data);
          });
       }
 
