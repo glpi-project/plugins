@@ -40,9 +40,9 @@ angular.module('frontendApp')
          // http://stackoverflow.com/questions/5223/length-of-a-javascript-object-that-is-associative-array
          var size = 0, key;
          for (key in payload) {
-            if (payload.hasOwnProperty(key)) size++;
+            if (payload.hasOwnProperty(key)) {size++;}
          }
-         return size == 0;
+         return size === 0;
       };
 
       FormValidator.prototype.validators = {
