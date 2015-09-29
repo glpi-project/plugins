@@ -28,7 +28,7 @@ class Mailer {
       ]);
    }
 
-   public function sendMail($template, $to, $subject, $values) {
+   public function sendMail($template, $to, $subject, $values, $replyTo = null) {
       $template = $this->renderer->loadTemplate($template);
       $values['client_url'] = Tool::getConfig()['client_url'];
       $values['subject'] = $subject;
@@ -38,6 +38,10 @@ class Mailer {
                                ->setFrom(Tool::getConfig()['msg_alerts']['from'])
                                ->setTo($to)
                                ->setBody($mailBody, 'text/html');
+
+      if ($replyTo) {
+         $message->setReplyTo($replyTo);
+      }
 
       $this->mailer->send($message);
    }
