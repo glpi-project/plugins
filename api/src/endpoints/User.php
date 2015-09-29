@@ -508,73 +508,6 @@ $user_remove_watch = Tool::makeEndpoint(function ($key) use($app, $resourceServe
    $app->halt(200);
 });
 
-$user_apps = Tool::makeEndpoint(function() use($app, $resourceServer) {
-  OAuthHelper::needsScopes(['user', 'user:apps']);
-
-  $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
-  $user = User::where('id', '=', $user_id)->first();
-
-  Tool::endWithJson($user->apps()->get());
-});
-
-$user_app = Tool::makeEndpoint(function($id) use($app, $resourceServer) {
-  OAuthHelper::needsScopes(['user', 'user:apps']);
-
-  $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
-  $user = User::where('id', '=', $user_id)->first();
-
-  $app = $user->apps()->where('id', '=', $id)->first();
-
-  if (!$app) {
-      throw new \API\Exception\ResourceNotFound('app', $id);
-  }
-
-  Tool::endWithJson($app);
-});
-
-$user_declare_app = Tool::makeEndpoint(function() use($app, $resourceServer) {
-   OAuthHelper::needsScopes(['user', 'user:apps']);
-   $body = Tool::getBody();
-
-   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
-   $user = User::where('id', '=', $user_id)->first();
-
-   $app = new App;
-
-   if (!isset($body->name) || !App::isValidName($body->name)) {
-      throw new \API\Exception\InvalidField('name');
-   } else if (App::where('user_id', '=', $user_id)
-                 ->where('name', '=', $body->name)->first() != null) {
-      throw new \API\Exception\UnavailableName('app', $name);
-   }
-   else {
-     $app->name = $body->name;
-   }
-
-   if (isset($body->homepage_url)) {
-     if (!App::isValidUrl($body->homepage_url)) {
-       throw new \APi\Exception\InvalidField('url');
-     } else {
-       $app->homepage_url = $body->homepage_url;
-     }
-   }
-
-   if (isset($body->description)) {
-     if (!App::isValidDescription($body->description)) {
-       throw new \API\Exception\InvalidField('description');
-     } else {
-       $app->description = $body->description;
-     }
-   }
-
-   // If everything went ok
-   $app->setRandomClientId();
-   $app->setRandomSecret();
-
-   // Then save
-  $user->apps()->save($app);
-});
-
 // HTTP REST Map
 
 $app->post('/user', $register);
@@ -585,10 +518,7 @@ $app->get('/user/plugins', $user_plugins);
 $app->get('/user/watchs', $user_watchs);
 $app->post('/user/watchs', $user_add_watch);
 $app->delete('/user/watchs/:key', $user_remove_watch);
-$app->get('/user/apps', $user_apps);
 $app->get('/user/validatemail/:token', $user_validate_mail);
-$app->get('/user/apps/:id', $user_app);
-$app->post('/user/apps', $user_declare_app);
 
 $app->get('/oauth/available_emails', $oauth_external_emails);
 $app->get('/oauth/associate/:service', $user_associate_external_account);
@@ -596,8 +526,6 @@ $app->post('/oauth/authorize', $authorize);
 
 $app->options('/user', function() {});
 $app->options('/user/plugins', function() {});
-$app->options('/user/apps', function() {});
-$app->options('/user/apps/:id', function($id) {});
 $app->options('/user/external_accounts', function() {});
 $app->options('/oauth/authorize', function() {});
 $app->options('/oauth/associate/:service', function() {});
