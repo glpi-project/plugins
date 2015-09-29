@@ -95,7 +95,7 @@ $claim_authorship = Tool::makeEndpoint(function() use($app, $resourceServer) {
    }
 
    $mailer = new Mailer;
-   $mailer->sendMail('authorship_claim.html', Tool::getConfig()['msg_alerts']['recipients'],
+   $mailer->sendMail('authorship_claim.html', Tool::getConfig()['msg_alerts']['local_admins'],
                      'User '.$user->username.' claim authorship', ['user' => $user->toArray(),
                                                                   'author' => $author->toArray()]);
    $app->halt(200);
