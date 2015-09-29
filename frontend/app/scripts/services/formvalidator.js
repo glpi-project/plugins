@@ -142,7 +142,32 @@ angular.module('frontendApp')
                errors.toolong = true;
             }
             return errors;
+         },
+
+         "appname": function(appname) {
+            var errors = {
+               tooshort: false,
+               toolong: false,
+            };
+            if (appname.length < 4) {
+               errors.tooshort = true;
+            }
+            if (appname.length > 35) {
+               errors.toolong = true;
+            }
+            return errors;
+         },
+
+         "appdescription": function(appdescription) {
+            var errors = {
+               toolong: false
+            };
+            if (appdescription.length > 200) {
+               errors.toolong = true;
+            }
+            return errors;
          }
+
       };
 
       this.$get = function () {
