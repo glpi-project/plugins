@@ -207,6 +207,9 @@ angular.module('frontendApp')
          });
       }
 
+      /**
+       * "Claim an Authorship" controller
+       */
       function ClaimAuthorshipDialogController (API_URL, $scope, $http, RECAPTCHA_PUBLIC_KEY, vcRecaptchaService, Toaster) {
          $scope.recaptcha_key = RECAPTCHA_PUBLIC_KEY;
          $scope.recaptcha_response = null;
