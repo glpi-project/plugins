@@ -1,4 +1,4 @@
-<md-dialog class="dialog">
+<md-dialog class="dialog" id="apikey-edit">
    <md-toolbar>
       <div class="md-toolbar-tools">
          <h2>Edit your application settings</h2>
@@ -11,7 +11,7 @@
 
    <div class="settings">
       <h2>Settings</h2>
-      <form ng-submit="updateSettings()">
+      <form ng-submit="save()">
          <md-input-container>
             <label>Client ID</label>
             <input type="text" ng-model="app.id" disabled>
@@ -25,17 +25,35 @@
          <md-input-container>
             <label>Application name</label>
             <input type="text" ng-model="app.name">
+            <div ng-messages="form_errors.name">
+               <div ng-message="tooshort">Your application name must be at least 4 characters</div>
+               <div ng-message="toolong">Your application name musn't exceed 60 characters</div>
+            </div>
          </md-input-container>
 
          <md-input-container>
             <label>Homepage URL (optional)</label>
             <input type="text" ng-model="app.homepage_url">
+            <div ng-messages="form_errors.homepage_url">
+               <div ng-message="invalid">This is not a valid URL</div>
+            </div>
          </md-input-container>
 
          <md-input-container>
             <label>Application description (optional, example "my simple script" or "OAuth signup with GLPI plugins")</label>
             <textarea name="" id="" rows="2" ng-model="app.description"></textarea>
+            <div ng-messages="form_errors.description">
+               <div ng-message="toolong">Your application description musn't exceed 200 chars</div>
+            </div>
          </md-input-container>
+
+         <div vc-recaptcha theme="light" key="recaptcha_key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
+
+         <div class="buttons">
+            <md-button class="md-raised" type="submit">Save</md-button>
+            <md-button class="md-raised md-primary" type="submit">Delete this app</md-button>
+         </div>
+
       </form>
    </div>
 </md-dialog>
