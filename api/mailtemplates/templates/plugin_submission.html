@@ -1,0 +1,45 @@
+<p>Dear GLPi Plugins Admin Team,</p>
+
+<p>A new Plugin has been submitted on the directory.</p>
+
+<p>here is it's authoritative URL (plugin.xml file) : <a href="{{plugin_xml.url}}">{{plugin_xml.url}}</a></p>
+
+<p>here are some infos :</p>
+
+<table>
+   <tr>
+      <td>Plugin Name</td> <td>{{plugin_xml.name}}</td>
+   </tr>
+   <tr>
+      <td>Plugin Key</td> <td>{{plugin_xml.key}}</td>
+   </tr>
+   {% if plugin.description.short.en %}
+   <tr>
+      <td>Short Description</td> <td>{{plugin.description.short.en}}</td>
+   </tr>
+   {% endif %}
+   {% if plugin.tags.en %}
+   <tr>
+      <td>Tags</td>
+      <td>
+         <table>
+            {% for tag in plugin.tags.en %}
+            <tr><td>{{tag}}</td></tr>
+            {% endfor %}
+         </table>
+      </td>
+   </tr>
+   {% endif %}
+</table>
+
+<p>
+   It still needs to be validated by an admin, once it's done, please run:
+</p>
+
+<p>
+   UPDATE plugin SET active = 1 WHERE `key` = '{{plugin_xml.key}}';
+</p>
+
+<p>
+   On the production MySQL Server.
+</p>

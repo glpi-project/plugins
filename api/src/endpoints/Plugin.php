@@ -13,6 +13,7 @@
 
 
 use \API\Core\Tool;
+use \API\Core\Mailer;
 use \Illuminate\Database\Capsule\Manager as DB;
 use \API\Model\User;
 use \API\Model\Plugin;
@@ -21,6 +22,8 @@ use \ReCaptcha\ReCaptcha;
 use \API\Core\ValidableXMLPluginDescription;
 use \API\Exception\ResourceNotFound;
 use \API\OAuthServer\OAuthHelper;
+use \API\Exception\InvalidRecaptcha;
+use \API\Exception\InvalidField;
 
 /**
  * Fetching infos of a single plugin
@@ -161,22 +164,16 @@ $submit = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['plugin:submit']);
 
    $body = Tool::getBody();
-   $fields = ['plugin_url'];
 
    $recaptcha = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
    $resp = $recaptcha->verify($body->recaptcha_response);
    if (!$resp->isSuccess()) {
-      Tool::endWithJson([
-         "error" => "Recaptcha not validated"
-      ]);
+      throw new InvalidRecaptcha;
    }
 
-   foreach($fields as $prop) {
-     if (!property_exists($body, $prop)) {
-         Tool::endWithJson([
-             "error" => "Missing ". $prop
-         ]);
-     }
+   if (!isset($body->plugin_url) ||
+       gettype($body->plugin_url) != 'string') {
+      throw new InvalidField('plugin_url');
    }
 
    // Quickly validating
@@ -213,20 +210,18 @@ $submit = Tool::makeEndpoint(function() use($app) {
    $plugin->date_added = DB::raw('NOW()');
    $plugin->active = false;
    $plugin->download_count = 0;
+   $plugin->save();
 
-   $msg_alerts_settings = Tool::getConfig()['msg_alerts'];
-   $recipients = ''; $i = 0;
-   foreach ($msg_alerts_settings['recipients'] as $recipient) {
-      if ($i > 0)
-         $recipients .= ', ';
-      $recipients .= $recipient;
-      $i++;
-   }
+   // mail($recipients,
+   //      $msg_alerts_settings['subject_prefix'].'[PLUGIN SUBMISSION] '.$xml->name.' ('.$xml->key.')',
+   //      'A new plugin "'.$xml->name.'" with key "'.$xml->key.'" has been submitted and is awaiting to be verified. It has db id #'.$plugin->id,
+   //      "From: GLPI Plugins <plugins@glpi-project.org>");
+   $mailer = new Mailer;
+   $mailer->sendMail('plugin_submission.html', Tool::getConfig()['msg_alerts']['local_admins'],
+                     '[PLUGIN SUBMISSION] '.$xml->name. ' ('.$xml->key.')',
+                     ['plugin_xml' => (array)$xml]);
+>>>>>>> now using \API\Core\Mailer in Plugin::submit endpoint
 
-   mail($recipients,
-        $msg_alerts_settings['subject_prefix'].'[PLUGIN SUBMISSION] '.$xml->name.' ('.$xml->key.')',
-        'A new plugin "'.$xml->name.'" with key "'.$xml->key.'" has been submitted and is awaiting to be verified. It has db id #'.$plugin->id,
-        "From: GLPI Plugins <plugins@glpi-project.org>");
 
    Tool::endWithJson([
       "success" => true
