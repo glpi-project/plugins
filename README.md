@@ -241,3 +241,4 @@ this one is up-to-date, what changed is especially the
 SetEnvIf for Authorization header, and the Access-Control-
 directives that are used.
 
+open up http://glpiplugindirectory/app/ (trailing slash !) in your web browser
