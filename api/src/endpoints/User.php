@@ -28,7 +28,8 @@ use \API\Exception\UnavailableName;
 use \API\Exception\InvalidField;
 use \API\Exception\ExternalAccountAlreadyPaired;
 use \API\Exception\AlreadyWatched;
-use API\Exception\NoCredentialsLeft;
+use \API\Exception\NoCredentialsLeft;
+use \API\Exception\InvalidCredentials;
 
 use \API\OAuthServer\AuthorizationServer;
 use \API\OAuthServer\OAuthHelper;
@@ -112,6 +113,47 @@ $register = Tool::makeEndpoint(function() use ($app) {
                      'Please confirm your email account', ['stylesheet' => 'confirm_email.css',
                                              'user' => $new_user->toArray(),
                                              'validation_token' => $validationToken->token]);
+});
+
+$user_delete_account = Tool::makeEndpoint(function() use($app, $resourceServer) {
+   OAuthHelper::needsScopes(['user']);
+   $body = Tool::getBody();
+
+   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+   $user = User::where('id', '=', $user_id)->first();
+
+   // Ensures acceptable
+   // password was given
+   // so we don't do hash
+   // enormous character
+   // strings if evil.com
+   // owner come visit
+   // our systems
+   if (!isset($body->password) ||
+       gettype($body->password) != 'string' ||
+       !User::isValidPassword($body->password)) {
+      throw new InvalidField('password');
+   }
+
+   // Ensures given password is the good one
+   if (!$user->assertPasswordIs($body->password)) {
+      throw new InvalidCredentials($user->username, strlen($body->password));
+   }
+
+   // Delete the session and access_token
+   $sessions = $user->sessions()->get();
+   if (sizeof($sessions) > 0) {
+      foreach ($sessions as $session) {
+         if ($session->accessToken) {
+            $session->accessToken->delete();
+         }
+         $session->delete();
+      }
+   }
+
+   // Finally delete the user
+   $user->delete();
+   $app->halt(200);
 });
 
 $user_validate_mail = Tool::makeEndpoint(function($_validationToken) use($app) {
@@ -536,6 +578,7 @@ $user_remove_watch = Tool::makeEndpoint(function ($key) use($app, $resourceServe
 
 // user profile related
 $app->post('/user', $register);
+$app->post('/user/delete', $user_delete_account);
 $app->get('/user', $profile_view);
 $app->put('/user', $profile_edit);
 $app->get('/user/validatemail/:token', $user_validate_mail);

@@ -167,6 +167,51 @@ angular.module('frontendApp')
         });
       };
 
+      $scope.openDeleteAccountDialog = function(ev) {
+         $mdDialog.show({
+            controller: DeleteAccountDialogController,
+            templateUrl: 'views/deleteaccount.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true
+         });
+      };
+
+      function DeleteAccountDialogController($scope, Auth, $state, $rootScope) {
+         $scope.password_confirmation = '';
+
+         $scope.confirmDeletion = function() {
+            $http({
+               method: 'POST',
+               url: API_URL+'/user/delete',
+               data: {
+                  password: $scope.password_confirmation
+               }
+            }).then(function() {
+               Auth.loginAttempt({
+                  anonymous: true
+               });
+               Toaster.make('You got rid of your GLPi Plugins Account. Hope to see you back one day !');
+               $rootScope.$watch('authed', function(a) {
+                  $mdDialog.hide();
+                  if (!a) {
+                     $state.go('featured');
+                  }
+               });
+            }, function(resp) {
+               if (resp.data.error === 'INVALID_CREDENTIALS' ||
+                   resp.data.error === 'INVALID_FIELD(field=password)') {
+                  Toaster.make('The password you entered is not correct, please try again.');
+                  $mdDialog.hide();
+               }
+            });
+         };
+
+         $scope.close = function() {
+            $mdDialog.hide();
+         };
+      }
+
       /**
        * "Link an Account" controller
        */

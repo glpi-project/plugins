@@ -20,4 +20,8 @@ class Session extends Model {
    public function scopes() {
       return $this->belongsToMany('\API\Model\Scope', 'sessions_scopes', 'session_id', 'scope_id');
    }
+
+   public function accessToken() {
+      return $this->belongsTo('\API\Model\AccessToken');
+   }
 }

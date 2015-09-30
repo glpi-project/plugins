@@ -1,0 +1,28 @@
+<md-dialog class="dialog" id="confirm-deletion">
+   <md-toolbar>
+      <div class="md-toolbar-tools">
+         <h2>Delete your GLPi Plugins Account</h2>
+         <span flex></span>
+         <md-button class="md-icon-button" ng-click="close()">
+           <i class="fa fa-times"></i>
+         </md-button>
+      </div>
+   </md-toolbar>
+
+   <div class="enter-password">
+      <p>
+         We need you to confirm your password in order
+         to delete your GLPi Plugins account.
+         Please note that all your plugins will
+         remain on the GLPi Plugins Directory.
+      </p>
+      <form ng-submit="confirmDeletion()">
+         <md-input-container>
+            <label>Password</label>
+            <input type="password" ng-model="password_confirmation">
+         </md-input-container>
+<!--          <div vc-recaptcha theme="light" key="recaptcha_key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div> -->
+         <md-button class="md-raised md-primary" type="submit">Claim</md-button>
+      </form>
+   </div>
+</md-dialog>

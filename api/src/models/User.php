@@ -26,6 +26,9 @@ class User extends Model {
    public function watchs() {
       return $this->hasMany('\API\Model\PluginWatch');
    }
+   public function sessions() {
+      return $this->hasMany('\API\Model\Session', 'owner_id');
+   }
 
    // Setters
 
