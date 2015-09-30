@@ -177,11 +177,67 @@ server {
 
 ```
 
-## Start a built-in development server in javascript
+## Start to develop
 
-This is if you develop locally on the frontend side of glpi-plugin-directory
+If you wanted to serve glpi-plugin-directory on a server, and simply
+want to use the functionality provided by it, the previous configuration
+works all fine, but due to cross-domain related issues, a developer
+currently needs to use the node-js/yeoman/grunt based development server,
+BUT, he also need to serve it proxied by the Apache instance, this way,
+the webapp and api are served on the same /etc/hosts domain (which is
+what a web developer might use to handle multiple local projects).
+
+There is the new configuration for developers
+
+```apache
+<VirtualHost *:80>
+    ServerName glpiplugindirectory;
+    ProxyRequests off
+    ProxyPass /app/ http://127.0.0.1:9000/
+    ProxyPassReverse /app/ http://127.0.0.1:9000/
+
+     <Proxy *>
+         Order deny,allow
+         Allow from all
+     </Proxy>
+
+    <Directory "/Users/me/Code/glpi-plugin-directory">
+       Options FollowSymLinks
+       AllowOverride None
+       Require all granted
+    </Directory>
+
+    # This force the Authorization header to be passed to PHP
+    SetEnvIf Authorization "(.+)" HTTP_AUTHORIZATION=$1
+
+    <Location /api>
+       Header add Access-Control-Allow-Origin "*"
+       Header add Access-Control-Allow-Headers "origin, x-requested-with, content-type, x-lang, x-range, authorization"
+       Header add Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
+       Header add Access-Control-Expose-Headers "content-type, content-Range, accept-range"
+       RewriteEngine On
+       RewriteCond %{REQUEST_FILENAME} !-f
+       RewriteRule ^ index.php [QSA,L]
+    </Location>
+    Alias /api "/Users/me/Code/glpi-plugin-directory/api"
+
+    ErrorLog "/usr/local/var/log/apache2/glpiplugindirectory.error.log"
+    CustomLog "/usr/local/var/log/apache2/glpiplugindirectory.access.log" common
+</VirtualHost>
+```
+
+As the web app, in this case, is served through the development server,
+the developer might also need to run it ...
 
 ```bash
 cd frontend
 grunt serve
 ```
+
+Everything should turn fine.
+
+NOTE: The original Apache configuration might be outdated,
+this one is up-to-date, what changed is especially the 
+SetEnvIf for Authorization header, and the Access-Control-
+directives that are used.
+
