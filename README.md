@@ -15,7 +15,7 @@ you might want to do.
 
 clone this repository where you are able to,
 and serve it via PHP and a local webserver 
-(Apache currently has a better supported).
+(Apache currently has a better support).
 
 ```bash
 cd somewhere
