@@ -51,13 +51,13 @@ $user_declare_app = Tool::makeEndpoint(function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user', 'user:apps']);
    $body = Tool::getBody();
 
-   $recaptcha = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
-   if (!isset($body->recaptcha_response) ||
-       gettype($body->recaptcha_response) != 'string' ||
-       !$recaptcha->verify($body->recaptcha_response)
-                  ->isSuccess()) {
-      throw new InvalidRecaptcha;
-   }
+   // $recaptcha = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
+   // if (!isset($body->recaptcha_response) ||
+   //     gettype($body->recaptcha_response) != 'string' ||
+   //     !$recaptcha->verify($body->recaptcha_response)
+   //                ->isSuccess()) {
+   //    throw new InvalidRecaptcha;
+   // }
 
    $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
    $user = User::where('id', '=', $user_id)->first();
@@ -113,8 +113,8 @@ $user_edit_app = Tool::makeEndpoint(function($id) use($app, $resourceServer) {
    $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
    $user = User::where('id', '=', $user_id)->first();
 
-   $app = $user->apps()->find($id);
-   if (!$app) {
+   $user_app = $user->apps()->find($id);
+   if (!$user_app) {
       throw new ResourceNotFound('App', $id);
    }
 
@@ -126,7 +126,7 @@ $user_edit_app = Tool::makeEndpoint(function($id) use($app, $resourceServer) {
          if ($user->apps()->where('name', '=', $body->name)->first()) {
             throw new UnavailableName('App', $body->name);
          }
-         $app->name = $body->name;
+         $user_app->name = $body->name;
       }
    }
 
@@ -135,7 +135,7 @@ $user_edit_app = Tool::makeEndpoint(function($id) use($app, $resourceServer) {
           !App::isValidUrl($body->homepage_url)) {
          throw new InvalidField('homepage_url');
       } else {
-         $app->homepage_url = $body->homepage_url;
+         $user_app->homepage_url = $body->homepage_url;
       }
    }
 
@@ -144,18 +144,36 @@ $user_edit_app = Tool::makeEndpoint(function($id) use($app, $resourceServer) {
          !App::isValidDescription($body->description)) {
        throw new InvalidField('description');
      } else {
-       $app->description = $body->description;
+       $user_app->description = $body->description;
      }
    }
 
-   $app->save();
-   Tool::endWithJson($app);
+   $user_app->save();
+   Tool::endWithJson($user_app);
+});
+
+$user_delete_app = Tool::makeEndpoint(function($id) use($app, $resourceServer) {
+   OAuthHelper::needsScopes(['user', 'user:apps']);
+   $body = Tool::getBody();
+
+   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+   $user = User::where('id', '=', $user_id)->first();
+
+   $user_app = $user->apps()->find($id);
+
+   if ($user_app) {
+      $user_app->delete();
+      $app->halt(200);
+   } else {
+      throw new ResourceNotFound('App', $id);
+   }
 });
 
 // HTTP REST Map
 $app->get('/user/apps', $user_apps);
 $app->get('/user/apps/:id', $user_app);
 $app->put('/user/apps/:id', $user_edit_app);
+$app->delete('/user/apps/:id', $user_delete_app);
 $app->post('/user/apps', $user_declare_app);
 
 $app->options('/user/apps', function() {});

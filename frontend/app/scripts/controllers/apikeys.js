@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('ApiKeysCtrl', function (API_URL, $rootScope, $state, $http, $scope, $mdDialog) {
+  .controller('ApiKeysCtrl', function (API_URL, $rootScope, $state, $http, $scope, $mdDialog, Toaster) {
       if (!$rootScope.authed) {
          return $state.go('featured');
       }
@@ -17,12 +17,15 @@ angular.module('frontendApp')
       $scope.homepage = '';
       $scope.description = '';
 
-      $http({
-         method: 'GET',
-         url: API_URL + '/user/apps'
-      }).success(function(data) {
-         $scope.apps = data;
-      });
+      var grabApps = function() {
+         $http({
+            method: 'GET',
+            url: API_URL + '/user/apps'
+         }).success(function(data) {
+            $scope.apps = data;
+         });
+      };
+      grabApps();
 
       /**
        * scope method to open the "link an account"
@@ -57,7 +60,7 @@ angular.module('frontendApp')
       function AppEditDialogController (API_URL, $scope, $http,
                                         vcRecaptchaService,
                                         RECAPTCHA_PUBLIC_KEY,
-                                        Toaster, FormValidator) {
+                                        FormValidator) {
          // $scope.recaptcha_key = RECAPTCHA_PUBLIC_KEY;
          // $scope.recaptcha_response = null;
          // $scope.recaptcha_widgetId = null;
@@ -73,6 +76,7 @@ angular.module('frontendApp')
          //    $scope.recaptcha_response = null;
          // };
 
+         $scope.app = {};
          $scope.form_errors = {
             name: {
                tooshort: false,
@@ -87,15 +91,15 @@ angular.module('frontendApp')
          };
 
          $scope.$watch('app.name', function() {
-            if (!$scope.app) return;
+            if (!$scope.app.name) return;
             $scope.form_errors.name = FormValidator.getValidator('appname')($scope.app.name);
          });
          $scope.$watch('app.homepage_url', function() {
-            if (!$scope.app) return;
+            if (!$scope.app.homepage_url) return;
             $scope.form_errors.homepage_url = FormValidator.getValidator('website')($scope.app.homepage_url);
          });
          $scope.$watch('app.description', function() {
-            if (!$scope.app) return;
+            if (!$scope.app.description) return;
             $scope.form_errors.description = FormValidator.getValidator('appdescription')($scope.app.description);
          });
 
@@ -130,9 +134,29 @@ angular.module('frontendApp')
                method: 'PUT',
                url: API_URL + '/user/apps/'+$scope.app.id,
                data: payload
-            }).then(function(resp) {
+            }).then(function() {
                Toaster.make('You modified your app settings !');
                $mdDialog.hide();
+               grabApps();
+            });
+         };
+
+         $scope.delete = function(ev) {
+            var confirm = $mdDialog.confirm()
+                                 .title('Deletion of "'+$scope.app.name+'"')
+                                 .content('Are you certain you want to delete this API Key ?')
+                                 .ariaLabel('api key deletion')
+                                 .targetEvent(ev)
+                                 .ok('Please')
+                                 .cancel('I changed my mind');
+            $mdDialog.show(confirm).then(function() {
+               $http({
+                  method: 'DELETE',
+                  url: API_URL+'/user/apps/'+$scope.app.id
+               }).then(function() {
+                  Toaster.make('You deleted the concerned app');
+                  grabApps();
+               });
             });
          };
 
@@ -162,6 +186,9 @@ angular.module('frontendApp')
                description: $scope.description
             }
          }).success(function() {
+            $scope.appName = '';
+            $scope.homepage = '';
+            $scope.description = '';
             $http({
                method: 'GET',
                url: API_URL + '/user/apps'
