@@ -151,6 +151,10 @@ $user_delete_account = Tool::makeEndpoint(function() use($app, $resourceServer) 
       }
    }
 
+   //@MonkeyPatch
+   // delete all apps()
+   $user->apps()->delete();
+
    // Finally delete the user
    $user->delete();
    $app->halt(200);
