@@ -171,6 +171,22 @@ angular.module('frontendApp')
        * "Link an Account" controller
        */
       function LinkAccountDialogController (API_URL, $scope, $http) {
+         $scope.external_accounts = {};
+
+         /**
+          * Fetch list of current external accounts
+          * when controller loads
+          */
+          var grabAccounts = function() {
+            $http({
+               method: "GET",
+               url: API_URL + '/user/external_accounts'
+            }).success(function(data) {
+               $scope.external_accounts = data;
+            });
+          };
+          grabAccounts();
+
          /**
           * scope method to actually link the account
           */
@@ -191,20 +207,39 @@ angular.module('frontendApp')
          /**
           * scope method to unlink an external account
           */
-         $scope.unlinkAccount = function(external_account_id) {
-            console.log(external_account_id);
+         $scope.unlinkAccount = function(ev, external_account) {
+            var confirm = $mdDialog.confirm()
+                                 .title('Deletion of your '+external_account.service+' account')
+                                 .content('You decided to unlink your '+external_account.service+' external social account #'+external_account.external_user_id+' from your glpi plugins account. Are you certain ?')
+                                 .ariaLabel('external account unlinking')
+                                 .targetEvent(ev)
+                                 .ok('Please')
+                                 .cancel('I changed my mind');
+            $mdDialog.show(confirm).then(function() {
+               $http({
+                  method: 'DELETE',
+                  url: API_URL + '/user/external_accounts/'+external_account.id
+               }).then(function() {
+                  Toaster.make('You unlinked your external account');
+               }, function(resp) {
+                  switch (resp.data.error) {
+                     case 'NO_CREDENTIALS_LEFT':
+                        $mdDialog.show(
+                           $mdDialog.alert()
+                             .parent(angular.element(document.querySelector('body')))
+                             .clickOutsideToClose(true)
+                             .title('You cannot do that')
+                             .content('It appears that you never decided to have a password on GLPi Plugins. '+
+                                      'This external account is the only way for you to login on GLPi Plugins, as it is the only one left. '+
+                                      'If you really want to unlink that account, your must set a password first in your panel')
+                             .ariaLabel('cannot unlink because no credentials left')
+                             .ok('Got it!')
+                        );
+                        break;
+                  }
+               });
+            });
          };
-
-         /**
-          * Fetch list of current external accounts
-          * when controller loads
-          */
-         $http({
-            method: "GET",
-            url: API_URL + '/user/external_accounts'
-         }).success(function(data) {
-            $scope.external_accounts = data;
-         });
       }
 
       /**

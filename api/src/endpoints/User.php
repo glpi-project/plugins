@@ -28,6 +28,7 @@ use \API\Exception\UnavailableName;
 use \API\Exception\InvalidField;
 use \API\Exception\ExternalAccountAlreadyPaired;
 use \API\Exception\AlreadyWatched;
+use API\Exception\NoCredentialsLeft;
 
 use \API\OAuthServer\AuthorizationServer;
 use \API\OAuthServer\OAuthHelper;
@@ -295,12 +296,35 @@ $user_external_accounts = Tool::makeEndpoint(function() use ($app, $resourceServ
    $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
    $user = User::where('id', '=', $user_id)->first();
 
-   if (!$user) {
-      Tool::endWithJson(null, 401);
-   }
-
    $external_accounts = $user->externalAccounts()->get();
    Tool::endWithJson($external_accounts, 200);
+});
+
+$user_delete_external_account = Tool::makeEndpoint(function($id) use($app, $resourceServer) {
+   OAuthHelper::needsScopes(['user:externalaccounts']);
+
+   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
+   $user = User::where('id', '=', $user_id)->first();
+
+   $externalAccount = $user->externalAccounts()->find($id);
+   if ($externalAccount) {
+      $user_accounts_count = $user->externalAccounts()->count();
+      // if there is only one external
+      // account left, it means we expect
+      // the user to at least have a password
+      // so he can log in back to the system
+      if ($user_accounts_count == 1 &&
+          $user->password == NULL) {
+         // if he doesn't we won't let him
+         // delete the external account link
+         throw new NoCredentialsLeft;
+      }
+
+      $externalAccount->delete();
+   }
+
+
+   Tool::endWithJson("ui", 200);
 });
 
 /**
@@ -510,20 +534,28 @@ $user_remove_watch = Tool::makeEndpoint(function ($key) use($app, $resourceServe
 
 // HTTP REST Map
 
+// user profile related
 $app->post('/user', $register);
 $app->get('/user', $profile_view);
 $app->put('/user', $profile_edit);
-$app->get('/user/external_accounts', $user_external_accounts);
+$app->get('/user/validatemail/:token', $user_validate_mail);
+
+// user plugins related
 $app->get('/user/plugins', $user_plugins);
+
+// user watched plugins related
 $app->get('/user/watchs', $user_watchs);
 $app->post('/user/watchs', $user_add_watch);
 $app->delete('/user/watchs/:key', $user_remove_watch);
-$app->get('/user/validatemail/:token', $user_validate_mail);
 
+// oauth related
+$app->get('/user/external_accounts', $user_external_accounts);
+$app->delete('/user/external_accounts/:id', $user_delete_external_account);
 $app->get('/oauth/available_emails', $oauth_external_emails);
 $app->get('/oauth/associate/:service', $user_associate_external_account);
 $app->post('/oauth/authorize', $authorize);
 
+// options for CORS
 $app->options('/user', function() {});
 $app->options('/user/plugins', function() {});
 $app->options('/user/external_accounts', function() {});

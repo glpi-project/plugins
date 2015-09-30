@@ -27,7 +27,7 @@
          <md-list-item ng-repeat="account in external_accounts">
             <p>{{account.service}}</p>
             <p>{{account.external_user_id}}</p>
-            <md-button class="md-icon-button" ng-click="unlinkAccount(account.id)">
+            <md-button class="md-icon-button" ng-click="unlinkAccount($ev, account)">
                <i class="fa fa-times"></i>
             </md-button>
          </md-list-item>
