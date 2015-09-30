@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block message %}
+<p>
+   Dear {{user.username}},
+</p>
+<p>
+   We're happy for your interest in GLPi Plugins, <br />
+   There are updates on some plugins you watch.
+</p>
+<ul>
+   {% for plugin in updated_plugins %}
+      <li><a href="{{client_url}}/#/plugin/#{{plugin.key}}">{{plugin.name}}</a></li>
+   {% endfor %}
+</ul>
+{% endblock %}
