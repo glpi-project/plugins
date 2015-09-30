@@ -3,14 +3,19 @@
 [![Join the chat at https://gitter.im/glpi-project/plugins](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/glpi-project/plugins?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This is the server side and webapp of GLPI Plugin Directory.  
-It is the future of http://plugins.glpi-project.org
+
+It went on production mode on Teclib servers since GLPi project is managed by the company,
+see http://plugins.glpi-project.org .
+if you want to collaborate, don't hesitate to fork this project, there is a lot
+you might want to do.
 
 ## Installation
 
 ### First
 
-clone this repository where you are able to serve it via
-PHP and a webserver.
+clone this repository where you are able to,
+and serve it via PHP and a local webserver 
+(Apache currently has a better supported).
 
 ```bash
 cd somewhere
