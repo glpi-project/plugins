@@ -1,14 +1,6 @@
 <?php
-/**
- * update.php
- *
- * This script should be fired by a crontab
- * to update the database according to all
- * the url and checksums.
- */
 
-require __DIR__.'/../api/vendor/autoload.php';
-
+namespace API\Core;
 
 use \Illuminate\Database\Capsule\Manager as DB;
 use \API\Model\Author;
@@ -20,69 +12,99 @@ use \API\Model\Tag;
 use \API\Core\Tool;
 use \API\Core\ValidableXMLPluginDescription;
 
-class DatabaseUpdater {
+class BackgroundTasks {
    public function __construct() {
       // Connecting to MySQL
       \API\Core\DB::initCapsule();
    }
 
-   public function verifyAndUpdatePlugins() {
+   public function foreachPlugins() {
       $plugins = Plugin::where('active', '=', 1)
-                   ->get();
+                       ->get();
 
-      // Going to compare checksums
-      // for each of these plugins
       $n = 0;
+      $l = sizeof($plugins);
       foreach($plugins as $num => $plugin) {
          $n++;
-         // Defaults not to update
-         $update = false;
-         // fetching via http
-         $xml = @file_get_contents($plugin->xml_url);
-         if (!$xml) {
-            echo('Plugin (' . $n . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Cannot get XML file via HTTP, Skipping.\n");
-            continue;
-         }
-         $crc = md5($xml); // compute crc
-         if ($plugin->xml_crc != $crc ||
-            $plugin->name == NULL) {
-            $update = true; // if we got
-            // missing name or changing
-            // crc, then we're going to
-            // update that one
-         }
-         else {
-            echo('Plugin (' . $n . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Already updated, Skipping.\n");
-            continue;
-         }
-
-         // loading XML OO-style with simplemxl
-         $xml = new ValidableXMLPluginDescription($xml);
-         if (!$xml->isValid()) {
-            echo('Plugin (' . $n . '/'. sizeof($plugins) ."): \"".$plugin->name."\" Unreadable/Non validable XML, Skipping.\n");
-            echo("Errors: \n");
-            foreach ($xml->errors as $error)
-               echo (" - ".$error."\n");
-            continue;
-         }
-         $xml = $xml->contents;
-
-         echo('Plugin (' . $n . '/'. sizeof($plugins) .'): Updating ... ');
-         $this->updatePlugin($plugin, $xml, $crc);
+         $this->updatePlugin($plugin, $n, $l);
       }
    }
 
-   public function updatePlugin($plugin, $xml, $new_crc) {
-      if (strlen($plugin->name) == 0) {
+   /**
+    * Task : updatePlugin()
+    *
+    * This function does direct output,
+    * in fact it builds the log string
+    * that concerns the update of a
+    * plugin.
+    */
+   public function updatePlugin($plugin, /*$xml, $new_crc,*/ $index = null, $length = null) {
+      // Displaying index / length
+      echo('Plugin (' . $index . '/'. $length . "): ");
+
+      $update = false;
+
+      // fetching via http
+      $xml = @file_get_contents($plugin->xml_url);
+      if (!$xml) {
+         echo($plugin->xml_url."\" Cannot get XML file via HTTP, Skipping.\n");
+         return false;
+      }
+      $crc = md5($xml); // compute crc
+      if ($plugin->xml_crc != $crc ||
+          $plugin->name == NULL) {
+          $update = true; // if we got
+         // missing name or changing
+         // crc, then we're going to
+         // update that one.
+         // missing name means it's
+         // the first time the plugin
+         // is updated
+      }
+      else {
+         echo ("\"" . $plugin->name . "\" Already updated, Skipping.\n");
+         return false;
+      }
+
+      $xml = new ValidableXMLPluginDescription($xml);
+      if (!$xml->isValid()) {
+         echo($plugin->name . "\" Unreadable/Non validable XML, Skipping.\n");
+         echo("Errors: \n");
+         foreach ($xml->errors as $error)
+            echo (" - ".$error."\n");
+         return false;
+      }
+      $xml = $xml->contents;
+
+      if (!$plugin->name) {
          echo "first time update, found name \"".$xml->name."\"...";
+         if (Plugin::where('name', '=', $xml->name)->first()) {
+            echo " already exists. skipping.";
+            // this would be amazing to alert the administrators
+            // of that. new Mailer; ?
+            return false;
+         }
          $firstTimeUpdate = true;
       }
       else {
-         if ($plugin->name != $xml->name)
-            echo "\"".$plugin->name."\" going to become \"".$xml->name."\" ...";
-         else
-            echo "\"".$xml->name."\" going to be updated ...";
+         if ($plugin->name != $xml->name) {
+            echo " requested name change to \"".$xml->name."\" ...";
+            if (Plugin::where('name', '=', $xml->name)->first()) {
+               echo " but name already exists. skipping.";
+               // this would be amazing to alert the administrators
+               // of that. new Mailer; ?
+               return false;
+            }
+         }
       }
+
+      if ($firstTimeUpdate) {
+         echo "\"".$xml->name."\"";
+      } else {
+         echo "\"".$plugin->name."\"";
+      }
+      echo " going to be synced with xml ...";
+
       // Updating basic infos
       $plugin->logo_url = $xml->logo;
       $plugin->name = $xml->name;
@@ -99,7 +121,7 @@ class DatabaseUpdater {
       foreach ($xml->description->children() as $type => $descs) {
          if (in_array($type, ['short','long'])) {
             foreach($descs->children() as $_lang => $content) {
-               $descriptions[$_lang][$type] = (string)$content;          
+               $descriptions[$_lang][$type] = (string)$content;
             }
          }
       }
@@ -186,7 +208,7 @@ class DatabaseUpdater {
       }
 
       // new crc
-      $plugin->xml_crc = $new_crc;
+      $plugin->xml_crc = $crc;
       // new timestamp
       if (!isset($firstTimeUpdate)) {
          $plugin->date_updated = DB::raw('NOW()');
@@ -286,6 +308,3 @@ class DatabaseUpdater {
       }
    }
 }
-
-$db_updater = new DatabaseUpdater;
-$db_updater->verifyAndUpdatePlugins();
