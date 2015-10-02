@@ -18,7 +18,7 @@ class BackgroundTasks {
       \API\Core\DB::initCapsule();
    }
 
-   public function foreachPlugins() {
+   public function foreachPlugins($tasks) {
       $plugins = Plugin::where('active', '=', 1)
                        ->get();
 
@@ -26,7 +26,13 @@ class BackgroundTasks {
       $l = sizeof($plugins);
       foreach($plugins as $num => $plugin) {
          $n++;
-         $this->updatePlugin($plugin, $n, $l);
+         if (in_array('update', $tasks)) {
+            $subtasks = [];
+            if (in_array('alert_watchers', $tasks)) {
+               $subtasks[] = 'alert_watchers';
+            }
+            $this->updatePlugin($plugin, $n, $l, $subtasks);
+         }
       }
    }
 
@@ -38,7 +44,7 @@ class BackgroundTasks {
     * that concerns the update of a
     * plugin.
     */
-   public function updatePlugin($plugin, /*$xml, $new_crc,*/ $index = null, $length = null) {
+   public function updatePlugin($plugin, /*$xml, $new_crc,*/ $index = null, $length = null, $subtasks) {
       // Displaying index / length
       echo('Plugin (' . $index . '/'. $length . "): ");
 
@@ -62,7 +68,7 @@ class BackgroundTasks {
          // is updated
       }
       else {
-         echo ("\"" . $plugin->name . "\" Already updated, Skipping.\n");
+         echo ("\"" . $plugin->name . "\" Already up-to-date, Skipping.\n");
          return false;
       }
 
@@ -214,7 +220,26 @@ class BackgroundTasks {
          $plugin->date_updated = DB::raw('NOW()');
       }
       $plugin->save();
-      echo " OK\n";
+      echo " OK";
+      if (in_array('alert_watchers', $subtasks)) {
+         $this->alertWatchers($plugin);
+         echo "\n";
+      } else {
+         echo "\n";
+      }
+   }
+
+   function alertWatchers($plugin) {
+      $client_url = Tool::getConfig()['client_url'];
+      foreach ($plugin->watchers()->get() as $watch) {
+         $user = $watch->user;
+         $mailer = new Mailer;
+         $mailer->sendMail('plugin_updated.html', Tool::getConfig()['msg_alerts']['local_admins'],
+                           'Plugin update "'.$plugin->name.'"',
+                           ['plugin' => $plugin,
+                            'user'   => $user,
+                            'client_url' => Tool::getConfig()]);
+      }
    }
 
    /*

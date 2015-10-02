@@ -5,4 +5,4 @@ require __DIR__.'/../api/vendor/autoload.php';
  */
 
 $tasks = new \API\Core\BackgroundTasks;
-$tasks->foreachPlugins();
+$tasks->foreachPlugins(['update', 'alert_watchers']);

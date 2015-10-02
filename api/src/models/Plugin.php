@@ -2,7 +2,7 @@
 
 namespace API\Model;
 
-use \Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Plugin extends Model {
@@ -39,6 +39,10 @@ class Plugin extends Model {
 
    public function tags() {
       return $this->belongsToMany('\API\Model\Tag', 'plugin_tags');
+   }
+
+   public function watchers() {
+      return $this->hasMany('\API\Model\PluginWatch');
    }
 
    public function scopeShort($query) {
