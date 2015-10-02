@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block message %}
+<p>
+   Dear {{user.username}},
+</p>
+<p>
+   The {{plugin.name}} plugin, which you are watching on GLPi Plugins, has been updated very recently.<br />
+   You might want to check the plugin page.
+</p>
+<p>
+   Plugin page: <a href="{{client_url}}/#/plugin/{{plugin.key}}">{{plugin.name}}</a>
+</p>
+<p>
+   If for any reason, you would like to stop following this plugin, you can move your browser to
+   the plugin page, which link is in the previous paragraph.<br />
+   You can also go to the <a href="{{client_url}}/#/panel/notifications">Notifications settings</a> part of your panel on GLPi Plugins.
+</p>
+<p>
+   Thanks you {{user.username}}
+</p>
+{% endblock %}
