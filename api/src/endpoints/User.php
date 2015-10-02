@@ -206,6 +206,7 @@ $user_associate_external_account = Tool::makeEndpoint(function($service) use($ap
    if (isset($_COOKIE['access_token'])) {
       $alreadyAuthed = true;
 
+      // this is OUR access token, not the provider's one
       $accessToken = AccessToken::where('token', '=', $_COOKIE['access_token'])->first();
       setcookie('access_token', '', 1, '/');
       if (!$accessToken) {

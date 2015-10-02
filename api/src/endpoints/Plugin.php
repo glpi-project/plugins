@@ -212,10 +212,6 @@ $submit = Tool::makeEndpoint(function() use($app) {
    $plugin->download_count = 0;
    $plugin->save();
 
-   // mail($recipients,
-   //      $msg_alerts_settings['subject_prefix'].'[PLUGIN SUBMISSION] '.$xml->name.' ('.$xml->key.')',
-   //      'A new plugin "'.$xml->name.'" with key "'.$xml->key.'" has been submitted and is awaiting to be verified. It has db id #'.$plugin->id,
-   //      "From: GLPI Plugins <plugins@glpi-project.org>");
    $mailer = new Mailer;
    $mailer->sendMail('plugin_submission.html', Tool::getConfig()['msg_alerts']['local_admins'],
                      '[PLUGIN SUBMISSION] '.$xml->name. ' ('.$xml->key.')',
