@@ -184,6 +184,7 @@ $submit = function() use($app) {
     $plugin->xml_url = $body->plugin_url;
     $plugin->date_added = DB::raw('NOW()');
     $plugin->active = false;
+    $plugin->download_count = 0;
     $plugin->save();
 
 
