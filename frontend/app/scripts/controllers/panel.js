@@ -290,7 +290,7 @@ angular.module('frontendApp')
       /**
        * "Claim an Authorship" controller
        */
-      function ClaimAuthorshipDialogController (API_URL, $scope, $http, RECAPTCHA_PUBLIC_KEY, vcRecaptchaService, Toaster) {
+      function ClaimAuthorshipDialogController (API_URL, $scope, $http, RECAPTCHA_PUBLIC_KEY, vcRecaptchaService, Toaster, $mdDialog) {
          $scope.recaptcha_key = RECAPTCHA_PUBLIC_KEY;
          $scope.recaptcha_response = null;
          $scope.recaptacha_widgetId = null;
@@ -325,6 +325,23 @@ angular.module('frontendApp')
                Toaster.make('We ackownledged your request', 'body');
             }, function(resp) {
                vcRecaptchaService.reload($scope.widgetId);
+               if (/^RESOURCE_NOT_FOUND\(type=Author/.exec(resp.data.error)) {
+                  // @todo @refactor_wished
+                  // should have a angular component to parse the error
+                  // codes returned by the
+                  // server, but it is actually out of specification
+                  // and we need to release now. this is an idea for
+                  // upcoming refactorings.
+                  $mdDialog.show(
+                     $mdDialog.alert()
+                        .parent(angular.element(document.querySelector('body')))
+                        .clickOutsideToClose(true)
+                        .title('Wrong spelling, Author not found')
+                        .content('We never heard of '+$scope.author+', please verify the exact spelling between <author> and </author> in the XML file, and try again.')
+                        .ariaLabel('author not found while authorship claiming')
+                        .ok('I\'ll sure do.')
+                  );
+               }
             });
          };
 
