@@ -17,7 +17,7 @@ angular.module('frontendApp')
          $scope.author = data;
       })
       .error(function(data) {
-         if (data.error === 'RESOURCE_NOT_FOUND') {
+         if (/^RESOURCE_NOT_FOUND/.exec(data.error)) {
             $state.go('featured');
             Toaster.make('This author does not exists');
          }

@@ -9,10 +9,10 @@ class ResourceNotFound extends ErrorResponse {
 
    public function __construct($type = null, $key = null) {
       if ($type) {
-         $this->setInfo('type', $type);
+         $this->setInfo('type', $type, true);
       }
       if ($key) {
-         $this->setInfo('key',  $key);
+         $this->setInfo('key',  $key, true);
       }
       parent::__construct();
    }
