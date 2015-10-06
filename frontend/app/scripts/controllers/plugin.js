@@ -176,24 +176,11 @@ angular.module('frontendApp')
       }
 
       filterTags(localStorage.getItem('lang'));
-<<<<<<< HEAD
-   }).error(function() {
-      var toast = $mdToast.simple()
-                  .capsule(true)
-                  .content('Oops... it look\'s like it\'s a 404 ... No plugin named `'+$stateParams.key+'` in the database')
-                  .position('top');
-               toast._options.parent =  angular.element(document.getElementById('submit_form'));
-               $mdToast.show(toast);
-      $timeout(function() {
-         $state.go('featured');
-      }, 3000);
-=======
    })
    .error(function(data) {
       if (/^RESOURCE_NOT_FOUND/.exec(data.error)) {
          $state.go('featured');
          Toaster.make('404 ! This plugin doesn\'t exit', 'body');
       }
->>>>>>> client change state when 404 of a single plugin
    });
 });

@@ -9,7 +9,7 @@ class Mailer {
    private $renderer;
 
    public function __construct() {
-      switch (Tool::getConfig()['transport']) {
+      switch (Tool::getConfig()['msg_alerts']['transport']) {
          case 'mail':
             $transport = \Swift_MailTransport::getInstance();
             break;

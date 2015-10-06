@@ -216,8 +216,6 @@ $submit = Tool::makeEndpoint(function() use($app) {
    $mailer->sendMail('plugin_submission.html', Tool::getConfig()['msg_alerts']['local_admins'],
                      '[PLUGIN SUBMISSION] '.$xml->name. ' ('.$xml->key.')',
                      ['plugin_xml' => (array)$xml]);
->>>>>>> now using \API\Core\Mailer in Plugin::submit endpoint
-
 
    Tool::endWithJson([
       "success" => true

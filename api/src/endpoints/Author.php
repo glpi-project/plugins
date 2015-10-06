@@ -66,7 +66,7 @@ $author_plugins = Tool::makeEndpoint(function($id) use($app) {
                                        ->whereAuthor($author->id)
                      )
    );
-};
+});
 
 $claim_authorship = Tool::makeEndpoint(function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user']);
