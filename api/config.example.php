@@ -14,11 +14,12 @@ $config = [
 	"log_queries" => true,
 	"recaptcha_secret" => '--your recaptcha key here--',
 	"msg_alerts" => [
-      "smtp_server" => "smtp.server.com",
-      "transport_mode" => "tls",
-      "port" => 587,
-      "username" => "mailer@glpi-plugins.com",
-      "password" => "mailerprivatesmtppassword",
+      "transport" => "mail", // mail, smtp, or sendmail
+      // "smtp_server" => "smtp.server.com",
+      // "transport_mode" => "tls",
+      // "port" => 587,
+      // "username" => "mailer@glpi-plugins.com",
+      // "password" => "mailerprivatesmtppassword",
       "local_admins" => ["person@email.com" => 'Person Full Name'], /* Used for special alerts to a admins */
       "from" => ['mailer@glpi-plugins.com' => 'GLPi Plugins'],
       "subject_prefix" => "[GLPI PLUGINS] "
@@ -29,25 +30,9 @@ $config = [
 	"oauth" => [ // Uncomment the following lines
 	             // to add client ID's for each
 					 // provider
-		// "github" => [
-		// 	"clientId" => "",
-		// 	"clientSecret" => "",
-		// 	"redirectUri" => ""
-		// ],
-		// "google" => [
-		// 	"clientId" => "",
-		// 	"clientSecret" => "",
-		// 	"redirectUri" => ""
-		// ],
-		// "facebook" => [
-		// 	"clientId" => "",
-		// 	"clientSecret" => "",
-		// 	"redirectUri" => ""
-		// ],
-		// "twitter" => [
-		// 	"clientId" => "",
-		// 	"clientSecret" => "",
-		// 	"redirectUri" => ""
-		// ],
+		"github" => [
+			"clientId" => "--your github client id here--",
+			"clientSecret" => "--your github client secret here--"
+		]
 	]
 ];
