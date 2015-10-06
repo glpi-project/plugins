@@ -24,13 +24,13 @@ use \API\Core\ValidableXMLPluginDescription;
  */
 $single = function($key) use($app) {
    $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots', 'tags')
-                  ->short()
-                  ->withAverageNote()
-                  ->withNumberOfVotes()
-                  ->withCurrentVersion()
-                  ->where('key', '=', $key)
-                  ->where('active', '=', 1)
-                  ->first();
+                   ->short()
+                   ->withAverageNote()
+                   ->withNumberOfVotes()
+                   ->withCurrentVersion()
+                   ->where('key', '=', $key)
+                   ->where('active', '=', 1)
+                   ->first();
 
    if ($plugin) {
       Tool::endWithJson($plugin);
