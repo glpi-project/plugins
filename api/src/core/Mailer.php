@@ -9,9 +9,18 @@ class Mailer {
    private $renderer;
 
    public function __construct() {
-      $transport = \Swift_SmtpTransport::newInstance(Tool::getConfig()['msg_alerts']['smtp_server'],
-                                                       Tool::getConfig()['msg_alerts']['port'],
-                                                       Tool::getConfig()['msg_alerts']['transport_mode']);
+      switch (Tool::getConfig()['transport']) {
+         case 'mail':
+            $transport = \Swift_MailTransport::getInstance();
+            break;
+         case 'smtp':
+            $transport = \Swift_SmtpTransport::newInstance(Tool::getConfig()['msg_alerts']['smtp_server'],
+                                                           Tool::getConfig()['msg_alerts']['port'],
+                                                           Tool::getConfig()['msg_alerts']['smtp_transport_mode']);
+            break;
+         default:
+            throw new \Exception('missing msg_alerts.transport setting. please see config.example.php and edit config.php accordingly');
+      }
 
       if (isset(Tool::getConfig()['msg_alerts']['username'])) {
          $transport->setUsername(Tool::getConfig()['msg_alerts']['username']);
