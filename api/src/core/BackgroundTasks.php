@@ -102,6 +102,7 @@ class BackgroundTasks {
                return false;
             }
          }
+         $firstTimeUpdate = false;
       }
 
       if ($firstTimeUpdate) {
