@@ -11,7 +11,7 @@ class Mailer {
    public function __construct() {
       switch (Tool::getConfig()['msg_alerts']['transport']) {
          case 'mail':
-            $transport = \Swift_MailTransport::getInstance();
+            $transport = \Swift_MailTransport::newInstance();
             break;
          case 'smtp':
             $transport = \Swift_SmtpTransport::newInstance(Tool::getConfig()['msg_alerts']['smtp_server'],
