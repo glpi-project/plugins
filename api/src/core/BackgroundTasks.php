@@ -103,13 +103,9 @@ class BackgroundTasks {
             }
          }
          $firstTimeUpdate = false;
-      }
-
-      if ($firstTimeUpdate) {
-         echo "\"".$xml->name."\"";
-      } else {
          echo "\"".$plugin->name."\"";
       }
+
       echo " going to be synced with xml ...";
 
       // Updating basic infos
