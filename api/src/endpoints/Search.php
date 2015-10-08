@@ -32,15 +32,16 @@ $search = function() use($app) {
 
    $_search = Tool::paginateCollection(
                     \API\Model\Plugin::short()
-                               ->with('authors', 'versions', 'descriptions')
-                               ->withAverageNote()
-                               ->descWithLang(Tool::getRequestLang())
-                         ->where('name', 'LIKE', "%$query_string%")
-                         ->orWhere('plugin_description.short_description', 'LIKE', "%$query_string%")
-                         ->orWhere('plugin_description.long_description', 'LIKE', "%$query_string%")
-                         ->orderBy('download_count', 'DESC')
-                         ->orderBy('note', 'DESC')
-                         ->orderBy('name', 'ASC'));
+                                     ->with('authors', 'versions', 'descriptions')
+                                     ->withAverageNote()
+                                     ->descWithLang(Tool::getRequestLang())
+                                     ->where('name', 'LIKE', "%$query_string%")
+                                     ->orWhere('plugin_description.short_description', 'LIKE', "%$query_string%")
+                                     ->orWhere('plugin_description.long_description', 'LIKE', "%$query_string%")
+                                     ->orWhere('key', 'LIKE', "%$query_string%")
+                                     ->orderBy('download_count', 'DESC')
+                                     ->orderBy('note', 'DESC')
+                                     ->orderBy('name', 'ASC'));
    Tool::endWithJson($_search);
 };
 
