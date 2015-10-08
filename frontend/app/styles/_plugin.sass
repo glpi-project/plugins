@@ -50,7 +50,7 @@
       .description
          background-color: $verylightgrey
    .markdown
-      li 
+      li
          list-style-type: inherit
 
    .infos
@@ -68,6 +68,18 @@
                text-transform: uppercase
             label + span
                display: table-cell
+         li span.glpi-top-compatible-version
+            padding-left: 6px
+            &:after
+               display: inline-block
+               content: ','
+               padding-left: 2px
+            &:first-child
+               padding-left: 0
+            &:last-child
+               &:after
+                  display: none
+
 
 @media (max-width: 599px)
    .plugin

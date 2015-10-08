@@ -12,7 +12,7 @@ angular.module('frontendApp')
 .controller('PluginCtrl', function(API_URL, $scope, $http, $stateParams, $window, $filter, $state, $mdToast, $timeout) {
    $scope.plugin = {
       authors: {},
-      downloaded: 0
+      download_count: 0
    };
    $scope.rated = false;
 
@@ -86,6 +86,9 @@ angular.module('frontendApp')
    $scope.screenshots = [];
    $scope.tags = [];
 
+   // This local-to-controller helper function
+   // helps filtering the tags for the current
+   // selected language
    var filterTags = function(lang) {
       var tags = [];
       for (var i in $scope.plugin.tags) {
@@ -103,6 +106,22 @@ angular.module('frontendApp')
    $scope.$on('languageChange', function(evt, data) {
       filterTags(data.newLang);
    });
+
+   $scope.displayLatestCompatibleGlpiVersions = function(versions) {
+      var versions = jQuery.extend([], versions); //copying object
+      var topCompatibleGlpiVersions = [];
+      if (versions.length) {
+         var topVersion = versions.shift();
+         var pluginTopVer = topVersion.num;
+         topCompatibleGlpiVersions.push(topVersion.compatibility)
+         for (var n in versions) {
+            if (versions[n].num == pluginTopVer) {
+               topCompatibleGlpiVersions.push(versions[n].compatibility);
+            }
+         }
+      }
+      return topCompatibleGlpiVersions;
+   };
 
    $http({
       method: 'GET',

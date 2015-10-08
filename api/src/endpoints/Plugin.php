@@ -18,6 +18,7 @@ use \API\Model\Plugin;
 use \API\Model\PluginStar;
 use \ReCaptcha\ReCaptcha;
 use \API\Core\ValidableXMLPluginDescription;
+use \API\Exception\ResourceNotFound;
 
 /**
  * Fetching infos of a single plugin
@@ -27,18 +28,15 @@ $single = function($key) use($app) {
                    ->short()
                    ->withAverageNote()
                    ->withNumberOfVotes()
-                   ->withCurrentVersion()
                    ->where('key', '=', $key)
                    ->where('active', '=', 1)
                    ->first();
 
-   if ($plugin) {
-      Tool::endWithJson($plugin);
-   } else {
-      Tool::endWithJson([
-       'error' => 'No plugin has that key'
-      ], 400);
+   if (!$plugin) {
+      throw new \API\Exception\ResourceNotFound('Plugin', $key);
    }
+
+   Tool::endWithJson($plugin);
 };
 
 /**
