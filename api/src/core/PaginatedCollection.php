@@ -103,10 +103,12 @@ class PaginatedCollection {
 
    public function setHeaders(&$response) {
       $response->headers['accept-range']   = 'model '. $this->length;
-      if ($this->currentRange) {     
+      if ($this->currentRange) {
          $response->headers['content-range']  = $this->currentRange->startIndex;
          $response->headers['content-range'] .= '-'.$this->currentRange->endIndex;
          $response->headers['content-range'] .= '/'.$this->length;
+      } else if($this->length == 0) {
+         $response->headers['content-range'] = '0-0/0';
       }
    }
 
@@ -117,4 +119,4 @@ class PaginatedCollection {
    public function get($rangeHeader) {
       return $this->page;
    }
-} 
+}
