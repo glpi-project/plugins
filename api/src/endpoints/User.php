@@ -383,7 +383,7 @@ $user_delete_external_account = Tool::makeEndpoint(function($id) use($app, $reso
    }
 
 
-   Tool::endWithJson("ui", 200);
+   $app->halt(200);
 });
 
 /**
