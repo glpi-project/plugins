@@ -119,8 +119,7 @@ $user_delete_account = Tool::makeEndpoint(function() use($app, $resourceServer) 
    OAuthHelper::needsScopes(['user']);
    $body = Tool::getBody();
 
-   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
-   $user = User::where('id', '=', $user_id)->first();
+   $user = OAuthHelper::currentlyAuthed();
 
    // Ensures acceptable
    // password was given
@@ -340,8 +339,7 @@ $authorize = Tool::makeEndpoint(function() use($app) {
 $user_external_accounts = Tool::makeEndpoint(function() use ($app, $resourceServer) {
    OAuthHelper::needsScopes(['user:externalaccounts']);
 
-   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
-   $user = User::where('id', '=', $user_id)->first();
+   $user = OAuthHelper::currentlyAuthed();
 
    $external_accounts = $user->externalAccounts()->get();
    Tool::endWithJson($external_accounts, 200);
@@ -350,8 +348,7 @@ $user_external_accounts = Tool::makeEndpoint(function() use ($app, $resourceServ
 $user_delete_external_account = Tool::makeEndpoint(function($id) use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user:externalaccounts']);
 
-   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
-   $user = User::where('id', '=', $user_id)->first();
+   $user = OAuthHelper::currentlyAuthed();
 
    $externalAccount = $user->externalAccounts()->find($id);
    if ($externalAccount) {
@@ -382,8 +379,7 @@ $user_delete_external_account = Tool::makeEndpoint(function($id) use($app, $reso
 $oauth_external_emails = Tool::makeEndpoint(function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user']);
 
-   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
-   $user = User::where('id', '=', $user_id)->first();
+   $user = OAuthHelper::currentlyAuthed();
 
    $externalAccounts = $user->externalAccounts()->get();
 
@@ -406,8 +402,7 @@ $oauth_external_emails = Tool::makeEndpoint(function() use($app, $resourceServer
 $profile_view = Tool::makeEndpoint(function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user']);
 
-   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
-   $user = User::where('id', '=', $user_id)->first();
+   $user = OAuthHelper::currentlyAuthed();
 
    Tool::endWithJson($user, 200);
 });
@@ -421,8 +416,7 @@ $profile_edit = Tool::makeEndpoint(function() use($app, $resourceServer) {
 
    $body = Tool::getBody();
 
-   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
-   $user = User::where('id', '=', $user_id)->first();
+   $user = OAuthHelper::currentlyAuthed();
 
    if (isset($body->email)) {
       $externalAccounts = $user->externalAccounts()->get();
@@ -486,12 +480,7 @@ $profile_edit = Tool::makeEndpoint(function() use($app, $resourceServer) {
 $user_plugins = Tool::makeEndpoint(function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user', 'plugins']);
 
-   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
-   $user = User::where('id', '=', $user_id)->first();
-
-   if (!$user) {
-      throw new ResourceNotFound('User', $user_id);
-   }
+   $user = OAuthHelper::currentlyAuthed();
 
    if (!$user->author) {
       Tool::endWithJson([], 200);
@@ -503,12 +492,7 @@ $user_plugins = Tool::makeEndpoint(function() use($app, $resourceServer) {
 $user_watchs = Tool::makeEndpoint(function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user', 'plugins']);
 
-   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
-   $user = User::where('id', '=', $user_id)->first();
-
-   if (!$user) {
-      throw new ResourceNotFound('User', $user_id);
-   }
+   $user = OAuthHelper::currentlyAuthed();
 
    $plugins = [];
    foreach ($user->watchs()->get() as $watch) {
@@ -522,12 +506,7 @@ $user_add_watch = Tool::makeEndpoint(function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user', 'plugins']);
    $body = Tool::getBody();
 
-   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
-   $user = User::where('id', '=', $user_id)->first();
-
-   if (!$user) {
-      throw new ResourceNotFound('User', $user_id);
-   }
+   $user = OAuthHelper::currentlyAuthed();
 
    if (!isset($body->plugin_key) ||
        gettype($body->plugin_key) != 'string') {
@@ -556,12 +535,7 @@ $user_remove_watch = Tool::makeEndpoint(function ($key) use($app, $resourceServe
    OAuthHelper::needsScopes(['user', 'plugins']);
    $body = Tool::getBody();
 
-   $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
-   $user = User::where('id', '=', $user_id)->first();
-
-   if (!$user) {
-      throw new ResourceNotFound('User', $user_id);
-   }
+   $user = OAuthHelper::currentlyAuthed();
 
    $plugin = Plugin::where('key', '=', $key)->first();
    if (!$plugin) {
