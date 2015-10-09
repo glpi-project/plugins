@@ -1,0 +1,35 @@
+.pluginpanel
+   padding: 0 15px
+   .pluginpanel-header
+      @include clearfix
+      width: 100%
+      .plugin-name
+         float: left
+      .panel-title
+         float: right
+   .summary
+      label
+         font-weight: 700
+         display: inline-block
+         min-width: 200px
+      .tags-container
+         label, .tags
+            display: block
+         margin-bottom: 4px
+      .tags
+         @include clearfix
+         span
+            margin-left: 8px
+            &:after
+               display: inline-block
+               content: ','
+               margin-left: 4px
+            &:first-child
+               margin-left: 0
+            &:last-child
+               &:after
+                  display: none
+   .plugin-settings
+      @include clearfix
+      .the-submit
+         float: right
