@@ -98,6 +98,34 @@ class OAuthHelper {
    }
 
    /**
+    * If the current http request is made by an
+    * authenticated user, this function will
+    * evaluate to the current user id, if not,
+    * the function will evaluate to false
+    *
+    * @todo: store the user model in a static variable
+    *        of that class (subtodo, implement singleton pattern)
+    *        the first time this function is evaluated
+    *        and return that user moodel the next time.
+    *        this is for performance, to avoid querying
+    *        too much the SQL Server
+    */
+   public static function currentlyAuthed() {
+      global $resourceServer;
+
+      $resourceServer->isValidRequest();
+      if (($user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId()) &&
+          ($user = User::find($user_id))) {
+         return $user;
+      } else if ($user_id && !$user) { // This is a very
+         // unexpected case, because the session collector
+         // is also here to avoid that problem
+         throw new \Exception('got an access token with session and unexisting owner id');
+      }
+      return false;
+   }
+
+   /**
     * It creates an access token, a session, and links
     * scopes mentionned in $scopes to the session and
     * access token, it finally returns the new access token
