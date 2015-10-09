@@ -24,13 +24,13 @@ use \API\Exception\ResourceNotFound;
 use \API\OAuthServer\OAuthHelper;
 use \API\Exception\InvalidRecaptcha;
 use \API\Exception\InvalidField;
+use \API\Exception\ResourceNotFound;
 
 /**
  * Fetching infos of a single plugin
  */
 $single = Tool::makeEndpoint(function($key) use($app, $resourceServer) {
    OAuthHelper::needsScopes(['plugin:card']);
-
 
    $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots', 'tags')
                   ->short()
@@ -50,6 +50,33 @@ $single = Tool::makeEndpoint(function($key) use($app, $resourceServer) {
    } else {
       throw new \API\Exception\ResourceNotFound('Plugin', $key);
    }
+});
+
+$single_authormode = Tool::makeEndpoint(function($key) use($app) {
+   OAuthHelper::needsScopes(['plugin:card', 'user']);
+
+   // get plugin
+   $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots', 'tags')
+                  ->short()
+                  ->withAverageNote()
+                  ->withNumberOfVotes()
+                  ->withCurrentVersion()
+                  ->where('key', '=', $key)
+                  ->where('active', '=', 1)
+                  ->first();
+
+   if (!$plugin) {
+      throw new ResourceNotFound('Plugin', $key);
+   }
+
+   Tool::endWithJson([
+      "card" => $plugin,
+      "tags" => $plugin->tags()->get(),
+      "statistics" => [
+         "current_monthly_downloads" => 500,
+         "current_weekly_downloads" => 250
+      ]
+   ]);
 });
 
 /**
@@ -134,7 +161,7 @@ $star = Tool::makeEndpoint(function() use($app) {
       ], 400);
    }
 
-   $plugin = Plugin::find($body->plugin_id);
+   $plugin = Plugin::where('active', '=', true)->find($body->plugin_id);
 
    if ($plugin == NULL) {
       Tool::endWithJson([
@@ -222,6 +249,8 @@ $submit = Tool::makeEndpoint(function() use($app) {
    ]);
 });
 
+
+
 // HTTP REST Map
 $app->get('/plugin', $all);
 $app->post('/plugin', $submit);
@@ -230,7 +259,8 @@ $app->get('/plugin/trending', $trending);
 $app->get('/plugin/updated', $updated);
 $app->get('/plugin/new', $new);
 $app->post('/plugin/star', $star);
-$app->get('/plugin/:id', $single);
+$app->get('/plugin/:key', $single);
+$app->get('/panel/plugin/:key', $single_authormode);
 
 $app->options('/plugin',function(){});
 $app->options('/plugin/popular',function(){});
@@ -239,3 +269,4 @@ $app->options('/plugin/updated',function(){});
 $app->options('/plugin/new',function(){});
 $app->options('/plugin/star',function(){});
 $app->options('/plugin/:id',function($id){});
+$app->options('/panel/plugin/:id',function($id){});
