@@ -36,14 +36,6 @@ use \API\OAuthServer\OAuthHelper;
 
 /**
  * Register a new user
- *
- * minimal infos are:
- *  + realname
- *  + username
- *  + password
- *  + email
- *  + location
- *  + website
  */
 $register = Tool::makeEndpoint(function() use ($app) {
    $body = Tool::getBody();
@@ -115,6 +107,9 @@ $register = Tool::makeEndpoint(function() use ($app) {
                                              'validation_token' => $validationToken->token]);
 });
 
+/**
+ * Deletes the GLPi account on user request
+ */
 $user_delete_account = Tool::makeEndpoint(function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user']);
    $body = Tool::getBody();
@@ -159,6 +154,10 @@ $user_delete_account = Tool::makeEndpoint(function() use($app, $resourceServer) 
    $app->halt(200);
 });
 
+/**
+ * Validate the email address for a manually registered user
+ * (i.e: click on the link that is sent by mail)
+ */
 $user_validate_mail = Tool::makeEndpoint(function($_validationToken) use($app) {
   $validationToken = ValidationToken::where('token', '=', $_validationToken)->first();
 
@@ -193,8 +192,11 @@ $user_validate_mail = Tool::makeEndpoint(function($_validationToken) use($app) {
 });
 
 /**
- * RPC that serves as a callback for the OAuth2
- * service
+ * Callback from a OAuth2 supported external service which handles
+ *  - creation of a GLPi Plugins account from an external service account
+ *  - association of an external service account to an existing GLPi Plugins account
+ *  - authentification is external account is already known to be linked to
+ *    a GLPi Plugins account
  */
 $user_associate_external_account = Tool::makeEndpoint(function($service) use($app, $resourceServer) {
    $oAuth = new OAuthClient($service);
@@ -316,7 +318,8 @@ $user_associate_external_account = Tool::makeEndpoint(function($service) use($ap
 
 /**
  * Authorize an user, providing him an
- * access token
+ * access token, this is directly backed
+ * by leaguephp/oauth2-server
  */
 $authorize = Tool::makeEndpoint(function() use($app) {
    if (isset($_POST['grant_type']) &&
@@ -345,6 +348,18 @@ $user_external_accounts = Tool::makeEndpoint(function() use ($app, $resourceServ
    Tool::endWithJson($external_accounts, 200);
 });
 
+/**
+ * Delete the link between GLPi Plugins account and
+ * remote OAuth2 account. There is a security that
+ * avoir the user to remove his last external account
+ * if it is the only way for him to auth back to the
+ * system.
+ *
+ * @note: if the account is activated, the
+ * user could have used the "I forgot my password"
+ * feature, but we still prefer to alert the user that
+ * he need to setup basic password.
+ */
 $user_delete_external_account = Tool::makeEndpoint(function($id) use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user:externalaccounts']);
 
@@ -489,6 +504,10 @@ $user_plugins = Tool::makeEndpoint(function() use($app, $resourceServer) {
    Tool::endWithJson($user->author->plugins()->get());
 });
 
+/**
+ * Returns the list of plugins that the user
+ * watch by key.
+ */
 $user_watchs = Tool::makeEndpoint(function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user', 'plugins']);
 
@@ -502,6 +521,10 @@ $user_watchs = Tool::makeEndpoint(function() use($app, $resourceServer) {
    Tool::endWithJson($plugins);
 });
 
+/**
+ * Endpoint whose action is to declare the watch
+ * of a plugin
+ */
 $user_add_watch = Tool::makeEndpoint(function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user', 'plugins']);
    $body = Tool::getBody();
@@ -531,6 +554,10 @@ $user_add_watch = Tool::makeEndpoint(function() use($app, $resourceServer) {
    $app->halt(200);
 });
 
+/**
+ * Endpoint whose action is to stop watching
+ * a specific plugin
+ */
 $user_remove_watch = Tool::makeEndpoint(function ($key) use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user', 'plugins']);
    $body = Tool::getBody();
@@ -579,7 +606,11 @@ $app->post('/oauth/authorize', $authorize);
 
 // options for CORS
 $app->options('/user', function() {});
+$app->options('/user/delete', function() {});
+$app->options('/user/validatemail/:token', function($token) {});
+$app->options('/user/watchs', function() {});
 $app->options('/user/plugins', function() {});
 $app->options('/user/external_accounts', function() {});
+$app->options('/oauth/available_emails', function() {});
 $app->options('/oauth/authorize', function() {});
 $app->options('/oauth/associate/:service', function() {});
