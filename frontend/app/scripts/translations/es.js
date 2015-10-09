@@ -64,6 +64,10 @@ angular
             EXTERNAL_ACCOUNT_ALREADY_PAIRED: "This external account has been already linked to another GLPI Plugins account.",
             PLUGIN_ALREADY_WATCHED: "You already watch that plugin",
             YOURE_NOW_WATCHING: "You are now watching",
-            PLUGIN_UNWATCHED: "You unwatched"
+            PLUGIN_UNWATCHED: "You unwatched",
+            TAGGED: "Tagged",
+            DOWNLOADED: "Downloaded",
+            THIS_MONTH: "This month",
+            THIS_WEEK: "This week"
          });
    });

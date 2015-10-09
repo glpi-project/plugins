@@ -72,9 +72,9 @@ angular.module('frontendApp')
          method: "GET",
          url: API_URL + '/user'
       }).success(function(data) {
-         if (!data.active) {
-          return $state.go('finishactivateaccount');
-         }
+         // if (!data.active) {
+         //  return $state.go('finishactivateaccount');
+         // }
          $scope.user = data;
          $scope.original_user = jQuery.extend({}, $scope.user);
       });
