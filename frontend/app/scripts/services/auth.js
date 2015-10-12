@@ -42,7 +42,6 @@ angular.module('frontendApp')
          }
 
          param.client_id = "webapp";
-         param.scope = 'plugins plugins:search plugin:card plugin:star plugin:submit plugin:download tags tag authors author version message user user:externalaccounts user:apps';
 
          if (!options.anonymous) {
             param.grant_type = "password";
