@@ -8,16 +8,23 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('VersionCtrl', function (API_URL, $http, $stateParams, $scope, PaginatedCollection) {
+  .controller('VersionCtrl', function (API_URL, $http, $stateParams, $scope, PaginatedCollection, fixIndepnet) {
       $scope.results = PaginatedCollection.getInstance();
       $scope.results.setRequest(function(from,to) {
-         return $http({
+         var p = $http({
             method: "GET",
             url: API_URL + '/version/'+$stateParams.version+'/plugin',
             headers: {
                'X-Range': from+'-'+to
             }
          });
+         p.then(function(resp) {
+            for (var n in resp.data) {
+               fixIndepnet.fix(resp.data[n]);
+            }
+            return resp;
+         });
+         return p;
       });
 
       var fetch = function() {
