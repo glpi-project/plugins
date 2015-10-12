@@ -13,6 +13,16 @@ angular.module('frontendApp')
     var authManager, rootScope, mdToast, timeout, http, cookies, Toaster, $window, filter, state;
     var AuthManager = function() {};
 
+    AuthManager.prototype.defaultScope = [
+      'plugins', 'plugins:search', 'plugin:card', 'plugin:star', 'plugin:submit',
+      'plugin:download', 'tags', 'tag', 'authors', 'author', 'version', 'message'
+    ];
+    AuthManager.prototype.authedScope =
+      AuthManager.prototype.defaultScope
+   .concat([
+      'user', 'user:externalaccounts', 'user:apps'
+   ]);
+
     /**
      * This methods is used to make a real login attempt
      * (auth attempt) via glpi-plugins account
@@ -38,9 +48,11 @@ angular.module('frontendApp')
             param.grant_type = "password";
             param.username = options.login;
             param.password = options.password;
+            param.scope = this.authedScope.join(' ');
             var auth = true;
          } else {
             param.grant_type = "client_credentials";
+            param.scope = this.defaultScope.join(' ');
             var auth = false;
          }
 
@@ -206,7 +218,7 @@ angular.module('frontendApp')
           client_id: 'webapp',
           grant_type: 'refresh_token',
           refresh_token: localStorage.getItem('refresh_token'),
-          scope: 'plugins plugins:search plugin:card plugin:star plugin:submit plugin:download tags tag authors author version message user user:externalaccounts user:apps'
+          scope: this.authedScope.join(' ')
         }),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
