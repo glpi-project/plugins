@@ -127,4 +127,20 @@ class Plugin extends Model {
             ->where('plugin_version.compatibility', '=', $version);
       return $query;
    }
+
+   /**
+    * Returns a boolean according to the
+    * `truth author #"author_id" is one
+    * of the plugin's author`
+    */
+   public function hasAuthor($author_id) {
+      $owner = false;
+      foreach ($this->authors as $author) {
+         if ($author_id == $author->id) {
+            $owner = true;
+            break;
+         }
+      }
+      return $owner;
+   }
 }
