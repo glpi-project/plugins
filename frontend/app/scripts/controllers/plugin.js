@@ -11,7 +11,7 @@ angular.module('frontendApp')
 
 .controller('PluginCtrl', function(API_URL, $scope, $http, $stateParams,
                                    $window, $filter, $state, $mdToast,
-                                   $timeout, fixIndepnet) {
+                                   $timeout, fixIndepnet, Toaster) {
    $scope.plugin = {
       authors: {},
       download_count: 0
