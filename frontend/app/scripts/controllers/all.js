@@ -8,16 +8,23 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-   .controller('AllCtrl', function(API_URL, $http, $scope, PaginatedCollection, $stateParams) {
+   .controller('AllCtrl', function(API_URL, $http, $scope, PaginatedCollection, $stateParams, fixIndepnet) {
       $scope.results = PaginatedCollection.getInstance();
       $scope.results.setRequest(function(from, to) {
-         return $http({
+         var p = $http({
             method: "GET",
             url: API_URL + '/plugin',
             headers: {
                'X-Range': from+'-'+to
             }
          });
+         p.then(function(resp) {
+            for (var n in resp.data) {
+               fixIndepnet.fix(resp.data[n]);
+            }
+            return resp;
+         });
+         return p;
       });
 
       if ($stateParams.page) {

@@ -12,10 +12,10 @@ angular.module('frontendApp')
 
 // This controller is created anytime the search
 // input's content is changed
-.controller('SearchCtrl', function(API_URL, $rootScope, $scope, $timeout, $stateParams, PaginatedCollection, $http) {
+.controller('SearchCtrl', function(API_URL, $rootScope, $scope, $timeout, $stateParams, PaginatedCollection, $http, fixIndepnet) {
    $scope.results = PaginatedCollection.getInstance();
    $scope.results.setRequest(function(from,to) {
-      return $http({
+      var p = $http({
                   method: "POST",
                   url: API_URL + '/search',
                   data: {
@@ -25,6 +25,13 @@ angular.module('frontendApp')
                      'X-Range': from+'-'+to
                   }
                });
+      p.then(function(resp) {
+         for (var n in resp.data) {
+            fixIndepnet.fix(resp.data[n]);
+         }
+         return resp;
+      });
+      return p;
    });
 
    var doSearch = function() {

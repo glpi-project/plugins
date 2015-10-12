@@ -9,7 +9,9 @@
  */
 angular.module('frontendApp')
 
-.controller('PluginCtrl', function(API_URL, $scope, $http, $stateParams, $window, $filter, $state, $mdToast, $timeout) {
+.controller('PluginCtrl', function(API_URL, $scope, $http, $stateParams,
+                                   $window, $filter, $state, $mdToast,
+                                   $timeout, fixIndepnet) {
    $scope.plugin = {
       authors: {},
       download_count: 0
@@ -128,6 +130,7 @@ angular.module('frontendApp')
       url: API_URL + '/plugin/' + $stateParams.key
    })
    .success(function(data) {
+      fixIndepnet.fix(data);
       $scope.plugin = data;
       $scope.rated = (localStorage.getItem('rated_' + $scope.plugin.id) == 'true') ? true : false;
       $scope.selectedIndex = getTabWithLang(localStorage.getItem('lang'));
