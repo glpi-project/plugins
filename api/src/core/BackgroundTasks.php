@@ -73,13 +73,14 @@ class BackgroundTasks {
       }
 
       $xml = new ValidableXMLPluginDescription($xml);
-      if (!$xml->isValid()) {
+      try {
+         $xml->validate();
+      }
+      catch (\API\Exception\ErrorResponse $e) {
          echo($plugin->name . "\" Unreadable/Non validable XML, Skipping.\n");
-         echo("Errors: \n");
-         foreach ($xml->errors as $error)
-            echo (" - ".$error."\n");
          return false;
       }
+
       $xml = $xml->contents;
 
       if (!$plugin->name) {
@@ -146,7 +147,7 @@ class BackgroundTasks {
       $plugin->authors()->detach();
       $clean_authors = [];
       foreach($xml->authors->children() as $author) {
-         $_clean_authors = $this->fixParseAuthors((string)$author);
+         $_clean_authors = Author::fixKnownDuplicates((string)$author);
          foreach ($_clean_authors as $author) {
             $clean_authors[] = $author;
          }
@@ -217,7 +218,7 @@ class BackgroundTasks {
          $plugin->date_updated = DB::raw('NOW()');
       }
       $plugin->save();
-      echo " OK";
+      echo " OK.";
       if (in_array('alert_watchers', $subtasks)) {
          $this->alertWatchers($plugin);
          echo "\n";
@@ -236,97 +237,6 @@ class BackgroundTasks {
                            ['plugin' => $plugin,
                             'user'   => $user,
                             'client_url' => Tool::getConfig()]);
-      }
-   }
-
-   /*
-    * fixParseAuthors()
-    *
-    * This function is very specific,
-    * it aims to provide a fix to current
-    * state of things in xml files.
-    *
-    * Currently, some authors are duplicates,
-    * and spelled differently depending on
-    * plugins, this functions aims to ensure
-    * correct detection of EACH author.
-    *
-    * This function shouldn't be here and might
-    * dissapear someday.
-    */
-   private $fpa_separators = [',', '/'];
-   private $fpa_duplicates = [
-      [
-         "names" => ['Xavier Caillaud / Infotel',
-                  'Xavier CAILLAUD'],
-         "ends"  => 'Xavier Caillaud'
-      ],
-      [
-         "names" => ['Nelly LASSON',
-                  'Nelly MAHU-LASSON'],
-         "ends"  => 'Nelly Mahu-Lasson'
-      ],
-      [
-         "names" => ['David DURIEUX'],
-         "ends"  => 'David Durieux'
-      ],
-      [
-         "names" => ['Olivier DURGEAU'],
-         "ends"  => 'Olivier Durgeau'
-      ],
-      [
-         "names" => ['Yohan BOUSSION'],
-         "ends"  => 'Yohan Boussion'
-      ],
-      [
-         "names" => ['Philippe GODOT'],
-         "ends"  => 'Philippe Godot'
-      ],
-      [
-         "names" => ['Cyril ZORMAN'],
-         "ends"  => 'Cyril Zorman'
-      ],
-      [
-         "names" => ['Maxime BONILLO'],
-         "ends"  => 'Maxime Bonillo'
-      ],
-      [
-         "names" => ['Philippe THOIREY'],
-         "ends"  => 'Philippe Thoirey'
-      ]
-   ];
-   public function fixParseAuthors($author_string) {
-      $detectedAuthors = [];
-      // empty string
-      if ($author_string == '') {
-         return $detectedAuthors;
-      }
-      // detecting known duplicates
-      foreach($this->fpa_duplicates as $known_duplicate) {
-         foreach ($known_duplicate['names'] as $known_name) {
-               if (preg_match('/'.preg_quote($known_name, '/').'/', $author_string)) {
-                  $author_string = preg_replace('/'.preg_quote($known_name, '/').'/',
-                                         $known_duplicate['ends'],
-                                         $author_string);
-               }
-         }
-      }
-
-      // detecting inline multiple authors
-      foreach($this->fpa_separators as $separator) {
-         $found_authors = explode($separator, $author_string);
-         if (sizeof($found_authors) > 1) {
-            foreach ($found_authors as $author) {
-               $detectedAuthors[] = trim($author);
-            }
-            break;
-         }
-      }
-
-      if (sizeof($detectedAuthors) == 0) {
-         return [trim($author_string)];
-      } else {
-         return $detectedAuthors;
       }
    }
 }
