@@ -64,14 +64,14 @@ class BackgroundTasks {
       $n_deleted = 0;
 
       foreach ($accessTokens as $accessToken) {
-         if (in_array('delete_AT_if_perempted', $tasks)) {
-            if ($this->deleteAccessTokenIfPerempted($accessToken)) {
+         if (in_array('delete_AT_if_expired', $tasks)) {
+            if ($this->deleteAccessTokenIfExpired($accessToken)) {
                $n_deleted++;
             }
          }
       }
 
-      if (in_array('delete_AT_if_perempted', $tasks) && $n_deleted > 0) {
+      if (in_array('delete_AT_if_expired', $tasks) && $n_deleted > 0) {
          echo " deleted ".$n_deleted." perempted access tokens.";
       }
 
@@ -340,19 +340,31 @@ class BackgroundTasks {
 
    // Tasks for Access Tokens
 
-   private function deleteAccessTokenIfPerempted() {
-      return true;
+   private function deleteAccessTokenIfExpired($accessToken) {
+      if ($accessToken->isExpired()) {
+         $accessToken->delete();
+         return true;
+      }
+      return false;
    }
 
    // Tasks for Refresh Tokens
 
-   private function deleteLonelyRefreshToken() {
-      return true;
+   private function deleteLonelyRefreshToken($refreshToken) {
+      if ($refreshToken->isAlone()) {
+         $refreshToken->delete();
+         return true;
+      }
+      return false;
    }
 
    // Tasks for Sessions
 
-   private function deleteLonelySession() {
-      return true;
+   private function deleteLonelySession($session) {
+      if ($session->isAlone()) {
+         $session->delete();
+         return true;
+      }
+      return false;
    }
 }

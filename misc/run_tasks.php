@@ -6,6 +6,6 @@ require __DIR__.'/../api/vendor/autoload.php';
 
 $taskDispatcher = new \API\Core\BackgroundTasks;
 $taskDispatcher->foreachPlugin(['update', 'alert_watchers']);
-$taskDispatcher->foreachAccessToken(['delete_AT_if_perempted']);
+$taskDispatcher->foreachAccessToken(['delete_AT_if_expired']);
 $taskDispatcher->foreachRefreshToken(['delete_lonely_RT']);
 $taskDispatcher->foreachSession(['delete_lonely_session']);
