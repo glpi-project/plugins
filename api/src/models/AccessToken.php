@@ -20,4 +20,23 @@ class AccessToken extends Model {
    public function refreshToken() {
       return $this->hasOne('\API\Model\RefreshToken');
    }
+
+   public function isExpired() {
+      if (strtotime($this->expire_time) - time() <= 0) {
+         if ($session = $this->session) {
+            if ($session->owner_type == 'user') {
+               $refreshToken = $this->refreshToken;
+               if (!$refreshToken || $refreshToken->isExpired()) {
+                  return true;
+               }
+            }
+            elseif ($session->owner_type == 'client') {
+               if ($session->app_id == 'webapp') {
+                  return true;
+               }
+            }
+         }
+      }
+      return false;
+   }
 }

@@ -22,6 +22,13 @@ class Session extends Model {
    }
 
    public function accessToken() {
-      return $this->belongsTo('\API\Model\AccessToken');
+      return $this->hasOne('\API\Model\AccessToken');
+   }
+
+   public function isAlone() {
+      if (!$this->accessToken) {
+         return true;
+      }
+      return false;
    }
 }
