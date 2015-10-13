@@ -35,17 +35,16 @@
          <h3>Settings</h3>
             <md-input-container>
                <label>Authoritative Plugin Meta-Description File URL (XML File)</label>
-               <input type="text" ng-model="plugin.xml_url">
+               <input type="text" ng-model="plugin.card.xml_url">
             </md-input-container>
       </div>
 
       <div class="contributors">
          <h3>Contributors</h3>
          <ul>
-            <li>Walid Nouh (You)</li>
-            <li>Rémi Collet</li>
+            <li ng-repeat="author in plugin.card.authors">{{author.name}} {{(author_id == author.id) ? '( You )' : ''}}</li>
          </ul>
       </div>
-      <md-button class="the-submit md-raised md-primary">Save</md-button>
+      <md-button class="the-submit md-raised md-primary" type="submit">Save</md-button>
    </form>
 </div>
