@@ -48,17 +48,19 @@ class Author extends Model {
    /*
     * fixKnownDuplicates()
     *
-    * This function is very specific,
-    * it aims to provide a fix to current
-    * state of things in xml files.
-    *
-    * Currently, some authors are duplicates,
-    * and spelled differently depending on
-    * plugins, this functions aims to ensure
-    * correct detection of EACH author.
-    *
-    * This function shouldn't be here and might
-    * dissapear someday.
+    * We have known duplicates and we know their
+    * exact spelling. It also appears sometimes
+    * that multiple authors were actually inlined
+    * in a single <author> tag.
+    * This function provides a fix, each time
+    * called with any <author> string, it returns
+    * the unique name for all groups of duplicates
+    * mentionned in fkd_duplicates, and all the
+    * separate items delimited by separators.
+    * It will return what was given, as a list
+    * (an array) of a single element for consistance
+    * if the given name is not a duplicate nor
+    * an inline list of names.
     */
    private static $fkd_separators = [',', '/'];
    private static $fkd_duplicates = [
