@@ -53,6 +53,10 @@ angular.module('frontendApp')
             data: {
                xml_url: $scope.plugin.card.xml_url
             }
+         }).then(function(resp) {
+            Toaster.make('You plugin has been updated.');
+         }, function(resp) {
+            Toaster.make(resp.data.error);
          });
       };
   });

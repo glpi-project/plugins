@@ -144,6 +144,12 @@ $single_authormode_edit = Tool::makeEndpoint(function($key) use($app) {
       //   we compare what is in the xml
       $_xml_authors = (array)$xml->authors;
       $_xml_authors = $_xml_authors['author'];
+      //   simplexml API returns a string if there
+      //   is a single 'author' node in authors
+      //   here
+      if (gettype($_xml_authors) == 'string') {
+         $_xml_authors = [$_xml_authors];
+      }
       $xml_authors = [];
       //   while applying the fixKnownDuplicates patch
       foreach ($_xml_authors as $author) {
