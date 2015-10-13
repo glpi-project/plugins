@@ -9,6 +9,9 @@ use \API\Model\PluginDescription;
 use \API\Model\PluginVersion;
 use \API\Model\PluginScreenshot;
 use \API\Model\Tag;
+use \API\Model\AccessToken;
+use \API\Model\RefreshToken;
+use \API\Model\Session;
 use \API\Core\Tool;
 use \API\Core\ValidableXMLPluginDescription;
 
@@ -18,12 +21,23 @@ class BackgroundTasks {
       \API\Core\DB::initCapsule();
    }
 
-   public function foreachPlugins($tasks) {
+   /**
+    * Triggers the given list of tasks
+    * on each plugin if task is supported
+    * on plugins, and also
+    * divides tasks into subtasks, and
+    * passes them to the a task
+    * that supports them
+    */
+   public function foreachPlugin($tasks) {
       $plugins = Plugin::where('active', '=', 1)
                        ->get();
 
       $n = 0;
       $l = sizeof($plugins);
+
+      echo "Analyzing ".$l." plugins... \n\n";
+
       foreach($plugins as $num => $plugin) {
          $n++;
          if (in_array('update', $tasks)) {
@@ -34,7 +48,91 @@ class BackgroundTasks {
             $this->updatePlugin($plugin, $n, $l, $subtasks);
          }
       }
+
+      echo "\n";
    }
+
+   /**
+    * Triggers the given list of tasks
+    * on each access token if task
+    * is supported on access tokens
+    */
+   public function foreachAccessToken($tasks) {
+      $accessTokens = AccessToken::get();
+      echo "Analyzing ".sizeof($accessTokens)." access tokens...";
+
+      $n_deleted = 0;
+
+      foreach ($accessTokens as $accessToken) {
+         if (in_array('delete_AT_if_perempted', $tasks)) {
+            if ($this->deleteAccessTokenIfPerempted($accessToken)) {
+               $n_deleted++;
+            }
+         }
+      }
+
+      if (in_array('delete_AT_if_perempted', $tasks) && $n_deleted > 0) {
+         echo " deleted ".$n_deleted." perempted access tokens.";
+      }
+
+      echo "\n\n";
+   }
+
+   /**
+    * Triggers the given list of tasks
+    * on each refresh token if task
+    * is supported on refresh tokens
+    */
+   public function foreachRefreshToken($tasks) {
+      $refreshTokens = RefreshToken::get();
+
+      echo "Analyzing ".sizeof($refreshTokens)." refresh tokens...";
+
+      $n_deleted = 0;
+
+      foreach ($refreshTokens as $refreshTokens) {
+         if (in_array('delete_lonely_RT', $tasks)) {
+            if ($this->deleteLonelyRefreshToken($refreshTokens)) {
+               $n_deleted++;
+            }
+         }
+      }
+
+      if (in_array('delete_lonely_RT', $tasks) && $n_deleted > 0) {
+         echo " deleted ".$n_deleted." lonely refresh tokens.";
+      }
+
+      echo "\n\n";
+   }
+
+   /**
+    * Triggers the given list of tasks
+    * on each session if task
+    * is supported on sessions
+    */
+   public function foreachSession($tasks) {
+      $sessions = Session::get();
+
+      echo "Analyzing ".sizeof($sessions)." sessions...";
+
+      $n_deleted = 0;
+
+      foreach ($sessions as $session) {
+         if (in_array('delete_lonely_session', $tasks)) {
+            if ($this->deleteLonelySession($session)) {
+               $n_deleted++;
+            }
+         }
+      }
+
+      if (in_array('delete_lonely_session', $tasks) && $n_deleted > 0) {
+         echo " deleted ".$n_deleted." lonely sessions.";
+      }
+
+      echo "\n\n";
+   }
+
+   // Tasks for Plugins
 
    /**
     * Task : updatePlugin()
@@ -44,7 +142,7 @@ class BackgroundTasks {
     * that concerns the update of a
     * plugin.
     */
-   public function updatePlugin($plugin, /*$xml, $new_crc,*/ $index = null, $length = null, $subtasks) {
+   private function updatePlugin($plugin, /*$xml, $new_crc,*/ $index = null, $length = null, $subtasks) {
       // Displaying index / length
       echo('Plugin (' . $index . '/'. $length . "): ");
 
@@ -227,7 +325,7 @@ class BackgroundTasks {
       }
    }
 
-   function alertWatchers($plugin) {
+   private function alertWatchers($plugin) {
       $client_url = Tool::getConfig()['client_url'];
       foreach ($plugin->watchers()->get() as $watch) {
          $user = $watch->user;
@@ -238,5 +336,23 @@ class BackgroundTasks {
                             'user'   => $user,
                             'client_url' => Tool::getConfig()]);
       }
+   }
+
+   // Tasks for Access Tokens
+
+   private function deleteAccessTokenIfPerempted() {
+      return true;
+   }
+
+   // Tasks for Refresh Tokens
+
+   private function deleteLonelyRefreshToken() {
+      return true;
+   }
+
+   // Tasks for Sessions
+
+   private function deleteLonelySession() {
+      return true;
    }
 }

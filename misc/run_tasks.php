@@ -5,4 +5,7 @@ require __DIR__.'/../api/vendor/autoload.php';
  */
 
 $tasks = new \API\Core\BackgroundTasks;
-$tasks->foreachPlugins(['update', 'alert_watchers']);
+$tasks->foreachPlugin(['update', 'alert_watchers']);
+$tasks->foreachAccessToken(['delete_AT_if_perempted']);
+$tasks->foreachRefreshToken(['delete_lonely_RT']);
+$tasks->foreachSession(['delete_lonely_session']);
