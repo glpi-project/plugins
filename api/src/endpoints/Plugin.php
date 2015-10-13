@@ -17,6 +17,7 @@ use \API\Core\Mailer;
 use \Illuminate\Database\Capsule\Manager as DB;
 use \API\Model\User;
 use \API\Model\Plugin;
+use \API\Model\Author;
 use \API\Model\PluginStar;
 use \ReCaptcha\ReCaptcha;
 use \API\Core\ValidableXMLPluginDescription;
@@ -25,6 +26,8 @@ use \API\OAuthServer\OAuthHelper;
 use \API\Exception\InvalidRecaptcha;
 use \API\Exception\InvalidField;
 use \API\Exception\ResourceNotFound;
+use \API\Exception\LackAuthorship;
+use \API\Exception\DifferentPluginSignature;
 
 /**
  * Fetching infos of a single plugin
@@ -52,11 +55,13 @@ $single = Tool::makeEndpoint(function($key) use($app, $resourceServer) {
    }
 });
 
-$single_authormode = Tool::makeEndpoint(function($key) use($app) {
+$single_authormode_view = Tool::makeEndpoint(function($key) use($app) {
    OAuthHelper::needsScopes(['plugin:card', 'user']);
 
+   $user = OAuthHelper::currentlyAuthed();
+
    // get plugin
-   $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots', 'tags')
+   $plugin = Plugin::with('descriptions', 'versions', 'screenshots', 'tags', 'authors')
                   ->short()
                   ->withAverageNote()
                   ->withNumberOfVotes()
@@ -68,6 +73,9 @@ $single_authormode = Tool::makeEndpoint(function($key) use($app) {
    if (!$plugin) {
       throw new ResourceNotFound('Plugin', $key);
    }
+   if (!$plugin->hasAuthor($user->author_id)) {
+      throw new LackAuthorship;
+   }
 
    Tool::endWithJson([
       "card" => $plugin,
@@ -77,6 +85,83 @@ $single_authormode = Tool::makeEndpoint(function($key) use($app) {
          "current_weekly_downloads" => 250
       ]
    ]);
+});
+
+/**
+ * Write-only endpoint to modify the card of
+ * a plugin.
+ */
+$single_authormode_edit = Tool::makeEndpoint(function($key) use($app) {
+   OAuthHelper::needsScopes(['user', 'plugin:card']);
+
+   $user = OAuthHelper::currentlyAuthed();
+
+   // get plugin
+   $plugin = Plugin::short()
+                   ->withAverageNote()
+                   ->withNumberOfVotes()
+                   ->withCurrentVersion()
+                   ->where('key', '=', $key)
+                   ->where('active', '=', 1)
+                   ->first();
+
+   if (!$plugin) {
+      throw new ResourceNotFound('Plugin', $key);
+   }
+   if (!$plugin->hasAuthor($user->author_id)) {
+      throw new LackAuthorship;
+   }
+
+   $body = Tool::getBody();
+
+   // User can change it's xml_url with this endpoint
+   if (isset($body->xml_url)) {
+      // We check if the URL is a correct URI
+      if (!filter_var($body->xml_url, FILTER_VALIDATE_URL)) {
+         throw new InvalidField;
+      }
+
+      // We check if we can fetch the file via HTTP
+      $xml = @file_get_contents($body->xml_url);
+      if (!$xml) {
+         throw new InvalidXML('url', $body->xml_url);
+      }
+
+      // We check is the plugin meta-description is
+      // complete, and without errors
+      $xml = new ValidableXMLPluginDescription($xml);
+      $xml->validate();
+      $xml = $xml->contents;
+
+      // Verifying the plugin key hasn't changed
+      if ($xml->key != $plugin->key) {
+         throw new DifferentPluginSignature('key');
+      }
+
+      // Verifying that at least the authors we knew
+      // are present in the new xml, to do that,
+      //   we compare what is in the xml
+      $_xml_authors = (array)$xml->authors;
+      $_xml_authors = $_xml_authors['author'];
+      $xml_authors = [];
+      //   while applying the fixKnownDuplicates patch
+      foreach ($_xml_authors as $author) {
+         $fkd_detected_authors = Author::fixKnownDuplicates($author);
+         $xml_authors = array_merge($xml_authors, $fkd_detected_authors);
+      }
+      //   with what we already had
+      $authors = $plugin->authors()->get();
+      foreach ($authors as $author) {
+         if (!in_array($author->name, $xml_authors)) {
+            throw new DifferentPluginSignature('authors');
+         }
+      }
+
+      $plugin->xml_url = $body->xml_url;
+      $plugin->save();
+   }
+
+   $app->halt(200);
 });
 
 /**
@@ -205,31 +290,20 @@ $submit = Tool::makeEndpoint(function() use($app) {
 
    // Quickly validating
    if (Plugin::where('xml_url', '=', $body->plugin_url)->count() > 0) {
-      Tool::endWithJson([
-          "error" => "That plugin XML URL has already been submitted."
-      ]);
+      throw new UnavailableName('XML_URL', $body->plugin_url);
    }
 
    $xml = @file_get_contents($body->plugin_url);
    if (!$xml) {
-      Tool::endWithJson([
-          "error" => "We cannot fetch that URL."
-      ]);
+      throw new InvalidXML('url', $ody->plugin_url);
    }
 
    $xml = new ValidableXMLPluginDescription($xml);
-   if (!$xml->isValid()) {
-      Tool::endWithJson([
-          "error" => "Unreadable/Non validable XML.",
-          "details" => $xml->errors
-      ]);
-   }
+   $xml->validate();
    $xml = $xml->contents;
 
    if (Plugin::where('key', '=', $xml->key)->count() > 0) {
-      Tool::endWithJson([
-          "error" => "Your XML describe a plugin whose key already exists in our database."
-      ]);
+      throw new UnavailableName('Plugin', $xml->key);
    }
 
    $plugin = new Plugin;
@@ -260,7 +334,8 @@ $app->get('/plugin/updated', $updated);
 $app->get('/plugin/new', $new);
 $app->post('/plugin/star', $star);
 $app->get('/plugin/:key', $single);
-$app->get('/panel/plugin/:key', $single_authormode);
+$app->get('/panel/plugin/:key', $single_authormode_view);
+$app->post('/panel/plugin/:key', $single_authormode_edit);
 
 $app->options('/plugin',function(){});
 $app->options('/plugin/popular',function(){});
