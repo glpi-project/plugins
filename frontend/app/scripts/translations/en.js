@@ -50,6 +50,7 @@ angular
             PAGINATION_TO: "to",
             PAGINATION_ON: "over",
             PAGINATION_ELEMENTS: "elements",
+            NO_RESULTS: "No result",
             NEVER_UPDATED: "never updated since first publication",
             LOADING: "Loading"
          });
