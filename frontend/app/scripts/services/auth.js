@@ -84,7 +84,7 @@ angular.module('frontendApp')
       if (service == 'github') {
          redirect_uri += 'github';
          authorization_endpoint = 'https://github.com/login/oauth/authorize';
-         scope = 'user user:email';
+         scope = 'user:email';
       }
 
       /**
