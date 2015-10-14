@@ -102,9 +102,11 @@ $register = Tool::makeEndpoint(function() use ($app) {
 
    $mailer = new Mailer;
    $mailer->sendMail('confirm_email.html', [$new_user->email] ,
-                     'Please confirm your email account', ['stylesheet' => 'confirm_email.css',
-                                             'user' => $new_user->toArray(),
-                                             'validation_token' => $validationToken->token]);
+                     'Please confirm your email account',
+                     [
+                        'user' => $new_user->toArray(),
+                        'validation_token' => $validationToken->token
+                     ]);
 });
 
 /**
@@ -175,8 +177,10 @@ $user_validate_mail = Tool::makeEndpoint(function($_validationToken) use($app) {
 
    $mailer = new Mailer;
    $mailer->sendMail('confirm_account.html', [$user->email] ,
-                     'Your email account is confirmed', ['stylesheet' => 'confirm_account.css',
-                                                         'user' => $user->toArray()]);
+                     'Your email account is confirmed',
+                     [
+                        'user' => $user->toArray()
+                     ]);
    $validationToken->delete();
 
    Tool::endWithJson([
