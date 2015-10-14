@@ -19,7 +19,7 @@ angular.module('frontendApp')
       PaginatedCollection.prototype.to = 14;
 
       PaginatedCollection.prototype.setRequest = function(template) {
-         this.request = template;         
+         this.request = template;
       };
 
       PaginatedCollection.prototype.contentRangeRegexp = /^([0-9]+)-([0-9]+)\/([0-9]+)$/;
@@ -72,13 +72,14 @@ angular.module('frontendApp')
                 '</div>',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
-         
+
       },
       scope: {
          "collection": "=collection"
       },
-      controller: function($stateParams, $state) {
+      controller: function($stateParams, $state, $window) {
          this.changeUrl = function(page) {
+            $window.scrollTo(0,0);
             $stateParams.page = page;
             if (! /_page$/.exec($state.current.name)) {
                var state = $state.current.name + '_page';
