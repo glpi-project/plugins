@@ -13,8 +13,13 @@ angular.module('frontendApp')
 // This controller is created anytime the search
 // input's content is changed
 .controller('SearchCtrl', function(API_URL, $rootScope, $scope, $timeout, $stateParams, PaginatedCollection, $http, fixIndepnet) {
+   if ($stateParams.val == '') {
+      $scope.nullSearch = true;
+   }
+   $scope.loading = true;
    $scope.results = PaginatedCollection.getInstance();
    $scope.results.setRequest(function(from,to) {
+      $scope.loading = true;
       var p = $http({
                   method: "POST",
                   url: API_URL + '/search',
@@ -26,6 +31,7 @@ angular.module('frontendApp')
                   }
                });
       p.then(function(resp) {
+         $scope.loading = false;
          for (var n in resp.data) {
             fixIndepnet.fix(resp.data[n]);
          }
