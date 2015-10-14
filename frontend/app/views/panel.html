@@ -54,7 +54,7 @@
       <h2>Actions</h2>
 
       <md-list>
-         <md-list-item>
+         <md-list-item ng-show="user.author_id === null">
             <md-button class="md-raised" ng-click="openClaimAuthorshipDialog($event)">
                <h4>Claim an authorship</h4>
             </md-button>
