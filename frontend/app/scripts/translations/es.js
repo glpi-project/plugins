@@ -50,6 +50,7 @@ angular
             PAGINATION_TO: "to",
             PAGINATION_ON: "over",
             PAGINATION_ELEMENTS: "elements",
-            NEVER_UPDATED: "never updated since first publication"
+            NEVER_UPDATED: "never updated since first publication",
+            LOADING: "Loading"
          });
    });
