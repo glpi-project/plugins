@@ -14,7 +14,10 @@
          <a href="" ng-click="orderBy=['downloaded','note'];reverse=true">Popularity</a>
       </p>
    </div>
-   <div class="results">
+   <div ng-show="loading && !nullSearch" class="loading">
+      <p><i class="fa fa-refresh"></i><span>{{'LOADING'|translate}}...</span></p>
+   </div>
+   <div ng-hide="loading" class="results">
       <div class="result" ng-repeat="plugin in results.currentPage">
          <div layout="row" layout-wrap layout-align="left end">
             <img class="icon" ng-src="{{plugin.logo_url}}" />
@@ -50,5 +53,5 @@
          </div>
       </div>
    </div>
-   <pagination collection="results"></pagination>
+   <pagination ng-hide="loading" collection="results"></pagination>
 </div>
