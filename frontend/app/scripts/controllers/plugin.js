@@ -17,6 +17,7 @@ angular.module('frontendApp')
       download_count: 0
    };
    $scope.rated = false;
+   $scope.download_url = API_URL + '/plugin/'+$stateParams.key+'/download';
 
    $scope.ratePlugin = function(note) {
       if (!$scope.rated) {
@@ -36,6 +37,7 @@ angular.module('frontendApp')
          $scope.rated = true;
       }
    };
+
 
    $scope.download = function() {
       $window.location.href = API_URL + '/plugin/' + $scope.plugin.key + '/download';
