@@ -10,7 +10,9 @@
 angular.module('frontendApp')
    .controller('TagCtrl', function(API_URL, $scope, $http, $stateParams, PaginatedCollection, fixIndepnet) {
       $scope.results = PaginatedCollection.getInstance();
+      $scope.loading = true;
       $scope.results.setRequest(function(from, to) {
+         $scope.loading = true;
          var p = $http({
             method: "GET",
             url: API_URL + '/tags/' + $stateParams.key + '/plugin',
@@ -19,6 +21,7 @@ angular.module('frontendApp')
             }
          });
          p.then(function(resp) {
+            $scope.loading = false;
             for (var n in resp.data) {
                fixIndepnet.fix(resp.data[n]);
             }

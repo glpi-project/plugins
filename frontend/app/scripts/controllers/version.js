@@ -8,9 +8,12 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('VersionCtrl', function (API_URL, $http, $stateParams, $scope, PaginatedCollection, fixIndepnet) {
+  .controller('VersionCtrl', function (API_URL, $http, $stateParams,
+                                       $scope, PaginatedCollection, fixIndepnet) {
+      $scope.loading = true;
       $scope.results = PaginatedCollection.getInstance();
       $scope.results.setRequest(function(from,to) {
+         $scope.loading = true;
          var p = $http({
             method: "GET",
             url: API_URL + '/version/'+$stateParams.version+'/plugin',
@@ -19,6 +22,7 @@ angular.module('frontendApp')
             }
          });
          p.then(function(resp) {
+            $scope.loading = false;
             for (var n in resp.data) {
                fixIndepnet.fix(resp.data[n]);
             }

@@ -10,14 +10,20 @@
 angular.module('frontendApp')
    .controller('AuthorsCtrl', function(API_URL, $http, $scope, PaginatedCollection, $stateParams) {
       $scope.authors = PaginatedCollection.getInstance();
+      $scope.loading = true;
       $scope.authors.setRequest(function(from,to) {
-         return $http({
+         $scope.loading = true;
+         var p = $http({
             method: "GET",
             url: API_URL + '/author',
             headers: {
-            'X-Range': from+'-'+to
-         }
+               'X-Range': from+'-'+to
+            }
          });
+         p.then(function() {
+            $scope.loading = false;
+         });
+         return p;
       });
 
       if ($stateParams.page) {

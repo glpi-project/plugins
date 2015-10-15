@@ -10,14 +10,20 @@
 angular.module('frontendApp')
    .controller('TagsCtrl', function(API_URL, $http, $stateParams, $state, $scope, PaginatedCollection) {
       $scope.tags = PaginatedCollection.getInstance();
+      $scope.loading = true;
       $scope.tags.setRequest(function(from, to) {
-         return $http({
+         $scope.loading = true;
+         var p = $http({
             method: "GET",
             url: API_URL + '/tags',
             headers: {
                'X-Range': from+'-'+to
             }
          });
+         p.then(function() {
+            $scope.loading = false;
+         });
+         return p;
       });
 
       var fetch = function() {

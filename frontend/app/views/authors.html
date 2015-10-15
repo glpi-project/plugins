@@ -1,12 +1,16 @@
+
 <div layout="column" class="authors">
    <md-list class="compact-list">
       <md-subheader class='topic margin'>{{'AUTHORS'|translate}}</md-subheader>
-      <md-list-item ng-repeat="author in authors.currentPage" class="result">
+      <div ng-show="loading" class="loading">
+         <p><i class="fa fa-refresh"></i><span>{{'LOADING'|translate}}...</span></p>
+      </div>
+      <md-list-item ng-hide="loading" ng-repeat="author in authors.currentPage" class="result">
          <md-button ui-sref="author({id: author.id})">
             <h4>{{author.name}}</h4>
          </md-button>
          <span class="info">{{'CONTRIBUTED_TO'|translate}} {{author.plugin_count}} plugins</span class="info">
       </md-list-item>
    </md-list>
-   <pagination collection="authors"></pagination>
+   <pagination ng-hide="loading" collection="authors"></pagination>
 </div>

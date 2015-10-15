@@ -13,7 +13,7 @@ angular.module('frontendApp')
 // This controller is created anytime the search
 // input's content is changed
 .controller('SearchCtrl', function(API_URL, $rootScope, $scope, $timeout, $stateParams, PaginatedCollection, $http, fixIndepnet) {
-   if ($stateParams.val == '') {
+   if ($stateParams.val.length < 2) {
       $scope.nullSearch = true;
    }
    $scope.loading = true;

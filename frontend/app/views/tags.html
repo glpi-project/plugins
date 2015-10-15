@@ -2,7 +2,10 @@
 
    <md-list class="compact-list results">
       <md-subheader class='topic margin'>{{'TAGS'|translate}}</md-subheader>
-      <md-list-item ng-repeat="tag in tags.currentPage" class="result">
+      <div ng-show="loading" class="loading">
+         <p><i class="fa fa-refresh"></i><span>{{'LOADING'|translate}}...</span></p>
+      </div>
+      <md-list-item ng-hide="loading" ng-repeat="tag in tags.currentPage" class="result">
          <md-button ui-sref="tag({key: tag.key})">
             <h4>{{tag.tag}}</h4>
          </md-button>
@@ -10,5 +13,5 @@
       </md-list-item>
    </md-list>
 
-   <pagination collection="tags"></pagination>
+   <pagination ng-hide="loading" collection="tags"></pagination>
 </div>
