@@ -1,8 +1,16 @@
-Dear GLPi Plugins Admin Team,
+{% extends "layout.html" %}
 
-{{firstname}} {{lastname}} &lt;{{email}}&gt; left a message,<br />
-there it is : <br />
-____ <br />
+{% block message %}
+<p>
+   Dear GLPi Plugins Admin Team,
+</p>
 
+<p>
+   {{firstname}} {{lastname}} &lt;{{email}}&gt; left the following message :
+   <br />
+</p>
 
-{{message}}
+<p>
+   {{message}}
+</p>
+{% endblock %}
