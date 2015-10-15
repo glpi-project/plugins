@@ -1,66 +1,68 @@
-<form class="submit" id="submit_form">
-   <h2>{{'SUBMIT_YOUR_PLUGIN'|translate}}</h2>
-   <span class="legend">{{'SUB_SUBMIT_YOUR_PLUGIN'|translate}}</span>
-   <md-input-container class="urlbox picbox">
-      <label>URL</label>
-      <input ng-model="url" type="url" />
-   </md-input-container>
-   <div vc-recaptcha theme="light" key="key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
-   <md-button class="md-raised md-primary submit-button" ng-click="submit()">{{'SUBMIT'|translate}}
-      <i class="fa fa-paper-plane"></i>
-   </md-button>
-</form>
-<div class="xml_description">
-   <span class="legend">Your XML must be valid and respect this format :</span>
-   <!-- htmlmin:ignore -->
-   <div hljs>
-<root>
-   <name>Displayed name</name>
-   <key>System name</key>
-   <state>stable</state>
-   <logo>http://link/to/logo/with/dimensions/40px/40px</logo>
-   <description>
-      <short>
-         <en>short description of the plugin, displayed on list, text only</en>
-         <lang>...</lang>
-      </short>
-      <long>
-         <en>short description of the plugin, displayed on detail, Markdown accepted</en>
-         <lang>...</lang>
-      </long>
-   </description>
-   <homepage>http://link/to/your/page</homepage>
-   <download>http://link/to/your/files</download>
-   <issues>http://link/to/your/issues</issues>
-   <readme>http://link/to/your/readme</readme>
-   <authors>
-      <author>Your name</author>
-   </authors>
-   <versions>
-      <version>
-         <num>1.0</num>
-         <compatibility>0.90</compatibility>
-      </version>
-   </versions>
-   <langs>
-      <lang>en_GB</lang>
-      <lang>...</lang>
-   </langs>
-   <license>GPL v2+</license>
-   <tags>
-      <en>
-         <tag>tag1</tag>
-      </en>
-      <lang>
-         <tag>tag1</tag>
-      </lang>
-   </tags>
-   <screenshots>
-      <screenshot>http://link/to/your/screenshot</screenshot>
-      <screenshot>http://link/to/your/screenshot</screenshot>
-      <screenshot>...</screenshot>
-   </screenshots>
-</root>
+<div class="submit-plugin-form">
+   <form class="submit" id="submit_form">
+      <h2>{{'SUBMIT_YOUR_PLUGIN'|translate}}</h2>
+      <span class="legend">{{'SUB_SUBMIT_YOUR_PLUGIN'|translate}}</span>
+      <md-input-container class="urlbox picbox">
+         <label>URL</label>
+         <input ng-model="url" type="url" />
+      </md-input-container>
+      <div vc-recaptcha theme="light" key="key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
+      <md-button class="md-raised md-primary submit-button" ng-click="submit()">{{'SUBMIT'|translate}}
+         <i class="fa fa-paper-plane"></i>
+      </md-button>
+   </form>
+   <div class="xml_description">
+      <span class="legend">Your XML must be valid and respect this format :</span>
+      <!-- htmlmin:ignore -->
+      <div hljs>
+         <root>
+            <name>Displayed name</name>
+            <key>System name</key>
+            <state>stable</state>
+            <logo>http://link/to/logo/with/dimensions/40px/40px</logo>
+            <description>
+               <short>
+                  <en>short description of the plugin, displayed on list, text only</en>
+                  <lang>...</lang>
+               </short>
+               <long>
+                  <en>short description of the plugin, displayed on detail, Markdown accepted</en>
+                  <lang>...</lang>
+               </long>
+            </description>
+            <homepage>http://link/to/your/page</homepage>
+            <download>http://link/to/your/files</download>
+            <issues>http://link/to/your/issues</issues>
+            <readme>http://link/to/your/readme</readme>
+            <authors>
+               <author>Your name</author>
+            </authors>
+            <versions>
+               <version>
+                  <num>1.0</num>
+                  <compatibility>0.90</compatibility>
+               </version>
+            </versions>
+            <langs>
+               <lang>en_GB</lang>
+               <lang>...</lang>
+            </langs>
+            <license>GPL v2+</license>
+            <tags>
+               <en>
+                  <tag>tag1</tag>
+               </en>
+               <lang>
+                  <tag>tag1</tag>
+               </lang>
+            </tags>
+            <screenshots>
+               <screenshot>http://link/to/your/screenshot</screenshot>
+               <screenshot>http://link/to/your/screenshot</screenshot>
+               <screenshot>...</screenshot>
+            </screenshots>
+         </root>
+      </div>
+      <!-- htmlmin:ignore -->
    </div>
-   <!-- htmlmin:ignore -->
 </div>
