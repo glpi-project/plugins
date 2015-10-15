@@ -12,7 +12,11 @@ angular.module('frontendApp')
       $scope.key = RECAPTCHA_PUBLIC_KEY;
       $scope.response = null;
       $scope.widgetId = null;
+      $scope.contact = {};
 
+      /**
+       * Scope functions used by reCaptcha
+       */
       $scope.setResponse = function(response) {
          $scope.response = response;
       };
@@ -27,6 +31,10 @@ angular.module('frontendApp')
          $scope.response = null;
       };
 
+      /**
+       * Scope function triggered when user
+       * user posts his message
+       */
       $scope.submit = function() {
          $http({
             method: 'POST',
@@ -37,23 +45,34 @@ angular.module('frontendApp')
             }
          })
          .success(function(data) {
-            if (data.success) {
-               var toast = $mdToast.simple()
-                      .capsule(true)
-                      .content('Thanks for your message ! Be certain we will love reading it')
-                      .position('top');
-               toast._options.parent = angular.element(document.getElementById('contact_form'));
-               $mdToast.show(toast);
+            var toast = $mdToast.simple()
+                   .capsule(true)
+                   .content('Thanks for your message ! Be certain we will love reading it')
+                   .position('top');
+            toast._options.parent = angular.element(document.getElementById('contactForm'));
+            $mdToast.show(toast);
 
-               $timeout(function() {
-                  $state.go('featured');
-               }, 3800);
-            } else {
-               $mdToast.show($mdToast.simple()
-                  .capsule(true)
-                  .content('Your message was rejected. Please try again !'));
-               vcRecaptchaService.reload($scope.widgetId);
-            }
+            $timeout(function() {
+               $state.go('featured');
+            }, 3800);
+         })
+         .error(function(data) {
+            var toast = $mdToast.simple()
+                   .capsule(true)
+                   .content('Uncomplete form or "I\'m not a robot" not checked. Please try again !')
+                   .position('bottom');
+            toast._options.parent = angular.element(document.getElementById('contactForm'));
+            $mdToast.show(toast);
+            vcRecaptchaService.reload($scope.widgetId);
          });
       };
+
+      /**
+       * Validation of the form
+       */
+       // $scope.form_errors = {
+       //   firstname: {
+
+       //   }
+       // };
    });

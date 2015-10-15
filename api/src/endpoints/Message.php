@@ -19,6 +19,8 @@ use \API\Model\Message;
 use \ReCaptcha\ReCaptcha;
 use \API\OAuthServer\OAuthHelper;
 use \API\Exception\InvalidField;
+use \API\Exception\MissingField;
+use \API\Exception\InvalidRecaptcha;
 
 require dirname(__FILE__) . '/../../config.php';
 
@@ -32,14 +34,12 @@ $send = Tool::makeEndpoint(function() use($app) {
    $recaptcha = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
    $resp = $recaptcha->verify($body->recaptcha_response);
    if (!$resp->isSuccess()) {
-      Tool::endWithJson([
-         "error" => "Recaptcha not validated"
-      ]);
+      throw new InvalidRecaptcha();
    }
 
    foreach($fields as $prop) {
       if (!property_exists($body->contact, $prop)) {
-         Tool::endWithJson(["error" => "Missing ". $prop]);
+         throw new MissingField($prop);
       }
       else {
          switch ($prop) {
