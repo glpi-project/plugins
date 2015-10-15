@@ -25,7 +25,6 @@ use \API\Exception\ResourceNotFound;
 use \API\OAuthServer\OAuthHelper;
 use \API\Exception\InvalidRecaptcha;
 use \API\Exception\InvalidField;
-use \API\Exception\ResourceNotFound;
 use \API\Exception\LackAuthorship;
 use \API\Exception\InvalidXML;
 use \API\Exception\DifferentPluginSignature;
