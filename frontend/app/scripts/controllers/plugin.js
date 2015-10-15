@@ -38,11 +38,6 @@ angular.module('frontendApp')
       }
    };
 
-
-   $scope.download = function() {
-      $window.location.href = API_URL + '/plugin/' + $scope.plugin.key + '/download';
-   };
-
    $scope.watch = function() {
       if (!$scope.plugin.watched) {
          $http({
