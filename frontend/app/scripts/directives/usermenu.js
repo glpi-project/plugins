@@ -11,7 +11,8 @@ angular.module('frontendApp')
     return {
       template: '<md-menu md-offset="0 92px">'+
                   '<md-button ng-click="ctrl.openMenu($mdOpenMenu, $event)">'+
-                     '<i class="fa fa-user"></i>'+
+                     '<i ng-hide="authed" class="fa fa-user"></i>'+
+                     '<img ng-show="authed" ng-src="http://www.gravatar.com/avatar/{{gravatar}}?s=50" class="avatar" />'+
                      '<span>{{(authed) ? username :  \'LOGIN\'|translate}}</span>'+
                   '</md-button>'+
                   '<md-menu-content width="4">'+
@@ -51,6 +52,9 @@ angular.module('frontendApp')
               }).success(function(data) {
                 if (data) {
                    $scope.username = data.username;
+                   if (data.gravatar) {
+                     $scope.gravatar = data.gravatar;
+                   }
                    if ($state.current.name == 'signin' ||
                        $state.current.name == 'signup') {
                      if (data.active == 0) {
@@ -60,6 +64,8 @@ angular.module('frontendApp')
                    }
                 }
               });
+            } else {
+               delete $scope.gravatar;
             }
           });
       },
