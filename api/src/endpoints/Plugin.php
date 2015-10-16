@@ -65,7 +65,6 @@ $single_authormode_view = Tool::makeEndpoint(function($key) use($app) {
                   ->short()
                   ->withAverageNote()
                   ->withNumberOfVotes()
-                  ->withCurrentVersion()
                   ->where('key', '=', $key)
                   ->where('active', '=', 1)
                   ->first();
@@ -100,7 +99,6 @@ $single_authormode_edit = Tool::makeEndpoint(function($key) use($app) {
    $plugin = Plugin::short()
                    ->withAverageNote()
                    ->withNumberOfVotes()
-                   ->withCurrentVersion()
                    ->where('key', '=', $key)
                    ->where('active', '=', 1)
                    ->first();
