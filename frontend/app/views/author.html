@@ -1,13 +1,24 @@
-<div layout="column">
-   <h2>{{author.name}}</h2>
+<div layout="column" class="author-page">
    <table>
       <tr>
-         <td>Name</td>
-         <td>{{author.name}}</td>
+         <td class="key">
+            <h2>{{author.name}}</h2>
+         </td>
+         <td ng-show="author.gravatar" class="value">
+            <img src="http://www.gravatar.com/avatar/{{author.gravatar}}" alt="{{author.name}}'s gravatar">
+         </td>
       </tr>
       <tr>
-         <td>Contributed to</td>
-         <td>
+         <td class="key">Name</td>
+         <td class="value">{{author.name}}</td>
+      </tr>
+      <tr ng-show="author.username">
+         <td class="key">GLPi Plugins Username</td>
+         <td class="value">{{author.username}}</td>
+      </tr>
+      <tr>
+         <td class="key">Contributed to</td>
+         <td class="value">
             <a ui-sref="author_plugins({id: author.id})">{{author.plugin_count}} Plugins</a>
          </td>
       </tr>
