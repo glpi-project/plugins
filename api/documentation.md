@@ -56,9 +56,10 @@ Concerning your OAuth2 App/API Key, those two credentials are given to you in th
 
   + OAuth2 Access-Token
 
-When you used the OAuth2 Client-Credentials Grant
+When you used the OAuth2 Client-Credentials Grant to request usage of the API, what is going to be given to you in case of success, is an Access-Token, that will be given by you or your app/script/client with each of the multiple HTTP requests you will make to our API Service Endpoints.
 
   + API Endpoint
 
 The GLPi Plugins API offers multiple endpoints, the term endpoint can be understood as "data source".
-The API offers multiple
+The API offers multiple kind of data (plugin, author, tag, ..., plugin list, ..., and much more).
+Each final url, specified in this document, as the url of an endpoint, is the URI that represents this endpoint, or data source, over HTTP. One endpoint is often related to one specific type of data (to give an example /plugin/room will send description of the 'room' plugin over HTTP when requested, if Authorization was previously given using OAuth2).
