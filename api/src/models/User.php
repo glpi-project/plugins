@@ -10,7 +10,7 @@ class User extends Model {
    public $timestamps = false;
    protected $visible = ['id', 'active', 'email', 'username',
                          'realname', 'location', 'website',
-                         'author_id'];
+                         'author_id', 'gravatar'];
 
 
    // Relations

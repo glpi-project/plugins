@@ -43,7 +43,14 @@ $single = Tool::makeEndpoint(function($id) use($app) {
                                   ->find($id);
 
    if (!$author) {
-      throw new \API\Exception\ResourceNotFound('Authed', $id);
+      throw new \API\Exception\ResourceNotFound('Author', $id);
+   }
+
+   if ($user = $author->user) {
+      $author->username = $user->username;
+      if ($user->email) {
+         $author->gravatar = md5(strtolower(trim($user->email)));
+      }
    }
 
    Tool::endWithJson($author);

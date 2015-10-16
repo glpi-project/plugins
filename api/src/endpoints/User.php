@@ -422,6 +422,8 @@ $profile_view = Tool::makeEndpoint(function() use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user']);
 
    $user = OAuthHelper::currentlyAuthed();
+   // Adding gravatar
+   $user->gravatar = md5(strtolower(trim($user->email)));
 
    Tool::endWithJson($user, 200);
 });
