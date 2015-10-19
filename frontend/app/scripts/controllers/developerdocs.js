@@ -8,10 +8,8 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-  .controller('DeveloperDocsCtrl', function () {
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+   .controller('DeveloperDocsCtrl', function () {
+      $('pre code').each(function(i, block) {
+         hljs.highlightBlock(block);
+      });
+   });
