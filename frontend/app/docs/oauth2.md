@@ -131,7 +131,7 @@ Method       |     GET
 Description  |     List of known GLPi contributors
 Paginated    |     true
 
-#### Example usage (HTTP Session)
+##### Example usage (HTTP Session)
 
 ```http
 GET /api/author HTTP/1.1
@@ -141,10 +141,33 @@ X-Lang: en
 X-Range: 0-14
 ```
 
-#### Example usage (cURL call)
+##### Example usage (cURL call)
 
 ```sh
 curl -X GET -H 'Authorization: Bearer youRAccesSTokeNhEre' -H 'X-Lang: en' -H 'X-Range: 0-14' http://plugins.glpi-project.com/api/author
+```
+
+#### Contributor card
+
+Key             |     Value
+----------------|-------------
+URL             |     /author/:id
+Method          |     GET
+Nature of Data  |     Descriptive Card of a GLPi Contributor
+Paginated       |     true
+
+##### Example usage (HTTP Session)
+
+```http
+GET /api/author/4 HTTP/1.1
+Host: plugins.glpi-project.org
+Authorization: Bearer yOuRAccesSTokeNhEre
+```
+
+##### Example usage (cURL call)
+
+```sh
+curl -X GET -H 'Authorization: Bearer youRAccesSTokeNhEre' http://plugins.glpi-project.com/api/author/4
 ```
 
 ### Plugins
