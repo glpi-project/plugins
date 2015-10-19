@@ -89,6 +89,9 @@ token_type    | The type of the token being given (Will be Bearer anytime)
 expires_in    | The time period for which the access_token token is valid (3600 seconds here)
 
 With the given access_token, you are able to make API requests during the next hour.
+
+### What happens after Access-Token expiration
+
 After that period, the server will reply you this :
 
 ```http
@@ -101,9 +104,11 @@ Content-Type: application/json
 }
 ```
 
+### Summary, how your app is going to stay authed
+
 To summarize, all your app/script has to do, in order to stay authed on GLPi Plugins API, and keeping being able to make requests, is to detect the HTTP code that is sent at each response,  
 
-For example :
+This is an example scenario :
 
   1. Your app fetches an access_token, via HTTP, if it hasn't got anyone saved in it's storage
   2. Your app makes API requests for as long as it is possible
@@ -126,7 +131,7 @@ Method       |     GET
 Description  |     List of known GLPi contributors
 Paginated    |     true
 
-##### Example usage (HTTP Session)
+#### Example usage (HTTP Session)
 
 ```http
 GET /api/author HTTP/1.1
