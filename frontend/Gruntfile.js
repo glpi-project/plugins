@@ -64,6 +64,12 @@ module.exports = function (grunt) {
           '.tmp/styles/{,*/}*.css',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
+      },
+      markdown: {
+         files: [
+            '<%= yeoman.app %>/docs/*.md'
+         ],
+         tasks: ['markdown:tmp']
       }
     },
 
@@ -288,14 +294,44 @@ module.exports = function (grunt) {
       dist: {
         options: {
           csspath: '../.tmp',
-          stylesheets: ['../.tmp/styles/main.css'], 
+          stylesheets: ['../.tmp/styles/main.css'],
           ignore: ['.ng-move', '.ng-enter', '.ng-leave', '.created_by_jQuery']
         },
         files: {
-          '.tmp/styles/main.css': ['<%= yeoman.dist %>/{,*/}*.html'], 
+          '.tmp/styles/main.css': ['<%= yeoman.dist %>/{,*/}*.html'],
         }
       }
-    }, 
+    },
+
+    /**
+     * This is the task that builds all the markdown
+     * files which have to appear rendered in the
+     * "API" tab of the webapp's sidenav
+     */
+    markdown: {
+      dist: {
+         files: [
+            {
+               expand: true,
+               cwd: '<%= yeoman.app %>/docs',
+               src: ['*.md'],
+               dest: '<%= yeoman.dist %>/docs',
+               ext: '.html'
+            }
+         ]
+      },
+      tmp: {
+         files: [
+            {
+               expand: true,
+               cwd: '<%= yeoman.app %>/docs',
+               src: ['*.md'],
+               dest: '<%= yeoman.dist %>/../.tmp/docs',
+               ext: '.html'
+            }
+         ]
+      }
+    },
 
     // The following *-min tasks will produce minified files in the dist folder
     // By default, your `index.html`'s <!-- Usemin block --> will take care of
@@ -482,6 +518,7 @@ module.exports = function (grunt) {
       'concurrent:server',
       'autoprefixer:server',
       'connect:livereload',
+      'markdown:tmp',
       'watch'
     ]);
   });
@@ -516,7 +553,8 @@ module.exports = function (grunt) {
     'filerev',
     'usemin',
     'htmlmin',
-    'uncss'
+    'uncss',
+    'markdown:dist'
   ]);
 
   grunt.registerTask('default', [

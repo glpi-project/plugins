@@ -42,11 +42,11 @@ You, as a registered user of GLPi Plugins, are allowed to create/delete OAuth2 A
   + OAuth2 Grant
 
 When requesting an Access-Token, you are using a Grant supported by OAuth2 which are :
-    + Authorization Code Grant
-    + Implicit Grant
-    + Resource Owner Password Credentials Grant
-    + Client Credentials Grant
-    + Refresh Token Grant
+   + Authorization Code Grant
+   + Implicit Grant
+   + Resource Owner Password Credentials Grant
+   + Client Credentials Grant
+   + Refresh Token Grant
 
   + OAuth2 Client-Credentials Grant
 
