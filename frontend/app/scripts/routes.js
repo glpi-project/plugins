@@ -137,5 +137,10 @@ angular
             url: '/finishactivateaccount',
             templateUrl: 'views/finishactivateaccount.html',
             controller: 'FinishActivateAccountCtrl'
+         })
+         .state('developerdocs', {
+            url: '/developer/docs',
+            templateUrl: 'docs/oauth2.html',
+            controller: 'DeveloperDocsCtrl'
          });
    });

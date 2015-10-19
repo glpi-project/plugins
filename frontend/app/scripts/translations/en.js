@@ -24,6 +24,7 @@ angular
             NAV_SEARCH: "Search",
             NAV_SUBMIT_A_PLUGIN: "Submit a plugin",
             NAV_CONTACT: "Contact",
+            NAV_DEVELOPER_GUIDES: "Developer Guides (API)",
             SEARCHBAR_PLACEHOLDER: "Search",
             VERSION: "Version",
             COMPATIBLE_WITH: "Compatible with",

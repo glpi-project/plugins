@@ -309,7 +309,7 @@ module.exports = function (grunt) {
      * "API" tab of the webapp's sidenav
      */
     markdown: {
-      dist: {
+      dist: { // this is for the "dist" task
          files: [
             {
                expand: true,
@@ -318,9 +318,12 @@ module.exports = function (grunt) {
                dest: '<%= yeoman.dist %>/docs',
                ext: '.html'
             }
-         ]
+         ],
+         options: {
+            template: '<%= yeoman.app %>/docs/template.jst'
+         }
       },
-      tmp: {
+      tmp: { // This for the "serve" task
          files: [
             {
                expand: true,
@@ -329,7 +332,10 @@ module.exports = function (grunt) {
                dest: '<%= yeoman.dist %>/../.tmp/docs',
                ext: '.html'
             }
-         ]
+         ],
+         options: {
+            template: '<%= yeoman.app %>/docs/template.jst'
+         }
       }
     },
 
