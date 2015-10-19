@@ -159,7 +159,7 @@ Paginated       |     true
 ##### Example usage (HTTP Session)
 
 ```http
-GET /api/author/4 HTTP/1.1
+GET /api/author/1 HTTP/1.1
 Host: plugins.glpi-project.org
 Authorization: Bearer yOuRAccesSTokeNhEre
 ```
@@ -167,10 +167,26 @@ Authorization: Bearer yOuRAccesSTokeNhEre
 ##### Example usage (cURL call)
 
 ```sh
-curl -X GET -H 'Authorization: Bearer youRAccesSTokeNhEre' http://plugins.glpi-project.com/api/author/4
+curl -X GET -H 'Authorization: Bearer youRAccesSTokeNhEre' http://plugins.glpi-project.com/api/author/1
+```
+
+##### Example response
+
+```http
+HTTP/1.1 200 OK
+Server: Apache/2.4.10 (Ubuntu)
+Content-Type: application/json
+
+{
+  "id":"1",
+  "name":"Julien Dombre",
+  "plugin_count":"1"
+}
 ```
 
 ### Plugins
+
+#### Plugin card
 
 ### Tags
 
