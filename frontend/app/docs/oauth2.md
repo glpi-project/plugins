@@ -23,7 +23,7 @@ In order to use this API, you must be Authorized to do so.
 You're lucky, it's not very hard to get Authorized to use GLPi Plugins API.
 
 The GLPi Plugins API access, is limited by the authorization system of GLPi Plugins which was developped according to [The OAuth 2 Authorization framework](https://tools.ietf.org/html/rfc6749).
-The GLPi Plugins API is respectful to the OAuth2 standard for authorization over resources between behind services over HTTP.
+The GLPi Plugins API is respectful to the OAuth2 standard for authorization over resources behind services over HTTP.
 
 In our case the OAuth2 framework is used to provide an Authentication and Authorization system to the API.
 
