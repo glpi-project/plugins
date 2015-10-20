@@ -66,7 +66,7 @@ $author_plugins = Tool::makeEndpoint(function($id) use($app) {
 
    Tool::endWithJson(Tool::paginateCollection(
                         \API\Model\Plugin
-                                       ::with('versions', 'authors')
+                                       ::with('versions', 'authors', 'descriptions')
                                        ->short()
                                        ->withAverageNote()
                                        ->descWithLang(Tool::getRequestLang())
