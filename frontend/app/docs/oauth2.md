@@ -192,7 +192,7 @@ Key           |     Value
 URL           |     /author
 Method        |     GET
 Description   |     List of known GLPi contributors
-`Paginated`   |     true
+Paginated        |     true (answers 206 Partial Content or 200 if all the data is in the response)
 
 ##### Example usage (HTTP Session)
 
@@ -289,7 +289,7 @@ Key              |     Value
 URL              |     /plugin
 Method           |     GET
 Data Nature      |     The collection of all GLPi known plugins
-Paginated        |     true
+Paginated        |     true (answers 206 Partial Content or 200 if all the data is in the response)
 
 ##### Example usage (HTTP Session)
 
@@ -298,12 +298,13 @@ GET /api/plugin HTTP/1.1
 Host: plugins.glpi-project.org
 Authorization: Bearer yOuRAccesSTokeNhEre
 Accept: application/json
+X-Range: 0-14
 ```
 
 ##### Example usage (cURL call)
 
 ```sh
-curl -X GET -H 'Authorization: Bearer youRAccesSTokeNhEre' -H 'Accept: application/json' http://plugins.glpi-project.com/api/plugin
+curl -X GET -H 'Authorization: Bearer youRAccesSTokeNhEre' -H 'Accept: application/json' -H 'X-Range: 0-14' http://plugins.glpi-project.com/api/plugin
 ```
 
 ##### Example reponse
@@ -312,6 +313,8 @@ curl -X GET -H 'Authorization: Bearer youRAccesSTokeNhEre' -H 'Accept: applicati
 HTTP/1.1 200 OK
 Server: Apache/2.4.10 (Ubuntu)
 Content-Type: application/json
+Content-Range: 0-14/111
+Accept-Range: model 111
 
 [
     {
@@ -441,10 +444,10 @@ This endpoint returns all the known plugins a specific contributor authored on.
 
 Key              |     Value
 -----------------|-----------------------------------------------
-URL              |     /author/<id>/plugin
+URL              |     /author/&lt;id&gt;/plugin
 Method           |     GET
 Data Nature      |     The collection of all GLPi known plugins
-Paginated        |     true
+Paginated        |     true (answers 206 Partial Content or 200 if all the data is in the response)
 
 ##### Example usage (HTTP Session)
 
@@ -668,7 +671,7 @@ Key              |     Value
 URL              |     /plugin/popular
 Method           |     GET
 Data Nature      |     The collection of all GLPi popular plugins
-Paginated        |     true
+Paginated        |     false
 
 ##### Example usage (HTTP Session)
 
@@ -734,7 +737,7 @@ Key              |     Value
 URL              |     /plugin/trending
 Method           |     GET
 Data Nature      |     The collection of all GLPi popular plugins
-Paginated        |     true
+Paginated        |     false
 
 ##### Example usage (HTTP Session)
 
@@ -785,21 +788,21 @@ Content-Type: application/json
 
 This endpoint's data source yields a JSON Array containing a list of JSON serialized objects.  
 Each of these objects describes a single Plugin.  
-This endpoint returns a top 10 of all the plugins that were recently updated at the XML level.  
+This endpoint returns a top 10 of all the plugins that were recently added in the GLPi Plugins Directory. 
 This endpoint gives only summaries of each plugin, containing id, name, key,  
 and the date of insertion of that plugin in the GLPi Plugins Directory.
 
 Key              |     Value
 -----------------|-----------------------------------------------
-URL              |     /plugin/trending
+URL              |     /plugin/new
 Method           |     GET
-Data Nature      |     The collection of all GLPi popular plugins
-Paginated        |     true
+Data Nature      |     top 10 of all the plugins that were recently added in the GLPi Plugins Directory
+Paginated        |     false
 
 ##### Example usage (HTTP Session)
 
 ```http
-GET /api/plugin/trending HTTP/1.1
+GET /api/plugin/new HTTP/1.1
 Host: plugins.glpi-project.org
 Accept: application/json
 Authorization: Bearer yOuRAccesSTokeNhEre
@@ -808,7 +811,7 @@ Authorization: Bearer yOuRAccesSTokeNhEre
 ##### Example usage (cURL call)
 
 ```sh
-curl -X GET -H 'Accept: application/json' -H 'Authorization: Bearer youRAccesSTokeNhEre' http://plugins.glpi-project.com/api/plugin/trending
+curl -X GET -H 'Accept: application/json' -H 'Authorization: Bearer youRAccesSTokeNhEre' http://plugins.glpi-project.com/api/plugin/new
 ```
 
 ##### Example response
@@ -842,6 +845,31 @@ Content-Type: application/json
 ```
 
 #### Plugin card
+
+This endpoint's data source yields a JSON serialized objects which describes a single Plugin.
+
+Key              |     Value
+-----------------|-----------------------------------------------
+URL              |     /plugin/&lt;key&gt;
+Parameter #1     |     `key`: the key of the plugin you request card of
+Method           |     GET
+Data Nature      |     Descriptive card of a single plugin
+Paginated        |     false
+
+##### Example usage (HTTP Session)
+
+```http
+GET /api/plugin/mantis HTTP/1.1
+Host: plugins.glpi-project.org
+Accept: application/json
+Authorization: Bearer yOuRAccesSTokeNhEre
+```
+
+##### Example usage (cURL call)
+
+```sh
+curl -X GET -H 'Accept: application/json' -H 'Authorization: Bearer youRAccesSTokeNhEre' http://plugins.glpi-project.com/api/plugin/mantis
+```
 
 ##### Example response
 
@@ -928,3 +956,432 @@ Content-Type: application/json
 
 ### Tags
 
+#### Tag list
+
+This endpoint's data source yields a JSON Array containing a list of JSON serialized objects.  
+Each of these objects describes a single Tag.  
+This endpoint returns all the known tags the GLPi Plugins service know about.
+
+Key              |     Value
+-----------------|-----------------------------------------------
+URL              |     /tags
+Method           |     GET
+Data Nature      |     The collection of known plugin tags
+Paginated        |     true
+
+##### Example usage (HTTP Session)
+
+```http
+GET /api/author/tags HTTP/1.1
+Host: plugins.glpi-project.org
+Accept: application/json
+Authorization: Bearer yOuRAccesSTokeNhEre
+X-Range: 0-14
+```
+
+##### Example usage (cURL call)
+
+```sh
+curl -X GET -H 'Accept: application/json' -H 'Authorization: Bearer youRAccesSTokeNhEre' -H 'X-Range: 0-14' http://plugins.glpi-project.com/api/tags
+```
+
+##### Example response
+
+```http
+HTTP/1.1 200 OK
+Server: Apache/2.4.10 (Ubuntu)
+Content-Type: application/json
+Accept-Range:model 160
+Content-Range: 0-14/160
+
+[
+    {
+        "key": "inventory",
+        "tag": "Inventory",
+        "lang": "en",
+        "plugin_count": "34"
+    },
+    {
+        "key": "helpdesk",
+        "tag": "Helpdesk",
+        "lang": "en",
+        "plugin_count": "19"
+    },
+    {
+        "key": "management",
+        "tag": "Management",
+        "lang": "en",
+        "plugin_count": "18"
+    },
+    {"...": "..."}
+]
+```
+
+#### Tag plugin list
+
+This endpoint's data source yields a JSON Array containing a list of JSON serialized objects.  
+Each of these objects describes a single Plugin.  
+This endpoint returns all the known plugins in the GLPi open-source community which have
+the requested tag.
+
+Key              |     Value
+-----------------|-----------------------------------------------
+URL              |     /tag/&lt;key&gt;/plugin
+Parameter #1     |     `key` : key of the tag you request associated plugins of
+Method           |     GET
+Data Nature      |     The collection of all individual plugins which have the specified tag
+Paginated        |     true (answers 206 Partial Content or 200 if all the data is in the response)
+
+##### Example usage (HTTP Session)
+
+```http
+GET /api/tag/management/plugin HTTP/1.1
+Host: plugins.glpi-project.org
+Accept: application/json
+Authorization: Bearer yOuRAccesSTokeNhEre
+X-Range: 0-14
+```
+
+##### Example usage (cURL call)
+
+```sh
+curl -X GET -H 'Accept: application/json' -H 'Authorization: Bearer youRAccesSTokeNhEre' -H 'X-Range: 0-14' http://plugins.glpi-project.com/api/tag/management/plugin
+```
+
+##### Example response
+
+```http
+HTTP/1.1 200 OK
+Server: Apache/2.4.10 (Ubuntu)
+Accept-Range: model 18
+Content-Range: 0-14/18
+
+[
+    {
+        "id": "4",
+        "name": "Racks / Bays Management",
+        "key": "racks",
+        "logo_url": "https://raw.githubusercontent.com/InfotelGLPI/racks/master/racks.png",
+        "xml_url": "https://raw.githubusercontent.com/InfotelGLPI/racks/master/racks.xml",
+        "homepage_url": "https://github.com/InfotelGLPI/racks",
+        "download_url": "https://github.com/InfotelGLPI/racks/releases",
+        "issues_url": "",
+        "readme_url": "",
+        "license": "GPL v2+",
+        "date_added": "2009-08-07",
+        "date_updated": "2015-10-09",
+        "download_count": "22966",
+        "note": 0,
+        "short_description": "Bay (racks) management. This plugin allows you to create bays. Manage the placement of your materials in your bays. And so know the space and its power consumption and heat dissipation.",
+        "versions": [
+            {
+                "num": "1.6.1",
+                "compatibility": "0.90"
+            },
+            {
+                "num": "1.6.0",
+                "compatibility": "0.90"
+            },
+            {
+                "num": "1.5.0",
+                "compatibility": "0.85"
+            },
+            {"...", "..."}
+        ],
+        "authors": [
+            {
+                "id": "3",
+                "name": "Xavier Caillaud"
+            },
+            {
+                "id": "49",
+                "name": "Infotel"
+            }
+        ]
+    },
+    {
+        "id": "5",
+        "name": "Entities Management",
+        "key": "manageentities",
+        "logo_url": "https://forge.indepnet.net/svn/manageentities/manageentities.png",
+        "xml_url": "https://raw.githubusercontent.com/InfotelGLPI/manageentities/master/manageentities.xml",
+        "homepage_url": "https://forge.indepnet.net/projects/manageentities",
+        "download_url": "https://forge.indepnet.net/projects/manageentities/files",
+        "issues_url": "",
+        "readme_url": "",
+        "license": "GPL v2+",
+        "date_added": "2009-08-07",
+        "date_updated": "2015-08-17",
+        "download_count": "16794",
+        "note": 0,
+        "short_description": "Entities management. This plugin allows you to manage entities. Link with documents, contacts, contracts. You can also create intervention reports and do contract management of your entities",
+        "versions": [
+            {
+                "num": "1.8.1",
+                "compatibility": "0.83.3"
+            },
+            {
+                "num": "1.8.0",
+                "compatibility": "0.83"
+            },
+            {
+                "num": "1.7.0",
+                "compatibility": "0.80"
+            },
+            {"...": "..."}
+        ],
+        "authors": [
+            {
+                "id": "3",
+                "name": "Xavier Caillaud"
+            }
+        ]
+    },
+    {
+        "id": "7",
+        "name": "Accounts Inventory",
+        "key": "accounts",
+        "logo_url": "https://raw.githubusercontent.com/InfotelGLPI/accounts/master/wiki/accounts.png",
+        "xml_url": "https://raw.githubusercontent.com/InfotelGLPI/accounts/master/accounts.xml",
+        "homepage_url": "https://github.com/InfotelGLPI/accounts",
+        "download_url": "https://github.com/InfotelGLPI/accounts/releases",
+        "issues_url": "",
+        "readme_url": "",
+        "license": "GPL v2+",
+        "date_added": "2009-08-07",
+        "date_updated": "2015-10-09",
+        "download_count": "19517",
+        "note": 0,
+        "short_description": "... (localized)",
+        "versions": [
+            {
+                "num": "2.1.0",
+                "compatibility": "0.90"
+            },
+            {
+                "num": "2.1.1",
+                "compatibility": "0.90"
+            },
+            {
+                "num": "2.0.1",
+                "compatibility": "0.85.3"
+            },
+            {"...": "..."}
+        ],
+        "authors": [
+            {
+                "id": "3",
+                "name": "Xavier Caillaud"
+            },
+            {
+                "id": "49",
+                "name": "Infotel"
+            }
+        ]
+    },
+    {"...": "..."}
+]
+```
+
+#### Most used tags
+
+This endpoint's data source yields a JSON Array containing a list of JSON serialized objects.  
+Each of these objects describes a single Tag.  
+This endpoint returns a top-10 of all the most used tags.
+
+Key              |     Value
+-----------------|-----------------------------------------------
+URL              |     /tags/top
+Method           |     GET
+Data Nature      |     top-10 of all the most used tags
+Paginated        |     false
+
+##### Example usage (HTTP Session)
+
+```http
+GET /api/tags/top HTTP/1.1
+Host: plugins.glpi-project.org
+Accept: application/json
+Authorization: Bearer yOuRAccesSTokeNhEre
+```
+
+##### Example usage (cURL call)
+
+```sh
+curl -X GET -H 'Accept: application/json' -H 'Authorization: Bearer youRAccesSTokeNhEre' -H 'X-Range: 0-14' http://plugins.glpi-project.com/api/tags/top
+```
+
+##### Example response
+
+```http
+HTTP/1.1 200 OK
+Server: Apache/2.4.10 (Ubuntu)
+Content-Type: application/json
+
+[
+    {
+        "id": "4",
+        "name": "Racks / Bays Management",
+        "key": "racks",
+        "logo_url": "https://raw.githubusercontent.com/InfotelGLPI/racks/master/racks.png",
+        "xml_url": "https://raw.githubusercontent.com/InfotelGLPI/racks/master/racks.xml",
+        "homepage_url": "https://github.com/InfotelGLPI/racks",
+        "download_url": "https://github.com/InfotelGLPI/racks/releases",
+        "issues_url": "",
+        "readme_url": "",
+        "license": "GPL v2+",
+        "date_added": "2009-08-07",
+        "date_updated": "2015-10-09",
+        "download_count": "22966",
+        "note": 0,
+        "short_description": "Bay (racks) management. This plugin allows you to create bays. Manage the placement of your materials in your bays. And so know the space and its power consumption and heat dissipation.",
+        "versions": [
+            {
+                "num": "1.6.1",
+                "compatibility": "0.90"
+            },
+            {
+                "num": "1.6.0",
+                "compatibility": "0.90"
+            },
+            {
+                "num": "1.5.0",
+                "compatibility": "0.85"
+            },
+            {"...", "..."}
+        ],
+        "authors": [
+            {
+                "id": "3",
+                "name": "Xavier Caillaud"
+            },
+            {
+                "id": "49",
+                "name": "Infotel"
+            }
+        ]
+    },
+    {
+        "id": "5",
+        "name": "Entities Management",
+        "key": "manageentities",
+        "logo_url": "https://forge.indepnet.net/svn/manageentities/manageentities.png",
+        "xml_url": "https://raw.githubusercontent.com/InfotelGLPI/manageentities/master/manageentities.xml",
+        "homepage_url": "https://forge.indepnet.net/projects/manageentities",
+        "download_url": "https://forge.indepnet.net/projects/manageentities/files",
+        "issues_url": "",
+        "readme_url": "",
+        "license": "GPL v2+",
+        "date_added": "2009-08-07",
+        "date_updated": "2015-08-17",
+        "download_count": "16794",
+        "note": 0,
+        "short_description": "Entities management. This plugin allows you to manage entities. Link with documents, contacts, contracts. You can also create intervention reports and do contract management of your entities",
+        "versions": [
+            {
+                "num": "1.8.1",
+                "compatibility": "0.83.3"
+            },
+            {
+                "num": "1.8.0",
+                "compatibility": "0.83"
+            },
+            {
+                "num": "1.7.0",
+                "compatibility": "0.80"
+            },
+            {"...": "..."}
+        ],
+        "authors": [
+            {
+                "id": "3",
+                "name": "Xavier Caillaud"
+            }
+        ]
+    },
+    {
+        "id": "7",
+        "name": "Accounts Inventory",
+        "key": "accounts",
+        "logo_url": "https://raw.githubusercontent.com/InfotelGLPI/accounts/master/wiki/accounts.png",
+        "xml_url": "https://raw.githubusercontent.com/InfotelGLPI/accounts/master/accounts.xml",
+        "homepage_url": "https://github.com/InfotelGLPI/accounts",
+        "download_url": "https://github.com/InfotelGLPI/accounts/releases",
+        "issues_url": "",
+        "readme_url": "",
+        "license": "GPL v2+",
+        "date_added": "2009-08-07",
+        "date_updated": "2015-10-09",
+        "download_count": "19517",
+        "note": 0,
+        "short_description": "... (localized)",
+        "versions": [
+            {
+                "num": "2.1.0",
+                "compatibility": "0.90"
+            },
+            {
+                "num": "2.1.1",
+                "compatibility": "0.90"
+            },
+            {
+                "num": "2.0.1",
+                "compatibility": "0.85.3"
+            },
+            {"...": "..."}
+        ],
+        "authors": [
+            {
+                "id": "3",
+                "name": "Xavier Caillaud"
+            },
+            {
+                "id": "49",
+                "name": "Infotel"
+            }
+        ]
+    },
+    {"...": "..."}
+]
+```
+
+#### Tag card
+
+This endpoint's data source yields a JSON serialized objects which describes a single Tag.
+
+Key              |     Value
+-----------------|-----------------------------------------------
+URL              |     /tags/&lt;key&gt;
+Parameter #1     |     `key`: the key of the tag you request card of
+Method           |     GET
+Data Nature      |     Descriptive card of a single tag
+Paginated        |     false
+
+##### Example usage (HTTP Session)
+
+```http
+GET /api/tags/management HTTP/1.1
+Host: plugins.glpi-project.org
+Accept: application/json
+Authorization: Bearer yOuRAccesSTokeNhEre
+```
+
+##### Example usage (cURL call)
+
+```sh
+curl -X GET -H 'Accept: application/json' -H 'Authorization: Bearer youRAccesSTokeNhEre' -H 'X-Range: 0-14' http://plugins.glpi-project.org/api/tags/management
+```
+
+##### Example response
+
+```http
+HTTP/1.1 200 OK
+Server: Apache/2.4.10 (Ubuntu)
+Content-Type: application/json
+
+{
+    "key": "management",
+    "tag": "Management",
+    "lang": "en"
+}
+```
