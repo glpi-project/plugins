@@ -138,9 +138,9 @@ angular
             templateUrl: 'views/finishactivateaccount.html',
             controller: 'FinishActivateAccountCtrl'
          })
-         .state('developerdocs', {
-            url: '/developer/docs',
+         .state('developerguides', {
+            url: '/developer/guides',
             templateUrl: 'docs/oauth2.html',
-            controller: 'DeveloperDocsCtrl'
+            controller: 'DeveloperGuidesCtrl'
          });
    });

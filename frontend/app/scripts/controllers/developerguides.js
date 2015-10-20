@@ -1,3 +1,4 @@
+
 'use strict';
 
 /**
@@ -8,7 +9,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-   .controller('DeveloperDocsCtrl', function () {
+   .controller('DeveloperGuidesCtrl', function () {
       $('pre code').each(function(i, block) {
          hljs.highlightBlock(block);
       });
