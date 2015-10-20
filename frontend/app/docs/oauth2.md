@@ -17,11 +17,6 @@ The API allows you to :
 
 ## Glossary
 
-### GLPi Plugin Directory
-
-You are currently using the GLPi Plugins service.
-The GLPi Plugins service has an open-source backend, which is called [glpi-plugin-directory](https://github.com/glpi-project/plugins), whose source-code is available [on Github](https://github.com/glpi-project/plugins).
-
 ### API Endpoint
 
 The GLPi Plugins API offers multiple endpoints, the term endpoint is an abstract concept that is covering a "data source".  
@@ -55,6 +50,11 @@ When you used the OAuth2 Client-Credentials Grant to request usage of the API, w
 This Access-Token will need to be sent via the Authorization HTTP Header set on each of all the HTTP requests  
 made by the service/app/client using the GLPi Plugins API.  
 See below the endpoints section. An example is given with each of them, describing the tranfer of the Access-Token.
+
+### GLPi Plugin Directory
+
+You are currently using the GLPi Plugins service.
+The GLPi Plugins service has an open-source backend, which is called [glpi-plugin-directory](https://github.com/glpi-project/plugins), whose source-code is available [on Github](https://github.com/glpi-project/plugins).
 
 ## Pagination
 
