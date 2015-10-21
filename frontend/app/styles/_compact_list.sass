@@ -1,9 +1,6 @@
 @import 'compass'
 @import 'colors'
 
-.authors-list, .tags-list
-   padding-left: 20px
-
 .compact-list
    margin-bottom: 30px
    .topic
@@ -38,3 +35,14 @@
          font-weight: normal
          color: $darkblue
          font-size: 1.2em
+   .info
+      padding-left: 10px
+
+.authors-list, .tags-list
+   padding-left: 20px
+   .compact-list
+      md-list-item
+         h4
+            text-align: center
+         .md-button
+            min-width: 200px
