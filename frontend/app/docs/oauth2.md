@@ -106,18 +106,20 @@ grant_type=client_credentials
 &scope=plugins+plugins%3Asearch+plugin%3Acard+plugin%3Astar+plugin%3Asubmit+plugin%3Adownload+tags+tag+authors+author+version+message
 ```
 
-(Please note the line starting by "grant_type[...]" has been truncated in multiple parts here, in fact you never add carriage returns in the body when it is x-www-form-urlencoded data, but this is for readability.
-The original text is written in a single line, without any carriage return)
+(Please note that the line starting by "grant_type[...]" has been splitted in multiple parts here, in fact you never add carriage returns in the body when it is x-www-form-urlencoded data, but this is for readability.
+The original text is written in a single line, without any line endings,  
+"grant_type=client_credentials[...]+version+message", in a single line.)
 
 ### What happened ?
 
-/api/oauth/authorize is the only POST endpoint we serve that doesn't expect the client to send JSON data in the HTTP Request body. This endpoint expect the traditional www-form-urlencoded string for encoded form values.
+/api/oauth/authorize is the only POST endpoint we serve which doesn't expect the client to send JSON data in the HTTP Request body.
+This endpoint expect the traditional www-form-urlencoded string for encoded form values.
 
-Let's analyze is are the real content of this request
+In the previous example we sent a couple of variables via the POST call,
+Let's analyze them.
 
 Key             |          Value
 ----------------|----------------
-URI             |     /api/oauth/authorize
 `grant_type`    | client_crendentials (Client Credentials)
 `client_id`     | a7nbqKopiTrLWtvgLTpO
 `client_secret` | WLvUAipaR7dOUPuqqGSTrHapJd95n0djRxNlv3To
