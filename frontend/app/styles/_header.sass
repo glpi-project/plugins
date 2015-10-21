@@ -19,8 +19,14 @@
       color: $lightblue
 
    .searchbox
+      @media (max-width: 600px)
+         md-input-container
+            padding-left: 20px
+            padding-right: 20px
       input   
          color: $verylightblue
+            padding-left: 30px
+            padding-right: 30px
       label
          color: $lightblue !important
    .md-input-focused 
