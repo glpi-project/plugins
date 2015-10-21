@@ -38,7 +38,8 @@ $app->notFound(Tool::makeEndpoint(function() {
 
 // Welcoming browsers when they reach /api
 $app->get('/', function() use($app) {
-   echo file_get_contents(__DIR__.'/welcome.html');
+   $app->halt(200);
+   //echo file_get_contents(__DIR__.'/welcome.html');
 });
 
 // Ready to serve with Slim
