@@ -24,6 +24,8 @@ CREATE TABLE author(
 
 CREATE TABLE user(
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   created_at DATETIME,
+   updated_at DATETIME,
    active INT(1),
    email VARCHAR(255),
    username VARCHAR(28),

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class User extends Model {
    protected $table = 'user';
-   public $timestamps = false;
    protected $visible = ['id', 'active', 'email', 'username',
                          'realname', 'location', 'website',
                          'author_id', 'gravatar'];
