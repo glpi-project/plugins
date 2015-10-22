@@ -54,7 +54,6 @@ angular
             NO_RESULTS: "No result",
             NEVER_UPDATED: "never updated since first publication",
             LOADING: "Loading",
-            NEVER_UPDATED: "never updated since first publication",
             LOGIN: "Connexion",
             USER_PANEL: "Réglages Profil",
             DISCONNECT: "Déconnexion",

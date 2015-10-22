@@ -54,7 +54,6 @@ angular
             NO_RESULTS: "Aucun résultat",
             NEVER_UPDATED: "jamais mis à jour depuis la première publication",
             LOADING: "Chargement",
-            NEVER_UPDATED: "jamais mis à jour depuis la première publication",
             LOGIN: "Connexion",
             USER_PANEL: "Réglages Profil",
             DISCONNECT: "Déconnexion",
