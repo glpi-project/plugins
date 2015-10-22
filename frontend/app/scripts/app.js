@@ -72,9 +72,9 @@ angular
    .run(function($rootScope) {
       var ua = window.navigator.userAgent;
       if (ua.indexOf('MSIE ') > 0) {
-         $rootScope.notIe = false;
+         $rootScope.notie = false;
       } else {
-         $rootScope.notIe = true;
+         $rootScope.notie = true;
       }
    })
 
