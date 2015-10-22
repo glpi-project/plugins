@@ -8,7 +8,7 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-   .controller('TagCtrl', function(API_URL, $scope, $http, $stateParams, PaginatedCollection, $state, Toaster) {
+   .controller('TagCtrl', function(API_URL, $scope, $http, $stateParams, PaginatedCollection, $state, Toaster, fixIndepnet) {
       $scope.results = PaginatedCollection.getInstance();
       $scope.loading = true;
       $scope.results.setRequest(function(from, to) {
