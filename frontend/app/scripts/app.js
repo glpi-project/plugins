@@ -68,6 +68,16 @@ angular
       $rootScope.authors = [];
    })
 
+   // Set the 'notie' boolean if the browser is not ie
+   .run(function($rootScope) {
+      var ua = window.navigator.userAgent;
+      if (ua.indexOf('MSIE ') > 0) {
+         $rootScope.notIe = false;
+      } else {
+         $rootScope.notIe = true;
+      }
+   })
+
    .config(function(API_URL, $authProvider) {
        $authProvider.github({
          clientId: '58b0aebf84896b64ed1e',
