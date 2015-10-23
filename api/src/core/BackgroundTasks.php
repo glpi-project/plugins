@@ -46,6 +46,11 @@ class BackgroundTasks {
       echo "\n";
    }
 
+   /**
+    * Tries to locate a single plugin
+    * by it's key and execute the given
+    * tasks on it if found.
+    */
    public function whereKeyIs($key, $tasks) {
       $plugin = Plugin::where('key', '=', $key)->first();
       if ($plugin) {
