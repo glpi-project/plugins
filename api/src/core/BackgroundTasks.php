@@ -2,7 +2,6 @@
 
 namespace API\Core;
 
-use \Illuminate\Database\Capsule\Manager as DB;
 use \API\Model\Author;
 use \API\Model\Plugin;
 use \API\Model\PluginDescription;
@@ -16,11 +15,6 @@ use \API\Core\Tool;
 use \API\Core\ValidableXMLPluginDescription;
 
 class BackgroundTasks {
-   public function __construct() {
-      // Connecting to MySQL
-      \API\Core\DB::initCapsule();
-   }
-
    /**
     * Triggers the given list of tasks
     * on each plugin if task is supported
@@ -50,6 +44,17 @@ class BackgroundTasks {
       }
 
       echo "\n";
+   }
+
+   public function whereKeyIs($key, $tasks) {
+      $plugin = Plugin::where('key', '=', $key)->first();
+      if ($plugin) {
+         if (in_array('update', $tasks)) {
+            $this->updatePlugin($plugin, 1, 1, []);
+         }
+      } else {
+         echo 'Plugin not found "'.$key.'"'."\n";
+      }
    }
 
    /**
@@ -142,7 +147,7 @@ class BackgroundTasks {
     * that concerns the update of a
     * plugin.
     */
-   private function updatePlugin($plugin, /*$xml, $new_crc,*/ $index = null, $length = null, $subtasks) {
+   private function updatePlugin($plugin, $index = null, $length = null, $subtasks) {
       // Displaying index / length
       echo('Plugin (' . $index . '/'. $length . "): ");
 
@@ -308,6 +313,9 @@ class BackgroundTasks {
             $tag->plugins()->attach($plugin);
          }
       }
+
+      // Reassociating plugin to langs
+      $
 
       // new crc
       $plugin->xml_crc = $crc;
