@@ -126,7 +126,6 @@ angular.module('frontendApp')
             var location = authorizationRequestWindow.location.href;
             if (location.split(API_URL).length > 1) {
                var evl = authorizationRequestWindow.addEventListener('message', function(e) {
-                  authorizationRequestWindow.removeEventListener('message', evl);
                   var data = JSON.parse(e.data);
                   if (!data.error) {
                      if (data.access_token) {
@@ -139,6 +138,7 @@ angular.module('frontendApp')
                      // Showing a toast
                      Toaster.make(filter('translate')(data.error), 'body');
                   }
+                  authorizationRequestWindow.removeEventListener('message', evl);
                   authorizationRequestWindow.close();
                });
                clearInterval(pollPopupForToken);
