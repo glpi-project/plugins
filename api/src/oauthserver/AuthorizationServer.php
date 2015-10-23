@@ -2,16 +2,18 @@
 
 namespace API\OAuthServer;
 
-use \API\OAuthServer\AccessTokenStorage;
-use \API\OAuthServer\AuthCodeStorage;
-use \API\OAuthServer\ClientStorage;
-use \API\OAuthServer\ScopeStorage;
-use \API\OAuthServer\SessionStorage;
-use \League\OAuth2\Server\Grant\PasswordGrant;
-use \League\OAuth2\Server\Grant\ClientCredentialsGrant;
-use \League\OAuth2\Server\Grant\RefreshTokenGrant;
-use \API\Model\User;
-use \API\Exception\InvalidScope;
+use API\OAuthServer\AccessTokenStorage;
+use API\OAuthServer\AuthCodeStorage;
+use API\OAuthServer\ClientStorage;
+use API\OAuthServer\ScopeStorage;
+use API\OAuthServer\SessionStorage;
+use League\OAuth2\Server\Grant\PasswordGrant;
+use League\OAuth2\Server\Grant\ClientCredentialsGrant;
+use League\OAuth2\Server\Grant\RefreshTokenGrant;
+use Symfony\Component\HttpFoundation\Request;
+use API\Model\User;
+use API\Exception\InvalidScope;
+use API\Exception\AccessDenied;
 
 class AuthorizationServer extends \League\OAuth2\Server\AuthorizationServer {
 
@@ -43,7 +45,7 @@ class AuthorizationServer extends \League\OAuth2\Server\AuthorizationServer {
             return false;
          }
          if ($count > 1) {
-            Tool::log('Dangerous, query result count > 1 when user tried'.
+            throw new \Exception('Dangerous, query result count > 1 when user tried'.
             ' to log with login "'.$login.'" '.
             'and password "'.$password.'"');
             return false;
@@ -99,8 +101,28 @@ class AuthorizationServer extends \League\OAuth2\Server\AuthorizationServer {
     * requested with scopes like "user" or so
     */
    public function issueAccessToken() {
-      $grantType = $this->getRequest()->request->get('grant_type');
-      $scopes = explode(' ', $this->getRequest()->request->get('scope'));
+      $request = Request::createFromGlobals();
+      $grantType = $request->get('grant_type');
+      $clientId = $request->get('client_id');
+      $scopes = explode(' ', $request->get('scope'));
+
+      switch ($clientId) {
+         // We set client_secret = '' for webapp
+         // and glpidefault. But the firewall will
+         // only allow them to do certain things
+         case 'webapp':
+         case 'glpidefault':
+            if (!$request->get('client_secret')) {
+               $_POST['client_secret'] = '';
+            }
+            break;
+      }
+
+      if (!$grantType == 'client_credentials') {
+         if ($clientId != 'webapp') {
+            throw new AccessDenied;
+         }
+      }
 
       $this->firewallOnScopes($grantType, $scopes);
       return parent::issueAccessToken();

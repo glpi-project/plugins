@@ -326,16 +326,7 @@ $user_associate_external_account = Tool::makeEndpoint(function($service) use($ap
  * by leaguephp/oauth2-server
  */
 $authorize = Tool::makeEndpoint(function() use($app) {
-   if (isset($_POST['grant_type']) &&
-       isset($_POST['client_id']) &&
-       $_POST['client_id'] == 'webapp') {
-      if (!isset($_POST['client_secret'])) {
-        $_POST['client_secret'] = '';
-      }
-   }
-
    $authorizationServer = new AuthorizationServer();
-
    Tool::endWithJson($authorizationServer->issueAccessToken(), 200);
 });
 

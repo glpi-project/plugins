@@ -15,6 +15,8 @@ class ErrorResponse extends \Exception {
 
    protected $infos = [];
 
+   private $parent = null;
+
    /**
     * Constructor
     */
@@ -31,6 +33,20 @@ class ErrorResponse extends \Exception {
          "value" => $value,
          "scope" => $public ? 'public' : 'private'
       ];
+   }
+
+   /**
+    * Sets the parent exception, used in the logging
+    * string to know the exact line in the code that
+    * triggered the exception.
+    *
+    * This setter is chainable,
+    * returning the Exception
+    * instance.
+    */
+   public function childOf(\Exception $e) {
+      $this->parent = $e;
+      return $this;
    }
 
    /**
@@ -88,6 +104,7 @@ class ErrorResponse extends \Exception {
                 ($accessToken ? '['.$accessToken.'] ' : '').
                 ($userId ? '('.$userId.') ' : '').
                 ($url ? '['.$app->request->getMethod().' '.$url.'] ' : '').
-                $this->getRepresentation());
+                $this->getRepresentation().
+                ($this->parent ? ' because of ' . get_class($this->parent) . ' thrown at '. $this->parent->getFile(). ' line ' . $this->parent->getLine() : ''));
    }
 }

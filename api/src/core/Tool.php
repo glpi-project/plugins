@@ -80,10 +80,12 @@ class Tool {
                               if ($app->request->post('client_secret')) {
                                  $clientSecret = $app->request->post('client_secret');
                               }
-                              throw new \API\Exception\ClientSecretError($clientId, $clientSecret);
+                              throw (new \API\Exception\ClientSecretError($clientId, $clientSecret))
+                                     ->childOf($e);
                               break;
                            case 'access token':
-                              throw new \API\Exception\NoAccessToken;
+                              throw (new \API\Exception\NoAccessToken)
+                                     ->childOf($e);
                               break;
                         }
                         break;
@@ -96,7 +98,8 @@ class Tool {
                         if ($app->request->post('client_secret')) {
                            $clientSecret = $app->request->post('client_secret');
                         }
-                        throw new \API\Exception\ClientSecretError($clientId, $clientSecret);
+                        throw (new \API\Exception\ClientSecretError($clientId, $clientSecret))
+                               ->childOf($e);
                         break;
                      case 'League\OAuth2\Server\Exception\AccessDeniedException':
                         if (isset($app->request->headers['authorization'])) {
@@ -104,7 +107,8 @@ class Tool {
                         } else {
                            $token = null;
                         }
-                        throw new \API\Exception\AccessDenied($token);
+                        throw (new \API\Exception\AccessDenied($token))
+                              ->childOf($e);
                         break;
                      case 'League\OAuth2\Server\Exception\InvalidRefreshException':
                         if ($app->request->post('refresh_token')) {
@@ -112,15 +116,18 @@ class Tool {
                         } else {
                            $token = null;
                         }
-                        throw new \API\Exception\InvalidRefreshToken($token);
+                        throw (new \API\Exception\InvalidRefreshToken($token))
+                               ->childOf($e);
                         break;
                      case 'League\OAuth2\Server\Exception\InvalidScopeException':
                         $parameter = explode('"', $e->getMessage())[1];
-                        throw new \API\Exception\InvalidScope($parameter);
+                        throw (new \API\Exception\InvalidScope($parameter))
+                              ->childOf($e);
                         break;
                      case 'League\OAuth2\Server\Exception\InvalidCredentialsException':
-                        throw new \API\Exception\InvalidCredentials(($app->request->post('username') ? $app->request->post('username') : null),
-                                                                   ($app->request->post('password') ? strlen($app->request->post('password')) : 0));
+                        throw (new \API\Exception\InvalidCredentials(($app->request->post('username') ? $app->request->post('username') : null),
+                                                                                           ($app->request->post('password') ? strlen($app->request->post('password')) : 0)))
+                               ->childOf($e);
                         break;
                      case 'Slim\Exception\Stop':
                        // we just let SLim halt() the app
@@ -131,6 +138,9 @@ class Tool {
                         // data and send the simple code (without
                         // critical information to the user)
                         $serviceError = new \API\Exception\ServiceError($e->getFile(),$e->getLine(),$e->getMessage());
+                        // we don't use ->childOf() on this one,
+                        // we're already provinding File, Line and Message
+                        // of the Exception
                         throw $serviceError;
                         break;
                   }
