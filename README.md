@@ -98,7 +98,7 @@ with the -f command line option shown in the example before.
 php misc/run_tasks.php
 ```
 
-will run all the normal tasks
+will run all the default tasks
  + updating all the plugins if possible
  + deleting expired access tokens
  + deleting lonely refresh tokens
