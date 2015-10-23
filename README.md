@@ -90,18 +90,33 @@ php misc/loadcsv.php -h hostname -d database -u username -p password -f misc/ind
 you can give the indepnet.csv file provided in misc
 with the -f command line option shown in the example before.
 
-## Grab plugin information 
+## Run the BackgroundTasks
 
 ### Manually 
 
 ```bash
-php misc/update.php
+php misc/run_tasks.php
 ```
+
+will run all the normal tasks.
+
+```bash
+php misc/run_tasks.php -k genericobject -t update
+```
+
+will run the update of the genericobject plugin.
+
+Here, the -k and -t options helps when you want
+per example to update a specific plugin
+from the command line.
 
 ### With crontab
 
 It is up to you to use a crontab entry to run this script,
 per example once every hour.
+Specify no arguments to the run_tasks commands in
+the crontab, this way all the normal tasks will
+run.
 
 ## Configuration (Via Apache HTTPd)
 
