@@ -120,6 +120,9 @@ php misc/run_tasks.php -i 44 -t update
 
 will run the update of the plugin which has id 44.
 
+Here the -i option, is used, used to select
+a plugin by it's database id.
+
 ### With crontab
 
 It is up to you to use a crontab entry to run this script,
