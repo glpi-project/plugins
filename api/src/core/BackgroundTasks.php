@@ -51,7 +51,7 @@ class BackgroundTasks {
     * by it's key and execute the given
     * tasks on it if found.
     */
-   public function whereKeyIs($key, $tasks) {
+   public function wherePluginKeyIs($key, $tasks) {
       $plugin = Plugin::where('key', '=', $key)->first();
       if ($plugin) {
          if (in_array('update', $tasks)) {
@@ -59,6 +59,17 @@ class BackgroundTasks {
          }
       } else {
          echo 'Plugin not found "'.$key.'"'."\n";
+      }
+   }
+
+   public function wherePluginIdIs($id, $tasks) {
+      $plugin = Plugin::where('active', '=', true)->find($id);
+      if ($plugin) {
+         if (in_array('update', $tasks)) {
+            $this->updatePlugin($plugin, 1, 1, []);
+         }
+      } else {
+         echo 'Plugin #'.$id.' not found '."\n";
       }
    }
 
@@ -320,7 +331,7 @@ class BackgroundTasks {
       }
 
       // Reassociating plugin to langs
-      $
+      // $
 
       // new crc
       $plugin->xml_crc = $crc;

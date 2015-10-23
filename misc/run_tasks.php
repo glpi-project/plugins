@@ -6,7 +6,7 @@ require __DIR__.'/../api/vendor/autoload.php';
 \API\Core\DB::initCapsule();
 $taskDispatcher = new \API\Core\BackgroundTasks;
 
-$options = getopt('k:t:');
+$options = getopt('i:k:t:');
 
 // If the user at the command line specify
 // no known options, there is the default
@@ -23,10 +23,12 @@ if (sizeof($options) == 0) {
 else {
    $key = null;
    $tasks = [];
-   if (isset($options['t']) && in_array(gettype($options['k']), ['string', 'array'])) {
+   if (isset($options['t']) && in_array(gettype($options['t']), ['string', 'array'])) {
       $tasks = (gettype($options['t']) == 'array' ? $options['t'] : [$options['t']]);
    }
    if (isset($options['k']) && gettype($options['k']) == 'string') {
-      $taskDispatcher->whereKeyIs($options['k'], $tasks);
+      $taskDispatcher->wherePluginKeyIs($options['k'], $tasks);
+   } elseif (isset($options['i']) && gettype($options['i'] == 'string')) {
+      $taskDispatcher->wherePluginIdIs($options['i'], $tasks);
    }
 }

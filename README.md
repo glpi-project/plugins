@@ -114,6 +114,12 @@ Here, the -k and -t options helps when you want
 per example to update a specific plugin
 from the command line.
 
+```bash
+php misc/run_tasks.php -i 44 -t update
+```
+
+will run the update of the plugin which has id 44.
+
 ### With crontab
 
 It is up to you to use a crontab entry to run this script,
