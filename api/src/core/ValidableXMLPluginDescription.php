@@ -185,7 +185,7 @@ class ValidableXMLPluginDescription {
    }
 
    public function validateScreenshots() {
-      foreach ($this->contents->screenshots as $tag => $screenshot) {
+      foreach ($this->contents->screenshots->children() as $tag => $screenshot) {
          if ($tag != 'screenshot') {
             throw new InvalidXML('field', 'screenshots.'.$tag, '<screenshots> should contain only <screenshot> tags');
          }
