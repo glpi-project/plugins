@@ -202,7 +202,9 @@ class BackgroundTasks {
              sizeof($xml->contents->name->children()) < 1 &&
              strlen((string)$xml->contents->name) < 80) {
             $_unreadable .= '"'.(string)$xml->contents->key . '" ';
-         } 
+         } elseif ($plugin->name) {
+            $_unreadable .= '"'.$plugin->name.'" ';
+         }
          $_unreadable .= "Unreadable/Non validable XML, error: ".$e->getRepresentation()." Skipping.\n";
          echo($_unreadable);
          return false;
