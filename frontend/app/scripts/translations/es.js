@@ -68,6 +68,7 @@ angular
             TAGGED: "Tagged",
             DOWNLOADED: "Downloaded",
             THIS_MONTH: "This month",
-            THIS_WEEK: "This week"
+            THIS_WEEK: "This week",
+            TRANSLATIONS: "Translations"
          });
    });
