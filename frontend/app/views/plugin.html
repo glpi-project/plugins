@@ -92,6 +92,12 @@
                <label>{{'UPDATED'|translate}}</label>
                <span>{{fromNow(plugin.date_updated)}}</span>
             </li>
+            <li>
+               <label>{{'TRANSLATIONS'|translate}}</label>
+               <span class="plugin-languages">
+                  <span ng-repeat="lang in plugin.langs">{{lang.lang}}</span>
+               </span>
+            </li>
          </ul>
       </md-content>
    </div>
