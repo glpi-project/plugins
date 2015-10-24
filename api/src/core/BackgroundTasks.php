@@ -166,7 +166,7 @@ class BackgroundTasks {
     */
    private function updatePlugin($plugin, $index = null, $length = null, $subtasks) {
       // Displaying index / length
-      echo('Plugin (' . $index . '/'. $length . "): ");
+      echo('Plugin (' . $index . '/'. $length . ') (id #'. $plugin->id . '): ');
 
       $update = false;
 
@@ -197,7 +197,7 @@ class BackgroundTasks {
          $xml->validate();
       }
       catch (\API\Exception\ErrorResponse $e) {
-         echo($plugin->name . "\" Unreadable/Non validable XML, Skipping.\n");
+         echo($plugin->name . "\" Unreadable/Non validable XML, error: ".$e->getRepresentation()." Skipping.\n");
          return false;
       }
 
