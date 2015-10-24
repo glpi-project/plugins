@@ -7,6 +7,7 @@ use \API\Model\Plugin;
 use \API\Model\PluginDescription;
 use \API\Model\PluginVersion;
 use \API\Model\PluginScreenshot;
+use \API\Model\PluginLang;
 use \API\Model\Tag;
 use \API\Model\AccessToken;
 use \API\Model\RefreshToken;
@@ -331,7 +332,19 @@ class BackgroundTasks {
       }
 
       // Reassociating plugin to langs
-      // $
+      $plugin->langs()->detach();
+      foreach ($xml->langs->children() as $lang) {
+         $lang = (string)$lang;
+
+         $_lang = PluginLang::where('lang', '=', $lang)->first();
+         if (!$_lang) {
+            $_lang = new PluginLang;
+            $_lang->lang = $lang;
+            $_lang->save();
+         }
+
+         $_lang->plugins()->attach($plugin);
+      }
 
       // new crc
       $plugin->xml_crc = $crc;

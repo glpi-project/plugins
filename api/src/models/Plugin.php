@@ -37,6 +37,10 @@ class Plugin extends Model {
       return $this->hasMany('\API\Model\PluginVersion')->orderBy('compatibility', 'desc');
    }
 
+   public function langs() {
+      return $this->belongsToMany('\API\Model\PluginLang', 'plugin_plugin_lang');
+   }
+
    public function tags() {
       return $this->belongsToMany('\API\Model\Tag', 'plugin_tags');
    }

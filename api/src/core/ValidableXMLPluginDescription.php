@@ -153,6 +153,10 @@ class ValidableXMLPluginDescription {
          if (sizeof($lang->children()) != 0) {
             throw new InvalidXML('field', 'langs.lang', '<lang> should be a singular field');
          }
+
+         if (strlen((string)$lang) > 5) {
+            throw new InvalidXML('field', 'langs.lang', '<lang> shouldnt exceed 5 characters');
+         }
       }
       return true;
    }

@@ -154,6 +154,23 @@ CREATE TABLE plugin_screenshot(
 ) ENGINE=InnoDB;
 CREATE INDEX idx_plugin_screenshot_plugin ON plugin_screenshot(plugin_id);
 
+CREATE TABLE plugin_lang(
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   lang VARCHAR(5) NOT NULL UNIQUE
+) ENGINE=InnoDB;
+
+CREATE TABLE plugin_plugin_lang(
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   plugin_id INT NOT NULL,
+   plugin_lang_id INT NOT NULL,
+   FOREIGN KEY (plugin_id)
+      REFERENCES plugin(id)
+      ON DELETE CASCADE,
+   FOREIGN KEY (plugin_lang_id)
+      REFERENCES plugin_lang(id)
+      ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 CREATE TABLE message(
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    first_name VARCHAR(40),
