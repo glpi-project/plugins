@@ -35,7 +35,7 @@ use \API\Exception\DifferentPluginSignature;
 $single = Tool::makeEndpoint(function($key) use($app, $resourceServer) {
    OAuthHelper::needsScopes(['plugin:card']);
 
-   $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots', 'tags')
+   $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots', 'tags', 'langs')
                   ->short()
                   ->withAverageNote()
                   ->withNumberOfVotes()
