@@ -196,8 +196,15 @@ class BackgroundTasks {
       try {
          $xml->validate();
       }
-      catch (\API\Exception\ErrorResponse $e) {
-         echo($plugin->name . "\" Unreadable/Non validable XML, error: ".$e->getRepresentation()." Skipping.\n");
+      catch (\API\Exception\InvalidXML $e) {
+         $_unreadable = '';
+         if ($xml->contents->name &&
+             sizeof($xml->contents->name->children()) < 1 &&
+             strlen((string)$xml->contents->name) < 80) {
+            $_unreadable .= '"'.(string)$xml->contents->key . '" ';
+         } 
+         $_unreadable .= "Unreadable/Non validable XML, error: ".$e->getRepresentation()." Skipping.\n";
+         echo($_unreadable);
          return false;
       }
 
