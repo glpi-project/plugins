@@ -14,20 +14,30 @@ class User extends Model {
 
    // Relations
 
+   // The plugin author associated with this account
    public function author() {
       return $this->belongsTo('\API\Model\Author');
    }
+   // External social accounts the user has
    public function externalAccounts() {
       return $this->hasMany('\API\Model\UserExternalAccount');
    }
+   // API Keys the user has
    public function apps() {
       return $this->hasMany('\API\Model\App');
    }
+   // Plugins the user watch (@todo; remove the PluginWatch class,
+   //                                keep a straight  belongsToMany)
    public function watchs() {
       return $this->hasMany('\API\Model\PluginWatch');
    }
+   // Sessions the user have
    public function sessions() {
       return $this->hasMany('\API\Model\Session', 'owner_id');
+   }
+   // Plugins user has right onto
+   public function plugins() {
+      return $this->belongsToMany('\API\Model\Plugin', 'plugin_admins');
    }
 
    // Setters

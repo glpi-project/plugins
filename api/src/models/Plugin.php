@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Plugin extends Model {
    protected $table = 'plugin';
    public $timestamps = false;
-
    protected $casts = [
      "note" => 'float'
    ];
+
+   // Relations
 
    public function descriptions() {
       return $this->hasMany('\API\Model\PluginDescription');
@@ -48,6 +49,12 @@ class Plugin extends Model {
    public function watchers() {
       return $this->hasMany('\API\Model\PluginWatch');
    }
+
+   public function admins() {
+      return $this->belongsToMany('\API\Model\User', 'plugin_admins');
+   }
+
+   // Scopes
 
    public function scopeShort($query) {
       $query->select(['plugin.id', 'plugin.name', 'plugin.key', 'plugin.logo_url',
@@ -131,6 +138,8 @@ class Plugin extends Model {
             ->where('plugin_version.compatibility', '=', $version);
       return $query;
    }
+
+   // Methods
 
    /**
     * Returns a boolean according to the
