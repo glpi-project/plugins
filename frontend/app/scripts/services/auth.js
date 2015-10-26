@@ -14,13 +14,13 @@ angular.module('frontendApp')
     var AuthManager = function() {};
 
     AuthManager.prototype.defaultScope = [
-      'plugins', 'plugins:search', 'plugin:card', 'plugin:star', 'plugin:submit',
+      'plugins', 'plugins:search', 'plugin:card', 'plugin:star',
       'plugin:download', 'tags', 'tag', 'authors', 'author', 'version', 'message'
     ];
     AuthManager.prototype.authedScope =
       AuthManager.prototype.defaultScope
    .concat([
-      'user', 'user:externalaccounts', 'user:apps'
+      'user', 'user:externalaccounts', 'user:apps', 'plugin:submit'
    ]);
 
     /**

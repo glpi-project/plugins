@@ -77,7 +77,7 @@ class AuthorizationServer extends \League\OAuth2\Server\AuthorizationServer {
     * requests.
     */
    private function firewallOnScopes($grantType, $scopes) {
-      $onlyForAuthed = ['user', 'user:externalaccounts', 'user:apps'];
+      $onlyForAuthed = ['user', 'user:externalaccounts', 'user:apps', 'plugin:submit'];
 
       if ($grantType == 'client_credentials') {
          foreach ($onlyForAuthed as $scope) {

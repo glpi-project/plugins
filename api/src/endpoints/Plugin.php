@@ -279,6 +279,7 @@ $star = Tool::makeEndpoint(function() use($app) {
 $submit = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['plugin:submit']);
 
+   $user = OAuthHelper::currentlyAuthed();
    $body = Tool::getBody();
 
    $recaptcha = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
@@ -316,6 +317,7 @@ $submit = Tool::makeEndpoint(function() use($app) {
    $plugin->active = false;
    $plugin->download_count = 0;
    $plugin->save();
+   $plugin->admins()->attach($user);
 
    $mailer = new Mailer;
    $mailer->sendMail('plugin_submission.html', Tool::getConfig()['msg_alerts']['local_admins'],

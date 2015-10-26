@@ -1,5 +1,5 @@
 <div class="submit-plugin-form">
-   <form class="submit" id="submit_form">
+   <form class="submit" id="submit_form" ng-show="authed">
       <h2>{{'SUBMIT_YOUR_PLUGIN'|translate}}</h2>
       <span class="legend">{{'SUB_SUBMIT_YOUR_PLUGIN'|translate}}</span>
       <md-input-container class="urlbox picbox">
@@ -11,6 +11,12 @@
          <i class="fa fa-paper-plane"></i>
       </md-button>
    </form>
+   <div ng-hide="authed">
+      <h2>You must be authed</h2>
+      <p>You must be authed in order to submit a XML File.</p>
+      <p>Please <a ui-sref="signin">sign-in</a></p>
+      <p>If you don't own a GLPi Plugins Account already, please consider to <a ui-sref="signup">register</a>.</p>
+   </div>
    <div class="xml_description">
       <span class="legend">Your XML must be valid and respect this format :</span>
       <!-- htmlmin:ignore -->
