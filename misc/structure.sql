@@ -171,6 +171,17 @@ CREATE TABLE plugin_plugin_lang(
       ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE plugin_admins (
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   plugin_id INT NOT NULL,
+   user_id INT NOT NULL,
+   master INT(1),
+   allowed_refresh_xml INT(1),
+   allowed_change_xml_url INT(1)
+) ENGINE=InnoDB;
+CREATE INDEX idx_plugin_admins_plugin ON plugin_admins(plugin_id);
+CREATE INDEX idx_plugin_admins_user ON plugin_admins(user_id);
+
 CREATE TABLE message(
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    first_name VARCHAR(40),
