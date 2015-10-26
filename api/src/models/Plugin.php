@@ -156,4 +156,15 @@ class Plugin extends Model {
       }
       return $owner;
    }
+
+   public function hasAdmin($admin_id) {
+      $admin = false;
+      foreach ($this->admins as $user) {
+         if ($admin_id == $user->id) {
+            $admin = true;
+            break;
+         }
+      }
+      return $admin;
+   }
 }

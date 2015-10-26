@@ -72,7 +72,7 @@ $single_authormode_view = Tool::makeEndpoint(function($key) use($app) {
    if (!$plugin) {
       throw new ResourceNotFound('Plugin', $key);
    }
-   if (!$plugin->hasAuthor($user->author_id)) {
+   if (!$plugin->hasAdmin($user->id)) {
       throw new LackAuthorship;
    }
 
@@ -106,7 +106,7 @@ $single_authormode_edit = Tool::makeEndpoint(function($key) use($app) {
    if (!$plugin) {
       throw new ResourceNotFound('Plugin', $key);
    }
-   if (!$plugin->hasAuthor($user->author_id)) {
+   if (!$plugin->hasAdmin($user->id)) {
       throw new LackAuthorship;
    }
 
