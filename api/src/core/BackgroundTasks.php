@@ -357,10 +357,8 @@ class BackgroundTasks {
 
       // new crc
       $plugin->xml_crc = $crc;
-      // new timestamp
-      if (!isset($firstTimeUpdate)) {
-         $plugin->date_updated = DB::raw('NOW()');
-      }
+      // new updated timestamp
+      $plugin->date_updated = \Illuminate\Database\Capsule\Manager::raw('NOW()');
       $plugin->save();
       echo " OK.";
       if (in_array('alert_watchers', $subtasks)) {
