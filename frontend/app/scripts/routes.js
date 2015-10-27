@@ -16,7 +16,11 @@ angular
          .state('pluginpanel', {
             url: "/panel/plugin/:key",
             controller: "PluginpanelCtrl",
-            templateUrl: "views/pluginpanel.html"
+            templateUrl: "views/pluginpanel.html",
+            params: {
+               refreshXML: false,
+               managePermissions: false
+            }
          })
          .state('apikeys', {
             url: '/panel/apikeys',

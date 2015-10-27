@@ -51,7 +51,7 @@ class Plugin extends Model {
    }
 
    public function admins() {
-      return $this->belongsToMany('\API\Model\User', 'plugin_rights')
+      return $this->belongsToMany('\API\Model\User', 'plugin_right')
                   ->withPivot('master', 'allowed_refresh_xml', 'allowed_change_xml_url');
    }
 

@@ -81,14 +81,40 @@
          </md-list-item>
       </md-list>
    </div>
-   <div flex="33">
+   <div flex="33" class="panel-plugins">
       <h2>My plugins</h2>
 
-      <md-list>
+<!--       <md-list>
          <md-list-item ng-repeat="plugin in plugins">
             <md-button ui-sref="pluginpanel({key: plugin.key})">
                <h4>{{plugin.name}}</h4>
             </md-button>
+         </md-list-item>
+      </md-list> -->
+
+      <md-list>
+         <md-list-item ng-repeat="plugin in plugins" layout="column">
+            <h4>{{plugin.name}}</h4>
+            <div class="buttons">
+               <md-button ng-hide="plugin.pivot.master == 0" ui-sref="pluginpanel({key: plugin.key, managePermissions: true})">
+                  <i class="fa fa-user"></i>
+                  <md-tooltip>
+                     Manage permissions
+                  </md-tooltip>
+               </md-button>
+               <md-button ng-hide="plugin.pivot.master == 0 || plugin.pivot.allowed_refresh_xml" ui-sref="pluginpanel({key: plugin.key, refreshXML: true})">
+                  <i class="fa fa-file-text"></i>
+                  <md-tooltip>
+                     Reload XML
+                  </md-tooltip>
+               </md-button>
+               <md-button ui-sref="pluginpanel({key: plugin.key})">
+                  <i class="fa fa-cog"></i>
+                  <md-tooltip>
+                     Plugin Panel
+                  </md-tooltip>
+               </md-button>
+            </div>
          </md-list-item>
       </md-list>
    </div>
