@@ -75,8 +75,8 @@ $single_authormode_view = Tool::makeEndpoint(function($key) use($app) {
    if (!$plugin) {
       throw new ResourceNotFound('Plugin', $key);
    }
-   if (!$plugin->hasAdmin($user->id)) {
-      throw new LackAuthorship;
+   if (!$plugin->admins->find($user->id)) {
+      throw new LackPermission('Plugin', $key, $user->username);
    }
 
    Tool::endWithJson([

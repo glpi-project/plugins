@@ -91,19 +91,19 @@
             <p ng-show="plugin.xml_state == 'bad_xml_url'">(Unreachable XML File Url)</p>
             <p ng-show="plugin.xml_state == 'xml_error'">(Invalid XML)</p>
             <div class="buttons">
-               <md-button ng-hide="plugin.pivot.master == 0" ui-sref="pluginpanel({key: plugin.key, managePermissions: true})">
+               <md-button ng-show="plugin.pivot.master" ui-sref="pluginpanel({key: plugin.key, managePermissions: true})">
                   <i class="fa fa-user"></i>
                   <md-tooltip>
                      Manage permissions
                   </md-tooltip>
                </md-button>
-               <md-button ng-hide="plugin.pivot.master == 0 || plugin.pivot.allowed_refresh_xml" ui-sref="pluginpanel({key: plugin.key, refreshXML: true})">
+               <md-button ng-show="plugin.pivot.master || plugin.pivot.allowed_refresh_xml" ui-sref="pluginpanel({key: plugin.key, refreshXML: true})">
                   <i class="fa fa-file-text"></i>
                   <md-tooltip>
                      Reload XML
                   </md-tooltip>
                </md-button>
-               <md-button ui-sref="pluginpanel({key: plugin.key})">
+               <md-button ng-show="plugin.pivot.master || plugin.pivot.allowed_refresh_xml || plugin.pivot.allowed_change_xml_url" ui-sref="pluginpanel({key: plugin.key})">
                   <i class="fa fa-cog"></i>
                   <md-tooltip>
                      Plugin Panel

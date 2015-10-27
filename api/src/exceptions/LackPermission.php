@@ -7,8 +7,10 @@ class LackPermission extends ErrorResponse {
 
    public $httpStatusCode = 401;
 
-   public function __construct($permissionNeeded, $resourceType = null, $resourceKey = null) {
-      $this->setInfo('permission', $permissionNeeded, true);
+   public function __construct($resourceType = null, $resourceKey = null, $username = null) {
+      if ($username) {
+         $this->setInfo('username', $username, true);
+      }
       if ($resourceType) {
          $this->setInfo('resourceType', $resourceType, true);
       }
