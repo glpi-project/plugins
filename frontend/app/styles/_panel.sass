@@ -62,3 +62,39 @@
       margin-top: 10px
       &:hover
          background-color: #eee
+
+.plugin-user-permissions
+   .user-permissions
+      padding: 10px 20px 10px 20px
+      ul
+         padding: 0
+      md-autocomplete
+         margin-top: 10px
+   .user-permission
+      // vertical gutters
+      padding-top: 20px
+      &:first-child
+         padding-top: 0
+      // paragraph margins
+      p
+         margin: 0
+      // Username
+      h4
+         line-height: 60px
+         min-width: 90px
+      // "Master"
+      &>div:nth-child(2)
+         p
+            line-height: 60px
+            padding-left: 8px
+      // checkboxes
+      &>div
+         padding-left: 20px
+         text-align: center
+         md-checkbox
+            display: inline-block
+      .delete-button
+         button
+            width: 30px
+            height: 30px
+            line-height: 36px

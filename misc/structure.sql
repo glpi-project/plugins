@@ -179,6 +179,7 @@ CREATE TABLE plugin_right (
    master INT(1),
    allowed_refresh_xml INT(1),
    allowed_change_xml_url INT(1),
+   allowed_notifications INT(1)
    FOREIGN KEY(user_id)
       REFERENCES user(id)
       ON DELETE CASCADE;
@@ -237,7 +238,8 @@ VALUES  ('plugins', 'Read lists of plugins (all, popular, trending, new, updated
         ('message', 'Send a message to our wonderful team'),
         ('user', 'Allow logged user to modify his profile'),
         ('user:externalaccounts', 'Allow logged user to view/edit/delete his external social account connections'),
-        ('user:apps', 'Allow logged user to view/edit/delete his API Keys');
+        ('user:apps', 'Allow logged user to view/edit/delete his API Keys'),
+        ('users:search', 'Allow to Search trough the users of GLPi Plugins');
 
 CREATE TABLE sessions(
    id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

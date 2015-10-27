@@ -367,6 +367,25 @@ $user_remove_watch = Tool::makeEndpoint(function ($key) use($app, $resourceServe
    $app->halt(200);
 });
 
+$user_search = Tool::makeEndpoint(function() {
+   OAuthHelper::needsScopes(['users:search']);
+   $body = Tool::getBody();
+
+   if (!isset($body->search) ||
+       gettype($body->search) != 'string') {
+      throw new InvalidField('search');
+   }
+   $search = $body->search;
+
+   $results = User::select(['username', 'realname'])
+         ->where('username', 'LIKE', "%$search%")
+         ->orWhere('realname', 'LIKE', "%$search%")
+         ->orWhere('email', '=', $search)
+         ->get();
+
+   Tool::endWithJson($results);
+});
+
 // HTTP REST Map
 
 // user profile related
@@ -384,9 +403,13 @@ $app->get('/user/watchs', $user_watchs);
 $app->post('/user/watchs', $user_add_watch);
 $app->delete('/user/watchs/:key', $user_remove_watch);
 
+// search trough user names
+$app->post('/user/search', $user_search);
+
 // options for CORS
 $app->options('/user', function() {});
 $app->options('/user/delete', function() {});
 $app->options('/user/validatemail/:token', function($token) {});
 $app->options('/user/watchs', function() {});
 $app->options('/user/plugins', function() {});
+$app->options('/user/search', function() {});

@@ -8,11 +8,56 @@
          </md-button>
       </div>
    </md-toolbar>
-   <div>
-      <md-list>
-         <md-list-item ng-repeat="user in permissions">
+   <div class="user-permissions">
+      <h4>User permissions</h4>
+      <p>For each line corresponding to each right granted to a GLPi Plugins user over a plugin<br/>
+      Simply check or uncheck the boxes to instantly set/remove the right, close the dialog once finished.</br>
+      Use the red button with a cross to totally remove all the rights for that user on the plugin</p>
+      <ul>
+         <li class="user-permission" ng-repeat="user in permissions" layout="row">
             <h4>{{user.username}}</h4>
-         </md-list-item>
-      </md-list>
+            <div ng-show="user.pivot.master">
+               <p>Master (Allowed everything)</p>
+            </div>
+            <div ng-show="!user.pivot.master">
+               <p>Allowed to refresh the synchro with XML file</p>
+               <md-checkbox ng-checked="user.pivot.allowed_refresh_xml" ng-click="changeRight(user, 'allowed_refresh_xml')">
+            </div>
+            <div ng-show="!user.pivot.master">
+               <p>Allowed to change the XML URL</p>
+               <md-checkbox ng-checked="user.pivot.allowed_change_xml_url" ng-click="changeRight(user, 'allowed_change_xml_url')">
+            </div>
+            <div ng-show="!user.pivot.master">
+               <p>Receive Notifications</p>
+               <md-checkbox ng-checked="user.pivot.allowed_notifications" ng-click="changeRight(user, 'allowed_notifications')">
+            </div>
+            <div ng-show="!user.pivot.master" class="delete-button">
+               <md-button class="md-fab md-primary md-raised" ng-click="deleteUserRight(user.username)">
+                  <i class="fa fa-times white"></i>
+                  <md-tooltip md-direction="bottom">Delete this user right</md-tooltip>
+               </md-button>
+            </div>
+         </li>
+      </ul>
+      <form id="user-permissions-form">
+         <h4>Add user permissions</h4>
+         <md-autocomplete
+          md-search-text="search_text"
+          md-items="item in querySearch(search_text)"
+          md-item-text="((item.realname !== null && item.realname.length != 0)?(item.realname + ' ('):'')
+                      + item.username
+                      + ((item.realname !== null && item.realname.length != 0)?(')'):'')"
+          placeholder="Please type the username, realname or email of a registered user"
+          md-no-cache="true"
+          md-selected-item="selected_item"
+          md-selected-item-change="addUserRight(item)">
+            <md-item-template>
+               <span><span ng-show="item.realname !== null && item.realname.length != 0">{{item.realname}} (</span>{{item.username}}<span ng-show="item.realname !== null && item.realname.length != 0">)</span></span>
+            </md-item-template>
+            <md-not-found>
+               No matching user.
+            </md-not-found>
+         </md-autocomplete>
+      </form>
    </div>
 </md-dialog>

@@ -20,7 +20,7 @@ angular.module('frontendApp')
     AuthManager.prototype.authedScope =
       AuthManager.prototype.defaultScope
    .concat([
-      'user', 'user:externalaccounts', 'user:apps', 'plugin:submit'
+      'user', 'user:externalaccounts', 'user:apps', 'plugin:submit', 'users:search'
    ]);
 
     /**

@@ -29,6 +29,8 @@ use \API\Exception\LackAuthorship;
 use \API\Exception\LackPermission;
 use \API\Exception\InvalidXML;
 use \API\Exception\DifferentPluginSignature;
+use \API\Exception\RightAlreadyExist;
+use \API\Exception\RightDoesntExist;
 
 /**
  * Fetching infos of a single plugin
@@ -183,6 +185,81 @@ $plugin_permissions = Tool::makeEndpoint(function($key) use ($app) {
    }
 
    Tool::endWithJson($plugin->admins);
+});
+
+$plugin_add_permission = Tool::makeEndpoint(function($key) use($app) {
+   OAuthHelper::needsScopes(['user', 'plugin:card']);
+   $user = OAuthHelper::currentlyAuthed();
+   $body = Tool::getBody();
+
+   $plugin = Plugin::where('key', '=', $key)->first();
+   if (!$plugin) {
+      throw new ResourceNotFound('Plugin', $key);
+   }
+   if (!$plugin->admins->find($user)) {
+      throw new LackPermission('manage_permissions', 'Plugin', $key);
+   }
+
+   if (!isset($body->username) ||
+       gettype($body->username) != 'string') {
+      throw new InvalidField('username');
+   }
+
+   $target_user = User::where('username', '=', $body->username)->first();
+   if (!$target_user) {
+      throw new ResourceNotFound('User', $body->username);
+   }
+
+   if ($plugin->admins->find($target_user)) {
+      throw new RightAlreadyExist($body->username, $plugin->key);
+   }
+
+   $plugin->admins()->attach($target_user);
+   $app->halt(200);
+});
+
+$plugin_delete_permission = Tool::makeEndpoint(function($key, $username) use($app) {
+   OAuthHelper::needsScopes(['user', 'plugin:card']);
+   $body = Tool::getBody();
+
+   $plugin = Plugin::where('key', '=', $key)->first();
+   if (!$plugin) {
+      throw new ResourceNotFound('Plugin', $key);
+   }
+   if (!($user = $plugin->admins()->where('username', '=', $username)->first())) {
+      throw new RightDoesntExist($username, $plugin->key);
+   }
+
+   $plugin->admins()->detach($user);
+   $app->halt(200);
+});
+
+$plugin_modify_permission = Tool::makeEndpoint(function($key, $username) use($app) {
+   OAuthHelper::needsScopes(['user', 'plugin:card']);
+   $body = Tool::getBody();
+
+   if (!isset($body->right) ||
+       gettype($body->right) != 'string' ||
+       !in_array($body->right, ['allowed_refresh_xml', 'allowed_change_xml_url', 'allowed_notifications'])) {
+      throw new InvalidField('right');
+   }
+
+   if (!isset($body->set) ||
+       gettype($body->set) != 'boolean') {
+      throw new InvalidField('set');
+   }
+
+   $plugin = Plugin::where('key', '=', $key)->first();
+   if (!$plugin) {
+      throw new ResourceNotFound('Plugin', $key);
+   }
+   if (!($user = $plugin->admins()->where('username', '=', $username)->first())) {
+      throw new RightDoesntExist($username, $plugin->key);
+   }
+
+   $user->pivot[$body->right] = ($body->set) ? $body->set : null;
+   $user->pivot->save();
+   $app->halt(200);
 });
 
 /**
@@ -360,6 +437,9 @@ $app->get('/plugin/:key', $single);
 $app->get('/panel/plugin/:key', $single_authormode_view);
 $app->post('/panel/plugin/:key', $single_authormode_edit);
 $app->get('/plugin/:key/permissions', $plugin_permissions);
+$app->post('/plugin/:key/permissions', $plugin_add_permission);
+$app->delete('/plugin/:key/permissions/:username', $plugin_delete_permission);
+$app->patch('/plugin/:key/permissions/:username', $plugin_modify_permission);
 
 $app->options('/plugin',function(){});
 $app->options('/plugin/popular',function(){});
