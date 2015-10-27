@@ -19,6 +19,14 @@
                   <label>{{'DOWNLOADED'|translate}}</label>
                   <span>94800 times</span>
                </li>
+               <li>
+                  <label>Contributors (Listed in the XML File)</label>
+                  <span>
+                     <ul>
+                        <li ng-repeat="author in plugin.card.authors">{{author.name}} {{(author_id == author.id) ? '( You )' : ''}}</li>
+                     </ul>
+                  </span>
+               </li>
 <!--                <li>
                   <label>{{'DOWNLOADED'|translate}} ({{'THIS_MONTH'|translate}})</label>
                   <span>224 times</span>
@@ -33,18 +41,28 @@
 
       <div class="plugin-settings">
          <h3>Settings</h3>
-            <md-input-container>
-               <label>Authoritative Plugin Meta-Description File URL (XML File)</label>
-               <input type="text" ng-model="plugin.card.xml_url">
-            </md-input-container>
+         <md-input-container>
+            <label>Authoritative Plugin Meta-Description File URL (XML File)</label>
+            <input type="text" ng-model="plugin.card.xml_url">
+         </md-input-container>
       </div>
 
-      <div class="contributors">
-         <h3>Contributors</h3>
-         <ul>
-            <li ng-repeat="author in plugin.card.authors">{{author.name}} {{(author_id == author.id) ? '( You )' : ''}}</li>
-         </ul>
+      <div class="settings">
+         <h3>Actions</h3>      
+         <md-list class="actions" layout="row">
+            <md-list-item>
+               <md-button class="md-raised md-primary" type="button" ng-click="refreshXMLFile()">
+                  Refresh XML File
+               </md-button>
+            </md-list-item>
+            <md-list-item>
+               <md-button class="md-raised md-primary" type="button" ng-click="showUserPermissionsDialog($event)">
+                  Set User Permissions
+               </md-button>
+            </md-list-item>
+         </md-list>
       </div>
+
       <md-button class="the-submit md-raised md-primary" type="submit">Save</md-button>
    </form>
 </div>

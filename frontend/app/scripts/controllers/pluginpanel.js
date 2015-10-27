@@ -10,7 +10,8 @@
  *
  */
 angular.module('frontendApp')
-  .controller('PluginpanelCtrl', function (API_URL, $scope, $rootScope, $state, $stateParams, $http, Toaster) {
+  .controller('PluginpanelCtrl', function (API_URL, $scope, $rootScope, $state,
+                                           $stateParams, $http, Toaster, $mdDialog) {
       // Redirects to /featured if not authed
       if (!$rootScope.authed) {
          $state.go('featured');
@@ -46,6 +47,9 @@ angular.module('frontendApp')
          }
       });
 
+      /**
+       * Update the plugin settings on user click
+       */
       $scope.updateSettings = function() {
          $http({
             method: 'POST',
@@ -57,6 +61,21 @@ angular.module('frontendApp')
             Toaster.make('You plugin has been updated.');
          }, function(resp) {
             Toaster.make(resp.data.error);
+         });
+      };
+
+      function UserPermissionsDialogController($scope, Auth, $state, $rootScope) {
+         $scope.close = function() {
+            $mdDialog.hide();
+         }
+      }
+      $scope.showUserPermissionsDialog = function(ev) {
+         $mdDialog.show({
+            controller: UserPermissionsDialogController,
+            templateUrl: 'views/pluginuserpermissions.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true
          });
       };
   });
