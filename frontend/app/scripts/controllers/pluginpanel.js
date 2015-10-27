@@ -67,6 +67,14 @@ angular.module('frontendApp')
       var pluginPanelScope = $scope;
       function UserPermissionsDialogController($scope, Auth, $state) {
          $scope.plugin = pluginPanelScope.plugin.card;
+         $scope.permissions = [];
+
+         $http({
+            url: API_URL + '/plugin/'+$scope.plugin.key+'/permissions',
+            method: 'GET'
+         }).then(function(resp) {
+            $scope.permissions = resp.data;
+         });
 
          $scope.close = function() {
             $mdDialog.hide();
