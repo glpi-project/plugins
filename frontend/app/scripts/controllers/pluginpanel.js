@@ -117,7 +117,7 @@ angular.module('frontendApp')
                $scope.search_text = '';
             }, function(resp) {
                if (/^RIGHT_ALREADY_EXIST/.exec(resp.data.error)) {
-                  Toaster.make('There is already a right for that user and plugin, modify it', 'user-permissions-form');
+                  Toaster.make('There is already a right for that user and plugin, please modify it', 'user-permissions-form');
                }
                if (/^RIGHT_DOESNT_EXIST/.exec(resp.data.error)) {
                   Toaster.make('The right which you try to delete doesn\'t exist', 'user-permissions-form');
