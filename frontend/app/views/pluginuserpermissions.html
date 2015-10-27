@@ -24,12 +24,12 @@
                <md-checkbox ng-checked="user.pivot.allowed_refresh_xml" ng-click="changeRight(user, 'allowed_refresh_xml')">
             </div>
             <div ng-show="!user.pivot.master">
-               <p>Allowed to change the XML URL</p>
-               <md-checkbox ng-checked="user.pivot.allowed_change_xml_url" ng-click="changeRight(user, 'allowed_change_xml_url')">
-            </div>
-            <div ng-show="!user.pivot.master">
                <p>Receive Notifications</p>
                <md-checkbox ng-checked="user.pivot.allowed_notifications" ng-click="changeRight(user, 'allowed_notifications')">
+            </div>
+            <div ng-show="!user.pivot.master">
+               <p>Allowed to change the XML URL</p>
+               <md-checkbox ng-checked="user.pivot.allowed_change_xml_url" ng-click="changeRight(user, 'allowed_change_xml_url')">
             </div>
             <div ng-show="!user.pivot.master" class="delete-button">
                <md-button class="md-fab md-primary md-raised" ng-click="deleteUserRight(user.username)">
