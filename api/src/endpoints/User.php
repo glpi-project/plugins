@@ -11,28 +11,31 @@
 use API\Core\Tool;
 use API\Core\OAuthClient;
 use API\Core\Mailer;
+use API\Core\ValidableXMLPluginDescription;
+
 use Illuminate\Database\Capsule\Manager as DB;
+
+use API\Model\User;
+use API\Model\UserExternalAccount;
+use API\Model\Session;
+use API\Model\AccessToken;
+use API\Model\Scope;
+use API\Model\App;
+use API\Model\ValidationToken;
+use API\Model\Plugin;
+use API\Model\PluginWatch;
+
+use API\Exception\UnavailableName;
+use API\Exception\InvalidField;
+use API\Exception\ExternalAccountAlreadyPaired;
+use API\Exception\AlreadyWatched;
+use API\Exception\NoCredentialsLeft;
+use API\Exception\InvalidCredentials;
+use API\Exception\InvalidXML;
+
 use League\OAuth2\Server\Util\SecureKey;
-
-use \API\Model\User;
-use \API\Model\UserExternalAccount;
-use \API\Model\Session;
-use \API\Model\AccessToken;
-use \API\Model\Scope;
-use \API\Model\App;
-use \API\Model\ValidationToken;
-use \API\Model\Plugin;
-use \API\Model\PluginWatch;
-
-use \API\Exception\UnavailableName;
-use \API\Exception\InvalidField;
-use \API\Exception\ExternalAccountAlreadyPaired;
-use \API\Exception\AlreadyWatched;
-use \API\Exception\NoCredentialsLeft;
-use \API\Exception\InvalidCredentials;
-
-use \API\OAuthServer\AuthorizationServer;
-use \API\OAuthServer\OAuthHelper;
+use API\OAuthServer\AuthorizationServer;
+use API\OAuthServer\OAuthHelper;
 
 /**
  * Register a new user

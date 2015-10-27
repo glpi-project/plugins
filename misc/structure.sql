@@ -1,6 +1,7 @@
 CREATE TABLE plugin (
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    active INT(1),
+   xml_state ENUM('bad_xml_url', 'xml_error', 'passing'),
    xml_url TEXT,
    xml_crc VARCHAR(32),
    name TEXT,

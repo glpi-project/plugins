@@ -87,6 +87,9 @@
       <md-list>
          <md-list-item ng-repeat="plugin in plugins" layout="column">
             <h4>{{plugin.name}}</h4>
+            <p ng-show="plugin.active == 0">(Awaiting Confirmation)</p>
+            <p ng-show="plugin.xml_state == 'bad_xml_url'">(Unreachable XML File Url)</p>
+            <p ng-show="plugin.xml_state == 'xml_error'">(Invalid XML)</p>
             <div class="buttons">
                <md-button ng-hide="plugin.pivot.master == 0" ui-sref="pluginpanel({key: plugin.key, managePermissions: true})">
                   <i class="fa fa-user"></i>

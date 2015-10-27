@@ -173,6 +173,8 @@ class BackgroundTasks {
       // fetching via http
       $xml = @file_get_contents($plugin->xml_url);
       if (!$xml) {
+         $plugin->xml_state = 'bad_xml_url';
+         $plugin->save();
          echo($plugin->xml_url."\" Cannot get XML file via HTTP, Skipping.\n");
          return false;
       }
@@ -188,6 +190,8 @@ class BackgroundTasks {
          // is updated
       }
       else {
+         $plugin->xml_state = 'passing';
+         $plugin->save();
          echo ("\"" . $plugin->name . "\" Already up-to-date, Skipping.\n");
          return false;
       }
@@ -205,6 +209,8 @@ class BackgroundTasks {
          } elseif ($plugin->name) {
             $_unreadable .= '"'.$plugin->name.'" ';
          }
+         $plugin->xml_state = 'xml_error';
+         $plugin->save();
          $_unreadable .= "Unreadable/Non validable XML, error: ".$e->getRepresentation()." Skipping.\n";
          echo($_unreadable);
          return false;
@@ -237,6 +243,7 @@ class BackgroundTasks {
       }
 
       echo " going to be synced with xml ...";
+      $plugin->xml_state = 'passing';
 
       // Updating basic infos
       $plugin->logo_url = $xml->logo;
