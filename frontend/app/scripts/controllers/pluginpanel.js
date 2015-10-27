@@ -64,12 +64,18 @@ angular.module('frontendApp')
          });
       };
 
-      function UserPermissionsDialogController($scope, Auth, $state, $rootScope) {
+      var pluginPanelScope = $scope;
+      function UserPermissionsDialogController($scope, Auth, $state) {
+         $scope.plugin = pluginPanelScope.plugin.card;
+
          $scope.close = function() {
             $mdDialog.hide();
          }
       }
       $scope.showUserPermissionsDialog = function(ev) {
+         if (!$scope.plugin.card) {
+            return;
+         }
          $mdDialog.show({
             controller: UserPermissionsDialogController,
             templateUrl: 'views/pluginuserpermissions.html',

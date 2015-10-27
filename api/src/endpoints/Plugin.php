@@ -26,6 +26,7 @@ use \API\OAuthServer\OAuthHelper;
 use \API\Exception\InvalidRecaptcha;
 use \API\Exception\InvalidField;
 use \API\Exception\LackAuthorship;
+use \API\Exception\LackPermission;
 use \API\Exception\InvalidXML;
 use \API\Exception\DifferentPluginSignature;
 
@@ -166,6 +167,22 @@ $single_authormode_edit = Tool::makeEndpoint(function($key) use($app) {
    }
 
    $app->halt(200);
+});
+
+$plugin_permissions = Tool::makeEndpoint(function($key) use ($app) {
+   OAuthHelper::needsScopes(['user', 'plugin:card']);
+   $user = OAuthHelper::currentlyAuthed();
+
+   $plugin = Plugin::where('key', '=', $key)->first();
+   if (!$plugin) {
+      throw new ResourceNotFound('Plugin', $key);
+   }
+
+   if (!$plugin->admins->find($user)) {
+      throw new LackPermission('manage_permissions', 'Plugin', $key);
+   }
+
+   Tool::endWithJson($plugin->admins);
 });
 
 /**
@@ -342,6 +359,7 @@ $app->post('/plugin/star', $star);
 $app->get('/plugin/:key', $single);
 $app->get('/panel/plugin/:key', $single_authormode_view);
 $app->post('/panel/plugin/:key', $single_authormode_edit);
+$app->get('/plugin/:key/permissions', $plugin_permissions);
 
 $app->options('/plugin',function(){});
 $app->options('/plugin/popular',function(){});
@@ -351,3 +369,4 @@ $app->options('/plugin/new',function(){});
 $app->options('/plugin/star',function(){});
 $app->options('/plugin/:id',function($id){});
 $app->options('/panel/plugin/:id',function($id){});
+$app->options('/plugin/:key/permissions', function($key){});

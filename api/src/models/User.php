@@ -37,7 +37,7 @@ class User extends Model {
    }
    // Plugins user has right onto
    public function plugins() {
-      return $this->belongsToMany('\API\Model\Plugin', 'plugin_right')
+      return $this->belongsToMany('\API\Model\Plugin', 'plugin_right', 'user_id')
                   ->withPivot('master', 'allowed_refresh_xml', 'allowed_change_xml_url');
    }
 
