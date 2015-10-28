@@ -135,7 +135,7 @@ angular.module('frontendApp')
             });
          };
 
-         $scope.changeRight = function(user, right) {
+         $scope.toggleRight = function(user, right) {
             var set = (user.pivot[right])?false:true;
             $http({
                method: 'PATCH',
