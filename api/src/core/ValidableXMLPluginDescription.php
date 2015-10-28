@@ -209,7 +209,8 @@ class ValidableXMLPluginDescription {
          $this->parsable = true;
       } else {
          $error = libxml_get_errors()[0];
-         throw new InvalidXML('parse', $error->line, trim($error->message));
+         $this->throwOrCollect(new InvalidXML('parse', $error->line, trim($error->message)));
+         $this->parsable = false;
       }
    }
 
