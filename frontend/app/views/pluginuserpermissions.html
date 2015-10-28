@@ -10,9 +10,10 @@
    </md-toolbar>
    <div class="user-permissions">
       <h4>User permissions</h4>
-      <p>For each line corresponding to each right granted to a GLPi Plugins user over a plugin<br/>
-      Simply check or uncheck the boxes to instantly set/remove the right, close the dialog once finished.</br>
-      Use the red button with a cross to totally remove all the rights for that user on the plugin</p>
+      <p>For each permission line, there are boxes for each possible right you can grant to a GLPi Plugins user over the plugin.<br/>
+      Simply check or uncheck the boxes to instantly set/remove the right, for the permission line of an user.<br />
+      Close the dialog once you finished your permissions management.</br>
+      Use the red button with a cross to totally remove the permission line for that user, with all her's/he's rights on the plugin</p>
       <ul>
          <li class="user-permission" ng-repeat="user in permissions" layout="row">
             <h4>{{user.username}}</h4>
