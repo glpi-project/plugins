@@ -16,6 +16,8 @@ use \API\Core\Tool;
 use \API\Core\ValidableXMLPluginDescription;
 
 class BackgroundTasks {
+   public $lastXml;
+
    /**
     * Triggers the given list of tasks
     * on each plugin if task is supported
@@ -177,6 +179,8 @@ class BackgroundTasks {
          $plugin->save();
          echo($plugin->xml_url."\" Cannot get XML file via HTTP, Skipping.\n");
          return false;
+      } else {
+         $this->lastXml = $xml;
       }
       $crc = md5($xml); // compute crc
       if ($plugin->xml_crc != $crc ||
