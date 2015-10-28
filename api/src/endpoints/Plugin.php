@@ -31,6 +31,7 @@ use \API\Exception\InvalidXML;
 use \API\Exception\DifferentPluginSignature;
 use \API\Exception\RightAlreadyExist;
 use \API\Exception\RightDoesntExist;
+use \API\Exception\CannotDeleteAdmin;
 
 /**
  * Fetching infos of a single plugin
@@ -75,7 +76,14 @@ $single_authormode_view = Tool::makeEndpoint(function($key) use($app) {
    if (!$plugin) {
       throw new ResourceNotFound('Plugin', $key);
    }
-   if (!$plugin->permissions->find($user->id)) {
+   if (!$plugin->permissions()
+               ->where('user_id', '=', $user->id)
+               ->where(function($q) {
+                  return $q->where('admin', '=', true)
+                           ->orWhere('allowed_refresh_xml', '=', true)
+                           ->orWhere('allowed_change_xml_url', '=', true);
+               })
+               ->first()) {
       throw new LackPermission('Plugin', $key, $user->username, 'authormode_view');
    }
 
@@ -112,13 +120,18 @@ $single_authormode_edit = Tool::makeEndpoint(function($key) use($app) {
    if (!$plugin) {
       throw new ResourceNotFound('Plugin', $key);
    }
-   // @todo, verify
-   //  + user has the correct permission on the plugin
+
+   // verify
    //    + user has the admin flag on the plugin
-   //  OR
-   //    + user has the change_xml_url flag on the plugin
+   // or + user has the change_xml_url flag on the plugin
    // otherwise reject
-   if (!$plugin->permissions->find($user->id)) {
+   if (!$plugin->permissions()
+               ->where(function($q) {
+                  return $q->where('admin', '=', true)
+                           ->orWhere('allowed_change_xml_url', '=', true);
+               })
+               ->where('user_id', '=', $user->id)
+               ->first()) {
       throw new LackPermission('Plugin', $key, $user->username, 'change_xml_url');
    }
 
@@ -189,11 +202,12 @@ $plugin_view_permissions = Tool::makeEndpoint(function($key) use ($app) {
       throw new ResourceNotFound('Plugin', $key);
    }
 
-   // @todo, verify
-   //  + user has the correct permission on the plugin
-   //    + user has the admin flag on the plugin
+   // verify user has the admin flag on the plugin
    // otherwise reject
-   if (!$plugin->permissions->find($user)) {
+   if (!$plugin->permissions()
+               ->where('admin', '=', true)
+               ->where('user_id', '=', $user->id)
+               ->first()) {
       throw new LackPermission('Plugin', $key, $user->username, 'manage_permissions');
    }
 
@@ -209,7 +223,10 @@ $plugin_add_permission = Tool::makeEndpoint(function($key) use($app) {
    if (!$plugin) {
       throw new ResourceNotFound('Plugin', $key);
    }
-   if (!$plugin->permissions->find($user)) {
+   if (!$plugin->permissions()
+               ->where('admin', '=', true)
+               ->where('user_id', '=', $user->id)
+               ->first()) {
       throw new LackPermission('manage_permissions', 'Plugin', $key);
    }
 
@@ -218,15 +235,13 @@ $plugin_add_permission = Tool::makeEndpoint(function($key) use($app) {
       throw new InvalidField('username');
    }
 
+   // verify user has the admin flag on the plugin
+   // otherwise reject
    $target_user = User::where('username', '=', $body->username)->first();
    if (!$target_user) {
       throw new ResourceNotFound('User', $body->username);
    }
 
-   // @todo, verify
-   //  + user has the correct permission on the plugin
-   //    + user has the admin flag on the plugin
-   // otherwise reject
    if ($plugin->permissions->find($target_user)) {
       throw new RightAlreadyExist($body->username, $plugin->key);
    }
@@ -237,28 +252,38 @@ $plugin_add_permission = Tool::makeEndpoint(function($key) use($app) {
 
 $plugin_delete_permission = Tool::makeEndpoint(function($key, $username) use($app) {
    OAuthHelper::needsScopes(['user', 'plugin:card']);
-   $body = Tool::getBody();
+   $user = OAuthHelper::currentlyAuthed();
 
    // reject if plugin not found
    $plugin = Plugin::where('key', '=', $key)->first();
    if (!$plugin) {
       throw new ResourceNotFound('Plugin', $key);
    }
-   // @todo, verify
-   //  + user has the correct permission on the plugin
-   //    + user has the admin flag on the plugin
-   // otherwise reject   
-   if (!($user = $plugin->permissions()->where('username', '=', $username)->first())) {
-      throw new RightDoesntExist($username, $plugin->key);
+
+   // reject if target_user not found
+   $target_user = $plugin->permissions()->where('username', '=', $username)->first();
+   if (!$target_user) {
+      throw new RightDoesntExist($username, $key);
    }
 
-   // @todo, reject if user is not admin and try to supress another
-   // permission than his own
-   // opposingly, if the user is admin, he cannot delete
-   // he's own permission, because this permission is
-   // to us the only way to have "someone" responsible of the plugin.
+   // if the user is trying to delete a permission set
+   // for another user,
+   // we require him to be admin of the plugin
+   if ($target_user->id != $user->id) { 
+      $user = $plugin->permissions->find($user);
+      if (!$user ||
+          !$user->pivot->admin) {
+         throw new LackPermission('Plugin', $key, $username, 'manage_permissions');
+      }
+   }
 
-   $plugin->permissions()->detach($user);
+   if ($target_user->pivot->admin) {
+      throw new CannotDeleteAdmin($plugin->key, $target_user->username);
+   }
+
+   // if everything is OK we clear
+   // the permission
+   $plugin->permissions()->detach($target_user);
 
    $app->halt(200);
 });
@@ -266,6 +291,7 @@ $plugin_delete_permission = Tool::makeEndpoint(function($key, $username) use($ap
 $plugin_modify_permission = Tool::makeEndpoint(function($key, $username) use($app) {
    OAuthHelper::needsScopes(['user', 'plugin:card']);
    $body = Tool::getBody();
+   $user = OAuthHelper::currentlyAuthed();
 
    if (!isset($body->right) ||
        gettype($body->right) != 'string' ||
@@ -282,16 +308,25 @@ $plugin_modify_permission = Tool::makeEndpoint(function($key, $username) use($ap
    if (!$plugin) {
       throw new ResourceNotFound('Plugin', $key);
    }
-   // @todo, verify
-   //  + user has the correct permission on the plugin
-   //    + user has the admin flag on the plugin
-   // otherwise reject   
-   if (!($user = $plugin->permissions()->where('username', '=', $username)->first())) {
+
+   // Verify user is admin on the plugin
+   if (!$plugin->permissions()
+              ->where('admin', '=', true)
+              ->where('user_id', '=', $user->id)
+              ->first()) {
+      throw new LackPermission('manage_permissions', 'Plugin', $key);
+   }
+
+   // verify username has the username has a right
+   // for the plugin
+   if (!($target_user = $plugin->permissions()
+                        ->where('username', '=', $username)
+                        ->first())) {
       throw new RightDoesntExist($username, $plugin->key);
    }
 
-   $user->pivot[$body->right] = ($body->set) ? $body->set : null;
-   $user->pivot->save();
+   $target_user->pivot[$body->right] = ($body->set) ? $body->set : null;
+   $target_user->pivot->save();
    $app->halt(200);
 });
 

@@ -17,11 +17,27 @@ angular.module('frontendApp')
          $state.go('featured');
       }
 
+      $scope.rights = {};
+
       // Note this is not the strict plugin object
       // but a special object which is only for
       // the author panel. the plugin will be at
       // $scope.plugin.card after $http has .then()'ed.
       $scope.plugin = {};
+
+      var readRights = function(plugin, user) {
+         for (var n in plugin.card.permissions) {
+            if (plugin.card.permissions[n].id == user.id) {
+               var pivot = plugin.card.permissions[n].pivot;
+               return {
+                  admin: pivot.admin,
+                  allowed_change_xml_url: pivot.allowed_change_xml_url,
+                  allowed_notifications: pivot.allowed_notifications,
+                  allowed_refresh_xml: pivot.allowed_refresh_xml
+               };
+            }
+         }
+      };
 
       /**
        * Fetching card of current user
@@ -30,6 +46,7 @@ angular.module('frontendApp')
          method: 'GET',
          url: API_URL + '/user'
       }).then(function(resp) {
+         $scope.user = resp.data;
          $scope.author_id = resp.data.author_id;
          // Fetching current plugin infos for the
          // author panel
@@ -41,10 +58,11 @@ angular.module('frontendApp')
             if ($stateParams.managePermissions) {
                $scope.showUserPermissionsDialog();
             }
+            $scope.rights = readRights($scope.plugin, $scope.user);
          }, function(resp) {
-            if (resp.data.error == 'LACK_AUTHORSHIP') {
-               Toaster.make('You\'re not author/contributor of that plugin');
-               $state.go('featured');
+            if (resp.data.error == 'LACK_PERMISSION') {
+               Toaster.make('You lack the permission to view this plugin panel.');
+               $state.go('panel');
             }
          });
       });
@@ -127,11 +145,21 @@ angular.module('frontendApp')
          };
 
          $scope.deleteUserRight = function(username) {
-            $http({
-               method: 'DELETE',
-               url: API_URL + '/plugin/'+$scope.plugin.key+'/permissions/'+username
-            }).then(function() {
-               getPermissions();
+            $mdDialog.show(
+               $mdDialog.confirm()
+                        .title('Deleting permission line')
+                        .content("Please confirm your choice to delete this permission line for "+username+' on "'+$scope.plugin.key+'"')
+                        .ok('Delete permission line')
+                        .cancel('I changed my mind')
+            ).then(function() {
+               $http({
+                  method: 'DELETE',
+                  url: API_URL + '/plugin/'+$scope.plugin.key+'/permissions/'+username
+               }).then(function() {
+                  showUserPermissionsDialog();
+               });
+            }, function() {
+               showUserPermissionsDialog();
             });
          };
 
@@ -153,7 +181,7 @@ angular.module('frontendApp')
             $mdDialog.hide();
          }
       }
-      $scope.showUserPermissionsDialog = function(ev) {
+      var showUserPermissionsDialog = function(ev) {
          if (!$scope.plugin.card) {
             return;
          }
@@ -165,4 +193,5 @@ angular.module('frontendApp')
             clickOutsideToClose: true
          });
       };
+      $scope.showUserPermissionsDialog = showUserPermissionsDialog;
   });

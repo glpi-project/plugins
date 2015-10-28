@@ -79,12 +79,15 @@ angular.module('frontendApp')
          $scope.original_user = jQuery.extend({}, $scope.user);
       });
 
-      $http({
-         method: "GET",
-         url: API_URL + '/user/plugins'
-      }).success(function(data) {
-         $scope.plugins = data;
-      });
+      var getPlugins = function() {      
+         $http({
+            method: "GET",
+            url: API_URL + '/user/plugins'
+         }).success(function(data) {
+            $scope.plugins = data;
+         });
+      };
+      getPlugins();
 
       /**
        * scope method to update the profile
@@ -197,7 +200,14 @@ angular.module('frontendApp')
                      .content("You don't want anymore the right that has been granted to you on \""+plugin.key+"\" ("+rights.join(', ')+"). Please confirm your choice to delete your relation with this plugin.")
                      .ok('Delete Relation')
                      .cancel('I changed my mind')
-         );
+         ).then(function() {
+            $http({
+               method: 'DELETE',
+               url: API_URL+'/plugin/'+plugin.key+'/permissions/'+$scope.user.username
+            }).then(function() {
+               getPlugins();
+            });
+         });
       };
 
       /**
