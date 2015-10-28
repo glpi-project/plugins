@@ -76,7 +76,7 @@ $single_authormode_view = Tool::makeEndpoint(function($key) use($app) {
       throw new ResourceNotFound('Plugin', $key);
    }
    if (!$plugin->permissions->find($user->id)) {
-      throw new LackPermission('Plugin', $key, $user->username);
+      throw new LackPermission('Plugin', $key, $user->username, 'authormode_view');
    }
 
    Tool::endWithJson([
@@ -171,7 +171,7 @@ $single_authormode_edit = Tool::makeEndpoint(function($key) use($app) {
    $app->halt(200);
 });
 
-$plugin_permissions = Tool::makeEndpoint(function($key) use ($app) {
+$plugin_view_permissions = Tool::makeEndpoint(function($key) use ($app) {
    OAuthHelper::needsScopes(['user', 'plugin:card']);
    $user = OAuthHelper::currentlyAuthed();
 
@@ -180,8 +180,10 @@ $plugin_permissions = Tool::makeEndpoint(function($key) use ($app) {
       throw new ResourceNotFound('Plugin', $key);
    }
 
+   // @todo
+   // 
    if (!$plugin->permissions->find($user)) {
-      throw new LackPermission('manage_permissions', 'Plugin', $key);
+      throw new LackPermission('Plugin', $key, $user->username, 'manage_permissions');
    }
 
    Tool::endWithJson($plugin->permissions);
@@ -443,7 +445,7 @@ $app->post('/plugin/star', $star);
 $app->get('/plugin/:key', $single);
 $app->get('/panel/plugin/:key', $single_authormode_view);
 $app->post('/panel/plugin/:key', $single_authormode_edit);
-$app->get('/plugin/:key/permissions', $plugin_permissions);
+$app->get('/plugin/:key/permissions', $plugin_view_permissions);
 $app->post('/plugin/:key/permissions', $plugin_add_permission);
 $app->delete('/plugin/:key/permissions/:username', $plugin_delete_permission);
 $app->patch('/plugin/:key/permissions/:username', $plugin_modify_permission);
