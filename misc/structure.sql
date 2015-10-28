@@ -172,7 +172,7 @@ CREATE TABLE plugin_plugin_lang(
       ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-CREATE TABLE plugin_right (
+CREATE TABLE plugin_permission (
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    plugin_id INT NOT NULL,
    user_id INT NOT NULL,
@@ -187,8 +187,8 @@ CREATE TABLE plugin_right (
       REFERENCES plugin(id)
       ON DELETE CASCADE
 ) ENGINE=InnoDB;
-CREATE INDEX idx_plugin_right_plugin ON plugin_right(plugin_id);
-CREATE INDEX idx_plugin_right_user ON plugin_right(user_id);
+CREATE INDEX idx_plugin_permission_plugin ON plugin_permission(plugin_id);
+CREATE INDEX idx_plugin_permission_user ON plugin_permission(user_id);
 
 CREATE TABLE message(
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

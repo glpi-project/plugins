@@ -51,7 +51,7 @@ class Plugin extends Model {
    }
 
    public function permissions() {
-      return $this->belongsToMany('\API\Model\User', 'plugin_right', 'plugin_id')
+      return $this->belongsToMany('\API\Model\User', 'plugin_permission', 'plugin_id')
                   ->withPivot('admin', 'allowed_refresh_xml', 'allowed_change_xml_url', 'allowed_notifications');
    }
 
