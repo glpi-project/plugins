@@ -14,6 +14,7 @@
 
 use \API\Core\Tool;
 use \API\Core\Mailer;
+use \API\Core\BackgroundTasks;
 use \Illuminate\Database\Capsule\Manager as DB;
 use \API\Model\User;
 use \API\Model\Plugin;
@@ -330,17 +331,36 @@ $plugin_modify_permission = Tool::makeEndpoint(function($key, $username) use($ap
    $app->halt(200);
 });
 
-$plugin_refresh_xml = Tool::makeEndpoint(function($key) {
-   // @todo, verify
-   //   + user has the correct permission on the plugin
-   //      + user has the admin flag on the plugin
-   //   OR + user has the allowed_refresh_xml flag on the plugin
-   // otherwise reject
+$plugin_refresh_xml = Tool::makeEndpoint(function($key) use($app) {
+   OAuthHelper::needsScopes(['user', 'plugin:card']);
+   $user = OAuthHelper::currentlyAuthed();
 
-   // @todo, answer
-   //   + 200 OK with JSON Object containing keys :
-   //     + xml_state  (passing, stuff, or so) 
-   //   + LackPermission if rejected
+   $plugin = Plugin::where('key', '=', $key)->first();
+   if (!$plugin) {
+      throw new ResourceNotFound('Plugin', $key);
+   }
+
+   // Verify user is admin on the plugin
+   if (!$plugin->permissions()
+               ->where(function($q) {
+                  return $q->where('admin', '=', true)
+                           ->orWhere('allowed_refresh_xml', '=', true);
+               })
+               ->where('user_id', '=', $user->id)
+               ->first()) {
+      throw new LackPermission('manage_permissions', 'Plugin', $key);
+   }
+
+   $taskDispatcher = new BackgroundTasks;
+   try {
+      $taskDispatcher->wherePluginKeyIs($plugin->key, ['update']);
+   } catch (InvalidXML $e) {
+      $xml = new ValidableXMLPluginDescription($xml->lastXml, true);
+      $xml->validate();
+      Tool::endWithJson($xml->errors);
+   }
+
+   //$app->halt(200);
 });
 
 /**
@@ -521,6 +541,7 @@ $app->get('/plugin/:key/permissions', $plugin_view_permissions);
 $app->post('/plugin/:key/permissions', $plugin_add_permission);
 $app->delete('/plugin/:key/permissions/:username', $plugin_delete_permission);
 $app->patch('/plugin/:key/permissions/:username', $plugin_modify_permission);
+$app->post('/plugin/:key/refresh', $plugin_refresh_xml);
 
 $app->options('/plugin',function(){});
 $app->options('/plugin/popular',function(){});
