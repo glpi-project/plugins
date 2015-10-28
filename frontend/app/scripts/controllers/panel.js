@@ -177,6 +177,32 @@ angular.module('frontendApp')
          });
       };
 
+      $scope.openDeleteRelationToPlugin = function(plugin) {
+         var rights = [];
+         for (var i in plugin.pivot) {
+            if (i == 'allowed_refresh_xml' && plugin.pivot.allowed_refresh_xml) {
+               rights.push('Refresh XML File');
+            }
+            else if (i == 'allowed_change_xml_url' && plugin.pivot.allowed_change_xml_url) {
+               rights.push('Change XML File URL');
+            }
+            else if (i == 'allowed_notifications' && plugin.pivot.allowed_notifications) {
+               rights.push('Receive Notifications related to XML File');
+            }
+         }
+
+         $mdDialog.show(
+            $mdDialog.confirm()
+                     .title('Delete your relation to Plugin "'+plugin.key+'"')
+                     .content("You don't want anymore the right that has been granted to you on \""+plugin.key+"\" ("+rights.join(', ')+"). Please confirm your choice to delete your relation with this plugin.")
+                     .ok('Delete Relation')
+                     .cancel('I changed my mind')
+         );
+      };
+
+      /**
+       * "Please delete my account" controller
+       */
       function DeleteAccountDialogController($scope, Auth, $state, $rootScope) {
          $scope.password_confirmation = '';
 
@@ -351,16 +377,5 @@ angular.module('frontendApp')
          $scope.close = function() {
             $mdDialog.hide();
          };
-
-         /**
-          * Fetch list of current external accounts
-          * when controller loads
-          */
-         // $http({
-         //    method: "GET",
-         //    url: API_URL + '/user/external_accounts'
-         // }).success(function(data) {
-         //    $scope.external_accounts = data;
-         // });
       }
   });

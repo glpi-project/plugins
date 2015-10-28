@@ -64,7 +64,7 @@ $single_authormode_view = Tool::makeEndpoint(function($key) use($app) {
    $user = OAuthHelper::currentlyAuthed();
 
    // get plugin
-   $plugin = Plugin::with('descriptions', 'versions', 'screenshots', 'tags', 'authors')
+   $plugin = Plugin::with('descriptions', 'versions', 'screenshots', 'tags', 'permissions')
                   ->short()
                   ->withAverageNote()
                   ->withNumberOfVotes()
@@ -75,7 +75,7 @@ $single_authormode_view = Tool::makeEndpoint(function($key) use($app) {
    if (!$plugin) {
       throw new ResourceNotFound('Plugin', $key);
    }
-   if (!$plugin->admins->find($user->id)) {
+   if (!$plugin->permissions->find($user->id)) {
       throw new LackPermission('Plugin', $key, $user->username);
    }
 
@@ -180,11 +180,11 @@ $plugin_permissions = Tool::makeEndpoint(function($key) use ($app) {
       throw new ResourceNotFound('Plugin', $key);
    }
 
-   if (!$plugin->admins->find($user)) {
+   if (!$plugin->permissions->find($user)) {
       throw new LackPermission('manage_permissions', 'Plugin', $key);
    }
 
-   Tool::endWithJson($plugin->admins);
+   Tool::endWithJson($plugin->permissions);
 });
 
 $plugin_add_permission = Tool::makeEndpoint(function($key) use($app) {
@@ -196,7 +196,7 @@ $plugin_add_permission = Tool::makeEndpoint(function($key) use($app) {
    if (!$plugin) {
       throw new ResourceNotFound('Plugin', $key);
    }
-   if (!$plugin->admins->find($user)) {
+   if (!$plugin->permissions->find($user)) {
       throw new LackPermission('manage_permissions', 'Plugin', $key);
    }
 
@@ -210,11 +210,11 @@ $plugin_add_permission = Tool::makeEndpoint(function($key) use($app) {
       throw new ResourceNotFound('User', $body->username);
    }
 
-   if ($plugin->admins->find($target_user)) {
+   if ($plugin->permissions->find($target_user)) {
       throw new RightAlreadyExist($body->username, $plugin->key);
    }
 
-   $plugin->admins()->attach($target_user);
+   $plugin->permissions()->attach($target_user);
    $app->halt(200);
 });
 
@@ -222,15 +222,22 @@ $plugin_delete_permission = Tool::makeEndpoint(function($key, $username) use($ap
    OAuthHelper::needsScopes(['user', 'plugin:card']);
    $body = Tool::getBody();
 
+   // reject if plugin not found
    $plugin = Plugin::where('key', '=', $key)->first();
    if (!$plugin) {
       throw new ResourceNotFound('Plugin', $key);
    }
-   if (!($user = $plugin->admins()->where('username', '=', $username)->first())) {
+   // reject if right doesn't exist
+   if (!($user = $plugin->permissions()->where('username', '=', $username)->first())) {
       throw new RightDoesntExist($username, $plugin->key);
    }
+   // reject if user is not admin and try to supress another
+   // permission than his own
+   // likely if the user is admin, he cannot delete
 
-   $plugin->admins()->detach($user);
+
+   $plugin->permissions()->detach($user);
+
    $app->halt(200);
 });
 
@@ -253,7 +260,7 @@ $plugin_modify_permission = Tool::makeEndpoint(function($key, $username) use($ap
    if (!$plugin) {
       throw new ResourceNotFound('Plugin', $key);
    }
-   if (!($user = $plugin->admins()->where('username', '=', $username)->first())) {
+   if (!($user = $plugin->permissions()->where('username', '=', $username)->first())) {
       throw new RightDoesntExist($username, $plugin->key);
    }
 

@@ -288,7 +288,7 @@ $user_plugins = Tool::makeEndpoint(function() use($app, $resourceServer) {
 
    $user = OAuthHelper::currentlyAuthed();
 
-   Tool::endWithJson($user->plugins);
+   Tool::endWithJson($user->pluginPermissions);
 });
 
 /**
