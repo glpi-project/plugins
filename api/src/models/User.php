@@ -9,8 +9,7 @@ class User extends Model {
    protected $table = 'user';
    protected $visible = ['id', 'active', 'email', 'username',
                          'realname', 'location', 'website',
-                         'author_id', 'gravatar',
-                         'pivot'];
+                         'author_id', 'gravatar', 'pivot'];
 
 
    // Relations
@@ -37,9 +36,9 @@ class User extends Model {
       return $this->hasMany('\API\Model\Session', 'owner_id');
    }
    // Plugins user has right onto
-   public function plugins() {
+   public function pluginPermissions() {
       return $this->belongsToMany('\API\Model\Plugin', 'plugin_right', 'user_id')
-                  ->withPivot('master', 'allowed_refresh_xml', 'allowed_change_xml_url', 'allowed_notifications');
+                  ->withPivot('admin', 'allowed_refresh_xml', 'allowed_change_xml_url', 'allowed_notifications');
    }
 
    // Setters

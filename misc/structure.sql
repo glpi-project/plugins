@@ -176,7 +176,7 @@ CREATE TABLE plugin_right (
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    plugin_id INT NOT NULL,
    user_id INT NOT NULL,
-   master INT(1),
+   admin INT(1),
    allowed_refresh_xml INT(1),
    allowed_change_xml_url INT(1),
    allowed_notifications INT(1),
