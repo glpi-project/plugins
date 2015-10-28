@@ -179,13 +179,13 @@ CREATE TABLE plugin_right (
    master INT(1),
    allowed_refresh_xml INT(1),
    allowed_change_xml_url INT(1),
-   allowed_notifications INT(1)
-   FOREIGN KEY(user_id)
+   allowed_notifications INT(1),
+   FOREIGN KEY (user_id)
       REFERENCES user(id)
-      ON DELETE CASCADE;
-   FOREIGN KEY(plugin_id)
+      ON DELETE CASCADE,
+   FOREIGN KEY (plugin_id)
       REFERENCES plugin(id)
-      ON DELETE CASCADE;
+      ON DELETE CASCADE
 ) ENGINE=InnoDB;
 CREATE INDEX idx_plugin_right_plugin ON plugin_right(plugin_id);
 CREATE INDEX idx_plugin_right_user ON plugin_right(user_id);
