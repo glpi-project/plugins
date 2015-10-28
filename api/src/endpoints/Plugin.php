@@ -109,7 +109,7 @@ $single_authormode_edit = Tool::makeEndpoint(function($key) use($app) {
    if (!$plugin) {
       throw new ResourceNotFound('Plugin', $key);
    }
-   if (!$plugin->hasAdmin($user->id)) {
+   if (!$plugin->permissions->find($user->id)) {
       throw new LackAuthorship;
    }
 
