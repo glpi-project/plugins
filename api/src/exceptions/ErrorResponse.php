@@ -35,6 +35,15 @@ class ErrorResponse extends \Exception {
       ];
    }
 
+   public function getInfo($name) {
+      foreach ($this->infos as $info) {
+         if ($info['name'] == $name) {
+            return $info['value'];
+         }
+      }
+      return false;
+   }
+
    /**
     * Sets the parent exception, used in the logging
     * string to know the exact line in the code that
