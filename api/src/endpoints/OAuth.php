@@ -82,7 +82,7 @@ $user_associate_external_account = Tool::makeEndpoint(function($service) use($ap
             ['plugins', 'plugins:search', 'plugin:card', 'plugin:star',
              'plugin:submit', 'plugin:download', 'tags', 'tag', 'authors',
              'author', 'version', 'message', 'user', 'user:externalaccounts',
-             'user:apps']
+             'user:apps', 'users:search']
          );
       }
       else { // Else we're creating a new
