@@ -17,6 +17,7 @@ use \API\Core\ValidableXMLPluginDescription;
 
 class BackgroundTasks {
    public $lastXml;
+   private $silentMode;
 
    /**
     * Triggers the given list of tasks
@@ -421,5 +422,19 @@ class BackgroundTasks {
          return true;
       }
       return false;
+   }
+
+   private function outputStr($str) {
+      if (!$this->silentMode) {
+         echo $str;
+      }
+   }
+
+   public function __construct($options = []) {
+      if (isset($options['silent']) &&
+          gettype($options['silent'] === 'boolean') &&
+          $options['silent']) {
+         $this->silentMode = true;
+      }
    }
 }
