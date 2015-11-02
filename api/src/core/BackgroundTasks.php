@@ -34,7 +34,7 @@ class BackgroundTasks {
       $n = 0;
       $l = sizeof($plugins);
 
-      echo "Analyzing ".$l." plugins... \n\n";
+      $this->outputStr("Analyzing ".$l." plugins... \n\n");
 
       foreach($plugins as $num => $plugin) {
          $n++;
@@ -47,7 +47,7 @@ class BackgroundTasks {
          }
       }
 
-      echo "\n";
+      $this->outputStr("\n");
    }
 
    /**
@@ -62,7 +62,7 @@ class BackgroundTasks {
             $this->updatePlugin($plugin, 1, 1, []);
          }
       } else {
-         echo 'Plugin not found "'.$key.'"'."\n";
+         $this->outputStr('Plugin not found "'.$key.'"'."\n");
       }
    }
 
@@ -73,7 +73,7 @@ class BackgroundTasks {
             $this->updatePlugin($plugin, 1, 1, []);
          }
       } else {
-         echo 'Plugin #'.$id.' not found '."\n";
+         $this->outputStr('Plugin #'.$id.' not found '."\n");
       }
    }
 
@@ -84,7 +84,7 @@ class BackgroundTasks {
     */
    public function foreachAccessToken($tasks) {
       $accessTokens = AccessToken::get();
-      echo "Analyzing ".sizeof($accessTokens)." access tokens...";
+      $this->outputStr("Analyzing ".sizeof($accessTokens)." access tokens...");
 
       $n_deleted = 0;
 
@@ -97,10 +97,10 @@ class BackgroundTasks {
       }
 
       if (in_array('delete_AT_if_expired', $tasks) && $n_deleted > 0) {
-         echo " deleted ".$n_deleted." perempted access tokens.";
+         $this->outputStr(" deleted ".$n_deleted." perempted access tokens.");
       }
 
-      echo "\n\n";
+      $this->outputStr("\n\n");
    }
 
    /**
@@ -111,7 +111,7 @@ class BackgroundTasks {
    public function foreachRefreshToken($tasks) {
       $refreshTokens = RefreshToken::get();
 
-      echo "Analyzing ".sizeof($refreshTokens)." refresh tokens...";
+      $this->outputStr("Analyzing ".sizeof($refreshTokens)." refresh tokens...");
 
       $n_deleted = 0;
 
@@ -124,10 +124,10 @@ class BackgroundTasks {
       }
 
       if (in_array('delete_lonely_RT', $tasks) && $n_deleted > 0) {
-         echo " deleted ".$n_deleted." lonely refresh tokens.";
+         $this->outputStr(" deleted ".$n_deleted." lonely refresh tokens.");
       }
 
-      echo "\n\n";
+      $this->outputStr("\n\n");
    }
 
    /**
@@ -138,7 +138,7 @@ class BackgroundTasks {
    public function foreachSession($tasks) {
       $sessions = Session::get();
 
-      echo "Analyzing ".sizeof($sessions)." sessions...";
+      $this->outputStr("Analyzing ".sizeof($sessions)." sessions...");
 
       $n_deleted = 0;
 
@@ -151,10 +151,10 @@ class BackgroundTasks {
       }
 
       if (in_array('delete_lonely_session', $tasks) && $n_deleted > 0) {
-         echo " deleted ".$n_deleted." lonely sessions.";
+         $this->outputStr(" deleted ".$n_deleted." lonely sessions.");
       }
 
-      echo "\n\n";
+      $this->outputStr("\n\n");
    }
 
    // Tasks for Plugins
@@ -169,7 +169,7 @@ class BackgroundTasks {
     */
    private function updatePlugin($plugin, $index = null, $length = null, $subtasks) {
       // Displaying index / length
-      echo('Plugin (' . $index . '/'. $length . ') (id #'. $plugin->id . '): ');
+      $this->outputStr('Plugin (' . $index . '/'. $length . ') (id #'. $plugin->id . '): ');
 
       $update = false;
 
@@ -178,7 +178,7 @@ class BackgroundTasks {
       if (!$xml) {
          $plugin->xml_state = 'bad_xml_url';
          $plugin->save();
-         echo($plugin->xml_url."\" Cannot get XML file via HTTP, Skipping.\n");
+         $this->outputStr($plugin->xml_url."\" Cannot get XML file via HTTP, Skipping.\n");
          return false;
       } else {
          $this->lastXml = $xml;
@@ -197,7 +197,7 @@ class BackgroundTasks {
       else {
          $plugin->xml_state = 'passing';
          $plugin->save();
-         echo ("\"" . $plugin->name . "\" Already up-to-date, Skipping.\n");
+         $this->outputStr("\"" . $plugin->name . "\" Already up-to-date, Skipping.\n");
          return false;
       }
 
@@ -217,16 +217,16 @@ class BackgroundTasks {
          $plugin->xml_state = 'xml_error';
          $plugin->save();
          $_unreadable .= "Unreadable/Non validable XML, error: ".$e->getRepresentation()." Skipping.\n";
-         echo($_unreadable);
+         $this->outputStr($_unreadable);
          return false;
       }
 
       $xml = $xml->contents;
 
       if (!$plugin->name) {
-         echo "first time update, found name \"".$xml->name."\"...";
+         $this->outputStr("first time update, found name \"".$xml->name."\"...");
          if (Plugin::where('name', '=', $xml->name)->first()) {
-            echo " already exists. skipping.";
+            $this->outputStr(" already exists. skipping.");
             // this would be amazing to alert the administrators
             // of that. new Mailer; ?
             return false;
@@ -235,19 +235,19 @@ class BackgroundTasks {
       }
       else {
          if ($plugin->name != $xml->name) {
-            echo " requested name change to \"".$xml->name."\" ...";
+            $this->outputStr(" requested name change to \"".$xml->name."\" ...");
             if (Plugin::where('name', '=', $xml->name)->first()) {
-               echo " but name already exists. skipping.";
+               $this->outputStr(" but name already exists. skipping.");
                // this would be amazing to alert the administrators
                // of that. new Mailer; ?
                return false;
             }
          }
          $firstTimeUpdate = false;
-         echo "\"".$plugin->name."\"";
+         $this->outputStr("\"".$plugin->name."\"");
       }
 
-      echo " going to be synced with xml ...";
+      $this->outputStr(" going to be synced with xml ...");
       $plugin->xml_state = 'passing';
 
       // Updating basic infos
@@ -372,12 +372,12 @@ class BackgroundTasks {
       // new updated timestamp
       $plugin->date_updated = \Illuminate\Database\Capsule\Manager::raw('NOW()');
       $plugin->save();
-      echo " OK.";
+      $this->outputStr(" OK.");
       if (in_array('alert_watchers', $subtasks)) {
          $this->alertWatchers($plugin);
-         echo "\n";
+         $this->outputStr("\n");
       } else {
-         echo "\n";
+         $this->outputStr("\n");
       }
    }
 
@@ -426,13 +426,13 @@ class BackgroundTasks {
 
    private function outputStr($str) {
       if (!$this->silentMode) {
-         echo $str;
+         $this->outputStr($str);
       }
    }
 
    public function __construct($options = []) {
       if (isset($options['silent']) &&
-          gettype($options['silent'] === 'boolean') &&
+          gettype($options['silent']) === 'boolean' &&
           $options['silent']) {
          $this->silentMode = true;
       }
