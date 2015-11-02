@@ -45,7 +45,7 @@ class ErrorResponse extends \Exception {
             return $info['value'];
          }
       }
-      return false;
+      return null;
    }
 
    /**

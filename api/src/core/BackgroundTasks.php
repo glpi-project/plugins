@@ -176,8 +176,7 @@ class BackgroundTasks {
       // fetching via http
       $xml = @file_get_contents($plugin->xml_url);
       if (!$xml) {
-         $plugin->xml_state = 'bad_xml_url';
-         $plugin->save();
+         $this->triggerPluginXmlStateChange($plugin, 'bad_xml_url');
          $this->outputStr($plugin->xml_url."\" Cannot get XML file via HTTP, Skipping.\n");
          return false;
       } else {
@@ -195,27 +194,26 @@ class BackgroundTasks {
          // is updated
       }
       else {
-         $plugin->xml_state = 'passing';
-         $plugin->save();
+         $this->triggerPluginXmlStateChange($plugin, 'passing');
          $this->outputStr("\"" . $plugin->name . "\" Already up-to-date, Skipping.\n");
          return false;
       }
 
-      $xml = new ValidableXMLPluginDescription($xml);
       try {
+         $xml = new ValidableXMLPluginDescription($xml);
          $xml->validate();
       }
       catch (\API\Exception\InvalidXML $e) {
          $_unreadable = '';
-         if ($xml->contents->name &&
+         if (isset($xml->contents) &&
+             $xml->contents->name &&
              sizeof($xml->contents->name->children()) < 1 &&
              strlen((string)$xml->contents->name) < 80) {
             $_unreadable .= '"'.(string)$xml->contents->key . '" ';
          } elseif ($plugin->name) {
             $_unreadable .= '"'.$plugin->name.'" ';
          }
-         $plugin->xml_state = 'xml_error';
-         $plugin->save();
+         $this->triggerPluginXmlStateChange($plugin, 'xml_error');
          $_unreadable .= "Unreadable/Non validable XML, error: ".$e->getRepresentation()." Skipping.\n";
          $this->outputStr($_unreadable);
          return false;
@@ -248,7 +246,7 @@ class BackgroundTasks {
       }
 
       $this->outputStr(" going to be synced with xml ...");
-      $plugin->xml_state = 'passing';
+      $this->triggerPluginXmlStateChange($plugin, 'passing');
 
       // Updating basic infos
       $plugin->logo_url = $xml->logo;
@@ -391,6 +389,66 @@ class BackgroundTasks {
                            ['plugin' => $plugin,
                             'user'   => $user,
                             'client_url' => Tool::getConfig()]);
+      }
+   }
+
+   private function triggerPluginXmlStateChange($plugin, $xml_state, $save = true) {
+      if (!in_array($xml_state, ['passing', 'bad_xml_url', 'xml_error'])) {
+         return;
+      }
+      $plugin->xml_state = $xml_state;
+      if ($save) {
+         $plugin->save();
+      }
+      if (in_array($xml_state, ['bad_xml_url', 'xml_error'])) {
+         $this->alertAdminsOfXMLErrors($plugin);
+      }
+   }
+
+   private function alertAdminsOfXMLErrors($plugin) {
+      $errors = [];
+
+      if ($plugin->xml_state == 'bad_xml_url') {
+         $errors[] = [
+            'reason' => 'url',
+            'url' => $plugin->xml_url
+         ];
+      }
+      elseif ($plugin->xml_state == 'xml_error') {
+         // Reevaluating Errors with previous plain-text xml,
+         // using the collectMode of ValidableXMLPluginDescription
+         $xml = new ValidableXMLPluginDescription($this->lastXml, true);
+         $xml->validate();
+         foreach ($xml->errors as $_error) {
+            $error = [];
+            $error['reason'] = $_error->getInfo('reason');
+            switch ($error['reason']) {
+               case 'parse':
+                  $error['line'] = $_error->getInfo('line');
+                  $error['errstring'] = $_error->getInfo('errstring');
+               case 'field':
+                  $error['field'] = $_error->getInfo('field');
+                  $error['errstring'] = $_error->getInfo('errstring');
+            }
+            $errors[] = $error;
+         }
+      }
+      else return;
+
+      $permissions = $plugin->permissions;
+      foreach ($permissions as $user) {
+         if ($user->pivot->admin ||
+             $user->pivot->allowed_notifications) {
+            $mailer = new Mailer;
+            $mailer->sendMail('xml_error.html',
+                              [$user->email],
+                              '"' . $plugin->key . '"' . ' Plugin\'s XML has turned invalid',
+                              [
+                                 'errors' => $errors,
+                                 'plugin' => $plugin,
+                                 'user' => $user
+                              ]);
+         }
       }
    }
 

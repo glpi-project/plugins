@@ -239,7 +239,7 @@ class ValidableXMLPluginDescription {
 
    public function throwOrCollect(InvalidXML $exception) {
       if ($this->collectMode) {
-         $this->errors[] = $exception->getRepresentation();
+         $this->errors[] = $exception;
       } else {
          throw $exception;
       }

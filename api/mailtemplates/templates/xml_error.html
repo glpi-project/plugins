@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block message %}
+<h1>Dear {{user.username}},</h1>
+
+<p class="lead">Your {{plugin.key}} Plugin's XML File has an error</p>
+
+<p>
+   {{plugin.key}}'s XML Description File has an Error, and thus cannot be validated.
+</p>
+
+<p>
+   Errors met :
+</p>
+
+{% if errors|length > 1 %}
+<p>
+   This is the complete list of errors.
+   In fact, our analyser stopped at the first error,
+   but there is the complete list in order for you
+   to correct them all.
+</p>
+{% endif %}
+
+<ul>
+   {% for error in errors %}
+      {% if error.reason == 'url' %}
+         <li>XML Unreachable at url {{error.url}}</li>
+      {% elseif error.reason == 'parse' %}
+         <li>Parse Error : {{error.errstring}} at line {{error.line}}</li>
+      {% elseif error.reason == 'field' %}
+         <li>Specification Error : at field {{error.field}} : (Specification is {{error.errstring}})</li>
+      {% endif %}
+   {% endfor %}
+</ul>
+{% endblock %}
