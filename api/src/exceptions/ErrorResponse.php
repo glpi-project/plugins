@@ -6,6 +6,10 @@ use API\Core\Tool;
 
 /**
  * Base class for Error Response
+ * @todo rename this class or
+ * make it inherit another one,
+ * or do something, just for
+ * the sake of it
  */
 
 class ErrorResponse extends \Exception {
