@@ -426,7 +426,7 @@ class BackgroundTasks {
 
    private function outputStr($str) {
       if (!$this->silentMode) {
-         $this->outputStr($str);
+         echo $str;
       }
    }
 
