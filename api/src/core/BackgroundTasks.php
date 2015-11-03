@@ -43,8 +43,8 @@ class BackgroundTasks {
             if (in_array('alert_watchers', $tasks)) {
                $subtasks[] = 'alert_watchers';
             }
-            if (in_array('alert_plugin_team_on_xml_error', $tasks)) {
-               $subtasks[] = 'alert_plugin_team_on_xml_error';
+            if (in_array('alert_plugin_team_on_xml_state_change', $tasks)) {
+               $subtasks[] = 'alert_plugin_team_on_xml_state_change';
             }
             $this->updatePlugin($plugin, $n, $l, $subtasks);
          }
@@ -183,7 +183,7 @@ class BackgroundTasks {
             $plugin,
             'bad_xml_url',
             true,
-            in_array('alert_plugin_team_on_xml_error', $subtasks)
+            in_array('alert_plugin_team_on_xml_state_change', $subtasks)
          );
          $this->outputStr($plugin->xml_url."\" Cannot get XML file via HTTP, Skipping.\n");
          return false;
@@ -224,7 +224,7 @@ class BackgroundTasks {
             $plugin,
             'xml_error',
             true,
-            in_array('alert_plugin_team_on_xml_error', $subtasks)
+            in_array('alert_plugin_team_on_xml_state_change', $subtasks)
          );
          $_unreadable .= "Unreadable/Non validable XML, error: ".$e->getRepresentation()." Skipping.\n";
          $this->outputStr($_unreadable);
@@ -262,7 +262,7 @@ class BackgroundTasks {
          $plugin,
          'passing',
          true,
-         in_array('alert_plugin_team_on_xml_error', $subtasks)
+         in_array('alert_plugin_team_on_xml_state_change', $subtasks)
       );
 
       // Updating basic infos

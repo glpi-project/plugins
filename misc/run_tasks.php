@@ -12,7 +12,7 @@ $options = getopt('i:k:t:');
 // no known options, there is the default
 // set of tasks that runs.
 if (sizeof($options) == 0) {
-   $taskDispatcher->foreachPlugin(['update', 'alert_watchers', 'alert_plugin_team_on_xml_error']);
+   $taskDispatcher->foreachPlugin(['update', 'alert_watchers', 'alert_plugin_team_on_xml_state_change']);
    $taskDispatcher->foreachAccessToken(['delete_AT_if_expired']);
    $taskDispatcher->foreachRefreshToken(['delete_lonely_RT']);
    $taskDispatcher->foreachSession(['delete_lonely_session']);
