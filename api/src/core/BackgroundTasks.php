@@ -202,7 +202,6 @@ class BackgroundTasks {
          // is updated
       }
       else {
-         $this->triggerPluginXmlStateChange($plugin, 'passing');
          $this->outputStr("\"" . $plugin->name . "\" Already up-to-date, Skipping.\n");
          return false;
       }
@@ -221,7 +220,12 @@ class BackgroundTasks {
          } elseif ($plugin->name) {
             $_unreadable .= '"'.$plugin->name.'" ';
          }
-         $this->triggerPluginXmlStateChange($plugin, 'xml_error');
+         $this->triggerPluginXmlStateChange(
+            $plugin,
+            'xml_error',
+            true,
+            in_array('alert_plugin_team_on_xml_error', $subtasks)
+         );
          $_unreadable .= "Unreadable/Non validable XML, error: ".$e->getRepresentation()." Skipping.\n";
          $this->outputStr($_unreadable);
          return false;
@@ -254,7 +258,12 @@ class BackgroundTasks {
       }
 
       $this->outputStr(" going to be synced with xml ...");
-      $this->triggerPluginXmlStateChange($plugin, 'passing');
+      $this->triggerPluginXmlStateChange(
+         $plugin,
+         'passing',
+         true,
+         in_array('alert_plugin_team_on_xml_error', $subtasks)
+      );
 
       // Updating basic infos
       $plugin->logo_url = $xml->logo;
@@ -400,8 +409,19 @@ class BackgroundTasks {
       }
    }
 
+   /**
+    * This method's goal is to change the xml_state of
+    * a specific plugin.
+    * It's behaviour depends of
+    *  + the current state of the plugin
+    *  + the list of admins or notified people
+    * 
+    * In fact, this function returns void and
+    * has no action if the state hasn't changed.
+    */
    private function triggerPluginXmlStateChange($plugin, $xml_state, $save = true, $mail = true) {
-      if (!in_array($xml_state, ['passing', 'bad_xml_url', 'xml_error'])) {
+      if (!in_array($xml_state, ['passing', 'bad_xml_url', 'xml_error']) ||
+          $xml_state == $plugin->xml_state) {
          return;
       }
       $plugin->xml_state = $xml_state;
