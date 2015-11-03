@@ -35,7 +35,7 @@ use \API\Exception\RightDoesntExist;
 use \API\Exception\CannotDeleteAdmin;
 
 /**
- * Fetching infos of a single plugin
+ * Giving infos to display a single plugin page
  */
 $single = Tool::makeEndpoint(function($key) use($app, $resourceServer) {
    OAuthHelper::needsScopes(['plugin:card']);
@@ -60,6 +60,10 @@ $single = Tool::makeEndpoint(function($key) use($app, $resourceServer) {
    }
 });
 
+/**
+ * giving info to display the plugin page in the panel
+ * The object sent by $single is in the attribute "card"
+ */
 $single_authormode_view = Tool::makeEndpoint(function($key) use($app) {
    OAuthHelper::needsScopes(['plugin:card', 'user']);
 
@@ -541,7 +545,7 @@ $app->get('/plugin/:key/permissions', $plugin_view_permissions);
 $app->post('/plugin/:key/permissions', $plugin_add_permission);
 $app->delete('/plugin/:key/permissions/:username', $plugin_delete_permission);
 $app->patch('/plugin/:key/permissions/:username', $plugin_modify_permission);
-$app->post('/plugin/:key/refresh', $plugin_refresh_xml);
+$app->post('/plugin/:key/refresh_xml', $plugin_refresh_xml);
 
 $app->options('/plugin',function(){});
 $app->options('/plugin/popular',function(){});

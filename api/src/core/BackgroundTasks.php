@@ -43,6 +43,9 @@ class BackgroundTasks {
             if (in_array('alert_watchers', $tasks)) {
                $subtasks[] = 'alert_watchers';
             }
+            if (in_array('alert_plugin_team_on_xml_error', $tasks)) {
+               $subtasks[] = 'alert_plugin_team_on_xml_error';
+            }
             $this->updatePlugin($plugin, $n, $l, $subtasks);
          }
       }
@@ -176,7 +179,12 @@ class BackgroundTasks {
       // fetching via http
       $xml = @file_get_contents($plugin->xml_url);
       if (!$xml) {
-         $this->triggerPluginXmlStateChange($plugin, 'bad_xml_url');
+         $this->triggerPluginXmlStateChange(
+            $plugin,
+            'bad_xml_url',
+            true,
+            in_array('alert_plugin_team_on_xml_error', $subtasks)
+         );
          $this->outputStr($plugin->xml_url."\" Cannot get XML file via HTTP, Skipping.\n");
          return false;
       } else {
@@ -392,7 +400,7 @@ class BackgroundTasks {
       }
    }
 
-   private function triggerPluginXmlStateChange($plugin, $xml_state, $save = true) {
+   private function triggerPluginXmlStateChange($plugin, $xml_state, $save = true, $mail = true) {
       if (!in_array($xml_state, ['passing', 'bad_xml_url', 'xml_error'])) {
          return;
       }
@@ -400,7 +408,8 @@ class BackgroundTasks {
       if ($save) {
          $plugin->save();
       }
-      if (in_array($xml_state, ['bad_xml_url', 'xml_error'])) {
+      if (in_array($xml_state, ['bad_xml_url', 'xml_error']) &&
+          $mail) {
          $this->alertAdminsOfXMLErrors($plugin);
       }
    }
