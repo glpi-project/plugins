@@ -70,7 +70,7 @@ $single_authormode_view = Tool::makeEndpoint(function($key) use($app) {
    $user = OAuthHelper::currentlyAuthed();
 
    // get plugin
-   $plugin = Plugin::with('descriptions', 'versions', 'screenshots', 'tags', 'permissions')
+   $plugin = Plugin::with('descriptions', 'versions', 'screenshots', 'tags', 'permissions', 'authors')
                   ->short()
                   ->withAverageNote()
                   ->withNumberOfVotes()
@@ -386,7 +386,7 @@ $plugin_refresh_xml = Tool::makeEndpoint(function($key) use($app) {
 
    Tool::endWithJson([
       "errors" => $errors,
-      "xml_state" => Plugin::where('key', '=', $key)->first()->xml_state
+      "xml_state" => $taskDispatcher->currentPluginState
    ]);
 });
 

@@ -18,6 +18,7 @@ use API\Exception\InvalidXML;
 
 class BackgroundTasks {
    public $currentXml;
+   public $currentPluginState;
    private $silentMode;
    private $throwsExceptions;
 
@@ -181,6 +182,7 @@ class BackgroundTasks {
       // This can be used to detect the state
       // in some way (think about it)
       $this->currentXml = null;
+      $this->currentPluginState = null;
 
       // fetching via http
       $xml = @file_get_contents($plugin->xml_url);
@@ -440,8 +442,10 @@ class BackgroundTasks {
    private function triggerPluginXmlStateChange($plugin, $xml_state, $save = true, $mail = true) {
       if (!in_array($xml_state, ['passing', 'bad_xml_url', 'xml_error']) ||
           $xml_state == $plugin->xml_state) {
+         $this->currentPluginState = $xml_state;
          return;
       }
+      $this->currentPluginState = $xml_state;
       $plugin->xml_state = $xml_state;
       if ($save) {
          $plugin->save();
