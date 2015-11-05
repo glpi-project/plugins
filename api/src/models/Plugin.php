@@ -62,7 +62,7 @@ class Plugin extends Model {
                       'plugin.xml_url', 'plugin.homepage_url',
                       'plugin.download_url', 'plugin.issues_url', 'plugin.readme_url',
                       'plugin.license', 'plugin.date_added', 'plugin.date_updated',
-                      'plugin.download_count']);
+                      'plugin.download_count', 'plugin.xml_state']);
       return $query;
    }
 
