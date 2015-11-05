@@ -11,7 +11,8 @@
  */
 angular.module('frontendApp')
   .controller('PluginpanelCtrl', function (API_URL, $scope, $rootScope, $state,
-                                           $stateParams, $http, Toaster, $mdDialog) {
+                                           $stateParams, $http, Toaster, $mdDialog,
+                                           $interval, exceptionRepresentationParser) {
       // Redirects to /featured if not authed
       if (!$rootScope.authed) {
          $state.go('featured');
@@ -24,6 +25,8 @@ angular.module('frontendApp')
       // the author panel. the plugin will be at
       // $scope.plugin.card after $http has .then()'ed.
       $scope.plugin = {};
+
+      $scope.xml_errors = [];
 
       var readRights = function(plugin, user) {
          for (var n in plugin.card.permissions) {
@@ -85,6 +88,63 @@ angular.module('frontendApp')
          });
       };
 
+
+      /**
+       * Updates the xml file using the corresponding
+       * endpoint to do that
+       */
+       $scope.refreshXMLFile = function(e) {
+         var icon = angular.element(e.currentTarget).parent().find('i');
+         // Simple code for the animated icon
+         // using css3 rotation
+         var translationProgress = 0;
+         var newProgress = function() {
+            if (translationProgress == 0) {
+               translationProgress = 0.1;
+            } else {
+               var decimal = parseInt(translationProgress.toString().split('.')[1]);
+               if (decimal < 9) {
+                  decimal++;
+                  translationProgress = parseFloat('0.'+decimal)
+               } else {
+                  translationProgress = 0;
+               }
+            }
+            return translationProgress;
+         };
+
+         var setRotation = function(progress) {
+            icon.css('transform', 'rotate('+progress+'turn)');
+         };
+
+         icon.css('display', 'block');
+         var interval = $interval(function() {
+            setRotation(newProgress());
+         }, 100)
+
+         $http({
+            method: 'POST',
+            url: API_URL + '/plugin/'+$scope.plugin.card.key+'/refresh_xml'
+         }).then(function(resp) {
+            $interval.cancel(interval);
+            icon.css('display', 'none');
+            $scope.plugin.card.xml_state = resp.data.xml_state;
+
+            var xml_errors = [];
+
+            for (var i = 0 ; i < resp.data.errors.length ; i++) {
+               xml_errors.push(exceptionRepresentationParser.parseExceptionRepresentation(resp.data.errors[i]));
+            }
+
+            $scope.xml_errors = xml_errors;
+         });
+       };
+
+      /**
+       * This is the code for the UserPermissions Dialog that
+       * opens when you click on "Manage User Permissions" in
+       * the view
+       */
       var pluginPanelScope = $scope;
       function UserPermissionsDialogController($scope, Auth, $state, $timeout, $q, Toaster) {
          $scope.plugin = pluginPanelScope.plugin.card;

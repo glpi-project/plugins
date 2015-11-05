@@ -9,6 +9,10 @@
          <h3>Summary</h3>
          <md-content>
             <ul>
+               <li class="xml_state">
+                  <label>XML State</label>
+                  <span ng-class="(plugin.card.xml_state != 'passing')?'error':''">{{plugin.card.xml_state}}</span>
+               </li>
                <li class="tags-container">
                   <label>{{'TAGGED'|translate}}</label>
                   <span class="tags">
@@ -27,14 +31,17 @@
                      </ul>
                   </span>
                </li>
-<!--                <li>
+
+               <!--
+               <li>
                   <label>{{'DOWNLOADED'|translate}} ({{'THIS_MONTH'|translate}})</label>
                   <span>224 times</span>
                </li>
                <li>
                   <label>{{'DOWNLOADED'|translate}} ({{'THIS_WEEK'|translate}})</label>
                   <span>80 times</span>
-               </li> -->
+               </li>
+               -->
             </ul>
          </md-content>
       </div>
@@ -47,11 +54,12 @@
          </md-input-container>
       </div>
 
-      <div class="settings">
+      <div class="actions">
          <h3>Actions</h3>      
          <md-list class="actions" layout="row">
-            <md-list-item>
-               <md-button class="md-raised md-primary" type="button" ng-click="refreshXMLFile()" ng-show="rights.admin || rights.allowed_refresh_xml">
+            <md-list-item class="refresh_xml-button">
+               <i class="fa fa-spinner"></i>
+               <md-button class="md-raised md-primary" type="button" ng-click="refreshXMLFile($event)" ng-show="rights.admin || rights.allowed_refresh_xml">
                   Refresh XML File
                </md-button>
             </md-list-item>
@@ -62,6 +70,36 @@
             </md-list-item>
          </md-list>
       </div>
+
+      <md-content class="xml-errors">
+         <md-list>
+            <md-list-item ng-repeat="error in xml_errors" layout="column">
+               <div class="reason">
+                     <span class="reason" ng-show="error.args.reason == 'url'">{{'XMLFILE_UNREACHABLE_URL'|translate}}</span>
+                     <span class="reason" ng-show="error.args.reason == 'parse'">{{'XMLFILE_PARSE_ERROR'|translate}}</span>
+                     <span class="reason" ng-show="error.args.reason == 'field'">{{'XMLFILE_SPECIFICATION_ERROR'|translate}}</span>
+               </div>
+
+               <div class="separator"></div>
+
+               <div class="details">
+                  <ul>
+                     <!-- Details for URL errors -->
+                     <li ng-show="error.args.reason == 'url'">The url {{error.args.url}} is not reachable.</li>
+
+                     <!-- Details for php/simplexml Parse errors -->
+                     <li ng-show="error.args.reason == 'parse'">Line {{error.args.line}}</li>
+                     <li ng-show="error.args.reason == 'parse'">{{error.args.errstring}}</li>
+
+
+                     <!-- Details for GLPi XML Plugin Description File Specification Errors -->
+                     <li ng-show="error.args.reason == 'field'">The field "{{error.args.field}}" fails to respect specification</li>
+                     <li ng-show="error.args.reason == 'field'">{{error.args.errstring}}</li>
+                  </ul>
+               </div>
+            </md-list-item>
+         </md-list>
+      </md-content>
 
       <md-button class="the-submit md-raised md-primary" type="submit">Save</md-button>
    </form>

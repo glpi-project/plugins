@@ -8,6 +8,11 @@
       .panel-title
          float: right
    .summary
+      .xml_state
+         span
+            color: $green
+         span.error
+            color: $red
       label
          font-weight: 700
          display: inline-block
@@ -33,3 +38,30 @@
       @include clearfix
       .the-submit
          float: right
+   .actions
+      .refresh_xml-button
+         i
+            display: none
+   .xml-errors
+      md-list-item
+         background-color: $red
+         border-radius: 4px
+         min-height: 38px
+         margin-bottom: 10px
+         .reason
+            color: #fff
+            width: 100%
+         .separator
+            width: 100%
+            height: 2px
+            background-color: #fff
+         .details
+            width: 100%
+            ul
+               padding-left: 20px
+               margin: 0
+            li
+               list-style-type: disc
+               color: #fff
+      p
+         margin: 4px 0 4px 0
