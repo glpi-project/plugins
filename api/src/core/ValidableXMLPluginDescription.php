@@ -59,18 +59,19 @@ class ValidableXMLPluginDescription {
       return true;
    }
 
+   // @todo: avoid dry;
    public function validateDescription() {
       if (sizeof($this->contents->description) != 1 ||
          sizeof($this->contents->description->children()) != 2) {
-         $this->throwOrCollect(new InvalidXML('field', 'description', '<description> should contain <short> and <long> tags only'));
+         return $this->throwOrCollect(new InvalidXML('field', 'description', '<description> should contain <short> and <long> tags only'));
       }
 
       foreach ($this->contents->description->children() as $type => $langs) {
          if (!in_array($type, ['long', 'short'])) {
-            $this->throwOrCollect(new InvalidXML('field', 'description.'.$type, '<description> should contain <short> and <long> tags only'));
+            return $this->throwOrCollect(new InvalidXML('field', 'description.'.$type, '<description> should contain <short> and <long> tags only'));
          }
          if(sizeof($langs->children()) < 1) {
-            $this->throwOrCollect(new InvalidXML('field', 'description.'.$type, 'each <short> and <long> should have at least one <lang> inside'));
+            return $this->throwOrCollect(new InvalidXML('field', 'description.'.$type, 'each <short> and <long> should have at least one <lang> inside'));
          }
       }
 
