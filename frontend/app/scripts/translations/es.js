@@ -69,6 +69,9 @@ angular
             DOWNLOADED: "Downloaded",
             THIS_MONTH: "This month",
             THIS_WEEK: "This week",
-            TRANSLATIONS: "Translations"
+            TRANSLATIONS: "Translations",
+            XMLFILE_UNREACHABLE_URL: 'Unreachable URL',
+            XMLFILE_PARSE_ERROR: 'XML Parse Error',
+            XMLFILE_SPECIFICATION_ERROR: 'Specification Error'
          });
    });
