@@ -11,7 +11,7 @@ class InvalidXML extends ErrorResponse {
       switch ($reason) {
          case 'url':
             $this->setInfo('reason', 'url', true);
-            $this->setInfo('url', $info);
+            $this->setInfo('url', '"'.$info.'"');
             break;
          case 'parse':
             $this->setInfo('reason', 'parse', true);
