@@ -28,7 +28,7 @@ class ValidableXMLPluginDescription {
    public function validateName() {
       if (sizeof($this->contents->name) != 1 ||
          sizeof($this->contents->name->children()) != 0) {
-         $this->throwOrCollect(new InvalidXML('field', 'name', '<name> should be a singular field'));
+         $this->throwOrCollect(new InvalidXML('field', 'name', '<name> should be a singular field without children'));
       }
       return true;
    }
@@ -36,7 +36,7 @@ class ValidableXMLPluginDescription {
    public function validateKey() {
       if (sizeof($this->contents->key) != 1 ||
          sizeof($this->contents->key->children()) != 0) {
-         $this->throwOrCollect(new InvalidXML('field', 'key', '<key> should be a singular field'));
+         $this->throwOrCollect(new InvalidXML('field', 'key', '<key> should be a singular field without children'));
       }
       return true;
    }
@@ -54,7 +54,7 @@ class ValidableXMLPluginDescription {
    public function validateLogo() {
       if (sizeof($this->contents->logo) != 1 ||
          sizeof($this->contents->logo->children()) != 0) {
-         $this->throwOrCollect(new InvalidXML('field', 'logo', '<logo> should be a singular field'));
+         $this->throwOrCollect(new InvalidXML('field', 'logo', '<logo> should be a singular field without children'));
       }
       return true;
    }
@@ -62,12 +62,12 @@ class ValidableXMLPluginDescription {
    public function validateDescription() {
       if (sizeof($this->contents->description) != 1 ||
          sizeof($this->contents->description->children()) != 2) {
-         $this->throwOrCollect(new InvalidXML('field', 'description', '<description> should contain only <short> and <long>'));
+         $this->throwOrCollect(new InvalidXML('field', 'description', '<description> should contain <short> and <long> tags only'));
       }
 
       foreach ($this->contents->description->children() as $type => $langs) {
          if (!in_array($type, ['long', 'short'])) {
-            $this->throwOrCollect(new InvalidXML('field', 'description', '<description> should contain <short> and <long> only'));
+            $this->throwOrCollect(new InvalidXML('field', 'description.'.$type, '<description> should contain <short> and <long> tags only'));
          }
          if(sizeof($langs->children()) < 1) {
             $this->throwOrCollect(new InvalidXML('field', 'description.'.$type, 'each <short> and <long> should have at least one <lang> inside'));
@@ -80,7 +80,7 @@ class ValidableXMLPluginDescription {
    public function validateHomepage() {
       if (sizeof($this->contents->homepage) != 1 ||
          sizeof($this->contents->homepage->children()) != 0) {
-         $this->throwOrCollect(new InvalidXML('field', 'homepage', '<homepage> should be a singular field'));
+         $this->throwOrCollect(new InvalidXML('field', 'homepage', '<homepage> should be a singular field without children'));
       }
       return true;
    }
@@ -88,7 +88,7 @@ class ValidableXMLPluginDescription {
    public function validateDownload() {
       if (sizeof($this->contents->download) != 1 ||
          sizeof($this->contents->download->children()) != 0) {
-         $this->throwOrCollect(new InvalidXML('field', 'download', '<download> should be a singular field'));
+         $this->throwOrCollect(new InvalidXML('field', 'download', '<download> should be a singular field without children'));
       }
       return true;
    }
@@ -96,7 +96,7 @@ class ValidableXMLPluginDescription {
    public function validateIssues() {
       if (sizeof($this->contents->issues) != 1 ||
          sizeof($this->contents->issues->children()) != 0) {
-         $this->throwOrCollect(new InvalidXML('field', 'issues', '<issues> should be a singular field'));
+         $this->throwOrCollect(new InvalidXML('field', 'issues', '<issues> should be a singular field without children'));
       }
       return true;
    }
@@ -104,7 +104,7 @@ class ValidableXMLPluginDescription {
    public function validateReadme() {
       if (sizeof($this->contents->readme) != 1 ||
          sizeof($this->contents->readme->children()) != 0) {
-         $this->throwOrCollect(new InvalidXML('field', 'readme', '<readme> should be a singular field'));
+         $this->throwOrCollect(new InvalidXML('field', 'readme', '<readme> should be a singular field without children'));
       }
       return true;
    }
@@ -115,9 +115,12 @@ class ValidableXMLPluginDescription {
          $this->throwOrCollect(new InvalidXML('field', 'authors', '<authors> should contain at least one <author>'));
       }
 
-      foreach ($this->contents->authors->children() as $author) {
+      foreach ($this->contents->authors->children() as $tag => $author) {
+         if ($tag != 'author') {
+            $this->throwOrCollect(new InvalidXML('field', 'authors.'.$tag, '<authors> should contain only <author> tags'));
+         }
          if (sizeof($author->children()) != 0) {
-            $this->throwOrCollect(new InvalidXML('field', 'authors.author', '<author> should be a singular field'));
+            $this->throwOrCollect(new InvalidXML('field', 'authors.author', '<author> should be a singular field without children'));
          }
       }
 
@@ -152,7 +155,7 @@ class ValidableXMLPluginDescription {
          }
 
          if (sizeof($lang->children()) != 0) {
-            $this->throwOrCollect(new InvalidXML('field', 'langs.lang', '<lang> should be a singular field'));
+            $this->throwOrCollect(new InvalidXML('field', 'langs.lang', '<lang> should be a singular field without children'));
          }
 
          if (strlen((string)$lang) > 5) {
@@ -165,7 +168,7 @@ class ValidableXMLPluginDescription {
    public function validateLicense() {
       if (sizeof($this->contents->license) != 1 ||
          sizeof($this->contents->license->children()) != 0) {
-         $this->throwOrCollect(new InvalidXML('field', 'license', '<license> should be a singular field'));
+         $this->throwOrCollect(new InvalidXML('field', 'license', '<license> should be a singular field without children'));
       }
       return true;
    }
@@ -182,7 +185,7 @@ class ValidableXMLPluginDescription {
                $this->throwOrCollect(new InvalidXML('field', 'tags.'.$lang, '<[lang]> should contain only <tag> tags'));
             }
             if (sizeof($tag->children()) != 0) {
-               $this->throwOrCollect(new InvalidXML('field', 'tags.'.$lang.'.tag', '<tag> should be a singular field'));
+               $this->throwOrCollect(new InvalidXML('field', 'tags.'.$lang.'.tag', '<tag> should be a singular field without children'));
             }
          }
       }
@@ -195,7 +198,7 @@ class ValidableXMLPluginDescription {
             $this->throwOrCollect(new InvalidXML('field', 'screenshots.'.$tag, '<screenshots> should contain only <screenshot> tags'));
          }
          if (sizeof($screenshot->children()) != 0) {
-            $this->throwOrCollect(new InvalidXML('field', 'screenshots.screenshot', '<screenshot> should be a singular field'));
+            $this->throwOrCollect(new InvalidXML('field', 'screenshots.screenshot', '<screenshot> should be a singular field without children'));
          }
       }
       return true;
@@ -208,9 +211,9 @@ class ValidableXMLPluginDescription {
       if ($this->contents) {
          $this->parsable = true;
       } else {
+         $this->parsable = false;
          $error = libxml_get_errors()[0];
          $this->throwOrCollect(new InvalidXML('parse', $error->line, trim($error->message)));
-         $this->parsable = false;
       }
    }
 

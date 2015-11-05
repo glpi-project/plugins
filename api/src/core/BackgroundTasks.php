@@ -2,22 +2,24 @@
 
 namespace API\Core;
 
-use \API\Model\Author;
-use \API\Model\Plugin;
-use \API\Model\PluginDescription;
-use \API\Model\PluginVersion;
-use \API\Model\PluginScreenshot;
-use \API\Model\PluginLang;
-use \API\Model\Tag;
-use \API\Model\AccessToken;
-use \API\Model\RefreshToken;
-use \API\Model\Session;
-use \API\Core\Tool;
-use \API\Core\ValidableXMLPluginDescription;
+use API\Model\Author;
+use API\Model\Plugin;
+use API\Model\PluginDescription;
+use API\Model\PluginVersion;
+use API\Model\PluginScreenshot;
+use API\Model\PluginLang;
+use API\Model\Tag;
+use API\Model\AccessToken;
+use API\Model\RefreshToken;
+use API\Model\Session;
+use API\Core\Tool;
+use API\Core\ValidableXMLPluginDescription;
+use API\Exception\InvalidXML;
 
 class BackgroundTasks {
-   public $lastXml;
+   public $currentXml;
    private $silentMode;
+   private $throwsExceptions;
 
    /**
     * Triggers the given list of tasks
@@ -172,9 +174,13 @@ class BackgroundTasks {
     */
    private function updatePlugin($plugin, $index = null, $length = null, $subtasks) {
       // Displaying index / length
-      $this->outputStr('Plugin (' . $index . '/'. $length . ') (id #'. $plugin->id . '): ');
+      $this->outputStr('Plugin (' . $index . '/' . $length . ') (id #'. $plugin->id . '): ');
 
       $update = false;
+
+      // This can be used to detect the state
+      // in some way (think about it)
+      $this->currentXml = null;
 
       // fetching via http
       $xml = @file_get_contents($plugin->xml_url);
@@ -186,9 +192,12 @@ class BackgroundTasks {
             in_array('alert_plugin_team_on_xml_state_change', $subtasks)
          );
          $this->outputStr($plugin->xml_url."\" Cannot get XML file via HTTP, Skipping.\n");
+         if ($this->throwsExceptions) {
+            throw new InvalidXML('url', $plugin->xml_url);
+         }
          return false;
       } else {
-         $this->lastXml = $xml;
+         $this->currentXml = $xml;
       }
       $crc = md5($xml); // compute crc
       if ($plugin->xml_crc != $crc ||
@@ -203,6 +212,12 @@ class BackgroundTasks {
       }
       else {
          $this->outputStr("\"" . $plugin->name . "\" Already up-to-date, Skipping.\n");
+         $this->triggerPluginXmlStateChange(
+            $plugin,
+            'passing',
+            true,
+            in_array('alert_plugin_team_on_xml_state_change', $subtasks)
+         );
          return false;
       }
 
@@ -228,6 +243,9 @@ class BackgroundTasks {
          );
          $_unreadable .= "Unreadable/Non validable XML, error: ".$e->getRepresentation()." Skipping.\n";
          $this->outputStr($_unreadable);
+         if ($this->throwsExceptions) {
+            throw $e;
+         }
          return false;
       }
 
@@ -446,7 +464,7 @@ class BackgroundTasks {
       elseif ($plugin->xml_state == 'xml_error') {
          // Reevaluating Errors with previous plain-text xml,
          // using the collectMode of ValidableXMLPluginDescription
-         $xml = new ValidableXMLPluginDescription($this->lastXml, true);
+         $xml = new ValidableXMLPluginDescription($this->currentXml, true);
          $xml->validate();
          foreach ($xml->errors as $_error) {
             $error = [];
@@ -518,10 +536,21 @@ class BackgroundTasks {
    }
 
    public function __construct($options = []) {
+      // checking boolean presence of options
+      // each of those line groups
+
+      // has the 'silent' option
       if (isset($options['silent']) &&
           gettype($options['silent']) === 'boolean' &&
           $options['silent']) {
          $this->silentMode = true;
+      }
+
+      // has the 'throwsExceptions' option
+      if (isset($options['throwsExceptions']) &&
+          gettype($options['throwsExceptions']) === 'boolean' &&
+          $options['throwsExceptions']) {
+         $this->throwsExceptions = true;
       }
    }
 }

@@ -12,7 +12,7 @@ use API\Core\Tool;
  * the sake of it
  */
 
-class ErrorResponse extends \Exception {
+class ErrorResponse extends \Exception implements \JsonSerializable {
    public $errorCode = 'DEFAULT_ERROR';
 
    public $httpStatusCode = 400;
@@ -119,5 +119,9 @@ class ErrorResponse extends \Exception {
                 ($url ? '['.$app->request->getMethod().' '.$url.'] ' : '').
                 $this->getRepresentation().
                 ($this->parent ? ' because of ' . get_class($this->parent) . ' thrown at '. $this->parent->getFile(). ' line ' . $this->parent->getLine() : ''));
+   }
+
+   public function jsonSerialize() {
+      return $this->getRepresentation();
    }
 }

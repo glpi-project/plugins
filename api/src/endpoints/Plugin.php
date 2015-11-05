@@ -293,6 +293,10 @@ $plugin_delete_permission = Tool::makeEndpoint(function($key, $username) use($ap
    $app->halt(200);
 });
 
+/**
+ * Endpoint that allows to modify permission on a plugin
+ * from pov of specific user
+ */
 $plugin_modify_permission = Tool::makeEndpoint(function($key, $username) use($app) {
    OAuthHelper::needsScopes(['user', 'plugin:card']);
    $body = Tool::getBody();
@@ -355,16 +359,35 @@ $plugin_refresh_xml = Tool::makeEndpoint(function($key) use($app) {
       throw new LackPermission('manage_permissions', 'Plugin', $key);
    }
 
-   $taskDispatcher = new BackgroundTasks;
+   $taskDispatcher = new BackgroundTasks([
+      'silent' => true,
+      'throwsExceptions' => true
+   ]);
+
+   $errors = [];
    try {
       $taskDispatcher->wherePluginKeyIs($plugin->key, ['update']);
+      // This point will be reached if no Exception is raised
    } catch (InvalidXML $e) {
-      $xml = new ValidableXMLPluginDescription($xml->lastXml, true);
-      $xml->validate();
-      Tool::endWithJson($xml->errors);
+      switch($e->getInfo('reason')) {
+         case 'url':
+         case 'parse':
+            $errors[] = $e;
+            break;
+         case 'field':
+            // In case it's a field error we use the ValidableXMLPluginDescription
+            // class ourself here in collectMode in order to also fetch all the errors
+            $xml = new ValidableXMLPluginDescription($taskDispatcher->currentXml, true);
+            $xml->validate();
+            $errors = $xml->errors;
+            break;
+      }
    }
 
-   //$app->halt(200);
+   Tool::endWithJson([
+      "errors" => $errors,
+      "xml_state" => Plugin::where('key', '=', $key)->first()->xml_state
+   ]);
 });
 
 /**
@@ -374,11 +397,12 @@ $all = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['plugins']);
 
    $plugins = Tool::paginateCollection(
-                 Plugin::short()
-                       ->with('authors', 'versions', 'descriptions')
-                       ->withAverageNote()
-                       ->descWithLang(Tool::getRequestLang())
-                       ->where('active', '=', 1));
+     Plugin::short()
+           ->with('authors', 'versions', 'descriptions')
+           ->withAverageNote()
+           ->descWithLang(Tool::getRequestLang())
+           ->where('active', '=', 1)
+   );
    Tool::endWithJson($plugins);
 });
 
