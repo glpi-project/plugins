@@ -5,7 +5,7 @@
          <div class='plugin_name' flex-sm="45">
             <h2>{{plugin.name}}</h2>
             <h4 class="inline-authors">
-               <span>{{'BY'|translate}}</span>
+               <span translate="BY"></span>
                <span inline-authors="plugin.authors"></span>
             </h4>
          </div>
@@ -22,22 +22,31 @@
          </div>
          <div class="flex_right">
             <rate-box flex-sm="45" current-note="plugin.note" disable-rating="rated" rate-method="ratePlugin"></rate-box>
-            <md-tooltip md-direction="top">{{plugin.n_votes}} votes</md-tooltip>
+            <md-tooltip md-direction="top">
+               <span translate="N_VOTES" translate-value-n="{{plugin.n_votes}}"></span>
+            </md-tooltip>
          </div>
          <span class="download">
             <span class="downloads">
                <span class='pill bg_red'>
                   <span ng-bind-html='plugin.download_count | nrFormat'></span>
-                  <md-tooltip  md-direction="top">downloads</md-tooltip>
+                  <md-tooltip md-direction="top">
+                     {{'DOWNLOADS'|translate}}
+                  </md-tooltip>
                </span>
             </span>
             <md-button class="md-fab md-primary md-raised" href="{{download_url}}">
                <i class="fa fa-2x fa-download white"></i>
-               <md-tooltip md-direction="top">Download</md-tooltip>
+               <md-tooltip md-direction="top">
+                  {{'DOWNLOAD'|translate}}
+               </md-tooltip>
             </md-button>
             <md-button ng-show="authed" class="md-fab md-primary md-raised watch-button" ng-click="watch()">
                <i class="fa fa-2x white" ng-class="plugin.watched ? 'fa-eye-slash' : 'fa-eye'"></i>
-               <md-tooltip md-direction="top">{{plugin.watched ? 'Unwatch' : 'Watch'}}</md-tooltip>
+               <md-tooltip md-direction="top">
+                  <span ng-show="plugin.watched" translate="PLUGIN_UNWATCH"></span>
+                  <span ng-hide="plugin.watched" translate="PLUGIN_WATCH"></span>
+               </md-tooltip>
             </md-button>
          </span>
       </div>
@@ -65,35 +74,35 @@
       <md-content class="infos" flex="50">
          <ul>
             <li>
-               <label>{{'VERSION'|translate}}</label>
+               <label translate="VERSION"></label>
                <span>{{plugin.versions[0].num}}</span>
             </li>
             <li>
-               <label>{{'COMPATIBLE_WITH'|translate}}</label>
+               <label translate="COMPATIBLE_WITH"></label>
                <span><span class="glpi-top-compatible-version" ng-repeat="glpiVersion in displayLatestCompatibleGlpiVersions(plugin.versions)">{{glpiVersion}}</span></span>
             </li>
             <li ng-show="plugin.homepage_url">
-               <label>{{'HOMEPAGE'|translate}}</label>
+               <label translate="HOMEPAGE"></label>
                <span>
                   <a href="{{plugin.homepage_url}}">{{plugin.homepage_url}}</a>
                </span>
             </li>
             <li ng-show="plugin.issues_url">
-               <label>Issues</label>
+               <label translate="PLUGIN_ISSUES"></label>
                <span>
                   <a href="{{plugin.issues_url}}">{{plugin.issues_url}}</a>
                </span>
             </li>
             <li>
-               <label>{{'ADDED'|translate}}</label>
+               <label translate="ADDED"></label>
                <span>{{fromNow(plugin.date_added)}}</span>
             </li>
             <li>
-               <label>{{'UPDATED'|translate}}</label>
+               <label translate="UPDATED"></label>
                <span>{{fromNow(plugin.date_updated)}}</span>
             </li>
             <li ng-hide="plugin.langs.length == 0">
-               <label>{{'TRANSLATIONS'|translate}}</label>
+               <label translate="TRANSLATIONS"></label>
                <span class="plugin-languages">
                   <span ng-repeat="lang in plugin.langs">{{lang.lang}}</span>
                </span>

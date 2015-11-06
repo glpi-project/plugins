@@ -1,118 +1,118 @@
 <div layout="row" class="panel">
    <div flex="33">
-      <h2>My informations</h2>
+      <h2 translate="PANEL_MY_INFORMATIONS"></h2>
 
       <form id="profile-form" ng-submit="update()">
          <md-input-container>
-            <label>Username</label>
+            <label translate="PANEL_USERNAME"></label>
             <input type="text" ng-model="user.username" disabled>
             <div ng-messages="form_errors.username">
-               <div ng-message="tooshort">Your username needs to be at least 4 characters</div>
-               <div ng-message="toolong">Your username cannot exceed 28 characters</div>
+               <div ng-message="tooshort">{{'PANEL_USERNAME_TOOSHORT'|translate:'{n: 4}'}}</div>
+               <div ng-message="toolong">{{'PANEL_USERNAME_TOOSHORT'|translate:'{n: 28}'}}</div>
             </div>
          </md-input-container>
          <md-input-container>
-            <label>Real Name</label>
+            <label translate="PANEL_REALNAME"></label>
             <input type="text" ng-model="user.realname">
             <div ng-messages="form_errors.realname">
-               <div ng-message="tooshort">Your realname needs to be at least 4 characters</div>
-               <div ng-message="toolong">Your realname cannot exceed 28 characters</div>
+               <div ng-message="tooshort">{{'PANEL_REALNAME_TOOSHORT'|translate:'{n: 4}'}}</div>
+               <div ng-message="toolong">{{'PANEL_REALNAME_TOOLONG'|translate:'{n: 28}'}}</div>
             </div>
          </md-input-container>
          <md-input-container>
-            <label>Email</label>
+            <label translate="PANEL_EMAIL"></label>
             <input type="text" ng-model="user.email" disabled>
             <div ng-messages="form_errors.email">
-               <div ng-message="required">{{'FIELD_REQUIRED'|translate}}</div>
-               <div ng-message="invalid">This is an invalid email</div>
+               <div ng-message="required">{{'PANEL_FIELD_REQUIRED'|translate}}</div>
+               <div ng-message="invalid">{{'PANEL_INVALID_EMAIL'|translate}}</div>
             </div>
          </md-input-container>
          <md-input-container>
-            <label>Website</label>
+            <label translate="PANEL_WEBSITE"></label>
             <input type="text" ng-model="user.website">
             <div ng-messages="form_errors.website">
-               <div ng-message="invalid">This is an invalid website</div>
+               <div ng-message="invalid">{{'PANEL_INVALID_WEBSITE'|translate}}</div>
             </div>
          </md-input-container>
          <md-input-container>
-            <label>Password</label>
+            <label translate="PANEL_PASSWORD"></label>
             <input type="password" ng-model="password">
             <div ng-messages="form_errors.password">
-               <div ng-message="different">Password and Confirmation aren't the same</div>
-               <div ng-message="tooshort">Password must be at least 6 characters</div>
-               <div ng-message="toolong">Password must not exceed 26 characters</div>
+               <div ng-message="different">{{'PANEL_PASSWORD_CONFIRMATION_DIFFERENT'|translate}}</div>
+               <div ng-message="tooshort">{{'PANEL_PASSWORD_TOOSHORT'|translate:'{n: 6}'}}</div>
+               <div ng-message="toolong">{{'PANEL_PASSWORD_TOOLONG'|translate:'{n: 26}'}}</div>
             </div>
          </md-input-container>
          <md-input-container>
-            <label>Confirm password</label>
+            <label translate="PANEL_CONFIRM_PASSWORD"></label>
             <input type="password" ng-model="password_repeat">
          </md-input-container>
-         <md-button class="md-raised md-primary" type="submit">Update</md-button>
+         <md-button class="md-raised md-primary" type="submit" translate="PANEL_UPDATE"></md-button>
       </form>
    </div>
    <div flex="33">
-      <h2>Actions</h2>
+      <h2 translate="PANEL_ACTIONS"></h2>
 
       <md-list>
          <md-list-item ng-show="user.author_id === null">
             <md-button class="md-raised" ng-click="openClaimAuthorshipDialog($event)">
-               <h4>Claim an authorship</h4>
+               <h4 translate="PANEL_CLAIM_AN_AUTHORSHIP"></h4>
             </md-button>
          </md-list-item>
          <md-list-item>
             <md-button ng-click="openLinkAccountDialog($event)" class="md-raised">
-               <h4>Manage my external social accounts</h4>
+               <h4 translate="PANEL_MANAGE_EXTERNAL_SOCIAL_ACCOUNTS"></h4>
             </md-button>
          </md-list-item>
          <md-list-item>
             <md-button class="md-raised" ui-sref="notifications">
-               <h4>Notifications settings</h4>
+               <h4 translate="PANEL_NOTIFICATIONS_SETTINGS"></h4>
             </md-button>
          </md-list-item>
          <md-list-item>
             <md-button class="md-raised" ui-sref="apikeys">
-               <h4>Manage API keys (and according Apps)</h4>
+               <h4 translate="PANEL_MANAGE_API_KEYS"></h4>
             </md-button>
          </md-list-item>
          <md-list-item>
             <md-button class="md-raised" ng-click="openDeleteAccountDialog($event)">
-               <h4>Please, delete my account</h4>
+               <h4 translate="PANEL_PLEASE_DELETE_MY_ACCOUNT"></h4>
             </md-button>
          </md-list-item>
       </md-list>
    </div>
    <div flex="33" class="panel-plugins">
-      <h2>My plugins</h2>
+      <h2 translate="PANEL_MY_PLUGINS"></h2>
 
       <md-list>
          <md-list-item ng-repeat="plugin in plugins" layout="column">
             <h4>{{plugin.name}}</h4>
-            <p ng-show="plugin.active == 0">(Awaiting Confirmation)</p>
-            <p ng-show="plugin.xml_state == 'bad_xml_url'">(Unreachable XML File Url)</p>
-            <p ng-show="plugin.xml_state == 'xml_error'">(Invalid XML)</p>
+            <p ng-show="plugin.active == 0">({{'PANEL_AWAITING_CONFIRMATION'|translate}})</p>
+            <p ng-show="plugin.xml_state == 'bad_xml_url'">({{'PANEL_UNREACHABLE_XML_FILE_URL'|translate}})</p>
+            <p ng-show="plugin.xml_state == 'xml_error'" >({{'PANEL_INVALID_XML'|translate}})</p>
             <div class="buttons">
                <md-button ng-show="!plugin.pivot.admin" ng-click="openDeleteRelationToPlugin(plugin)">
                   <i class="fa fa-user-times"></i>
                   <md-tooltip>
-                     Delete your relation to this plugin
+                     <span translate="PANEL_DELETE_RELATION_TO_PLUGINS"></span>
                   </md-tooltip>
                </md-button>
                <md-button ng-show="plugin.pivot.admin" ui-sref="pluginpanel({key: plugin.key, managePermissions: true})">
                   <i class="fa fa-user"></i>
                   <md-tooltip>
-                     Manage permissions
+                     <span translate="PANEL_MANAGE_PERMISSIONS"></span>
                   </md-tooltip>
                </md-button>
                <md-button ng-show="plugin.pivot.admin || plugin.pivot.allowed_refresh_xml" ui-sref="pluginpanel({key: plugin.key, refreshXML: true})">
                   <i class="fa fa-file-text"></i>
                   <md-tooltip>
-                     Reload XML
+                     <span translate="PANEL_RELOAD_XML"></span>
                   </md-tooltip>
                </md-button>
                <md-button ng-show="plugin.pivot.admin || plugin.pivot.allowed_refresh_xml || plugin.pivot.allowed_change_xml_url" ui-sref="pluginpanel({key: plugin.key})">
                   <i class="fa fa-cog"></i>
                   <md-tooltip>
-                     Plugin Panel
+                     <span translate="PANEL_PLUGIN_PANEL"></span>
                   </md-tooltip>
                </md-button>
             </div>

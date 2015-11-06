@@ -1,30 +1,30 @@
 <div layout="row" class="apikeys-page">
    <div flex="50">
-      <h2>Declare a new OAuth2 Application</h2>
+      <h2 translate="PANEL_DECLARE_NEW_OAUTH2_APP"></h2>
 
-      <h4>Register a new Application to gain API access</h4>
+      <h4 translate="PANEL_REGISTER_NEW_APP"></h4>
 
       <form ng-submit="newApp()">
          <md-input-container>
-            <label>Application name</label>
+            <label translate="PANEL_APPLICATION_NAME"></label>
             <input type="text" ng-model="appName">
          </md-input-container>
 
          <md-input-container>
-            <label>Homepage URL (optional)</label>
+            <label translate="PANEL_HOMEPAGE_URL"></label>
             <input type="text" ng-model="homepage">
          </md-input-container>
 
          <md-input-container>
-            <label>Application description (optional, example "my simple script" or "OAuth signup with GLPI plugins")</label>
+            <label translate="PANEL_APP_DESCRIPTION"></label>
             <textarea name="" id="" rows="2" ng-model="description"></textarea>
          </md-input-container>
 
-         <md-button class="md-raised md-primary" type="submit">Create</md-button>
+         <md-button class="md-raised md-primary" type="submit" translate="PANEL_APP_CREATE"></md-button>
       </form>
    </div>
    <div flex="50">
-      <h2>My applications</h2>
+      <h2 translate="PANEL_MY_APPLICATIONS"></h2>
 
       <md-list>
          <md-list-item ng-repeat="app in apps">

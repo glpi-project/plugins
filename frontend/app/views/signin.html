@@ -1,22 +1,22 @@
 <div layout="row" id="signin">
    <div flex="33" offset="33">
-      <h2>Connecting with GLPI Plugins Account</h2>
+      <h2 translate="SIGNIN_PAGE_TITLE"></h2>
 
       <form ng-submit="ctrl.loginAttempt()">
          <md-input-container>
-            <label>Username or Email</label>
+            <label translate="SIGNIN_USERNAME_OR_EMAIL"></label>
             <input type="text" ng-model="login">
          </md-input-container>
          <md-input-container>
-            <label>Password</label>
+            <label translate="SIGNIN_PASSWORD"></label>
             <input type="password" ng-model="password">
          </md-input-container>
-         <md-button class="md-raised md-primary" type="submit">Login</md-button>
+         <md-button class="md-raised md-primary" type="submit" translate="SIGNIN_LOGIN"></md-button>
       </form>
 
 
       <div ng-show="notie">
-         <h2>Or connect with an external account</h2>
+         <h2 translate="SIGNIN_OR_CONNECT_WITH_AN_EXTERNAL_ACCOUNT"></h2>
          <md-button ng-click="ctrl.linkAccount('github')"><i class="fa fa-github social-icon"></i></md-button>
 <!--          <md-button><i class="fa fa-google social-icon"></i></md-button>
          <md-button><i class="fa fa-facebook social-icon"></i></md-button>

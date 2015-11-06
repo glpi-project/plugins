@@ -1,60 +1,60 @@
 <div layout="row" class="register">
    <div flex="33">
-      <h2>Register Manually</h2>
+      <h2 translate="SIGNUP_REGISTER_MANUALLY"></h2>
 
       <form id="signup-form">
          <md-input-container>
-            <label>User Name</label>
+            <label translate="SIGNUP_USERNAME"></label>
             <input ng-model="user.username" type="text">
             <div ng-messages="form_errors.username">
                <div ng-message="required">{{'FIELD_REQUIRED'|translate}}</div>
-               <div ng-message="tooshort">Your username needs to be at least 4 characters</div>
-               <div ng-message="toolong">Your username cannot exceed 28 characters</div>
-               <div ng-message="badcharacters">Your username should contain only alphanumeric characters</div>
+               <div ng-message="tooshort">{{'SIGNUP_USERNAME_TOOSHORT'|translate:'{n: 4}'}}</div>
+               <div ng-message="toolong">{{'SIGNUP_USERNAME_TOOLONG'|translate:'{n: 28}'}}</div>
+               <div ng-message="badcharacters">{{'SIGNUP_USERNAME_BADCHARACTERS':|translate}}</div>
             </div>
          </md-input-container>
          <md-input-container>
-            <label>Real Name</label>
+            <label translate="SIGNUP_REALNAME"></label>
             <input ng-model="user.realname" type="text">
             <div ng-messages="form_errors.realname">
-               <div ng-message="tooshort">Your realname needs to be at least 4 characters</div>
-               <div ng-message="toolong">Your realname cannot exceed 28 characters</div>
+               <div ng-message="tooshort">{{'SIGNUP_REALNAME_TOOSHORT'|translate:'{n: 4}'}}</div>
+               <div ng-message="toolong">{{'SIGNUP_REALNAME_TOOLONG'|translate:'{n: 28}'}}</div>
             </div>
          </md-input-container>
          <md-input-container>
-            <label>Email</label>
+            <label>{{'SIGNUP_EMAIL'|translate}}</label>
             <input ng-model="user.email" type="text">
             <div ng-messages="form_errors.email">
                <div ng-message="required">{{'FIELD_REQUIRED'|translate}}</div>
-               <div ng-message="invalid">This is an invalid email</div>
+               <div ng-message="invalid">{{'SIGNUP_EMAIL_INVALID'|translate}}</div>
             </div>
          </md-input-container>
          <md-input-container>
-            <label>Website</label>
+            <label translate="SIGNUP_WEBSITE"></label>
             <input ng-model="user.website" type="text">
             <div ng-messages="form_errors.website">
-               <div ng-message="invalid">This is an invalid website</div>
+               <div ng-message="invalid">{{'SIGNUP_WEBSITE_INVALID'|translate}}</div>
             </div>
          </md-input-container>
          <md-input-container>
-            <label>Password</label>
+            <label translate="SIGNUP_PASSWORD"></label>
             <input ng-model="password" type="password">
             <div ng-messages="form_errors.password">
                <div ng-message="required">{{'FIELD_REQUIRED'|translate}}</div>
-               <div ng-message="different">Password and Confirmation aren't the same</div>
-               <div ng-message="tooshort">Password must be at least 6 characters</div>
-               <div ng-message="toolong">Password must not exceed 26 characters</div>
+               <div ng-message="different">{{'SIGNUP_PASSWORD_DIFFERENT'|translate}}</div>
+               <div ng-message="tooshort">{{'SIGNUP_PASSWORD_TOOSHORT'|translate:'{n: 6}'}}</div>
+               <div ng-message="toolong">{{'SIGNUP_PASSWORD_TOOLONG'|translate:'{n: 26}'}}</div>
             </div>
          </md-input-container>
          <md-input-container>
-            <label>Confirm password</label>
+            <label translate="SIGNUP_CONFIRM_PASSWORD"></label>
             <input ng-model="password_repeat" type="password">
          </md-input-container>
          <md-button class="md-raised md-primary" ng-click="signUp()" id="signup-button">Sign-Up !</md-button>
       </form>
    </div>
    <div flex="66" class="link-your-account" ng-show="notie">
-      <h2>Or link your account</h2>
+      <h2 translate="SIGNUP_OR_LINK_YOUR_ACCOUNT"></h2>
 
       <md-button ng-click="authenticate('github')"><i class="fa fa-github"></i></md-button>
 <!--       <md-button><i class="fa fa-google"></i></md-button>

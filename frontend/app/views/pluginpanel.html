@@ -1,30 +1,30 @@
 <div layout="column" class="pluginpanel">
    <div class="pluginpanel-header">
       <h2 class="plugin-name">{{plugin.card.name}}</h2>
-      <h2 class="panel-title">Plugin Panel</h2>
+      <h2 class="panel-title" translate="PLUGIN_PANEL"></h2>
    </div>
 
    <form class="plugin-settings" ng-submit="updateSettings()">
       <div class="summary">
-         <h3>Summary</h3>
+         <h3 translate="PLUGIN_PANEL_SUMMARY"></h3>
          <md-content>
             <ul>
                <li class="xml_state">
-                  <label>XML State</label>
+                  <label translate="PLUGIN_PANEL_XML_STATE"></label>
                   <span ng-class="(plugin.card.xml_state != 'passing')?'error':''">{{plugin.card.xml_state}}</span>
                </li>
                <li class="tags-container">
-                  <label>{{'TAGGED'|translate}}</label>
+                  <label translate="TAGGED"></label>
                   <span class="tags">
                      <span ng-repeat="tag in plugin.card.tags">{{tag.tag}} [{{tag.lang}}]</span>
                   </span>
                </li>
                <li>
-                  <label>{{'DOWNLOADED'|translate}}</label>
-                  <span>94800 times</span>
+                  <label translate="DOWNLOADED"></label>
+                  <span translate="N_TIMES" translate-value-n="94800"></span>
                </li>
                <li>
-                  <label>Contributors (Listed in the XML File)</label>
+                  <label translate="PLUGIN_PANEL_CONTRIBUTORS"></label>
                   <span>
                      <ul>
                         <li ng-repeat="author in plugin.card.authors">{{author.name}} {{(author_id == author.id) ? '( You )' : ''}}</li>
@@ -47,25 +47,25 @@
       </div>
 
       <div class="plugin-settings">
-         <h3>Settings</h3>
+         <h3 translate="PLUGIN_PANEL_SETTINGS"></h3>
          <md-input-container>
-            <label>Authoritative Plugin Meta-Description File URL (XML File)</label>
+            <label translate="PLUGIN_PANEL_XML_URL"></label>
             <input type="text" ng-model="plugin.card.xml_url">
          </md-input-container>
       </div>
 
       <div class="actions">
-         <h3>Actions</h3>      
+         <h3 translate="PLUGIN_PANEL_ACTIONS"></h3>
          <md-list class="actions" layout="row">
             <md-list-item class="refresh_xml-button">
                <i class="fa fa-spinner"></i>
                <md-button class="md-raised md-primary" type="button" ng-click="refreshXMLFile($event)" ng-show="rights.admin || rights.allowed_refresh_xml">
-                  Refresh XML File
+                  <span translate="PLUGIN_PANEL_REFRESH_XML_FILE"></span>
                </md-button>
             </md-list-item>
             <md-list-item>
                <md-button class="md-raised md-primary" type="button" ng-click="showUserPermissionsDialog($event)" ng-show="rights.admin">
-                  Manage User Permissions
+                  <span translate="PLUGIN_PANEL_USER_PERMISSIONS"></span>
                </md-button>
             </md-list-item>
          </md-list>
@@ -85,15 +85,15 @@
                <div class="details">
                   <ul>
                      <!-- Details for URL errors -->
-                     <li ng-show="error.args.reason == 'url'">The url {{error.args.url}} is not reachable.</li>
+                     <li ng-show="error.args.reason == 'url'" translate="PLUGIN_PANEL_URLNOTREACHABLE" translate-value-url="{{error.args.url}}"></li>
 
                      <!-- Details for php/simplexml Parse errors -->
-                     <li ng-show="error.args.reason == 'parse'">Line {{error.args.line}}</li>
+                     <li ng-show="error.args.reason == 'parse'" translate="PLUGIN_PANEL_ERROR_AT_LINE_N" translate-value-n="{{error.args.line}}"></li>
                      <li ng-show="error.args.reason == 'parse'">{{error.args.errstring}}</li>
 
 
                      <!-- Details for GLPi XML Plugin Description File Specification Errors -->
-                     <li ng-show="error.args.reason == 'field'">The field "{{error.args.field}}" fails to respect specification</li>
+                     <li ng-show="error.args.reason == 'field'" translate="PLUGIN_PANEL_FIELD_FAILS_TO_RESPECT_SPEC" translate-value-field="{{error.args.field}}"></li>
                      <li ng-show="error.args.reason == 'field'">{{error.args.errstring}}</li>
                   </ul>
                </div>
@@ -101,6 +101,6 @@
          </md-list>
       </md-content>
 
-      <md-button class="the-submit md-raised md-primary" type="submit">Save</md-button>
+      <md-button class="the-submit md-raised md-primary" type="submit" translate="PLUGIN_PANEL_SAVE"></md-button>
    </form>
 </div>

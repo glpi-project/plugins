@@ -3,7 +3,7 @@
       <h2>{{'SUBMIT_YOUR_PLUGIN'|translate}}</h2>
       <span class="legend">{{'SUB_SUBMIT_YOUR_PLUGIN'|translate}}</span>
       <md-input-container class="urlbox picbox">
-         <label>URL</label>
+         <label translate="SUBMIT_PLUGIN_URL"></label>
          <input ng-model="url" type="url" />
       </md-input-container>
       <div vc-recaptcha theme="light" key="key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
@@ -12,13 +12,13 @@
       </md-button>
    </form>
    <div ng-hide="authed">
-      <h2>You must be authed</h2>
-      <p>You must be authed in order to submit a XML File.</p>
-      <p>Please <a ui-sref="signin">sign-in</a></p>
-      <p>If you don't own a GLPi Plugins Account already, please consider to <a ui-sref="signup">register</a>.</p>
+      <h2 translate="SUBMIT_YOU_MUST_BE_AUTHED"></h2>
+      <p translate="SUBMIT_YOU_MUST_BE_AUTHED_2"></p>
+      <p>{{'SUBMIT_PLEASE'|translate}} <a ui-sref="signin">{{'SUBMIT_SIGNIN'|translate}}</a></p>
+      <p>{{'SUBMIT_IF_YOU_DONT_HAVE_AN_ACCOUNT'|translate}} <a ui-sref="signup">{{'SUBMIT_REGISTER'|translate}}</a>.</p>
    </div>
    <div class="xml_description">
-      <span class="legend">Your XML must be valid and respect this format :</span>
+      <span class="legend">{{'SUBMIT_YOUR_XML_MUST_BE_VALID'|translate}} {{'SUBMIT_AND_RESPECT_THIS_FORMAT'|translate}} :</span>
       <!-- htmlmin:ignore -->
       <div hljs>
          <root>

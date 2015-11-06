@@ -1,7 +1,7 @@
 <md-dialog class="dialog plugin-user-permissions">
    <md-toolbar>
       <div class="md-toolbar-tools">
-         <h2>Manage permissions of GLPi Plugins Users on "{{plugin.key}}" Plugin</h2>
+         <h2 translate="PLUGIN_PERMISSIONS_OF_PLUGIN" translate-value-pluginkey="{{plugin.key}}"></h2>
          <span flex></span>
          <md-button class="md-icon-button" ng-click="close()">
            <i class="fa fa-times"></i>
@@ -9,55 +9,58 @@
       </div>
    </md-toolbar>
    <div class="user-permissions">
-      <h4>User permissions</h4>
-      <p>For each permission line, there are boxes for each possible right you can grant to a GLPi Plugins user over the plugin.<br/>
-      Simply check or uncheck the boxes to instantly set/remove the right, for the permission line of an user.<br />
-      Close the dialog once you finished your permissions management.</br>
-      Use the red button with a cross to totally remove the permission line for that user, with all her's/he's rights on the plugin</p>
+      <h4 translate="PLUGIN_PERMISSIONS_USER_PERMISSIONS"></h4>
+
+      <p>
+         <span translate="PLUGIN_PERMISSIONS_USER_PERMISSIONS_DETAILS_1"></span><br />
+         <span translate="PLUGIN_PERMISSIONS_USER_PERMISSIONS_DETAILS_2"></span><br />
+         <span translate="PLUGIN_PERMISSIONS_USER_PERMISSIONS_DETAILS_3"></span><br />
+         <span translate="PLUGIN_PERMISSIONS_USER_PERMISSIONS_DETAILS_4"></span>
+      </p>
       <ul>
          <li class="user-permission" ng-repeat="user in permissions" layout="row">
             <h4>{{user.username}}</h4>
             <div ng-show="user.pivot.admin">
-               <p>Master (Allowed everything)</p>
+               <p>{{'PLUGIN_PERMISSIONS_ADMIN'|translate}} ({{'PLUGIN_PERMISSIONS_ALLOWED_EVERYTHING'|translate}})</p>
             </div>
             <div ng-show="!user.pivot.admin">
-               <p>Allowed to refresh the synchro with XML file</p>
+               <p translate="PLUGIN_PERMISSIONS_REFRESH_XML"></p>
                <md-checkbox ng-checked="user.pivot.allowed_refresh_xml" ng-click="toggleRight(user, 'allowed_refresh_xml')">
             </div>
             <div ng-show="!user.pivot.admin">
-               <p>Receive Notifications about XML passing status</p>
+               <p translate="PLUGIN_PERMISSIONS_RECEIVE_NOTIFICATIONS"></p>
                <md-checkbox ng-checked="user.pivot.allowed_notifications" ng-click="toggleRight(user, 'allowed_notifications')">
             </div>
             <div ng-show="!user.pivot.admin">
-               <p>Allowed to change the XML URL</p>
+               <p translate="PLUGIN_PERMISSIONS_ALLOWED_CHANGE_XML_URL"></p>
                <md-checkbox ng-checked="user.pivot.allowed_change_xml_url" ng-click="toggleRight(user, 'allowed_change_xml_url')">
             </div>
             <div ng-show="!user.pivot.admin" class="delete-button">
                <md-button class="md-fab md-primary md-raised" ng-click="deleteUserRight(user.username)">
                   <i class="fa fa-times white"></i>
-                  <md-tooltip md-direction="bottom">Delete this user right</md-tooltip>
+                  <md-tooltip md-direction="bottom">
+                     <span translate="PLUGIN_PERMISSIONS_DELETE_USER_RIGHT"></span>
+                  </md-tooltip>
                </md-button>
             </div>
          </li>
       </ul>
       <form id="user-permissions-form">
-         <h4>Add user permissions</h4>
+         <h4 translate="PLUGIN_PERMISSIONS_ADD_USER_PERMISSIONS"></h4>
          <md-autocomplete
           md-search-text="search_text"
           md-items="item in querySearch(search_text)"
           md-item-text="((item.realname !== null && item.realname.length != 0)?(item.realname + ' ('):'')
                       + item.username
                       + ((item.realname !== null && item.realname.length != 0)?(')'):'')"
-          placeholder="Please type the username, realname or email of a registered user, then use arrow and enter to select the user"
+          placeholder="{{'PLUGIN_PERMISSIONS_AUTOCOMPLETE_PLACEHOLDER'|translate}}"
           md-no-cache="true"
           md-selected-item="selected_item"
           md-selected-item-change="addUserRight(item)">
             <md-item-template>
                <span><span ng-show="item.realname !== null && item.realname.length != 0">{{item.realname}} (</span>{{item.username}}<span ng-show="item.realname !== null && item.realname.length != 0">)</span></span>
             </md-item-template>
-            <md-not-found>
-               No matching user.
-            </md-not-found>
+            <md-not-found>{{'PLUGIN_PERMISSIONS_AUTOCOMPLETE_NO_MATCHING_USERS'|translate}}</md-not-found>
          </md-autocomplete>
       </form>
    </div>

@@ -1,22 +1,22 @@
 <div layout="row" id="finish-activate-account">
    <div flex="33" offset="33">
-      <h2>You're close to the goal</h2>
-      <h3>We need you to validate some data</h3>
+      <h2 translate="FINISHACTIVEACCOUNT_CLOSE_TO_THE_GOAL"></h2>
+      <h3 translate="FINISHACTIVATEACCOUNT_WE_NEED_YOU_TO_VALIDATE_SOME_DATA"></h3>
 
       <form>
          <md-input-container>
-            <label>Confirm (or change) your username</label>
+            <label translate="FINISHACTIVEACCOUNT_CONFIRM_USERNAME"></label>
             <input type="text" ng-model="user.username">
          </md-input-container>
 
          <md-input-container>
-            <label>Select a primary email from one of your external account</label>
+            <label translate="FINISHACTIVATEACCOUNT_SELECT_PRIMARY_EMAIL"></label>
             <md-select ng-model="email" ng-show="user.email === null">
                <md-option ng-repeat="email in available_emails" value="{{email.email}}">{{email.email}} ({{email.service}})</md-option>
             </md-select>
          </md-input-container>
 
-         <md-button class="md-raised md-primary" ng-click="confirm()">Confirm</md-button>
+         <md-button class="md-raised md-primary" ng-click="confirm()" translate="FINISHACTIVEACCOUNT_CONFIRM"></md-button>
       </form>
    </div>
 </div>

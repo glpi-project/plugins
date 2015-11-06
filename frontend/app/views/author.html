@@ -9,17 +9,17 @@
          </td>
       </tr>
       <tr>
-         <td class="key">Name</td>
+         <td class="key" translate="AUTHOR_NAME"></td>
          <td class="value">{{author.name}}</td>
       </tr>
       <tr ng-show="author.username">
-         <td class="key">GLPi Plugins Username</td>
+         <td class="key" translate="AUTHOR_GLPI_PLUGINS_USERNAME"></td>
          <td class="value">{{author.username}}</td>
       </tr>
       <tr>
-         <td class="key">Contributed to</td>
+         <td class="key" translate="AUTHOR_CONTRIBUTED_TO"></td>
          <td class="value">
-            <a ui-sref="author_plugins({id: author.id})">{{author.plugin_count}} Plugins</a>
+            <a ui-sref="author_plugins({id: author.id})" translate="AUTHOR_PLUGIN_COUNT" translate-value-plugincount="{{author.plugin_count}}"></a>
          </td>
       </tr>
    </table>

@@ -1,17 +1,18 @@
 <div layout="column" class="plugin-list">
    <div class="list-name">
       <p ng-show="author">
-         <a ui-sref="author({id: author.id})">{{author.name}}</a>{{'PLUGIN_CONTRIBUTED_TO'|translate}}
+         <a ui-sref="author({id: author.id})">{{author.name}}</a> {{'PLUGIN_CONTRIBUTED_TO'|translate}}
       </p>
-      <p ng-show="tag">{{'PLUGIN_TAGGED_WITH'|translate}} "
-         <a ui-sref="tag({key: tag.key})">{{tag.tag}}</a>"
+      <p ng-show="tag">
+         {{'PLUGIN_TAGGED_WITH'|translate}}
+         "<a ui-sref="tag({key: tag.key})">{{tag.tag}}</a>"
       </p>
    </div>
    <div ng-init="orderBy=['downloaded','note'];reverse=true" class="sort-filters" ng-show="results.length">
       <p>
-         <span>Sort by :</span>
-         <a href="" ng-click="orderBy='$$hashKey';reverse=false">Relevance</a>
-         <a href="" ng-click="orderBy=['downloaded','note'];reverse=true">Popularity</a>
+         <span>{{'SORT_BY'|translate}} :</span>
+         <a href="" ng-click="orderBy='$$hashKey';reverse=false" translate="RELEVANCE"></a>
+         <a href="" ng-click="orderBy=['downloaded','note'];reverse=true" translate="POPULARITY"></a>
       </p>
    </div>
    <div ng-show="loading && !nullSearch" class="loading">
@@ -26,7 +27,7 @@
                   <a ui-sref="plugin({id: plugin.id, key: plugin.key})">{{plugin.name}}</a>
                </h2>
                <h4 class="inline-authors">
-                  <span>{{'BY'|translate}}</span>
+                  <span translate="BY"></span>
                   <span inline-authors="plugin.authors"></span>
                </h4>
             </div>
@@ -41,7 +42,9 @@
                   </span>
                   <span class="downloads" flex flex-sm='20'>
                      <span class='pill bg_red'>{{plugin.download_count}}
-                        <md-tooltip>downloads</md-tooltip>
+                        <md-tooltip>
+                           <span translate="DOWNLOADS"></span>
+                        </md-tooltip>
                      </span>
                   </span>
                </div>

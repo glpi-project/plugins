@@ -1,7 +1,7 @@
 <md-dialog class="dialog" id="apikey-edit">
    <md-toolbar>
       <div class="md-toolbar-tools">
-         <h2>Edit your application settings</h2>
+         <h2>{{'PANEL_EDIT_APP_SETTINGS'|translate}}</h2>
          <span flex></span>
          <md-button class="md-icon-button" ng-click="close()">
            <i class="fa fa-times"></i>
@@ -10,48 +10,48 @@
    </md-toolbar>
 
    <div class="settings">
-      <h2>Settings</h2>
+      <h2>{{'PANEL_SETTINGS'|translate}}</h2>
       <form ng-submit="save()">
          <md-input-container>
-            <label>Client ID</label>
+            <label>{{'PANEL_CLIENT_ID'|translate}}</label>
             <input type="text" ng-model="app.id" disabled>
          </md-input-container>
 
          <md-input-container>
-            <label>Client Secret</label>
+            <label>{{'PANEL_CLIENT_SECRET'|translate}}</label>
             <input type="text" ng-model="app.secret" disabled>
          </md-input-container>
 
          <md-input-container>
-            <label>Application name</label>
+            <label>{{'PANEL_APPLICATION_NAME'|translate}}</label>
             <input type="text" ng-model="app.name">
             <div ng-messages="form_errors.name">
-               <div ng-message="tooshort">Your application name must be at least 4 characters</div>
-               <div ng-message="toolong">Your application name musn't exceed 60 characters</div>
+               <div ng-message="tooshort">{{'PANEL_APPLICATION_NAME_TOO_SHORT'|translate:'{n:4}'}}</div>
+               <div ng-message="toolong">{{'PANEL_APPLICATION_NAME_TOO_LONG'|translate:'{n:60}'}}</div>
             </div>
          </md-input-container>
 
          <md-input-container>
-            <label>Homepage URL (optional)</label>
+            <label translate="PANEL_APP_HOMEPAGE_URL"></label>
             <input type="text" ng-model="app.homepage_url">
             <div ng-messages="form_errors.homepage_url">
-               <div ng-message="invalid">This is not a valid URL</div>
+               <div ng-message="invalid">{{'PANEL_HOMEPAGE_URL_NOT_VALID'|translate}}</div>
             </div>
          </md-input-container>
 
          <md-input-container>
-            <label>Application description (optional, example "my simple script" or "OAuth signup with GLPI plugins")</label>
+            <label translate="PANEL_APP_DESCRIPTION"></label>
             <textarea name="" id="" rows="2" ng-model="app.description"></textarea>
             <div ng-messages="form_errors.description">
-               <div ng-message="toolong">Your application description musn't exceed 200 chars</div>
+               <div ng-message="toolong">{{'PANEL_APP_DESCRIPTION_TOO_LONG'|translate:'{n:200}'}}</div>
             </div>
          </md-input-container>
 
          <div vc-recaptcha theme="light" key="recaptcha_key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
 
          <div class="buttons">
-            <md-button class="md-raised" type="submit">Save</md-button>
-            <md-button class="md-raised md-primary" ng-click="delete($ev)">Delete this app</md-button>
+            <md-button class="md-raised" type="submit" translate="PANEL_APP_SAVE"></md-button>
+            <md-button class="md-raised md-primary" ng-click="delete($ev)" translate="PANEL_APP_DELETE"></md-button>
          </div>
 
       </form>

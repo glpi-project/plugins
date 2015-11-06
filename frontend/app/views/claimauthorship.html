@@ -1,7 +1,7 @@
 <md-dialog class="dialog claim_authorship">
    <md-toolbar>
       <div class="md-toolbar-tools">
-         <h2>Claim an authorship</h2>
+         <h2 translate="PANEL_CLAIM_AN_AUTHORSHIP"></h2>
          <span flex></span>
          <md-button class="md-icon-button" ng-click="close()">
            <i class="fa fa-times"></i>
@@ -9,15 +9,15 @@
       </div>
    </md-toolbar>
    <div>
-      <h3>You can claim that you are a specific author once a plugin has been submitted via XML.</h3>
-      <p class="explanations">If we accept the request (ie: make sure that you are the correct author), your user will be associated with all your plugins and you will be granted  with specific admin rights</p>
+      <h3 translate="PANEL_CLAIM_AN_AUTORSHIP_FEATURE_DESC"></h3>
+      <p class="explanations" translate="PANEL_CLAIM_AN_AUTHORSHIP_FEATURE_DESC2"></p>
       <form ng-submit="claim()">
          <md-input-container>
-            <label>Author Name (as exactly mentionned in the &lt;author&gt; tag of the concerned plugins XML files)</label>
+            <label translate="PANEL_CLAIM_AN_AUTHORSHIP_AUTHOR_NAME"></label>
             <input type="text" ng-model="author">
          </md-input-container>
          <div vc-recaptcha theme="light" key="recaptcha_key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
-         <md-button class="md-raised md-primary" type="submit">Claim</md-button>
+         <md-button class="md-raised md-primary" type="submit" translate="PANEL_CLAIM_AN_AUTHORSHIP_CLAIM"></md-button>
       </form>
    </div>
 </md-dialog>
