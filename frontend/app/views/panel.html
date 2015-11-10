@@ -86,10 +86,7 @@
 
       <md-list>
          <md-list-item ng-repeat="plugin in plugins" layout="column">
-            <h4>{{plugin.name}}</h4>
-            <p ng-show="plugin.active == 0">({{'PANEL_AWAITING_CONFIRMATION'|translate}})</p>
-            <p ng-show="plugin.xml_state == 'bad_xml_url'">({{'PANEL_UNREACHABLE_XML_FILE_URL'|translate}})</p>
-            <p ng-show="plugin.xml_state == 'xml_error'" >({{'PANEL_INVALID_XML'|translate}})</p>
+            <h4 class="plugin-name" ui-sref="pluginpanel({key: plugin.key})" eat-click-if="!plugin.pivot.admin && !plugin.pivot.allowed_refresh_xml && !plugin.pivot.allowed_change_xml_url" ng-class="(!plugin.pivot.admin && !plugin.pivot.allowed_refresh_xml && !plugin.pivot.allowed_change_xml_url) ? 'not-admin-of' : ''" ui-sref="pluginpanel({key: plugin.key})">{{plugin.name}}</h4>
             <div class="buttons">
                <md-button ng-show="!plugin.pivot.admin" ng-click="openDeleteRelationToPlugin(plugin)">
                   <i class="fa fa-user-times"></i>
@@ -104,17 +101,28 @@
                   </md-tooltip>
                </md-button>
                <md-button ng-show="plugin.pivot.admin || plugin.pivot.allowed_refresh_xml" ui-sref="pluginpanel({key: plugin.key, refreshXML: true})">
-                  <i class="fa fa-file-text"></i>
+                  <i class="fa fa-refresh"></i>
                   <md-tooltip>
                      <span translate="PANEL_RELOAD_XML"></span>
                   </md-tooltip>
                </md-button>
-               <md-button ng-show="plugin.pivot.admin || plugin.pivot.allowed_refresh_xml || plugin.pivot.allowed_change_xml_url" ui-sref="pluginpanel({key: plugin.key})">
-                  <i class="fa fa-cog"></i>
+               <md-button ui-sref="plugin({key: plugin.key})">
+                  <i class="fa fa-eye"></i>
                   <md-tooltip>
-                     <span translate="PANEL_PLUGIN_PANEL"></span>
+                     <span translate="PLUGIN_PANEL_SEE_PUBLIC_PAGE"></span>
                   </md-tooltip>
                </md-button>
+            </div>
+            <div class="plugin-state-infos">
+               <p ng-show="plugin.active == 0">
+                  ({{'PANEL_AWAITING_CONFIRMATION'|translate}})
+               </p>
+               <p ng-show="plugin.xml_state == 'bad_xml_url'">
+                  ({{'PANEL_UNREACHABLE_XML_FILE_URL'|translate}})
+               </p>
+               <p ng-show="plugin.xml_state == 'xml_error'" >
+                  ({{'PANEL_INVALID_XML'|translate}})
+               </p>
             </div>
          </md-list-item>
       </md-list>

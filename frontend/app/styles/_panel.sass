@@ -59,14 +59,37 @@
 
 .panel-plugins
    md-list-item
+      @include clearfix
+      display: block
       margin-top: 10px
-      height: 80px
-      padding-top: 6px
-      &:hover
+      min-height: 60px
+      padding: 6px 10px 0 10px
+      &:nth-child(even)
          background-color: #eee
+      .plugin-name
+         float: left
+         line-height: 60px
+         &:hover
+            text-decoration: underline
+            cursor: pointer
+         &.not-admin-of
+            text-decoration: none
+            cursor: initial
+      .plugin-state-infos
+         margin-bottom: 10px
+         clear: both
+         p
+            margin: 0
+            text-align: center
       .buttons
+         float: right
+         height: 60px
          .md-button
             margin: 0
+            padding: 0
+            min-width: initial
+            width: 40px
+            margin-left: 10px
          a.md-button
             position: relative
             top: 12px

@@ -61,6 +61,9 @@ angular.module('frontendApp')
             if ($stateParams.managePermissions) {
                $scope.showUserPermissionsDialog();
             }
+            if ($stateParams.refreshXML) {
+               $scope.refreshXMLFile();
+            }
             $scope.rights = readRights($scope.plugin, $scope.user);
          }, function(resp) {
             if (resp.data.error == 'LACK_PERMISSION') {
@@ -93,9 +96,9 @@ angular.module('frontendApp')
        * Updates the xml file using the corresponding
        * endpoint to do that
        */
-       $scope.refreshXMLFile = function(e) {
-         var icon = angular.element(e.currentTarget).parent().find('.spinner');
-         // Simple code for the animated icon
+       $scope.refreshXMLFile = function() {
+         var spinner = angular.element('.refresh-xml-spinner');
+         // Simple code for the animated spinner
          // using css3 rotation
          var translationProgress = 0;
          var newProgress = function() {
@@ -114,10 +117,10 @@ angular.module('frontendApp')
          };
 
          var setRotation = function(progress) {
-            icon.css('transform', 'rotate('+progress+'turn)');
+            spinner.css('transform', 'rotate('+progress+'turn)');
          };
 
-         icon.css('display', 'block');
+         spinner.css('display', 'block');
          var interval = $interval(function() {
             setRotation(newProgress());
          }, 100)
@@ -127,7 +130,7 @@ angular.module('frontendApp')
             url: API_URL + '/plugin/'+$scope.plugin.card.key+'/refresh_xml'
          }).then(function(resp) {
             $interval.cancel(interval);
-            icon.css('display', 'none');
+            spinner.css('display', 'none');
             $scope.plugin.card.xml_state = resp.data.xml_state;
 
             var xml_errors = [];
@@ -137,6 +140,9 @@ angular.module('frontendApp')
             }
 
             $scope.xml_errors = xml_errors;
+            if (resp.data.xml_state == 'passing') {
+               Toaster.make('Your XML File is fully accepted by the system.');
+            }
          });
        };
 

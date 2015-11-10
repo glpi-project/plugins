@@ -182,6 +182,7 @@ angular
             PLUGIN_PANEL_URLNOTREACHABLE: 'The url {{url}} is not reachable.',
             PLUGIN_PANEL_FIELD_FAILS_TO_RESPECT_SPEC: 'The field {{field}} fails to respect specification',
             PLUGIN_PANEL_ERROR_AT_LINE_N: 'Error at line {{n}}',
+            PLUGIN_PANEL_SEE_PUBLIC_PAGE: 'See public page',
             PLUGIN_PANEL_SAVE: 'Save',
             PLUGIN_PERMISSIONS_OF_PLUGIN: 'Manage permissions of GLPi Plugins Users on "{{pluginkey}}" Plugin',
             PLUGIN_PERMISSIONS_USER_PERMISSIONS: 'User permissions',

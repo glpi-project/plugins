@@ -58,8 +58,8 @@
          <h3 translate="PLUGIN_PANEL_ACTIONS"></h3>
          <md-list class="actions" layout="row">
             <md-list-item class="refresh_xml-button">
-               <i class="spinner fa fa-spinner"></i>
-               <md-button class="md-raised md-primary" type="button" ng-click="refreshXMLFile($event)" ng-show="rights.admin || rights.allowed_refresh_xml">
+               <i class="refresh-xml-spinner spinner fa fa-spinner"></i>
+               <md-button class="md-raised md-primary" type="button" ng-click="refreshXMLFile()" ng-show="rights.admin || rights.allowed_refresh_xml">
                   <i class="fa fa-refresh"></i>
                   <span translate="PLUGIN_PANEL_REFRESH_XML_FILE"></span>
                </md-button>
