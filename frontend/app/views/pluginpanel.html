@@ -15,9 +15,9 @@
                </li>
                <li class="tags-container">
                   <label translate="TAGGED"></label>
-                  <span class="tags">
-                     <span ng-repeat="tag in plugin.card.tags">{{tag.tag}} [{{tag.lang}}]</span>
-                  </span>
+                  <md-chips>
+                     <md-chip ng-repeat="tag in plugin.card.tags">{{tag.tag}} [{{tag.lang}}]</md-chip>
+                  </md-chips>
                </li>
                <li>
                   <label translate="DOWNLOADED"></label>
