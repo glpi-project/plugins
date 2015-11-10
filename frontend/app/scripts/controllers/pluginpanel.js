@@ -12,7 +12,8 @@
 angular.module('frontendApp')
   .controller('PluginpanelCtrl', function (API_URL, $scope, $rootScope, $state,
                                            $stateParams, $http, Toaster, $mdDialog,
-                                           $interval, exceptionRepresentationParser) {
+                                           $interval, exceptionRepresentationParser,
+                                           $translate, $filter) {
       // Redirects to /featured if not authed
       if (!$rootScope.authed) {
          $state.go('featured');
@@ -65,6 +66,14 @@ angular.module('frontendApp')
                $scope.refreshXMLFile();
             }
             $scope.rights = readRights($scope.plugin, $scope.user);
+            if ($scope.rights.admin) {
+               $http({
+                  method: 'GET',
+                  url: API_URL + '/plugin/' + $scope.plugin.card.key + '/permissions'
+               }).then(function(resp) {
+                  $scope.admins = resp.data;
+               });
+            }
          }, function(resp) {
             if (resp.data.error == 'LACK_PERMISSION') {
                Toaster.make('You lack the permission to view this plugin panel.');
@@ -87,7 +96,14 @@ angular.module('frontendApp')
          }).then(function(resp) {
             Toaster.make('You plugin has been updated.');
          }, function(resp) {
-            Toaster.make(resp.data.error);
+            var error = exceptionRepresentationParser.parseExceptionRepresentation(resp.data.error);
+            switch (error.name) {
+               case 'INVALID_XML':
+                  if (error.args.reason == 'url') {
+                     Toaster.make($filter('translate')('INVALID_XML_BECAUSE_UNREACHABLE_URL'));
+                  }
+                  break;
+            }
          });
       };
 

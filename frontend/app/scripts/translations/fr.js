@@ -240,6 +240,7 @@ angular
             VIEWAPIKEY_PAGE_TITLE: 'View Client Credentials',
             VIEWAPIKEY_CLIENT_CREDENTIALS: 'Client Credentials',
             VIEWAPIKEY_CLIENT_ID: 'Client ID',
-            VIEWAPIKEY_CLIENT_SECRET: 'Client Secret'
+            VIEWAPIKEY_CLIENT_SECRET: 'Client Secret',
+            INVALID_XML_BECAUSE_UNREACHABLE_URL: 'Your XML File is not reachable at the URL you mentionned'
          });
    });
