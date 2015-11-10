@@ -89,7 +89,6 @@ angular
             PANEL_APPLICATION_NAME_TOO_LONG: 'Your application name musn\'t exceed {{n}} characters',
             PANEL_APP_HOMEPAGE_URL: 'Homepage URL (optional)',
             PANEL_HOMEPAGE_URL_NOT_VALID: 'This is not a valid URL',
-            PANEL_APP_DESCRIPTION: 'Application description (optional, example "my simple script" or "OAuth signup with GLPI plugins")',
             PANEL_APP_DESCRIPTION_TOO_LONG: 'Your application description musn\'t exceed {{n}} chars',
             PANEL_APP_SAVE: 'Save',
             PANEL_APP_DELETE: 'Delete this app',
