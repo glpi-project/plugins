@@ -94,7 +94,7 @@ angular.module('frontendApp')
        * endpoint to do that
        */
        $scope.refreshXMLFile = function(e) {
-         var icon = angular.element(e.currentTarget).parent().find('i');
+         var icon = angular.element(e.currentTarget).parent().find('.spinner');
          // Simple code for the animated icon
          // using css3 rotation
          var translationProgress = 0;

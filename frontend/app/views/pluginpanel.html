@@ -58,13 +58,15 @@
          <h3 translate="PLUGIN_PANEL_ACTIONS"></h3>
          <md-list class="actions" layout="row">
             <md-list-item class="refresh_xml-button">
-               <i class="fa fa-spinner"></i>
+               <i class="spinner fa fa-spinner"></i>
                <md-button class="md-raised md-primary" type="button" ng-click="refreshXMLFile($event)" ng-show="rights.admin || rights.allowed_refresh_xml">
+                  <i class="fa fa-refresh"></i>
                   <span translate="PLUGIN_PANEL_REFRESH_XML_FILE"></span>
                </md-button>
             </md-list-item>
             <md-list-item>
                <md-button class="md-raised md-primary" type="button" ng-click="showUserPermissionsDialog($event)" ng-show="rights.admin">
+                  <i class="fa fa-user"></i>
                   <span translate="PLUGIN_PANEL_USER_PERMISSIONS"></span>
                </md-button>
             </md-list-item>
@@ -101,6 +103,9 @@
          </md-list>
       </md-content>
 
-      <md-button class="the-submit md-raised md-primary" type="submit" translate="PLUGIN_PANEL_SAVE"></md-button>
+      <md-button class="the-submit md-raised md-primary" type="submit">
+         <i class="fa fa-floppy-o"></i>
+         <span translate="PLUGIN_PANEL_SAVE"></span>
+      </md-button>
    </form>
 </div>
