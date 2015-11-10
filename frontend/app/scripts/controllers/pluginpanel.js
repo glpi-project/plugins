@@ -193,6 +193,7 @@ angular.module('frontendApp')
             }).then(function() {
                getPermissions();
                $scope.search_text = '';
+               Toaster.make('User added to plugin permissions', 'user-permissions-form');
             }, function(resp) {
                if (/^RIGHT_ALREADY_EXIST/.exec(resp.data.error)) {
                   Toaster.make('There is already a right for that user and plugin, please modify it', 'user-permissions-form');
@@ -234,6 +235,7 @@ angular.module('frontendApp')
                }
             }).then(function() {
                user.pivot[right] = set;
+               Toaster.make('Permissions changed', 'user-permissions-form');
             });
          };
 
