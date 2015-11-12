@@ -185,7 +185,8 @@ CREATE TABLE plugin_permission (
       ON DELETE CASCADE,
    FOREIGN KEY (plugin_id)
       REFERENCES plugin(id)
-      ON DELETE CASCADE
+      ON DELETE CASCADE,
+   UNIQUE (plugin_id,user_id)
 ) ENGINE=InnoDB;
 CREATE INDEX idx_plugin_permission_plugin ON plugin_permission(plugin_id);
 CREATE INDEX idx_plugin_permission_user ON plugin_permission(user_id);
