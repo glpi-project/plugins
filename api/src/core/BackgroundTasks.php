@@ -440,19 +440,18 @@ class BackgroundTasks {
     * has no action if the state hasn't changed.
     */
    private function triggerPluginXmlStateChange($plugin, $xml_state, $save = true, $mail = true) {
-      if (!in_array($xml_state, ['passing', 'bad_xml_url', 'xml_error']) ||
-          $xml_state == $plugin->xml_state) {
-         $this->currentPluginState = $xml_state;
+      if (!in_array($xml_state, ['passing', 'bad_xml_url', 'xml_error'])) {
          return;
       }
       $this->currentPluginState = $xml_state;
-      $plugin->xml_state = $xml_state;
-      if ($save) {
-         $plugin->save();
-      }
-      if (in_array($xml_state, ['bad_xml_url', 'xml_error']) &&
-          $mail) {
-         $this->alertAdminsOfXMLErrors($plugin);
+      if ($plugin->xml_state != $xml_state) {
+         $plugin->xml_state = $xml_state;
+         if ($save) {
+            $plugin->save();
+         }
+         if (in_array($xml_state, ['bad_xml_url', 'xml_error']) && $mail) {
+            $this->alertAdminsOfXMLErrors($plugin);
+         }
       }
    }
 
