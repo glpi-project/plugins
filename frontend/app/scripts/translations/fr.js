@@ -195,7 +195,6 @@ angular
             PLUGIN_PERMISSIONS_ALLOWED_CHANGE_XML_URL: 'Autorisé à changer l\'URL du fichier XML',
             PLUGIN_PERMISSIONS_DELETE_USER_RIGHT: 'Détruire ce droit utilisateur',
             PLUGIN_PERMISSIONS_ADD_USER_PERMISSIONS: 'Ajouter des permissions utilisateur',
-            PLUGIN_PERMISSIONS_AUTOCOMPLETE_PLACEHOLDER: 'Please type the username, realname or email of a registered user, then use arrow and enter to select the user',
             PLUGIN_PERMISSIONS_AUTOCOMPLETE_PLACEHOLDER: 'Veuillez taper le nom d\'utilisateur, le nom réel, ou l\'email d\'un utilisateur enregistré, utilisez ensuite les flèches et entrée pour sélectionner un utilisateur.',
             PLUGIN_PERMISSIONS_AUTOCOMPLETE_NO_MATCHING_USERS: 'Aucun utilisateur correspondant',
             SIGNIN_PAGE_TITLE: 'Connexion avec votre compte GLPI Plugins',
