@@ -73,7 +73,6 @@ angular
             XMLFILE_UNREACHABLE_URL: 'URL innaccessible',
             XMLFILE_PARSE_ERROR: 'Erreur dans le XML (Erreur de parsing)',
             XMLFILE_SPECIFICATION_ERROR: 'Erreur dans le XML (Non respect de la spécification)',
-            PANEL_DECLARE_NEW_OAUTH2_APP: 'Declare a new OAuth2 Application',
             PANEL_DECLARE_NEW_OAUTH2_APP: 'Créer une nouvelle application OAuth2',
             PANEL_REGISTER_NEW_APP: 'Créez une nouvelle application OAuth2 pour avoir accès à une API Key',
             PANEL_APPLICATION_NAME: 'Nom de l\'application',
