@@ -173,7 +173,6 @@ angular
             PLUGIN_PANEL_N_TIMES: '{{n}} fois',
             PLUGIN_PANEL_CONTRIBUTORS: 'Contributeurs (Listés dans le fichier XML)',
             PLUGIN_PANEL_SETTINGS: 'Réglages',
-            PLUGIN_PANEL_XML_URL: 'Authoritative Plugin Meta-Description File URL (XML File, see specification)',
             PLUGIN_PANEL_XML_URL: 'URL du fichier métadescriptif de référencement du plugin (fichier XML suivant la spécification)',
             PLUGIN_PANEL_ACTIONS: 'Actions',
             PLUGIN_PANEL_REFRESH_XML_FILE: 'Relire le fichier XML',
