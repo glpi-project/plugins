@@ -85,7 +85,6 @@ angular
             PANEL_SETTINGS: 'Réglages',
             PANEL_CLIENT_ID: 'Identifiant de l\'application (OAuth2 Client ID)',
             PANEL_CLIENT_SECRET: 'Clé secrete (OAuth2 Client Secret)',
-            PANEL_APPLICATION_NAME: 'Nom de l\'application',
             PANEL_APPLICATION_NAME_TOO_SHORT: 'Le nom de votre application doit être d\'au moins {{n}} caractères',
             PANEL_APPLICATION_NAME_TOO_LONG: 'Le nom de votre application ne doit pas excéder {{n}} characters',
             PANEL_APP_HOMEPAGE_URL: 'URL du site web (optionnel)',

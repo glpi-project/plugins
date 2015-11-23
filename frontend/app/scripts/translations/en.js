@@ -84,7 +84,6 @@ angular
             PANEL_SETTINGS: 'Settings',
             PANEL_CLIENT_ID: 'Client ID',
             PANEL_CLIENT_SECRET: 'Client Secret',
-            PANEL_APPLICATION_NAME: 'Application Name',
             PANEL_APPLICATION_NAME_TOO_SHORT: 'Your application name must be at least {{n}} characters',
             PANEL_APPLICATION_NAME_TOO_LONG: 'Your application name musn\'t exceed {{n}} characters',
             PANEL_APP_HOMEPAGE_URL: 'Homepage URL (optional)',

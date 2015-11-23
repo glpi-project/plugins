@@ -75,7 +75,6 @@ angular
             XMLFILE_SPECIFICATION_ERROR: 'Specification Error',
             PANEL_DECLARE_NEW_OAUTH2_APP: 'Declare a new OAuth2 Application',
             PANEL_REGISTER_NEW_APP: 'Register a new Application to gain API access',
-            PANEL_APPLICATION_NAME: 'Application Name',
             PANEL_HOMEPAGE_URL: 'Homepage URL (optional)',
             PANEL_APP_DESCRIPTION: 'Application description (optional, example "my simple script" or "OAuth signup with GLPI plugins")',
             PANEL_APP_CREATE: 'Create',
