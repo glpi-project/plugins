@@ -34,5 +34,7 @@ $config = [
 			"clientId" => "--your github client id here--",
 			"clientSecret" => "--your github client secret here--"
 		]
-	]
+	],
+   "plugin_xml_fetching_max_fail" => 4,
+   "glpi_plugin_directory_user_agent" => 'GlpiPluginDirectory/1.0'
 ];

@@ -206,7 +206,7 @@ class Plugin extends Model {
     * Will "reset" the fails counter
     * (which in fact mean deleting the table entry)
     */
-   public function clearXmlFetchFailCount() {
+   public function resetXmlFetchFailCount() {
       if (!$this->id) {
          throw new \Exception('Calling clearXmlFetchFailCount() method on a unsaved Plugin model.');
       }

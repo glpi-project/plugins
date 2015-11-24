@@ -15,12 +15,14 @@ use API\Model\Session;
 use API\Core\Tool;
 use API\Core\ValidableXMLPluginDescription;
 use API\Exception\InvalidXML;
+use GuzzleHttp\Client as GuzzleHttpClient;
 
 class BackgroundTasks {
    public $currentXml;
    public $currentPluginState;
    private $silentMode;
    private $throwsExceptions;
+   private $pluginMaxConsecutiveXmlFetchFails;
 
    /**
     * Triggers the given list of tasks
@@ -185,22 +187,49 @@ class BackgroundTasks {
       $this->currentPluginState = null;
 
       // fetching via http
-      $xml = @file_get_contents($plugin->xml_url);
-      if (!$xml) {
-         $this->triggerPluginXmlStateChange(
-            $plugin,
-            'bad_xml_url',
-            true,
-            in_array('alert_plugin_team_on_xml_state_change', $subtasks)
-         );
-         $this->outputStr($plugin->xml_url."\" Cannot get XML file via HTTP, Skipping.\n");
-         if ($this->throwsExceptions) {
-            throw new InvalidXML('url', $plugin->xml_url);
+      $unableToFetch = false;
+      $httpClient = new GuzzleHttpClient();
+      try {      
+         $pluginXmlRequest = $httpClient->get($plugin->xml_url, [
+            "headers" => [
+               "User-Agent" => Tool::getConfig()['glpi_plugin_directory_user_agent']
+            ]
+         ]);
+      } catch (\GuzzleHttp\Exception\ConnectException $e) {
+         $unableToFetch = true;
+      } finally {
+         if ($unableToFetch ||
+             (!$unableToFetch && $pluginXmlRequest->getStatusCode() != 200)) {
+            if ($this->pluginMaxConsecutiveXmlFetchFails) {
+               $fetchFailCount = $plugin->incrementXmlFetchFailCount();
+               if ($fetchFailCount == $this->pluginMaxConsecutiveXmlFetchFails) {
+                  $this->triggerPluginXmlStateChange(
+                     $plugin,
+                     'bad_xml_url',
+                     true,
+                     in_array('alert_plugin_team_on_xml_state_change', $subtasks)
+                  );
+                  $plugin->resetXmlFetchFailCount();
+               }
+            } else {
+               $this->triggerPluginXmlStateChange(
+                  $plugin,
+                  'bad_xml_url',
+                  true,
+                  in_array('alert_plugin_team_on_xml_state_change', $subtasks)
+               );
+            }
+            $this->outputStr($plugin->xml_url."\" Cannot get XML file via HTTP, Skipping.\n");
+            if ($this->throwsExceptions) {
+               throw new InvalidXML('url', $plugin->xml_url);
+            }
+            return false;
          }
-         return false;
-      } else {
-         $this->currentXml = $xml;
       }
+
+      $xml = $pluginXmlRequest->getBody();
+      $this->currentXml = (string)$xml;
+
       $crc = md5($xml); // compute crc
       if ($plugin->xml_crc != $crc ||
           $plugin->name == NULL) {
@@ -554,6 +583,15 @@ class BackgroundTasks {
           gettype($options['throwsExceptions']) === 'boolean' &&
           $options['throwsExceptions']) {
          $this->throwsExceptions = true;
+      }
+
+      // has the
+      // plugin_max_consecutive_xml_fetch_fails
+      // option
+      if (isset($options['plugin_max_consecutive_xml_fetch_fails']) &&
+          gettype($options['plugin_max_consecutive_xml_fetch_fails']) &&
+          $options['plugin_max_consecutive_xml_fetch_fails']) {
+         $this->pluginMaxConsecutiveXmlFetchFails = $options['plugin_max_consecutive_xml_fetch_fails'];
       }
    }
 }

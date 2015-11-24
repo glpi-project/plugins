@@ -4,7 +4,9 @@ require __DIR__.'/../api/vendor/autoload.php';
  * This is the crontab script.
  */
 \API\Core\DB::initCapsule();
-$taskDispatcher = new \API\Core\BackgroundTasks;
+$taskDispatcher = new \API\Core\BackgroundTasks([
+   "plugin_max_consecutive_xml_fetch_fails" => \API\Core\Tool::getConfig()['plugin_max_consecutive_xml_fetch_fails']
+]);
 
 $options = getopt('i:k:t:');
 
