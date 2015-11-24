@@ -302,3 +302,13 @@ CREATE TABLE auth_codes(
    FOREIGN KEY (session_id)
       REFERENCES sessions(id)
 ) ENGINE=InnoDB;
+
+CREATE TABLE plugin_xml_fetch_fails(
+   id            INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   plugin_id     INT NOT NULL,
+   n             INT UNSIGNED NOT NULL,
+   FOREIGN KEY (plugin_id)
+      REFERENCES plugin(id)
+      ON DELETE CASCADE
+);
+CREATE INDEX idx_plugin_xml_fetch_fails_plugin_id ON plugin_xml_fetch_fails(plugin_id);

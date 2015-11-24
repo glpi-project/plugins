@@ -139,4 +139,80 @@ class Plugin extends Model {
             ->where('plugin_version.compatibility', '=', $version);
       return $query;
    }
+
+   // Methods
+
+   /**
+    * Will initialize the side fetch fails counter,
+    * will not do it, if it is already done.
+    */
+   private function initXmlFetchFailCount() {
+      if (!$this->id) {
+         throw new \Exception('Calling initXmlFetchFailCount() method on a unsaved Plugin model.');
+      }
+      $fetchFailCounter = DB::table('plugin_xml_fetch_fails')
+                            ->where('plugin_id', '=', $this->id)
+                            ->first();
+      if (!$fetchFailCounter) {
+         DB::table('plugin_xml_fetch_fails')
+           ->insert([
+               'plugin_id' => $this->id,
+               'n' => 1
+            ]);
+      }
+   }
+
+   /**
+    * Will increment the fetch fails counter,
+    * or initialize it if no 
+    */
+   public function incrementXmlFetchFailCount() {
+      if (!$this->id) {
+         throw new \Exception('Calling incrementXmlFetchFailCount() method on a unsaved Plugin model.');
+      }
+      $fetchFailCounter = $this->getXmlFetchFailCount();
+      $fetchFailCounter++;
+      if ($fetchFailCounter == 1) {
+         // we set the fetch fail counter using
+         // initStuff()
+         return $this->initXmlFetchFailCount();
+      } else {
+         DB::table('plugin_xml_fetch_fails')
+           ->where('plugin_id', '=', $this->id)
+           ->increment('n');
+      }
+      // another costy query here.
+      return $this->getXmlFetchFailCount();
+   }
+
+   /**
+    * Will return the current fetch fails count
+    */
+   public function getXmlFetchFailCount() {
+      if (!$this->id) {
+         throw new \Exception('Calling getXmlFetchFailCount() method on a unsaved Plugin model.');
+      }
+      $fetchFailCounter = DB::table('plugin_xml_fetch_fails')
+                            ->where('plugin_id', '=', $this->id)
+                            ->first();
+      if (!$fetchFailCounter) {
+         return 0;
+      } else {
+         return (int)$fetchFailCounter->n;
+      }
+   }
+
+   /**
+    * Will "reset" the fails counter
+    * (which in fact mean deleting the table entry)
+    */
+   public function clearXmlFetchFailCount() {
+      if (!$this->id) {
+         throw new \Exception('Calling clearXmlFetchFailCount() method on a unsaved Plugin model.');
+      }
+      DB::table('plugin_xml_fetch_fails')
+        ->where('plugin_id', '=', $this->id)
+        ->delete();
+      return 0;
+   }
 }
