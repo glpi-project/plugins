@@ -224,6 +224,8 @@ class BackgroundTasks {
                throw new InvalidXML('url', $plugin->xml_url);
             }
             return false;
+         } else {
+            $plugin->resetXmlFetchFailCount();
          }
       }
 
