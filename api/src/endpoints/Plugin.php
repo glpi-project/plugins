@@ -543,7 +543,7 @@ $submit = Tool::makeEndpoint(function() use($app) {
    $plugin->permissions()->attach($user);
 
    $user = $plugin->permissions()
-                  ->where('user_id' => $user->id)
+                  ->where('user_id', '=', $user->id)
                   ->first();
    $user->pivot['admin'] = true;
    $user->pivot->save();
