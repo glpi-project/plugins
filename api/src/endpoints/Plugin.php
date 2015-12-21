@@ -11,28 +11,28 @@
  * /plugin/star
  */
 
-
-use \API\Core\Tool;
-use \API\Core\Mailer;
-use \API\Core\BackgroundTasks;
-use \Illuminate\Database\Capsule\Manager as DB;
-use \API\Model\User;
-use \API\Model\Plugin;
-use \API\Model\Author;
-use \API\Model\PluginStar;
-use \ReCaptcha\ReCaptcha;
-use \API\Core\ValidableXMLPluginDescription;
-use \API\Exception\ResourceNotFound;
-use \API\OAuthServer\OAuthHelper;
-use \API\Exception\InvalidRecaptcha;
-use \API\Exception\InvalidField;
-use \API\Exception\LackAuthorship;
-use \API\Exception\LackPermission;
-use \API\Exception\InvalidXML;
-use \API\Exception\DifferentPluginSignature;
-use \API\Exception\RightAlreadyExist;
-use \API\Exception\RightDoesntExist;
-use \API\Exception\CannotDeleteAdmin;
+use API\Core\Tool;
+use API\Core\Mailer;
+use API\Core\BackgroundTasks;
+use Illuminate\Database\Capsule\Manager as DB;
+use API\Model\User;
+use API\Model\Plugin;
+use API\Model\Author;
+use API\Model\PluginStar;
+use ReCaptcha\ReCaptcha;
+use API\Core\ValidableXMLPluginDescription;
+use API\Exception\ResourceNotFound;
+use API\OAuthServer\OAuthHelper;
+use API\Exception\InvalidRecaptcha;
+use API\Exception\InvalidField;
+use API\Exception\LackAuthorship;
+use API\Exception\LackPermission;
+use API\Exception\InvalidXML;
+use API\Exception\DifferentPluginSignature;
+use API\Exception\RightAlreadyExist;
+use API\Exception\RightDoesntExist;
+use API\Exception\CannotDeleteAdmin;
+use API\Exception\UnavailableName;
 
 /**
  * Giving infos to display a single plugin page
