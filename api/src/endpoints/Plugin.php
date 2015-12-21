@@ -540,7 +540,13 @@ $submit = Tool::makeEndpoint(function() use($app) {
    $plugin->active = false;
    $plugin->download_count = 0;
    $plugin->save();
-   $plugin->admins()->attach($user);
+   $plugin->permissions()->attach($user);
+
+   $user = $plugin->permissions()
+                  ->where('user_id' => $user->id)
+                  ->first();
+   $user->pivot['admin'] = true;
+   $user->pivot->save();
 
    $mailer = new Mailer;
    $mailer->sendMail('plugin_submission.html', Tool::getConfig()['msg_alerts']['local_admins'],
