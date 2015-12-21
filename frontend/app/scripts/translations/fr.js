@@ -239,6 +239,7 @@ angular
             VIEWAPIKEY_CLIENT_CREDENTIALS: 'Client Credentials',
             VIEWAPIKEY_CLIENT_ID: 'Client ID',
             VIEWAPIKEY_CLIENT_SECRET: 'Client Secret',
-            INVALID_XML_BECAUSE_UNREACHABLE_URL: 'Votre fichier XML n\'est pas atteignable à l\'URL mentionnée'
+            INVALID_XML_BECAUSE_UNREACHABLE_URL: 'Votre fichier XML n\'est pas atteignable à l\'URL mentionnée',
+            README: 'Readme'
          });
    });
