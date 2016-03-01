@@ -189,7 +189,7 @@ class BackgroundTasks {
       // fetching via http
       $unableToFetch = false;
       $httpClient = new GuzzleHttpClient();
-      try {      
+      try {
          $pluginXmlRequest = $httpClient->get($plugin->xml_url, [
             "headers" => [
                "User-Agent" => Tool::getConfig()['glpi_plugin_directory_user_agent']
@@ -452,11 +452,12 @@ class BackgroundTasks {
       foreach ($plugin->watchers()->get() as $watch) {
          $user = $watch->user;
          $mailer = new Mailer;
-         $mailer->sendMail('plugin_updated.html', Tool::getConfig()['msg_alerts']['local_admins'],
+         $mailer->sendMail('plugin_updated.html',
+                           [$user->email, $user->username],
                            'Plugin update "'.$plugin->name.'"',
                            ['plugin' => $plugin,
-                            'user'   => $user,
-                            'client_url' => Tool::getConfig()]);
+                           'user'   => $user,
+                           'client_url' => Tool::getConfig()]);
       }
    }
 
@@ -466,7 +467,7 @@ class BackgroundTasks {
     * It's behaviour depends of
     *  + the current state of the plugin
     *  + the list of admins or notified people
-    * 
+    *
     * In fact, this function returns void and
     * has no action if the state hasn't changed.
     */
