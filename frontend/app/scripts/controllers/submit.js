@@ -35,29 +35,27 @@ angular.module('frontendApp')
                plugin_url: $scope.url,
                recaptcha_response: $scope.response
             }
-         })
-         .success(function(data) {
-            if (data.success) {
-               var toast = $mdToast.simple()
-                  .capsule(true)
-                  .content('Thanks for your time ! We are going to verify the plugin you have submitted.')
-                  .position('top');
-               toast._options.parent =  angular.element(document.getElementById('submit_form'));
-               $mdToast.show(toast);
+        }).then(function(response) {
+            var data = response.data;
+            var toast = $mdToast.simple()
+            .capsule(true)
+            .content('Thanks for your time ! We are going to verify the plugin you have submitted.')
+            .position('top');
+            toast._options.parent =  angular.element(document.getElementById('submit_form'));
+            $mdToast.show(toast);
 
-               $timeout(function() {
-                  $state.go('featured');
-               }, 3800);
-
-            } else {
-               var toast = $mdToast.simple()
-                  .capsule(true)
-                  .content("Error: " + data.error)
-                  .position('top right');
-               toast._options.parent =  angular.element(document.getElementById('submit_form'));
-               $mdToast.show(toast);
-               vcRecaptchaService.reload($scope.widgetId);
-            }
-         });
+            $timeout(function() {
+                $state.go('featured');
+            }, 3800);
+        }, function(response) {
+            var data = response.data;
+            var toast = $mdToast.simple()
+            .capsule(true)
+            .content("Error: " + data.error)
+            .position('top right');
+            toast._options.parent =  angular.element(document.getElementById('submit_form'));
+            $mdToast.show(toast);
+            vcRecaptchaService.reload($scope.widgetId);
+        });
       };
    });
