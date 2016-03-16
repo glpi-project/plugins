@@ -8,7 +8,9 @@
  * Controller of the frontendApp
  */
 angular.module('frontendApp')
-   .controller('SubmitCtrl', function(API_URL, RECAPTCHA_PUBLIC_KEY, $scope, $http, vcRecaptchaService, $mdToast, $timeout, $state) {
+   .controller('SubmitCtrl', function(API_URL, RECAPTCHA_PUBLIC_KEY, $scope,
+                                      $http, vcRecaptchaService, $mdToast,
+                                      $timeout, $state, exceptionRepresentationParser) {
       $scope.key = RECAPTCHA_PUBLIC_KEY;
       $scope.response = null;
       $scope.widgetId = null;
@@ -49,9 +51,10 @@ angular.module('frontendApp')
             }, 3800);
         }, function(response) {
             var data = response.data;
+            var error = exceptionRepresentationParser.parseExceptionRepresentation(data.error);
             var toast = $mdToast.simple()
             .capsule(true)
-            .content("Error: " + data.error)
+            .content("Error: " + error.name + (typeof error.errstring !== 'undefined' ? (' : ' + error.errstring) : ''))
             .position('top right');
             toast._options.parent =  angular.element(document.getElementById('submit_form'));
             $mdToast.show(toast);
