@@ -274,7 +274,7 @@ $plugin_delete_permission = Tool::makeEndpoint(function($key, $username) use($ap
    // if the user is trying to delete a permission set
    // for another user,
    // we require him to be admin of the plugin
-   if ($target_user->id != $user->id) { 
+   if ($target_user->id != $user->id) {
       $user = $plugin->permissions->find($user);
       if (!$user ||
           !$user->pivot->admin) {
@@ -523,7 +523,7 @@ $submit = Tool::makeEndpoint(function() use($app) {
 
    $xml = @file_get_contents($body->plugin_url);
    if (!$xml) {
-      throw new InvalidXML('url', $ody->plugin_url);
+      throw new InvalidXML('url', $body->plugin_url);
    }
 
    $xml = new ValidableXMLPluginDescription($xml);
