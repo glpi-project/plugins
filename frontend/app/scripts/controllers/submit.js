@@ -52,12 +52,13 @@ angular.module('frontendApp')
         }, function(response) {
             var data = response.data;
             var error = exceptionRepresentationParser.parseExceptionRepresentation(data.error);
-            var toast = $mdToast.simple()
-            .capsule(true)
-            .content("Error: " + error.name + (typeof error.args.errstring !== 'undefined' ? (' : ' + error.args.errstring) : ''))
-            .position('top right');
-            toast._options.parent =  angular.element(document.getElementById('submit_form'));
-            $mdToast.show(toast);
+            $mdDialog.show(
+                $mdDialog.alert()
+                         .parent(angular.element('body'))
+                         .clickOutsideToClose(true)
+                         .title(error.args.name)
+                         .content(typeof error.args.errstring !== 'undefined' ? (' : ' + error.args.errstring) : '')
+            );
             vcRecaptchaService.reload($scope.widgetId);
         });
       };
