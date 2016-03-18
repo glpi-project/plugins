@@ -57,8 +57,8 @@ angular.module('frontendApp')
                 $mdDialog.alert()
                          .parent(angular.element('body'))
                          .clickOutsideToClose(true)
-                         .title(error.args.name)
-                         .content(typeof error.args.errstring !== 'undefined' ? (' : ' + error.args.errstring) : '')
+                         .title(error.name)
+                         .content(typeof error.args.errstring !== 'undefined' ? error.args.errstring : '')
             );
             vcRecaptchaService.reload($scope.widgetId);
         });
