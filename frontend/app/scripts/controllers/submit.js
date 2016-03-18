@@ -10,7 +10,8 @@
 angular.module('frontendApp')
    .controller('SubmitCtrl', function(API_URL, RECAPTCHA_PUBLIC_KEY, $scope,
                                       $http, vcRecaptchaService, $mdToast,
-                                      $timeout, $state, exceptionRepresentationParser) {
+                                      $timeout, $state, exceptionRepresentationParser,
+                                      $mdDialog) {
       $scope.key = RECAPTCHA_PUBLIC_KEY;
       $scope.response = null;
       $scope.widgetId = null;
