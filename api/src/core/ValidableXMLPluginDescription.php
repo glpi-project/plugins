@@ -38,6 +38,11 @@ class ValidableXMLPluginDescription {
          sizeof($this->contents->key->children()) != 0) {
          $this->throwOrCollect(new InvalidXML('field', 'key', '<key> should be a singular field without children'));
       }
+      $key = (string)$this->contents->key;
+      if (strlen($key) < 3 ||
+          strlen($key) > 16) {
+          $this->throwOrCollect(new InvalidXML('field', 'key', '<key>\'s length should be between 3 and 16'));
+      }
       return true;
    }
 
