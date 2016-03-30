@@ -453,11 +453,11 @@ class BackgroundTasks {
          $user = $watch->user;
          $mailer = new Mailer;
          $mailer->sendMail('plugin_updated.html',
-                           [$user->email, $user->username],
+                           [$user->email => $user->username],
                            'Plugin update "'.$plugin->name.'"',
                            ['plugin' => $plugin,
                            'user'   => $user,
-                           'client_url' => Tool::getConfig()]);
+                           'client_url' => Tool::getConfig()['client_url']]);
       }
    }
 
