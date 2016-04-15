@@ -170,7 +170,7 @@ class BackgroundTasks {
    /**
     * Task : updatePlugin()
     *
-    * This function does direct output,
+    * Note: This function does direct output,
     * in fact it builds the log string
     * that concerns the update of a
     * plugin.
