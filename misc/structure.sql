@@ -72,6 +72,16 @@ CREATE TABLE user_external_account(
 ) ENGINE=InnoDB;
 CREATE INDEX idx_user_external_acount_user_id ON user_external_account(user_id);
 
+CREATE TABLE user_resetpassword_token(
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   user_id INT NOT NULL,
+   token VARCHAR(40),
+   FOREIGN KEY(user_id)
+      REFERENCES user(id)
+      ON DELETE CASCADE
+) ENGINE=InnoDB;
+CREATE INDEX idx_user_resetpassword_token ON user_resetpassword_token(user_id);
+
 CREATE TABLE plugin_download (
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    plugin_id INT NOT NULL,
