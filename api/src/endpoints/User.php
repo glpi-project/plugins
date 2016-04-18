@@ -388,6 +388,12 @@ $user_search = Tool::makeEndpoint(function() {
    Tool::endWithJson($results);
 });
 
+$user_send_password_reset_link = Tool::makeEndpoint(function() {
+    $body = Tool::getBody();
+    
+    Tool::endWithJson(new \stdClass());
+});
+
 // HTTP REST Map
 
 // user profile related
@@ -396,6 +402,7 @@ $app->post('/user/delete', $user_delete_account);
 $app->get('/user', $profile_view);
 $app->put('/user', $profile_edit);
 $app->get('/user/validatemail/:token', $user_validate_mail);
+$app->post('/user/sendpasswordresetlink', $user_send_password_reset_link);
 
 // user plugins related
 $app->get('/user/plugins', $user_plugins);
@@ -415,3 +422,4 @@ $app->options('/user/validatemail/:token', function($token) {});
 $app->options('/user/watchs', function() {});
 $app->options('/user/plugins', function() {});
 $app->options('/user/search', function() {});
+$app->options('/user/sendpasswordresetlink', function() {});

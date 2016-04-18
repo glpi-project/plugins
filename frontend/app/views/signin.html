@@ -14,6 +14,7 @@
             <a aria-label="I forgot my password" ng-click="ctrl.iForgotMyPassword($event)" class="i-forgot-my-password">I forgot my password</a>
          </md-input-container>
 
+         <div vc-recaptcha theme="light" key="key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
 
          <md-button class="md-raised md-primary" type="submit" translate="SIGNIN_LOGIN"></md-button>
       </form>
