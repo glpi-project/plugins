@@ -7,12 +7,17 @@
             <label translate="SIGNIN_USERNAME_OR_EMAIL"></label>
             <input type="text" ng-model="login">
          </md-input-container>
+
          <md-input-container>
             <label translate="SIGNIN_PASSWORD"></label>
             <input type="password" ng-model="password">
+            <a aria-label="I forgot my password" ng-click="ctrl.iForgotMyPassword($event)" class="i-forgot-my-password">I forgot my password</a>
          </md-input-container>
+
+
          <md-button class="md-raised md-primary" type="submit" translate="SIGNIN_LOGIN"></md-button>
       </form>
+
 
 
       <div ng-show="notie">

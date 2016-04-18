@@ -240,6 +240,11 @@ angular
             VIEWAPIKEY_CLIENT_ID: 'Client ID',
             VIEWAPIKEY_CLIENT_SECRET: 'Client Secret',
             INVALID_XML_BECAUSE_UNREACHABLE_URL: 'Votre fichier XML n\'est pas atteignable à l\'URL mentionnée',
-            README: 'Readme'
+            README: 'Readme',
+            FORGOTPASSWORD_DIALOG_TITLE: 'So you forgot your password',
+            FORGOTPASSWORD_DIALOG_FORMINTRO_1: "If you're here, it's probably because you lost your password.",
+            FORGOTPASSWORD_DIALOG_FORMINTRO_2: "We need you to provide your account's email.",
+            FORGOTPASSWORD_DIALOG_FORMINTRO_3: "Please mind that if you've never setup a password before (because you always logged-in with Github) then it's not possible to recover the password because as said, you never set any. You should close this dialog and auth with Github.",
+            SEND_MAIL_PASSWORD_RESET_LINK: "Send password reset link via mail"
          });
    });
