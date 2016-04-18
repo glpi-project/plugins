@@ -23,14 +23,6 @@ angular.module('frontendApp')
                login: $scope.login,
                password: $scope.password
             });
-            // .error(function(data) {
-            //    var toast = $mdToast.simple()
-            //       .capsule(true)
-            //       .content(data.error)
-            //       .position('top');
-            //    toast._options.parent =  angular.element(document.getElementById('signin'));
-            //    $mdToast.show(toast);
-            // });
          }
       };
 
