@@ -24,6 +24,7 @@ use API\Model\App;
 use API\Model\ValidationToken;
 use API\Model\Plugin;
 use API\Model\PluginWatch;
+use API\Model\ResetPasswordToken;
 
 use API\Exception\UnavailableName;
 use API\Exception\InvalidField;
@@ -32,6 +33,7 @@ use API\Exception\AlreadyWatched;
 use API\Exception\NoCredentialsLeft;
 use API\Exception\InvalidCredentials;
 use API\Exception\InvalidXML;
+use API\Exception\WrongPasswordResetToken;
 
 use League\OAuth2\Server\Util\SecureKey;
 use API\OAuthServer\AuthorizationServer;
@@ -390,9 +392,51 @@ $user_search = Tool::makeEndpoint(function() {
 
 $user_send_password_reset_link = Tool::makeEndpoint(function() {
     $body = Tool::getBody();
-    
+
+    if (!isset($body->email) ||
+        gettype($body->email) !== 'string') {
+        throw new InvalidField('email');
+    }
+
+    $user = User::where('email', '=', $body->email)->first();
+    if (!$user) {
+        throw new AccountNotFound();
+    }
+
+    $mailer = new Mailer();
+    $mailer->sendMail('reset_your_password.html',
+                      [$user->email],
+                      'Reset your GLPi:Plugins password',
+                      [
+                          'user' => $user,
+                          'reset_password_token' => 'ababab'
+                      ]);
+
+
     Tool::endWithJson(new \stdClass());
 });
+//
+// $user_reset_password = Tool::makeEndpoint(function() {
+//     $body = Tool::getBody();
+//
+//     // verifying the supply of token.
+//     if (!isset($body->token)  ||
+//         gettype($body->token) !== 'string') {
+//         throw new WrongPasswordResetToken();
+//     }
+//     $token = ResetPasswordToken::where('token', '=', $body->token)
+//                       ->first();
+//     // also verifying it's existence in database
+//     if (!isset($token)) {
+//         throw new WrongPasswordResetToken();
+//     }
+//
+//     $user = $token->user;
+//
+//
+//
+//     Tool::endWithJson(new \stdClass());
+// });
 
 // HTTP REST Map
 
