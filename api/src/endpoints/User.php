@@ -38,6 +38,7 @@ use API\Exception\WrongPasswordResetToken;
 use League\OAuth2\Server\Util\SecureKey;
 use API\OAuthServer\AuthorizationServer;
 use API\OAuthServer\OAuthHelper;
+use ReCaptcha\ReCaptcha;
 
 /**
  * Register a new user
@@ -390,18 +391,37 @@ $user_search = Tool::makeEndpoint(function() {
    Tool::endWithJson($results);
 });
 
-$user_send_password_reset_link = Tool::makeEndpoint(function() {
+$user_send_password_reset_link = Tool::makeEndpoint(function() use($app) {
     $body = Tool::getBody();
 
     if (!isset($body->email) ||
         gettype($body->email) !== 'string') {
         throw new InvalidField('email');
     }
+    
+    // -- <this_is_not_used_for_now> --
+    // rejecting if request isn't signed by
+    // a recaptcha captcha
+    // if (!isset($body->recaptcha_response) ||
+    //     gettype($body->recaptcha_response) !== 'string') {
+    //    throw new InvalidRecaptcha;
+    // }
+    // $recaptchaStuff = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
+    // $resp = $recaptchaStuff->verify($body->recaptcha_response);
+    // if (!$resp->isSuccess()) {
+    //     throw new InvalidRecaptcha;
+    // }
+    // -- </this_is_not_used_for_now>
 
     $user = User::where('email', '=', $body->email)->first();
     if (!$user) {
         throw new AccountNotFound();
     }
+
+    $resetPasswordToken = new ResetPasswordToken;
+    $resetPasswordToken->token = Tool::randomSha1();
+    $resetPasswordToken->user_id = $user->id;
+    $resetPasswordToken->save();
 
     $mailer = new Mailer();
     $mailer->sendMail('reset_your_password.html',
@@ -409,34 +429,51 @@ $user_send_password_reset_link = Tool::makeEndpoint(function() {
                       'Reset your GLPi:Plugins password',
                       [
                           'user' => $user,
-                          'reset_password_token' => 'ababab'
+                          'reset_password_token' => $resetPasswordToken->token
                       ]);
 
-
-    Tool::endWithJson(new \stdClass());
+     $app->halt(200);
 });
-//
-// $user_reset_password = Tool::makeEndpoint(function() {
-//     $body = Tool::getBody();
-//
-//     // verifying the supply of token.
-//     if (!isset($body->token)  ||
-//         gettype($body->token) !== 'string') {
-//         throw new WrongPasswordResetToken();
-//     }
-//     $token = ResetPasswordToken::where('token', '=', $body->token)
-//                       ->first();
-//     // also verifying it's existence in database
-//     if (!isset($token)) {
-//         throw new WrongPasswordResetToken();
-//     }
-//
-//     $user = $token->user;
-//
-//
-//
-//     Tool::endWithJson(new \stdClass());
-// });
+
+$user_reset_password = Tool::makeEndpoint(function() use($app) {
+    $body = Tool::getBody();
+    // rejecting if token not provided as a string
+    if (!isset($body->token)  ||
+        gettype($body->token) !== 'string') {
+        throw new WrongPasswordResetToken();
+    }
+    $token = ResetPasswordToken::where('token', '=', $body->token)
+                               ->first();
+    // rejecting if no password given
+    if (!isset($body->password) ||
+        gettype($body->password) !== 'string') {
+       throw new InvalidField('password');
+    }
+    // rejecting if request isn't signed by
+    // a recaptcha captcha
+    if (!isset($body->recaptcha_response) ||
+        gettype($body->recaptcha_response) !== 'string') {
+       throw new InvalidRecaptcha;
+    }
+    $recaptchaStuff = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
+    $resp = $recaptchaStuff->verify($body->recaptcha_response);
+    if (!$resp->isSuccess()) {
+        throw new InvalidRecaptcha;
+    }
+    // also rejecting request if token is not in db
+    if (!$token) {
+        throw new WrongPasswordResetToken();
+    }
+    // having the user which is concerned by the
+    // password change procedure.
+    $user = $token->user;
+    // Changing the password
+    $user->password = $body->password;
+    $user->save();
+    // Deleting the ResetPasswordToken object
+    $token->delete();
+    $app->halt(200);
+});
 
 // HTTP REST Map
 
