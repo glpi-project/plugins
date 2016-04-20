@@ -32,7 +32,7 @@ angular.module('frontendApp')
          Auth.linkAccount(provider);
       };
 
-      var IForgotMyPasswordDialog = function($scope, $mdDialog) {
+      var IForgotMyPasswordDialog = function($scope, $mdDialog, Toaster) {
          $scope.key = RECAPTCHA_PUBLIC_KEY;
          $scope.response = null;
          $scope.widgetId = null;
@@ -64,6 +64,9 @@ angular.module('frontendApp')
                       email: $scope.userWhoLostPassword.email,
                       recaptcha_response: $scope.response
                    }
+                }).then(function() {
+                    $state.go('featured');
+                    Toaster.make("A mail has been sent to your email address.");
                 });
              });
          };
