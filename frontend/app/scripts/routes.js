@@ -146,5 +146,10 @@ angular
             url: '/developer/guides',
             templateUrl: 'docs/oauth2.html',
             controller: 'DeveloperGuidesCtrl'
+         })
+         .state('resetpassword', {
+            url: '/resetpassword',
+            templateUrl: 'views/reset_password.html',
+            controller: 'ResetpasswordCtrl'
          });
    });
