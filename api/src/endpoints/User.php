@@ -451,16 +451,16 @@ $user_reset_password = Tool::makeEndpoint(function() use($app) {
     }
     // rejecting if request isn't signed by
     // a recaptcha captcha
-    if (!isset($body->recaptcha_response) ||
-        gettype($body->recaptcha_response) !== 'string') {
-       throw new InvalidRecaptcha;
-    }
-    $recaptchaStuff = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
-    $resp = $recaptchaStuff->verify($body->recaptcha_response);
-    if (!$resp->isSuccess()) {
-        throw new InvalidRecaptcha;
-    }
-    // also rejecting request if token is not in db
+    // if (!isset($body->recaptcha_response) ||
+    //     gettype($body->recaptcha_response) !== 'string') {
+    //    throw new InvalidRecaptcha;
+    // }
+    // $recaptchaStuff = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
+    // $resp = $recaptchaStuff->verify($body->recaptcha_response);
+    // if (!$resp->isSuccess()) {
+    //     throw new InvalidRecaptcha;
+    // }
+    // ultimately rejecting request if token is not in db
     if (!$token) {
         throw new WrongPasswordResetToken();
     }
@@ -468,10 +468,10 @@ $user_reset_password = Tool::makeEndpoint(function() use($app) {
     // password change procedure.
     $user = $token->user;
     // Changing the password
-    $user->password = $body->password;
+    $user->setPassword($body->password);
     $user->save();
-    // Deleting the ResetPasswordToken object
-    $token->delete();
+    // Deleting the ResetPasswordToken objects for this user
+    $user->passwordResetTokens()->truncate();
     $app->halt(200);
 });
 
@@ -484,6 +484,7 @@ $app->get('/user', $profile_view);
 $app->put('/user', $profile_edit);
 $app->get('/user/validatemail/:token', $user_validate_mail);
 $app->post('/user/sendpasswordresetlink', $user_send_password_reset_link);
+$app->put('/user/password', $user_reset_password);
 
 // user plugins related
 $app->get('/user/plugins', $user_plugins);

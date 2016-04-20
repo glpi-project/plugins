@@ -148,7 +148,7 @@ angular
             controller: 'DeveloperGuidesCtrl'
          })
          .state('resetpassword', {
-            url: '/resetpassword',
+            url: '/resetpassword/:token',
             templateUrl: 'views/reset_password.html',
             controller: 'ResetpasswordCtrl'
          });

@@ -40,6 +40,10 @@ class User extends Model {
       return $this->belongsToMany('\API\Model\Plugin', 'plugin_permission', 'user_id')
                   ->withPivot('admin', 'allowed_refresh_xml', 'allowed_change_xml_url', 'allowed_notifications');
    }
+   // Password reset token the user has
+   public function passwordResetTokens() {
+       return $this->hasMany('\API\Model\ResetPasswordToken', 'user_id');
+   }
 
    // Setters
 
