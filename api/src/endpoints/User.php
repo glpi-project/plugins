@@ -426,7 +426,7 @@ $user_send_password_reset_link = Tool::makeEndpoint(function() use($app) {
     $mailer = new Mailer();
     $mailer->sendMail('reset_your_password.html',
                       [$user->email],
-                      'Reset your GLPi:Plugins password',
+                      'Reset your GLPi Plugin Directory password',
                       [
                           'user' => $user,
                           'reset_password_token' => $resetPasswordToken->token
