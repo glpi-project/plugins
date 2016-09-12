@@ -40,7 +40,7 @@ class ValidableXMLPluginDescription {
       }
       $key = (string)$this->contents->key;
       if (strlen($key) < 3 ||
-          strlen($key) > 16) {
+          strlen($key) > 50) {
           $this->throwOrCollect(new InvalidXML('field', 'key', '<key>\'s length should be between 3 and 16'));
       }
       return true;
