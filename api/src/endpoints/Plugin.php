@@ -445,7 +445,7 @@ $updated = Tool::makeEndpoint(function() use($app) {
 });
 // rss endpoint
 $rss_updated = Tool::makeEndpoint(function() use($app) {
-   $updated_plugins = Plugin::updatedRecently(10)
+   $updated_plugins = Plugin::updatedRecently(30)
                             ->where('active', '=', 1)
                             ->get();
    Tool::endWithRSS($updated_plugins, "Updated plugins");
@@ -465,7 +465,7 @@ $new = Tool::makeEndpoint(function() use($app) {
 });
 // rss endpoint
 $rss_new = Tool::makeEndpoint(function() use($app) {
-   $new_plugins = Plugin::mostFreshlyAddedPlugins(10)
+   $new_plugins = Plugin::mostFreshlyAddedPlugins(30)
                        ->where('active', '=', 1)
                        ->get();
    Tool::endWithRSS($new_plugins, "New Plugins");
