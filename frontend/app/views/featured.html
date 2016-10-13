@@ -21,6 +21,9 @@
          <md-subheader class='topic'>
             {{'NEW'|translate}}
             <i class="fa fa-plus darkblue"></i>
+            <a href="{{api_url}}/plugin/rss_new">
+               <i class="fa fa-rss"></i>
+            </a>
          </md-subheader>
          <span class="legend" translate="NEW_SUB"></span>
          <md-list-item ng-repeat="plugin in new">
@@ -55,6 +58,9 @@
          <md-subheader class='topic'>
             {{'UPDATED'|translate}}
             <i class="fa fa-refresh green"></i>
+            <a href="{{api_url}}/plugin/rss_updated">
+               <i class="fa fa-rss"></i>
+            </a>
          </md-subheader>
          <span class='legend' translate="UPDATED_SUB"></span>
          <md-list-item ng-repeat="plugin in updated">
