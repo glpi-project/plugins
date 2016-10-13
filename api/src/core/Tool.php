@@ -106,15 +106,25 @@ class Tool {
                $description = $plugin['descriptions'][0]['long_description'];
             }
 
+            // find last version (the first in list)
+            $version_num  = $version_compat = "";
+            $last_version = array_shift($plugin['versions']);
+            if ($last_version != NULL) {
+               $version_num    = $last_version['num'];
+               $version_compat = $last_version['compatibility'];
+               $description.= "\n Version: $version_num";
+               $description.= "\n compatibility: $version_compat";
+            }
+
             // add plugin to feed
             $item = new \Suin\RSSWriter\Item();
             $item
-               ->title($plugin['name'])
+               ->title($plugin['name']." ".$version_num)
                ->description($description)
                ->contentEncoded($description)
                ->url($url.'/#/plugin/'.$plugin['key'])
                ->pubDate(strtotime($date))
-               ->guid($plugin['name']."_".$date, true)
+               ->guid($plugin['name']."_".$date."_".$version_num, true)
                ->appendTo($channel);
          }
       }
