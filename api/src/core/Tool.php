@@ -114,8 +114,9 @@ class Tool {
             if ($last_version != NULL) {
                $version_num    = $last_version['num'];
                $version_compat = $last_version['compatibility'];
-               $description.= "\n Version: $version_num";
-               $description.= "\n compatibility: $version_compat";
+               $description.=  "<br />
+                                <br /> Version: $version_num
+                                <br /> compatibility: $version_compat";
             }
 
             // add plugin to feed
