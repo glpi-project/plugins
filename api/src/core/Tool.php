@@ -20,6 +20,8 @@ use \ReCaptcha\ReCaptcha;
  */
 class Tool {
    public static function getPayload($_payload, $code = 200) {
+      global $app;
+
       // Handling special case of PaginatedCollection
       if ($_payload instanceof \API\Core\PaginatedCollection) {
          $_payload->setStatus($app->response);
