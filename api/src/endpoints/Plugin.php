@@ -443,6 +443,13 @@ $updated = Tool::makeEndpoint(function() use($app) {
                             ->get();
    Tool::endWithJson($updated_plugins);
 });
+// rss endpoint
+$rss_updated = Tool::makeEndpoint(function() use($app) {
+   $updated_plugins = Plugin::updatedRecently(10)
+                            ->where('active', '=', 1)
+                            ->get();
+   Tool::endWithRSS($updated_plugins, "Updated plugins");
+});
 
 /**
  * New plugins
@@ -455,6 +462,13 @@ $new = Tool::makeEndpoint(function() use($app) {
                        ->where('active', '=', 1)
                        ->get();
    Tool::endWithJson($new_plugins);
+});
+// rss endpoint
+$rss_new = Tool::makeEndpoint(function() use($app) {
+   $new_plugins = Plugin::mostFreshlyAddedPlugins(10)
+                       ->where('active', '=', 1)
+                       ->get();
+   Tool::endWithRSS($new_plugins, "New Plugins");
 });
 
 /**
@@ -563,10 +577,12 @@ $submit = Tool::makeEndpoint(function() use($app) {
 // HTTP REST Map
 $app->get('/plugin', $all);
 $app->post('/plugin', $submit);
+$app->get('/plugin/new', $new);
 $app->get('/plugin/popular', $popular);
 $app->get('/plugin/trending', $trending);
 $app->get('/plugin/updated', $updated);
-$app->get('/plugin/new', $new);
+$app->get('/plugin/rss_new', $rss_new);
+$app->get('/plugin/rss_updated', $rss_updated);
 $app->post('/plugin/star', $star);
 $app->get('/plugin/:key', $single);
 $app->get('/panel/plugin/:key', $single_authormode_view);

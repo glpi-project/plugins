@@ -9,6 +9,7 @@ namespace API\Core;
 // with an error response
 use \API\Exception\ErrorResponse;
 use \API\Exception\InvalidRecaptcha;
+use \API\Model\Plugin;
 use \League\OAuth2\Server\Exception\OAuthException;
 use \ReCaptcha\ReCaptcha;
 
@@ -18,6 +19,21 @@ use \ReCaptcha\ReCaptcha;
  * used in every endpoint
  */
 class Tool {
+   public static function getPayload($_payload, $code = 200) {
+      // Handling special case of PaginatedCollection
+      if ($_payload instanceof \API\Core\PaginatedCollection) {
+         $_payload->setStatus($app->response);
+         $_payload->setHeaders($app->response);
+         $payload = $_payload->get($app->request->headers['x-range']);
+      } else {
+         $payload = &$_payload;
+         http_response_code($code);
+      }
+
+      return $payload;
+   }
+
+
    /**
     * Method used to end with
     * a JSON value from
@@ -26,19 +42,85 @@ class Tool {
    public static function endWithJson($_payload, $code = 200) {
       global $app;
 
-      // Handling special case of PaginatedCollection
-      if ($_payload instanceof \API\Core\PaginatedCollection) {
-         $_payload->setStatus($app->response);
-         $_payload->setHeaders($app->response);
-         $payload = $_payload->get($app->request->headers['x-range']);
-      // Or serialize the payload as is
-      } else {
-         $payload = &$_payload;
-         http_response_code($code);
-      }
-
+      $payload = self::getPayload($_payload);
       $app->response->headers->set('Content-Type', 'application/json');
       $app->halt($code, json_encode($payload));
+   }
+
+   /**
+    * Method used to end with
+    * a Rss value from
+    * an endpoint.
+    */
+   public static function endWithRSS($_payload, $feed_title = '', $code = 200) {
+      global $app;
+
+      $plugins = self::getPayload($_payload);
+
+      // retrieve app config
+      $app_config = self::getConfig();
+      $url = $app_config['client_url'];
+
+      // create a feed
+      $feed = new \Suin\RSSWriter\Feed();
+
+      // create a channel
+      $channel = new \Suin\RSSWriter\Channel();
+      $channel
+         ->title($feed_title)
+         ->url($url)
+         ->language('en-US')
+         ->pubDate(time())
+         ->lastBuildDate(time())
+         ->ttl(60)
+         ->appendTo($feed);
+
+
+      foreach($plugins->toArray() as $current_plugin) {
+         $plugin = Plugin::with('descriptions', 'authors', 'versions',
+                                'screenshots', 'tags', 'langs')
+                  ->short()
+                  ->where('key', '=', $current_plugin['key'])
+                  ->where('active', '=', 1)
+                  ->first();
+
+         if ($plugin) {
+            $plugin = $plugin->toArray();
+
+            // compute date
+            $date = isset($plugin['date_added'])
+                        ? $plugin['date_added']
+                        : isset($plugin['date_updated'])
+                           ? $plugin['date_updated']
+                           : '';
+
+            // compute description
+            $description = "";
+            foreach($plugin['descriptions'] as $current_desc) {
+               if ($current_desc['lang'] == 'en') {
+                  $description = $current_desc['long_description'];
+                  break;
+               }
+            }
+            if (empty($description)) {
+               $description = $plugin['descriptions'][0]['long_description'];
+            }
+
+            // add plugin to feed
+            $item = new \Suin\RSSWriter\Item();
+            $item
+               ->title($plugin['name'])
+               ->description($description)
+               ->contentEncoded($description)
+               ->url($url.'/plugin/'.$plugin['key'])
+               ->pubDate(strtotime($date))
+               ->guid($plugin['name']."_".$date, true)
+               ->appendTo($channel);
+         }
+      }
+
+      // render feed
+      $app->halt($code, $feed->render());
    }
 
    /**

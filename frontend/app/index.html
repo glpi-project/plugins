@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html ng-app="frontendApp">
    <head>
       <meta charset="utf-8" />
       <title>GLPi Plugins</title>
@@ -20,8 +20,11 @@
       <link rel="stylesheet" href="styles/main.css" />
       <link rel="stylesheet" href="styles/ui.view.animate.css" />
       <!-- endbuild -->
+
+      <link rel="alternate" type="application/rss+xml" title="New plugins" href="{{api_url}}/plugin/rss_new" />
+      <link rel="alternate" type="application/rss+xml" title="Updated plugins" href="{{api_url}}/plugin/rss_updated" />
    </head>
-   <body ng-app="frontendApp" class="ng-cloak">
+   <body class="ng-cloak">
       <!-- [if lte IE 8]>
            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
            <![endif] -->

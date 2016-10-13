@@ -78,6 +78,11 @@ angular
       }
    })
 
+   // set base url
+   .run(function($rootScope, API_URL) {
+      $rootScope.api_url = API_URL;
+   })
+
    .config(function(API_URL, $authProvider) {
        $authProvider.github({
          clientId: '58b0aebf84896b64ed1e',
