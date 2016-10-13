@@ -112,7 +112,7 @@ class Tool {
                ->title($plugin['name'])
                ->description($description)
                ->contentEncoded($description)
-               ->url($url.'/plugin/'.$plugin['key'])
+               ->url($url.'/#/plugin/'.$plugin['key'])
                ->pubDate(strtotime($date))
                ->guid($plugin['name']."_".$date, true)
                ->appendTo($channel);
