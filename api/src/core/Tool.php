@@ -90,9 +90,9 @@ class Tool {
             $plugin = $plugin->toArray();
 
             // compute date
-            $date = isset($plugin['date_added'])
+            $date = isset($plugin['date_added']) && !empty($plugin['date_added'])
                         ? $plugin['date_added']
-                        : isset($plugin['date_updated'])
+                        : isset($plugin['date_updated']) && !empty($plugin['date_updated'])
                            ? $plugin['date_updated']
                            : '';
 
