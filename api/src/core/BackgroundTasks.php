@@ -195,7 +195,7 @@ class BackgroundTasks {
                "User-Agent" => Tool::getConfig()['glpi_plugin_directory_user_agent']
             ]
          ]);
-      } catch (\GuzzleHttp\Exception\ConnectException $e) {
+      } catch (\GuzzleHttp\Exception\RequestException $e) {
          $unableToFetch = true;
       } finally {
          if ($unableToFetch ||
