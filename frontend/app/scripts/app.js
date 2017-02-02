@@ -55,6 +55,12 @@ angular
       $httpProvider.defaults.headers.common['Accept'] = 'application/json';
    })
 
+   .config(['markdownConverterProvider', function (markdownConverterProvider) {
+      markdownConverterProvider.config({
+         extensions: ['table']
+      });
+   }])
+
    // Associating empty arrays to
    // placeholders in $rootScope
    // that are going to be used
