@@ -549,6 +549,7 @@ $submit = Tool::makeEndpoint(function() use($app) {
    }
 
    $plugin = new Plugin;
+   $plugin->key = $xml->key;
    $plugin->xml_url = $body->plugin_url;
    $plugin->date_added = DB::raw('NOW()');
    $plugin->active = false;
