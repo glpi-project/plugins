@@ -46,7 +46,7 @@ class ValidableXMLPluginDescription {
       return true;
    }
 
-   public function validateState() {
+   /*public function validateState() {
       if (sizeof($this->contents->state) != 1 ||
          sizeof($this->contents->state->children()) != 0 ||
          !in_array((string)$this->contents->state, ['stable', 'unstable', 'beta', 'alpha']))
@@ -54,7 +54,7 @@ class ValidableXMLPluginDescription {
          $this->throwOrCollect(new InvalidXML('field', 'state', "<state> should be 'stable', 'unstable', 'beta' or 'alpha'"));
       }
       return true;
-   }
+   }*/
 
    public function validateLogo() {
       if (sizeof($this->contents->logo) != 1 ||
