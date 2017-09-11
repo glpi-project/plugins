@@ -35,7 +35,7 @@ class Plugin extends Model {
    }
 
    public function versions() {
-      return $this->hasMany('\API\Model\PluginVersion')->orderBy('compatibility', 'desc');
+      return $this->hasMany('\API\Model\PluginVersion')/*->orderBy('compatibility', 'desc')*/;
    }
 
    public function langs() {
