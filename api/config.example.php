@@ -9,7 +9,8 @@ $config = [
 		'password'  =>  '',
 		'charset'   =>  'utf8',
 		'collation' =>  'utf8_general_ci',
-		'prefix'    =>  ''
+		'prefix'    =>  '',
+        'strict'    => false,
 	],
 	"log_queries" => true,
 	"recaptcha_secret" => '--your recaptcha key here--',
