@@ -70,7 +70,11 @@ angular.module('frontendApp')
           date === null) {
          return $filter('translate')('NEVER_UPDATED');
       }
-      return moment(date).fromNow();
+      date = moment(date);
+      if (moment().diff(date, 'days') < 1) {
+         return date.calendar().split(' ')[0];  // 'Today'
+      }
+      return date.fromNow();
    };
 
    // Enable retrieval of tab index according

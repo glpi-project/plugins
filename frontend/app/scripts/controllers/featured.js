@@ -72,7 +72,11 @@ angular.module('frontendApp')
 
 
          $scope.fromNow = function(date) {
-            return moment(date).fromNow();
+            date = moment(date);
+            if (moment().diff(date, 'days') < 1) {
+               return date.calendar().split(' ')[0];  // 'Today'
+            }
+            return date.fromNow();
          };
       }
    ]);
