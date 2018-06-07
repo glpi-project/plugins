@@ -181,7 +181,7 @@ CREATE INDEX idx_plugin_screenshot_plugin ON plugin_screenshot(plugin_id);
 
 CREATE TABLE plugin_lang(
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   lang VARCHAR(5) NOT NULL UNIQUE
+   lang VARCHAR(20) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_plugin_lang(
