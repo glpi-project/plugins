@@ -164,8 +164,8 @@ class ValidableXMLPluginDescription {
             $this->throwOrCollect(new InvalidXML('field', 'langs.lang', '<lang> should be a singular field without children'));
          }
 
-         if (strlen((string)$lang) > 5) {
-            $this->throwOrCollect(new InvalidXML('field', 'langs.lang', '<lang> shouldnt exceed 5 characters'));
+         if (strlen((string)$lang) > 10) {
+            $this->throwOrCollect(new InvalidXML('field', 'langs.lang', '<lang> shouldnt exceed 10 characters'));
          }
       }
       return true;
