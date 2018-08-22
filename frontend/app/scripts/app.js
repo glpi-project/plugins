@@ -27,7 +27,7 @@ angular
 
    // Determining current language
    .run(function($rootScope) {
-      var langs = ['en', 'fr'];
+      var langs = ['en', 'fr', 'cs'];
       if (localStorage.getItem('lang') === null) {
          var lang = (navigator.language ?
                      navigator.language :
