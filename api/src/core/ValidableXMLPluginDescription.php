@@ -142,7 +142,7 @@ class ValidableXMLPluginDescription {
       foreach ($this->contents->versions->children() as $version) {
          foreach ($version->children() as $prop => $val) {
             if (!in_array($prop, ['num', 'compatibility', 'download_url'])) {
-               $this->throwOrCollect(new InvalidXML('field', 'versions.'.$prop, '<version> should contain only <num> and <compatibility>'));
+               $this->throwOrCollect(new InvalidXML('field', 'versions.'.$prop, '<version> should contain only <num>, <compatibility> and <download_url>'));
             }
          }
       }
