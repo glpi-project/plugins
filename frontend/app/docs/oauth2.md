@@ -487,7 +487,7 @@ Key              |     Value
 -----------------|-----------------------------------------------
 URL              |     /plugin/updated
 Method           |     GET
-Data Nature      |     The collection of all GLPi popular plugins
+Data Nature      |     The collection of latest updated GLPi plugins
 Paginated        |     false
 
 ##### Example usage (HTTP Session)
