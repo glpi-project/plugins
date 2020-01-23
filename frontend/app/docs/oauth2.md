@@ -485,7 +485,7 @@ and the date of the last update that occured on that plugin at the XML level.
 
 Key              |     Value
 -----------------|-----------------------------------------------
-URL              |     /plugin/trending
+URL              |     /plugin/updated
 Method           |     GET
 Data Nature      |     The collection of all GLPi popular plugins
 Paginated        |     false
@@ -493,7 +493,7 @@ Paginated        |     false
 ##### Example usage (HTTP Session)
 
 ```http
-GET /api/plugin/trending HTTP/1.1
+GET /api/plugin/updated HTTP/1.1
 Host: plugins.glpi-project.org
 Accept: application/json
 Authorization: Bearer yOuRAccesSTokeNhEre
