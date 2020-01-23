@@ -7,7 +7,7 @@ use \API\Model\Plugin;
 use \API\OAuthServer\OAuthHelper;
 
 $version_plugins = Tool::makeEndpoint(function($version) {
-   OAuthHelper::needsScopes(['version', 'plugins']);
+   OAuthHelper::needsScopes(['version', 'plugins', 'download_url']);
 
    $plugins = Tool::paginateCollection(Plugin::short()
                                              ->with('authors', 'versions', 'descriptions')

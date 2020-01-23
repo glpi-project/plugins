@@ -108,6 +108,7 @@ CREATE TABLE plugin_version(
    plugin_id INT,
    num VARCHAR(50),
    compatibility VARCHAR(50),
+   download_url VARCHAR(50),
    FOREIGN KEY (plugin_id)
       REFERENCES plugin(id)
       ON DELETE CASCADE
