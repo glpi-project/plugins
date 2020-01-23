@@ -382,6 +382,7 @@ class BackgroundTasks {
             $version = new PluginVersion;
             $version->num = trim((string)$_version->num);
             $version->compatibility = trim((string)$compat);
+            $version->download_url = trim((string)$_version->download_url);
             $version->plugin_id = $plugin->id;
             $version->save();
          }
