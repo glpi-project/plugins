@@ -19,19 +19,13 @@
    <md-content flex="33" flex-md="50" flex-sm="100">
       <md-list class="compact-list">
          <md-subheader class='topic'>
-            {{'NEW'|translate}}
-            <i class="fa fa-plus darkblue"></i>
-            <a href="{{api_url}}/plugin/rss_new">
-               <i class="fa fa-rss"></i>
-            </a>
+            {{'FEATURED'|translate}}
+            <i class="fa fa-star teal"></i>
          </md-subheader>
-         <span class="legend" translate="NEW_SUB"></span>
-         <md-list-item ng-repeat="plugin in new">
+         <span class='legend' translate="FEATURED_SUB"></span>
+         <md-list-item ng-repeat="plugin in featured">
             <md-button ui-sref="plugin({key: plugin.key})">
                <h4>{{plugin.name}}</h4>
-               <md-tooltip md-direction="right">
-                  <span translate="ADDED_ON_DATE" translate-value-date="{{plugin.date_added}}"></span>
-               </md-tooltip>
             </md-button>
          </md-list-item>
       </md-list>
@@ -76,6 +70,26 @@
    <md-content flex="33" flex-md="50" flex-sm="100">
       <md-list class="compact-list">
          <md-subheader class='topic'>
+            {{'NEW'|translate}}
+            <i class="fa fa-plus darkblue"></i>
+            <a href="{{api_url}}/plugin/rss_new">
+               <i class="fa fa-rss"></i>
+            </a>
+         </md-subheader>
+         <span class="legend" translate="NEW_SUB"></span>
+         <md-list-item ng-repeat="plugin in new">
+            <md-button ui-sref="plugin({key: plugin.key})">
+               <h4>{{plugin.name}}</h4>
+               <md-tooltip md-direction="right">
+                  <span translate="ADDED_ON_DATE" translate-value-date="{{plugin.date_added}}"></span>
+               </md-tooltip>
+            </md-button>
+         </md-list-item>
+      </md-list>
+   </md-content>
+   <md-content flex="33" flex-md="50" flex-sm="100">
+      <md-list class="compact-list">
+         <md-subheader class='topic'>
             <a ui-sref="tags" translate="TAGS"></a>
             <i class="fa fa-tags"></i>
          </md-subheader>
@@ -85,23 +99,6 @@
                <h4>{{tag.tag}}</h4>
                <md-tooltip md-direction="right">
                   <span translate="TAGGED_ON_N_PLUGINS" translate-value-plugincount="{{tag.plugin_count}}"></span>
-               </md-tooltip>
-            </md-button>
-         </md-list-item>
-      </md-list>
-   </md-content>
-   <md-content flex="33" flex-md="50" flex-sm="100">
-      <md-list class="compact-list">
-         <md-subheader class='topic'>
-            <a ui-sref="authors" translate="AUTHORS"></a>
-            <i class="fa fa-user yellow"></i>
-         </md-subheader>
-         <span class='legend' translate="AUTHORS_SUB"></span>
-         <md-list-item ng-repeat="author in authors">
-            <md-button ui-sref="author_plugins({id: author.id})">
-               <h4>{{author.name}}</h4>
-               <md-tooltip md-direction="right">
-                  <span translate="CONTRIBUTED_TO_N_PLUGINS" translate-value-plugincount="{{author.plugin_count}}"></span>
                </md-tooltip>
             </md-button>
          </md-list-item>

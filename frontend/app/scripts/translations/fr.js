@@ -15,6 +15,8 @@ angular
             POPULAR_SUB: "Les mieux notés",
             UPDATED: "Mis à jour",
             UPDATED_SUB: "Derniers plugins mis à jour",
+            FEATURED: "En vedette",
+            FEATURED_SUB: "Plugins sélectionnés par Teclib'",
             TAGS: "Tags",
             TAGS_SUB: "Avec le plus de plugins",
             AUTHORS: "Auteurs",

@@ -47,10 +47,10 @@ angular
             url: "/validatemail/:token",
             controller: "ValidatemailCtrl"
          })
-         .state('featured', {
+         .state('home', {
             url: "/",
-            templateUrl: "views/featured.html",
-            controller: 'FeaturedCtrl'
+            templateUrl: "views/home.html",
+            controller: 'HomeCtrl'
          })
          .state('all', {
             url: "/plugins",

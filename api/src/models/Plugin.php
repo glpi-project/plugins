@@ -109,6 +109,14 @@ class Plugin extends Model {
      return $query;
    }
 
+   public function scopeFeaturedPlugins($query) {
+      $query->select(['plugin.id', 'plugin.name','plugin.key'])
+         ->where('featured', '=', 1)
+         ->groupBy('plugin.id')
+         ->orderBy('plugin.name', 'ASC');
+      return $query;
+   }
+
    public function scopeTrendingTop($query) {
       $query->select(['plugin.id', 'plugin.name', 'plugin.key', 'plugin.download_count',
                         DB::raw('COUNT(name) as recent_downloads')])
