@@ -25,6 +25,12 @@ $download = Tool::makeEndpoint(function($key) use($app) {
    $plugin_download->plugin_id = $plugin->id;
    $plugin_download->save();
 
+   // don't redirect if it's an api call
+   $accept = $app->request->headers->get('Accept');
+   if (strtolower($accept) == "application/json") {
+      return;
+   }
+
    /**
     * @MonkeyPatch
     * @todo remove this as soon as possible once
