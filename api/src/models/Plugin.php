@@ -129,10 +129,14 @@ class Plugin extends Model {
       return $query;
    }
 
-   public function scopeWithTag($query, $tag) {
+   public function scopeWithTags($query, $tags) {
+      $ids = $tags->map(function ($tag) {
+         return $tag->id;
+      });
+
       $query->join('plugin_tags', 'plugin.id', '=', 'plugin_tags.plugin_id')
          ->join('tag', 'plugin_tags.tag_id', '=', 'tag.id')
-         ->where('tag.id', '=', $tag->id);
+         ->whereIn('tag.id', $ids);
       return $query;
    }
 
@@ -166,7 +170,7 @@ class Plugin extends Model {
 
    /**
     * Will increment the fetch fails counter,
-    * or initialize it if no 
+    * or initialize it if no
     */
    public function incrementXmlFetchFailCount() {
       if (!$this->id) {
