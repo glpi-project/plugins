@@ -62,8 +62,8 @@ $tag_single = Tool::makeEndpoint(function($key) use($app) {
 $tag_plugins = Tool::makeEndpoint(function($key) use($app) {
    OAuthHelper::needsScopes(['tag', 'plugins']);
 
-   $tag = Tag::where('key', '=', $key)->first();
-   if ($tag == NULL) {
+   $tags = Tag::where('key', '=', $key)->get();
+   if ($tags->isEmpty()) {
       throw new \API\Exception\ResourceNotFound('Tag', $key);
    }
 
@@ -71,7 +71,7 @@ $tag_plugins = Tool::makeEndpoint(function($key) use($app) {
                 ->short()
                 ->withAverageNote()
                 ->descWithLang(Tool::getRequestLang())
-                ->withTag($tag));
+                ->withTags($tags));
    Tool::endWithJson($plugins);
 });
 
