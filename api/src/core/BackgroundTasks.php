@@ -91,18 +91,27 @@ class BackgroundTasks {
     * is supported on access tokens
     */
    public function foreachAccessToken($tasks) {
-      $accessTokens = AccessToken::get();
-      $this->outputStr("Analyzing ".sizeof($accessTokens)." access tokens...");
-
+      $page      = 0;
+      $limit     = 1000;
       $n_deleted = 0;
 
-      foreach ($accessTokens as $accessToken) {
-         if (in_array('delete_AT_if_expired', $tasks)) {
-            if ($this->deleteAccessTokenIfExpired($accessToken)) {
-               $n_deleted++;
+      do {
+         $accessTokens = AccessToken::with('session')
+            ->skip($page * $limit - $n_deleted)
+            ->take($limit)
+            ->get();
+         $this->outputStr("Analyzing ".sizeof($accessTokens)." access tokens...");
+
+         foreach ($accessTokens as $accessToken) {
+            if (in_array('delete_AT_if_expired', $tasks)) {
+               if ($this->deleteAccessTokenIfExpired($accessToken)) {
+                  $n_deleted++;
+               }
             }
          }
-      }
+
+         $page++;
+      } while ($accessTokens->count() > 0);
 
       if (in_array('delete_AT_if_expired', $tasks) && $n_deleted > 0) {
          $this->outputStr(" deleted ".$n_deleted." perempted access tokens.");
@@ -117,19 +126,27 @@ class BackgroundTasks {
     * is supported on refresh tokens
     */
    public function foreachRefreshToken($tasks) {
-      $refreshTokens = RefreshToken::get();
-
-      $this->outputStr("Analyzing ".sizeof($refreshTokens)." refresh tokens...");
-
+      $page      = 0;
+      $limit     = 1000;
       $n_deleted = 0;
 
-      foreach ($refreshTokens as $refreshTokens) {
-         if (in_array('delete_lonely_RT', $tasks)) {
-            if ($this->deleteLonelyRefreshToken($refreshTokens)) {
-               $n_deleted++;
+      do {
+         $refreshTokens = RefreshToken::with('accessToken')
+            ->skip($page * $limit - $n_deleted)
+            ->take($limit)
+            ->get();
+         $this->outputStr("Analyzing ".sizeof($refreshTokens)." refresh tokens...");
+
+         foreach ($refreshTokens as $refreshTokens) {
+            if (in_array('delete_lonely_RT', $tasks)) {
+               if ($this->deleteLonelyRefreshToken($refreshTokens)) {
+                  $n_deleted++;
+               }
             }
          }
-      }
+
+         $page++;
+      } while ($refreshTokens->count() > 0);
 
       if (in_array('delete_lonely_RT', $tasks) && $n_deleted > 0) {
          $this->outputStr(" deleted ".$n_deleted." lonely refresh tokens.");
@@ -144,19 +161,27 @@ class BackgroundTasks {
     * is supported on sessions
     */
    public function foreachSession($tasks) {
-      $sessions = Session::get();
-
-      $this->outputStr("Analyzing ".sizeof($sessions)." sessions...");
-
+      $page      = 0;
+      $limit     = 1000;
       $n_deleted = 0;
 
-      foreach ($sessions as $session) {
-         if (in_array('delete_lonely_session', $tasks)) {
-            if ($this->deleteLonelySession($session)) {
-               $n_deleted++;
+      do {
+         $sessions = Session::with('accessToken')
+            ->skip($page * $limit - $n_deleted)
+            ->take($limit)
+            ->get();
+         $this->outputStr("Analyzing ".sizeof($sessions)." sessions...");
+
+         foreach ($sessions as $session) {
+            if (in_array('delete_lonely_session', $tasks)) {
+               if ($this->deleteLonelySession($session)) {
+                  $n_deleted++;
+               }
             }
          }
-      }
+
+         $page++;
+      } while ($sessions->count() > 0);
 
       if (in_array('delete_lonely_session', $tasks) && $n_deleted > 0) {
          $this->outputStr(" deleted ".$n_deleted." lonely sessions.");
