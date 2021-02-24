@@ -25,6 +25,12 @@ class BackgroundTasks {
    private $pluginMaxConsecutiveXmlFetchFails;
 
    /**
+    * Limit used for paginated processes.
+    * @var integer
+    */
+   const PAGE_LIMIT = 1000;
+
+   /**
     * Triggers the given list of tasks
     * on each plugin if task is supported
     * on plugins, and also
@@ -92,15 +98,16 @@ class BackgroundTasks {
     */
    public function foreachAccessToken($tasks) {
       $page      = 0;
-      $limit     = 1000;
+      $limit     = self::PAGE_LIMIT;
       $n_deleted = 0;
+
+      $this->outputStr("Analyzing ". AccessToken::count() ." access tokens...\n");
 
       do {
          $accessTokens = AccessToken::with('session')
             ->skip($page * $limit - $n_deleted)
             ->take($limit)
             ->get();
-         $this->outputStr("Analyzing ".sizeof($accessTokens)." access tokens...");
 
          foreach ($accessTokens as $accessToken) {
             if (in_array('delete_AT_if_expired', $tasks)) {
@@ -127,15 +134,16 @@ class BackgroundTasks {
     */
    public function foreachRefreshToken($tasks) {
       $page      = 0;
-      $limit     = 1000;
+      $limit     = self::PAGE_LIMIT;
       $n_deleted = 0;
+
+      $this->outputStr("Analyzing ". RefreshToken::count() ." refresh tokens...\n");
 
       do {
          $refreshTokens = RefreshToken::with('accessToken')
             ->skip($page * $limit - $n_deleted)
             ->take($limit)
             ->get();
-         $this->outputStr("Analyzing ".sizeof($refreshTokens)." refresh tokens...");
 
          foreach ($refreshTokens as $refreshTokens) {
             if (in_array('delete_lonely_RT', $tasks)) {
@@ -162,15 +170,16 @@ class BackgroundTasks {
     */
    public function foreachSession($tasks) {
       $page      = 0;
-      $limit     = 1000;
+      $limit     = self::PAGE_LIMIT;
       $n_deleted = 0;
+
+      $this->outputStr("Analyzing ". Session::count() ." sessions...\n");
 
       do {
          $sessions = Session::with('accessToken')
             ->skip($page * $limit - $n_deleted)
             ->take($limit)
             ->get();
-         $this->outputStr("Analyzing ".sizeof($sessions)." sessions...");
 
          foreach ($sessions as $session) {
             if (in_array('delete_lonely_session', $tasks)) {
