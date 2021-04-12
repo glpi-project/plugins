@@ -95,7 +95,7 @@ We are using the /oauth/authorize endpoint of glpi-plugin-directory which is the
 This is the kind of HTTP request that your script/webapp/thing needs to do in order to get an Access-Token.
 
 ```http
-GET /api/oauth/authorize HTTP/1.1
+POST /api/oauth/authorize HTTP/1.1
 Host: plugins.glpi-project.org
 Accept: application/json
 Content-Type: application/x-www-form-urlencoded
@@ -485,15 +485,15 @@ and the date of the last update that occured on that plugin at the XML level.
 
 Key              |     Value
 -----------------|-----------------------------------------------
-URL              |     /plugin/trending
+URL              |     /plugin/updated
 Method           |     GET
-Data Nature      |     The collection of all GLPi popular plugins
+Data Nature      |     The collection of latest updated GLPi plugins
 Paginated        |     false
 
 ##### Example usage (HTTP Session)
 
 ```http
-GET /api/plugin/trending HTTP/1.1
+GET /api/plugin/updated HTTP/1.1
 Host: plugins.glpi-project.org
 Accept: application/json
 Authorization: Bearer yOuRAccesSTokeNhEre
@@ -502,7 +502,7 @@ Authorization: Bearer yOuRAccesSTokeNhEre
 ##### Example usage (cURL call)
 
 ```sh
-curl -X GET -H 'Accept: application/json' -H 'Authorization: Bearer youRAccesSTokeNhEre' http://plugins.glpi-project.com/api/plugin/trending
+curl -X GET -H 'Accept: application/json' -H 'Authorization: Bearer youRAccesSTokeNhEre' http://plugins.glpi-project.com/api/plugin/updated
 ```
 
 ##### Example response
