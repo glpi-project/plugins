@@ -140,7 +140,7 @@ CREATE TABLE plugin_contributor(
       ON DELETE CASCADE
 ) ENGINE=InnoDB;
 CREATE INDEX idx_plugin_contributor_plugin ON plugin_contributor(plugin_id);
-CREATE INDEX idx_plugin_contributor_user ON plugin_contributor(userpuser_id);
+CREATE INDEX idx_plugin_contributor_user ON plugin_contributor(user_id);
 
 CREATE TABLE tag(
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
