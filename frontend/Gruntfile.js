@@ -25,6 +25,8 @@ module.exports = function (grunt) {
     dist: 'dist'
   };
 
+   var serveStatic = require('serve-static');
+
   // Define the configuration for all the tasks
   grunt.initConfig({
 
@@ -86,16 +88,16 @@ module.exports = function (grunt) {
           open: true,
           middleware: function (connect) {
             return [
-              connect.static('.tmp'),
+              serveStatic('.tmp'),
               connect().use(
                 '/bower_components',
-                connect.static('./bower_components')
+                serveStatic('./bower_components')
               ),
               connect().use(
                 '/app/styles',
-                connect.static('./app/styles')
+                serveStatic('./app/styles')
               ),
-              connect.static(appConfig.app)
+              serveStatic(appConfig.app)
             ];
           }
         }
@@ -105,13 +107,13 @@ module.exports = function (grunt) {
           port: 9001,
           middleware: function (connect) {
             return [
-              connect.static('.tmp'),
-              connect.static('test'),
+              serveStatic('.tmp'),
+              serveStatic('test'),
               connect().use(
                 '/bower_components',
-                connect.static('./bower_components')
+                serveStatic('./bower_components')
               ),
-              connect.static(appConfig.app)
+              serveStatic(appConfig.app)
             ];
           }
         }
@@ -285,19 +287,6 @@ module.exports = function (grunt) {
         ],
         patterns: {
           js: [[/(images\/[^''""]*\.(png|jpg|jpeg|gif|webp|svg))/g, 'Replacing references to images']]
-        }
-      }
-    },
-
-    uncss: {
-      dist: {
-        options: {
-          csspath: '../.tmp',
-          stylesheets: ['../.tmp/styles/main.css'],
-          ignore: ['.ng-move', '.ng-enter', '.ng-leave', '.created_by_jQuery']
-        },
-        files: {
-          '.tmp/styles/main.css': ['<%= yeoman.dist %>/{,*/}*.html'],
         }
       }
     },
@@ -558,7 +547,6 @@ module.exports = function (grunt) {
     'filerev',
     'usemin',
     'htmlmin',
-    'uncss',
     'markdown:dist'
   ]);
 
