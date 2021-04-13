@@ -12,12 +12,14 @@
       "google/recaptcha": "^1.1",
       "illuminate/database": "5.1.*",
       "illuminate/events": "5.1.*",
+      "laminas/laminas-uri": "^2.8",
       "league/oauth2-client": "^1.0",
       "league/oauth2-github": "^0.2.0",
       "league/oauth2-server": "^4.1",
       "slim/slim": "~2.0",
       "suin/php-rss-writer": ">=1.0",
       "swiftmailer/swiftmailer": "^5.4",
+      "tgalopin/html-sanitizer": "^1.4",
       "twig/twig": "~1.0"
    },
    "autoload": {

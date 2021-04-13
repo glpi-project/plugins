@@ -2,20 +2,20 @@
 
 namespace API\Core;
 
+use API\Exception\InvalidXML;
+use API\Model\AccessToken;
 use API\Model\Author;
 use API\Model\Plugin;
 use API\Model\PluginDescription;
-use API\Model\PluginVersion;
-use API\Model\PluginScreenshot;
 use API\Model\PluginLang;
-use API\Model\Tag;
-use API\Model\AccessToken;
+use API\Model\PluginScreenshot;
+use API\Model\PluginVersion;
 use API\Model\RefreshToken;
 use API\Model\Session;
-use API\Core\Tool;
-use API\Core\ValidableXMLPluginDescription;
-use API\Exception\InvalidXML;
+use API\Model\Tag;
 use GuzzleHttp\Client as GuzzleHttpClient;
+use HtmlSanitizer\Sanitizer;
+use Laminas\Uri\Uri;
 
 class BackgroundTasks {
    public $currentXml;
@@ -317,10 +317,11 @@ class BackgroundTasks {
       }
 
       $xml = $xml->contents;
+      $xml_name = $this->sanitizeText($xml->name);
 
       if (!$plugin->name) {
-         $this->outputStr("first time update, found name \"".$xml->name."\"...");
-         if (Plugin::where('name', '=', $xml->name)->first()) {
+         $this->outputStr("first time update, found name \"".$xml_name."\"...");
+         if (Plugin::where('name', '=', $xml_name)->first()) {
             $this->outputStr(" already exists. skipping.");
             // this would be amazing to alert the administrators
             // of that. new Mailer; ?
@@ -329,9 +330,9 @@ class BackgroundTasks {
          $firstTimeUpdate = true;
       }
       else {
-         if ($plugin->name != $xml->name) {
-            $this->outputStr(" requested name change to \"".$xml->name."\" ...");
-            if (Plugin::where('name', '=', $xml->name)->first()) {
+         if ($plugin->name != $xml_name) {
+            $this->outputStr(" requested name change to \"".$xml_name."\" ...");
+            if (Plugin::where('name', '=', $xml_name)->first()) {
                $this->outputStr(" but name already exists. skipping.");
                // this would be amazing to alert the administrators
                // of that. new Mailer; ?
@@ -351,14 +352,14 @@ class BackgroundTasks {
       );
 
       // Updating basic infos
-      $plugin->logo_url = $xml->logo;
-      $plugin->name = $xml->name;
-      $plugin->key = $xml->key;
-      $plugin->homepage_url = $xml->homepage;
-      $plugin->download_url = $xml->download;
-      $plugin->issues_url = $xml->issues;
-      $plugin->readme_url  = $xml->readme;
-      $plugin->license = $xml->license;
+      $plugin->logo_url = $this->sanitizeUrl($xml->logo);
+      $plugin->name = $xml_name;
+      $plugin->key =  $this->sanitizeText($xml->key);
+      $plugin->homepage_url = $this->sanitizeUrl($xml->homepage);
+      $plugin->download_url = $this->sanitizeUrl($xml->download);
+      $plugin->issues_url = $this->sanitizeUrl($xml->issues);
+      $plugin->readme_url  = $this->sanitizeUrl($xml->readme);
+      $plugin->license = $this->sanitizeText($xml->license);
 
       // reading descriptions,
       // mapping type=>lang relation to lang=>type
@@ -366,7 +367,7 @@ class BackgroundTasks {
       foreach ($xml->description->children() as $type => $descs) {
          if (in_array($type, ['short','long'])) {
             foreach($descs->children() as $_lang => $content) {
-               $descriptions[$_lang][$type] = (string)$content;
+               $descriptions[$_lang][$type] = $this->sanitizeHtml((string)$content);
             }
          }
       }
@@ -388,7 +389,8 @@ class BackgroundTasks {
       $plugin->authors()->detach();
       $clean_authors = [];
       foreach($xml->authors->children() as $author) {
-         $_clean_authors = Author::fixKnownDuplicates((string)$author);
+         $author = $this->sanitizeText((string)$author);
+         $_clean_authors = Author::fixKnownDuplicates($author);
          foreach ($_clean_authors as $author) {
             $clean_authors[] = $author;
          }
@@ -414,9 +416,9 @@ class BackgroundTasks {
       foreach($xml->versions->children() as $_version) {
          foreach ($_version->compatibility as $compat) {
             $version = new PluginVersion;
-            $version->num = trim((string)$_version->num);
-            $version->compatibility = trim((string)$compat);
-            $version->download_url = trim((string)$_version->download_url);
+            $version->num = $this->sanitizeText(trim((string)$_version->num));
+            $version->compatibility = $this->sanitizeText(trim((string)$compat));
+            $version->download_url = $this->sanitizeUrl(trim((string)$_version->download_url));
             $version->plugin_id = $plugin->id;
             $version->save();
          }
@@ -427,7 +429,7 @@ class BackgroundTasks {
          $plugin->screenshots()->delete();
          foreach ($xml->screenshots->children() as $url) {
             $screenshot = new PluginScreenshot;
-            $screenshot->url = (string)$url;
+            $screenshot->url = $this->sanitizeUrl((string)$url);
             $screenshot->plugin_id = $plugin->id;
             $screenshot->save();
          }
@@ -437,14 +439,15 @@ class BackgroundTasks {
       $plugin->tags()->detach();
       foreach($xml->tags->children() as $lang => $tags) {
          foreach($tags->children() as $_tag) {
-            $found = Tag::where('tag', '=', (string)$_tag)
+            $_tag = $this->sanitizeText((string)$_tag);
+            $found = Tag::where('tag', '=', $_tag)
                         ->where('lang', '=', $lang)
                         ->first();
             if (sizeof($found) < 1) {
                $tag = new Tag;
-               $tag->tag = (string)$_tag;
+               $tag->tag = $_tag;
                $tag->lang = $lang;
-               $tag->key = Tool::getUrlSlug((string)$_tag);
+               $tag->key = Tool::getUrlSlug($_tag);
                $tag->save();
             }
             else $tag = $found;
@@ -456,7 +459,7 @@ class BackgroundTasks {
       // Reassociating plugin to langs
       $plugin->langs()->detach();
       foreach ($xml->langs->children() as $lang) {
-         $lang = (string)$lang;
+         $lang = $this->sanitizeText((string)$lang);
 
          $_lang = PluginLang::where('lang', '=', $lang)->first();
          if (!$_lang) {
@@ -603,6 +606,49 @@ class BackgroundTasks {
       if (!$this->silentMode) {
          echo $str;
       }
+   }
+
+   /**
+    * Sanitize a text (remove HTML tags).
+    *
+    * @param string $text
+    *
+    * @return string
+    */
+   private function sanitizeText(string $text): string {
+      $sanitizer = Sanitizer::create([]);
+      $sanitized = $sanitizer->sanitize($text);
+      return html_entity_decode($sanitized, ENT_QUOTES); // Decode quotes as result is not supposed to be a HTML code
+   }
+
+   /**
+    * Sanitize a HTML string (remove unauthorized HTML tags).
+    *
+    * @param string $html
+    *
+    * @return string
+    */
+   private function sanitizeHtml(string $html): string {
+      $sanitizer = Sanitizer::create(['extensions' => ['basic']]);
+      return $sanitizer->sanitize($html);
+   }
+
+   /**
+    * Sanitize an URL
+    *
+    * @param string $url
+    *
+    * @return string|null
+    */
+   private function sanitizeUrl(string $url): ?string {
+      try {
+         $uri = new Uri($url);
+      } catch (\Laminas\Uri\Exception\InvalidArgumentException $e) {
+         return null;
+      }
+      return $uri->isValid() && $uri->isAbsolute() && in_array($uri->getScheme(), ['http', 'https'])
+         ? $uri->__toString()
+         : null;
    }
 
    public function __construct($options = []) {
