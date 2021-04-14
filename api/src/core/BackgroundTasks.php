@@ -440,6 +440,7 @@ class BackgroundTasks {
       foreach($xml->tags->children() as $lang => $tags) {
          foreach($tags->children() as $_tag) {
             $_tag = $this->sanitizeText((string)$_tag);
+            $_tag = substr($_tag, 0, 25); // Tag length is limited to 25 chars in DB
             $found = Tag::where('tag', '=', $_tag)
                         ->where('lang', '=', $lang)
                         ->first();
