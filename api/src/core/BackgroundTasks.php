@@ -397,7 +397,7 @@ class BackgroundTasks {
       }
       foreach ($clean_authors as $_author) {
          $found = Author::where('name', '=', $_author)->first();
-         if (sizeof($found) < 1) {
+         if (!$found) {
             $author = new Author;
             $author->name = $_author;
             $author->save();
@@ -444,7 +444,7 @@ class BackgroundTasks {
             $found = Tag::where('tag', '=', $_tag)
                         ->where('lang', '=', $lang)
                         ->first();
-            if (sizeof($found) < 1) {
+            if (!$found) {
                $tag = new Tag;
                $tag->tag = $_tag;
                $tag->lang = $lang;
