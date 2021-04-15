@@ -151,7 +151,7 @@ This is a configuration example for Apache HTTPd :
 
        # Cross domain access (you need apache header mod : a2enmod headers)
        Header add Access-Control-Allow-Origin "*"
-       Header add Access-Control-Allow-Headers "origin, x-requested-with, content-type, x-lang, x-range, accept"
+       Header add Access-Control-Allow-Headers "origin, x-requested-with, content-type, x-lang, x-range, accept, authorization"
        Header add Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
        Header add Access-Control-Expose-Headers "content-type, content-range, accept-range"
 
@@ -187,10 +187,10 @@ server {
 
     root /path/to/glpi-plugin-directory/api;
 
-    add_header Access-Control-Allow-Origin "*";
-    add_header Access-Control-Allow-Headers "origin, x-requested-with, content-type, x-lang, x-range, accept";
-    add_header Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS";
-    add_header Access-Control-Expose-Headers "content-type, content-range, accept-range";
+    add_header Access-Control-Allow-Origin "*" always;
+    add_header Access-Control-Allow-Headers "origin, x-requested-with, content-type, x-lang, x-range, accept, authorization" always;
+    add_header Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS" always;
+    add_header Access-Control-Expose-Headers "content-type, content-range, accept-range" always;
 
     try_files $uri $uri/ /index.php?$args;
     index index.php;
