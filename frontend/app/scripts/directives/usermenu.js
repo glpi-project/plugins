@@ -12,7 +12,7 @@ angular.module('frontendApp')
       template: '<md-menu md-offset="0 92px">'+
                   '<md-button ng-click="ctrl.openMenu($mdOpenMenu, $event)">'+
                      '<i ng-hide="authed" class="fa fa-user"></i>'+
-                     '<img ng-show="authed" ng-src="http://www.gravatar.com/avatar/{{gravatar}}?s=50" class="avatar" />'+
+                     '<img ng-show="authed" ng-src="//www.gravatar.com/avatar/{{gravatar}}?s=50" class="avatar" />'+
                      '<span>{{(authed) ? username :  \'LOGIN\'|translate}}</span>'+
                   '</md-button>'+
                   '<md-menu-content width="4">'+
