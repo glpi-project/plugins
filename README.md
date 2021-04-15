@@ -59,7 +59,7 @@ GRANT ALL PRIVILEGES ON glpiplugindirectory.* TO '<usercreated>'@'localhost' IDE
 in the folder where you cloned this repo, run
 
 ```bash
-mysql -u <usercreated> -p<password> <database> < misc/structure.sql
+mysql -u <usercreated> -p<password> <database> < misc/init-db.sql
 ```
 
 be sure to replace &lt;usercreated&gt; &lt;password&gt; and &lt;database&gt;
