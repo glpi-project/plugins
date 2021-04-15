@@ -350,7 +350,7 @@ Accept-Range: model 111
 
 This endpoint's data source yields a JSON Array containing a list of JSON serialized objects.
 Each of these objects describes a single Plugin.
-This endpoint returns a top 10 of all the plugins that were recently significantly downloaded.
+This endpoint returns plugins that were recently significantly downloaded.
 There is a output difference between this endpoint and the "Plugin list" one,
 This endpoint gives only summaries of each plugin, containing id, name, key,
 total number of downloads and number of recent downloads (within the last month)
@@ -413,7 +413,7 @@ Content-Type: application/json
 
 This endpoint's data source yields a JSON Array containing a list of JSON serialized objects.
 Each of these objects describes a single Plugin.
-This endpoint returns a top 10 of all the plugins that were the most significantly downloaded.
+This endpoint returns plugins that were the most significantly downloaded.
 There is a output difference between this endpoint and the "Plugin list" one,
 This endpoint gives only summaries of each plugin, containing id, name, key,
 total number of downloads, number of votes, and current average note.
@@ -479,7 +479,7 @@ Content-Type: application/json
 
 This endpoint's data source yields a JSON Array containing a list of JSON serialized objects.
 Each of these objects describes a single Plugin.
-This endpoint returns a top 10 of all the plugins that were recently updated at the XML level.
+This endpoint returns plugins that were recently updated at the XML level.
 This endpoint gives only summaries of each plugin, containing id, name, key,
 and the date of the last update that occured on that plugin at the XML level.
 
@@ -538,7 +538,7 @@ Content-Type: application/json
 
 This endpoint's data source yields a JSON Array containing a list of JSON serialized objects.
 Each of these objects describes a single Plugin.
-This endpoint returns a top 10 of all the plugins that were recently added in the GLPi Plugins Directory.
+This endpoint returns plugins that were recently added in the GLPi Plugins Directory.
 This endpoint gives only summaries of each plugin, containing id, name, key,
 and the date of insertion of that plugin in the GLPi Plugins Directory.
 
@@ -546,7 +546,7 @@ Key              |     Value
 -----------------|-----------------------------------------------
 URL              |     /plugin/new
 Method           |     GET
-Data Nature      |     top 10 of all the plugins that were recently added in the GLPi Plugins Directory
+Data Nature      |     plugins that were recently added in the GLPi Plugins Directory
 Paginated        |     false
 
 ##### Example usage (HTTP Session)
@@ -1181,13 +1181,13 @@ Content-Range: 0-14/18
 
 This endpoint's data source yields a JSON Array containing a list of JSON serialized objects.
 Each of these objects describes a single Tag.
-This endpoint returns a top-10 of all the most used tags.
+This endpoint returns a top of all the most used tags.
 
 Key              |     Value
 -----------------|-----------------------------------------------
 URL              |     /tags/top
 Method           |     GET
-Data Nature      |     top-10 of all the most used tags
+Data Nature      |     top of all the most used tags
 Paginated        |     false
 
 ##### Example usage (HTTP Session)

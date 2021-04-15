@@ -34,14 +34,12 @@ class Author extends Model {
       return $newQuery;
    }
 
-   public function scopeMostActive($query, $limit = false) {
+   public function scopeMostActive($query) {
       $query->select(['author.id', 'author.name', DB::raw('COUNT(plugin_author.plugin_id) as plugin_count')])
             ->leftJoin('plugin_author', 'author.id', '=', 'plugin_author.author_id')
             ->groupBy('author.name')
             ->orderBy('plugin_count', 'DESC');
-      if ($limit != false) {
-         $query->take($limit);
-      }
+
       return $query;
    }
 

@@ -23,7 +23,10 @@ angular.module('frontendApp')
 
     $http({
       method: 'GET',
-      url: API_URL + '/plugin/trending'
+      url: API_URL + '/plugin/trending',
+      headers: {
+         'X-Range': '0-9'
+      }
     }).then(function(resp) {
       $scope.trending = resp.data;
     });
