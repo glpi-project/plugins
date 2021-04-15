@@ -32,7 +32,10 @@ $all = Tool::makeEndpoint(function() use($app) {
 $top = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['authors']);
 
-   $top = \API\Model\Author::mostActive(10)->get();
+   $top = Tool::paginateCollection(
+       \API\Model\Author::mostActive()
+   );
+
    Tool::endWithJson($top);
 });
 

@@ -18,7 +18,10 @@ angular.module('frontendApp')
 
          $http({
             method: 'GET',
-            url: apiUrl + '/plugin/trending'
+            url: apiUrl + '/plugin/trending',
+            headers: {
+               'X-Range': '0-9'
+            }
          })
          .success(function(data, status, headers, config) {
             $scope.trending = data;
@@ -26,7 +29,10 @@ angular.module('frontendApp')
 
          $http({
             method: 'GET',
-            url: apiUrl + '/plugin/popular'
+            url: apiUrl + '/plugin/popular',
+            headers: {
+               'X-Range': '0-9'
+            }
          })
          .success(function(data, status, headers, config) {
             $scope.popular = data;
@@ -34,7 +40,10 @@ angular.module('frontendApp')
 
          $http({
             method: 'GET',
-            url: apiUrl + '/plugin/updated'
+            url: apiUrl + '/plugin/updated',
+            headers: {
+               'X-Range': '0-9'
+            }
          })
          .success(function(data, status, headers, config) {
             $scope.updated = data;
@@ -42,7 +51,10 @@ angular.module('frontendApp')
 
          $http({
             method: 'GET',
-            url: apiUrl + '/plugin/new'
+            url: apiUrl + '/plugin/new',
+            headers: {
+               'X-Range': '0-9'
+            }
          })
          .success(function(data, status, headers, config) {
             $scope.new = data;
@@ -51,7 +63,10 @@ angular.module('frontendApp')
          var getTags = function() {
             $http({
                method: 'GET',
-               url: apiUrl + '/tags/top'
+               url: apiUrl + '/tags/top',
+               headers: {
+                  'X-Range': '0-9'
+               }
             })
             .success(function(data, status, headers, config) {
                $scope.tags = data;
@@ -64,7 +79,10 @@ angular.module('frontendApp')
 
          $http({
             method: 'GET',
-            url: apiUrl + '/author/top'
+            url: apiUrl + '/author/top',
+            headers: {
+               'X-Range': '0-9'
+            }
          })
          .success(function(data, status, headers, config) {
             $scope.authors = data;

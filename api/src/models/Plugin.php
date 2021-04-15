@@ -93,39 +93,35 @@ class Plugin extends Model {
       return $query;
    }
 
-   public function scopePopularTop($query, $limit = 10) {
+   public function scopePopularTop($query) {
       $query->select(['plugin.id', 'plugin.name','plugin.key', 'download_count',
                   DB::raw('(SELECT COUNT(*) FROM plugin_stars where plugin_stars.plugin_id = plugin.id) as n_votes'),
                   DB::raw('(select AVG(plugin_stars.note) AS avg_note FROM plugin_stars WHERE plugin_stars.plugin_id = plugin.id) AS note')])
                 ->orderBy('download_count', 'DESC')
                 ->orderBy('note', 'DESC')
-                ->orderBy('n_votes', 'DESC')
-                ->take(10);
+                ->orderBy('n_votes', 'DESC');
       return $query;
    }
 
-   public function scopeMostFreshlyAddedPlugins($query, $limit = 10) {
+   public function scopeMostFreshlyAddedPlugins($query) {
      $query->select(['plugin.id', 'plugin.name', 'plugin.date_added', 'plugin.key'])
-         ->orderBy('plugin.date_added', 'DESC')
-         ->take($limit);
+         ->orderBy('plugin.date_added', 'DESC');
      return $query;
    }
 
-   public function scopeTrendingTop($query, $limit = 10) {
+   public function scopeTrendingTop($query) {
       $query->select(['plugin.id', 'plugin.name', 'plugin.key', 'plugin.download_count',
                         DB::raw('COUNT(name) as recent_downloads')])
                 ->join('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
                 ->where('downloaded_at', '>', DB::raw('NOW() - INTERVAL 1 MONTH'))
                 ->groupBy('plugin.name')
-                ->orderBy('recent_downloads', 'DESC')
-               ->take($limit);
+                ->orderBy('recent_downloads', 'DESC');
       return $query;
    }
 
-   public function scopeUpdatedRecently($query, $limit = 10) {
+   public function scopeUpdatedRecently($query) {
       $query->select(['plugin.id', 'plugin.key', 'plugin.name', 'plugin.date_updated'])
-           ->orderBy('date_updated', 'DESC')
-           ->take($limit);
+           ->orderBy('date_updated', 'DESC');
       return $query;
    }
 

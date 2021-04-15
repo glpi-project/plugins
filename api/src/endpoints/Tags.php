@@ -36,8 +36,7 @@ $tags_top = Tool::makeEndpoint(function() use ($app) {
    OAuthHelper::needsScopes(['tags']);
 
    $tags = Tag::withUsage()
-            ->orderBy('plugin_count', 'DESC')
-            ->limit(10);
+            ->orderBy('plugin_count', 'DESC');
 
    $tags_lang = clone $tags;
    $tags_lang = $tags_lang->withLang(Tool::getRequestLang());
@@ -46,7 +45,7 @@ $tags_top = Tool::makeEndpoint(function() use ($app) {
    } else {
       $tags = $tags->withLang(Tool::getRequestLang());
    }
-   Tool::endWithJson($tags->get());
+   Tool::endWithJson(Tool::paginateCollection($tags));
 });
 
 $tag_single = Tool::makeEndpoint(function($key) use($app) {
