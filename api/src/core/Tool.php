@@ -87,6 +87,7 @@ class Tool {
                   ->first();
 
          if ($plugin) {
+            $last_version = $plugin->getLatestVersion();
             $plugin = $plugin->toArray();
 
             // compute date
@@ -110,8 +111,8 @@ class Tool {
 
             // find last version (the first in list)
             $version_num  = $version_compat = "";
-            $last_version = array_shift($plugin['versions']);
             if ($last_version != NULL) {
+               $last_version = $last_version->toArray();
                $version_num    = $last_version['num'];
                $version_compat = $last_version['compatibility'];
                $description.=  "<br />
