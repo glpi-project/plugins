@@ -630,7 +630,11 @@ class BackgroundTasks {
     * @return string
     */
    private function sanitizeHtml(string $html): string {
-      $sanitizer = Sanitizer::create(['extensions' => ['basic']]);
+      $sanitizer = Sanitizer::create(
+          [
+              'extensions' => ['basic', 'code', 'details', 'extra', 'list', 'table',]
+          ]
+      );
       return $sanitizer->sanitize($html);
    }
 
