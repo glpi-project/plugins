@@ -487,9 +487,13 @@ class BackgroundTasks {
    }
 
    private function alertWatchers($plugin) {
-      $client_url = Tool::getConfig()['client_url'];
+      $mime_grammar = new \Swift_Mime_Grammar();
+
       foreach ($plugin->watchers()->get() as $watch) {
          $user = $watch->user;
+         if (!preg_match('/^'.$mime_grammar->getDefinition('addr-spec').'$/D', $user->email)) {
+            continue; // Prevent \Swift_RfcComplianceException exception on email sending
+         }
          $mailer = new Mailer;
          $mailer->sendMail('plugin_updated.html',
                            [$user->email => $user->username],
