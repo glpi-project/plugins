@@ -217,4 +217,9 @@ class Plugin extends Model {
         ->delete();
       return 0;
    }
+
+   public function getLatestVersion() {
+      $sorted = $this->versions->sortByDesc('num', SORT_NATURAL);
+      return $sorted->first();
+   }
 }

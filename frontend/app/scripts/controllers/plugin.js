@@ -11,7 +11,7 @@ angular.module('frontendApp')
 
 .controller('PluginCtrl', function(API_URL, $scope, $http, $stateParams,
                                    $window, $filter, $state, $mdToast,
-                                   $timeout, fixIndepnet, Toaster) {
+                                   $timeout, fixIndepnet, Toaster, PluginVersions) {
    $scope.plugin = {
       authors: {},
       download_count: 0
@@ -160,6 +160,7 @@ angular.module('frontendApp')
    .success(function(data) {
       fixIndepnet.fix(data);
       $scope.plugin = data;
+      $scope.plugin.versions = PluginVersions.sort(data.versions);
       $scope.rated = (localStorage.getItem('rated_' + $scope.plugin.id) == 'true') ? true : false;
       $scope.selectedIndex = getTabWithLang(localStorage.getItem('lang'));
 
