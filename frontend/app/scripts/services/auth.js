@@ -124,7 +124,7 @@ angular.module('frontendApp')
 
          try {
             var location = authorizationRequestWindow.location.href;
-            if (location.split(API_URL).length > 1) {
+            if (location.split(API_URL.replace(/http(s)?:/, '')).length > 1) {
                var evl = authorizationRequestWindow.addEventListener('message', function(e) {
                   var data = JSON.parse(e.data);
                   if (!data.error) {
