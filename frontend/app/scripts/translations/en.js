@@ -15,6 +15,8 @@ angular
             POPULAR_SUB: "With the most unique installs",
             UPDATED: "Updated",
             UPDATED_SUB: "Recently updated plugins",
+            FEATURED: "Featured",
+            FEATURED_SUB: "Selected plugins by Teclib'",
             TAGS: "Tags",
             TAGS_SUB: "With the highest number of plugin",
             AUTHORS: "Authors",
