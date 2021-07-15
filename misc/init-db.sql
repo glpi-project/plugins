@@ -6,7 +6,9 @@ CREATE TABLE `access_tokens` (
   `token` varchar(40) DEFAULT NULL,
   `session_id` int NOT NULL,
   `expire_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `session_id` (`session_id`),
+  CONSTRAINT `access_tokens_ibfk_1` FOREIGN KEY (`session_id`) REFERENCES `sessions` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `access_tokens_scopes` (
