@@ -80,7 +80,8 @@ CREATE TABLE `plugin` (
   `date_updated` date DEFAULT NULL,
   `download_count` int DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `ix_plugin` (`key`)
+  UNIQUE KEY `ix_plugin` (`key`),
+  KEY `active` (`active`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `plugin_author` (
