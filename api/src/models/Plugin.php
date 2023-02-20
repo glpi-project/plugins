@@ -111,10 +111,10 @@ class Plugin extends Model {
 
    public function scopeTrendingTop($query) {
       $query->select(['plugin.id', 'plugin.name', 'plugin.key', 'plugin.download_count',
-                        DB::raw('COUNT(name) as recent_downloads')])
+                        DB::raw('COUNT(plugin.id) as recent_downloads')])
                 ->join('plugin_download', 'plugin.id', '=', 'plugin_download.plugin_id')
                 ->where('downloaded_at', '>', DB::raw('NOW() - INTERVAL 1 MONTH'))
-                ->groupBy('plugin.name')
+                ->groupBy('plugin.id')
                 ->orderBy('recent_downloads', 'DESC');
       return $query;
    }
