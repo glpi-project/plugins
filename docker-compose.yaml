@@ -1,0 +1,13 @@
+services:
+  app:
+    container_name: "plugins.glpi-project.org"
+    build:
+      context: ".docker/development"
+    ports:
+      - "8080:80"
+      - "9000:9000"
+      - "35729:35729"
+    volumes:
+      - ".:/var/www/plugins.glpi-project.org:rw"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

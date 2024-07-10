@@ -1,6 +1,6 @@
-FROM composer:latest AS composer
+FROM composer:1 AS composer
 
-FROM php:7.4-apache
+FROM php:7.4-apache-bullseye
 
 # Workaround to make apache use same UID/GID as host user.
 ARG HOST_GROUP_ID=1000
@@ -22,13 +22,10 @@ RUN apt-get update \
   # Install PDO MySQL PHP extension.
   && docker-php-ext-install pdo pdo_mysql \
   \
-  # Install cron service.
-  && apt-get install --assume-yes --no-install-recommends --quiet cron \
-  \
   # Install nodejs, npm and build utils.
-  && apt-get install --assume-yes --no-install-recommends --quiet gnupg \
-  && curl --silent --location https://deb.nodesource.com/setup_10.x | bash - \
-  && apt-get install --assume-yes --no-install-recommends --quiet nodejs \
+  && mkdir /opt/nodejs && curl --silent --location https://nodejs.org/download/release/v10.24.1/node-v10.24.1-linux-x64.tar.gz | tar --extract --gzip --strip-components=1 --verbose --directory=/opt/nodejs \
+  && ln --symbolic /opt/nodejs/bin/node /usr/bin/node \
+  && ln --symbolic /opt/nodejs/bin/npm /usr/bin/npm \
   && npm install -g bower grunt \
   && apt-get install --assume-yes --no-install-recommends --quiet ruby-dev \
   && gem install compass \
@@ -43,6 +40,9 @@ RUN apt-get update \
   # Clean sources list
   && rm -rf /var/lib/apt/lists/*
 
+# Add global node installed libs to path
+ENV PATH="/opt/nodejs/bin/:${PATH}"
+
 # Required for PhantomJS.
 ENV OPENSSL_CONF=/etc/ssl/
 
@@ -51,16 +51,6 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Copy files to container.
 COPY ./files/etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf
-COPY ./files/opt/startup.sh /opt/startup.sh
-COPY ./files/etc/cron.d/plugins.glpi-project.org /etc/cron.d/plugins.glpi-project.org
 
-# Install crontab.
-RUN crontab -u www-data /etc/cron.d/plugins.glpi-project.org
-
-# Define application path as volume and working dir
-VOLUME /var/www/plugins.glpi-project.org
+USER www-data
 WORKDIR /var/www/plugins.glpi-project.org
-
-# Make startup script executable and executes it as default command.
-RUN chmod u+x /opt/startup.sh
-CMD /opt/startup.sh
