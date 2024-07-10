@@ -99,6 +99,12 @@
                   <a href="{{plugin.issues_url}}">{{plugin.issues_url}}</a>
                </span>
             </li>
+            <li ng-show="plugin.changelog_url">
+               <label translate="CHANGELOG"></label>
+               <span>
+                  <a href="{{plugin.changelog_url}}">{{plugin.changelog_url}}</a>
+               </span>
+            </li>
             <li>
                <label translate="ADDED"></label>
                <span>{{fromNow(plugin.date_added)}}</span>

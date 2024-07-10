@@ -17,6 +17,7 @@ class ValidableXMLPluginDescription {
       "state",
       "description",
       "homepage",
+      "changelog",
       "download",
       "authors",
       "versions",
@@ -87,6 +88,14 @@ class ValidableXMLPluginDescription {
       if (sizeof($this->contents->homepage) != 1 ||
          sizeof($this->contents->homepage->children()) != 0) {
          $this->throwOrCollect(new InvalidXML('field', 'homepage', '<homepage> should be a singular field without children'));
+      }
+      return true;
+   }
+
+   public function validateChangeLog() {
+      if (sizeof($this->contents->changelog) != 1 ||
+         sizeof($this->contents->changelog->children()) != 0) {
+         $this->throwOrCollect(new InvalidXML('field', 'changelog', '<changelog> should be a singular field without children'));
       }
       return true;
    }
