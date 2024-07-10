@@ -6,3 +6,4 @@ api/config.php
 /frontend/app/scripts/conf.js
 /misc/illuminate_queries.log
 .vagrant
+/docker-compose.override.yaml

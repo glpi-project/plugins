@@ -1,1 +1,0 @@
-*/5 * * * *    /usr/local/bin/php /var/www/plugins.glpi-project.org/misc/run_tasks.php &>/dev/null
