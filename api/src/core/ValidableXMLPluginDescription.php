@@ -17,7 +17,6 @@ class ValidableXMLPluginDescription {
       "state",
       "description",
       "homepage",
-      "changelog",
       "download",
       "authors",
       "versions",
