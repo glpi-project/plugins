@@ -245,6 +245,7 @@ angular
             FORGOTPASSWORD_DIALOG_FORMINTRO_1: "Pokud jste zde, nejspíš jste ztratili své heslo.",
             FORGOTPASSWORD_DIALOG_FORMINTRO_2: "Je třeba, abyste zadali e-mail svého účtu.",
             FORGOTPASSWORD_DIALOG_FORMINTRO_3: "Mějte na paměti, že pokud jste předtím ještě nikdy nenastavovali heslo (protože jste se vždy přihlašovali prostřednictvím Github) pak není možné heslo obnovit, protože nikdy nebylo nastavené. Měli byste tento dialog zavřít a ověřit se prostřednictvím Github.",
-            SEND_MAIL_PASSWORD_RESET_LINK: "Poslat odkaz na resetování hesla e-mailem"
+            SEND_MAIL_PASSWORD_RESET_LINK: "Poslat odkaz na resetování hesla e-mailem",
+            CHANGELOG: 'Changelog',
          });
    });

@@ -245,6 +245,7 @@ angular
             FORGOTPASSWORD_DIALOG_FORMINTRO_1: "If you're here, it's probably because you lost your password.",
             FORGOTPASSWORD_DIALOG_FORMINTRO_2: "We need you to provide your account's email.",
             FORGOTPASSWORD_DIALOG_FORMINTRO_3: "Please mind that if you've never setup a password before (because you always logged-in with Github) then it's not possible to recover the password because as said, you never set any. You should close this dialog and auth with Github.",
-            SEND_MAIL_PASSWORD_RESET_LINK: "Send password reset link via mail"
+            SEND_MAIL_PASSWORD_RESET_LINK: "Send password reset link via mail",
+            CHANGELOG: 'Changelog',
          });
    });

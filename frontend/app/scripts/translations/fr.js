@@ -245,6 +245,7 @@ angular
             FORGOTPASSWORD_DIALOG_FORMINTRO_1: "Si vous êtes ici c'est sûrement parce que vous avez oublié votre mot de passe.",
             FORGOTPASSWORD_DIALOG_FORMINTRO_2: "Nous avons besoin de l'adresse e-mail de votre compte utilisateur",
             FORGOTPASSWORD_DIALOG_FORMINTRO_3: "Veuillez noter que si vous n'avez jamais défini de mot de passe (parce que vous vous connectiez via GitHub) il nous est impossible de le ré-initialiser puisque, comme évoqué, vous n'en avez jamais défini. Vous devriez fermer cette fenêtre et vous identifier avec GitHub.",
-            SEND_MAIL_PASSWORD_RESET_LINK: "Envoyer le lien de ré-initialisation par e-mail"
+            SEND_MAIL_PASSWORD_RESET_LINK: "Envoyer le lien de ré-initialisation par e-mail",
+            CHANGELOG: 'Notes de version',
          });
    });
