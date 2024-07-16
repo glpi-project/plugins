@@ -359,7 +359,7 @@ class BackgroundTasks {
       $plugin->download_url = $this->sanitizeUrl($xml->download);
       $plugin->issues_url = $this->sanitizeUrl($xml->issues);
       $plugin->readme_url  = $this->sanitizeUrl($xml->readme);
-      $plugin->changelog_url  = $this->sanitizeUrl($xml->changelog);
+      $plugin->changelog_url  = isset($xml->changelog) ? $this->sanitizeUrl($xml->changelog) : null;
       $plugin->license = $this->sanitizeText($xml->license);
 
       // reading descriptions,
