@@ -18,7 +18,7 @@
       var fixField = function(value) {
          return value.replace('https://forge.indepnet.net', 'https://forge.glpi-project.org');
       };
-      var fields = ['logo_url', 'readme_url', 'download_url', 'homepage_url', 'changelog_url'];
+      var fields = ['logo_url', 'readme_url', 'download_url', 'homepage_url'];
 
       for (var n in fields) {
          if (data[fields[n]] &&
