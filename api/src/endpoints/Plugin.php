@@ -482,6 +482,21 @@ $rss_new = Tool::makeEndpoint(function() use($app) {
 });
 
 /**
+ * Featured plugins
+ *  plugins set featured by Teclib'
+ */
+$featured = Tool::makeEndpoint(function() use($app) {
+   OAuthHelper::needsScopes(['plugins']);
+
+   $featured_plugins = Tool::paginateCollection(
+      Plugin::featuredPlugins()
+         ->where('active', '=', 1)
+   );
+
+   Tool::endWithJson($featured_plugins);
+});
+
+/**
  * Remote procedure to star a plugin
  */
 $star = Tool::makeEndpoint(function() use($app) {
@@ -592,6 +607,7 @@ $app->get('/plugin/new', $new);
 $app->get('/plugin/popular', $popular);
 $app->get('/plugin/trending', $trending);
 $app->get('/plugin/updated', $updated);
+$app->get('/plugin/featured', $featured);
 $app->get('/plugin/rss_new', $rss_new);
 $app->get('/plugin/rss_updated', $rss_updated);
 $app->post('/plugin/star', $star);

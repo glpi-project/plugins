@@ -65,6 +65,7 @@ CREATE TABLE `message` (
 CREATE TABLE `plugin` (
   `id` int NOT NULL AUTO_INCREMENT,
   `active` int DEFAULT NULL,
+  `featured` int DEFAULT NULL,
   `xml_state` enum('bad_xml_url','xml_error','passing') DEFAULT NULL,
   `xml_url` text,
   `xml_crc` varchar(32) DEFAULT NULL,
