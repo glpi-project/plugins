@@ -245,6 +245,7 @@ angular
             FORGOTPASSWORD_DIALOG_FORMINTRO_1: "Ako se nalaziš ovdje, vjerojatno se radi o tome da si zaboravio/la lozinku.",
             FORGOTPASSWORD_DIALOG_FORMINTRO_2: "Moraš navesti tvoju e-mail adresu računa.",
             FORGOTPASSWORD_DIALOG_FORMINTRO_3: "Ako nikada prije nisi postavio/la lozinku (jer si se uvijek prijavio/la s Github računom), onda nije moguće obnoviti lozinku jer, kao što je rečeno, nikada je nisi postavio/la. Zatvori ovaj dijalog i autentificiraj se s Github računom.",
-            SEND_MAIL_PASSWORD_RESET_LINK: "Pošalji poveznicu za resetiranje lozinke putem e-maila"
+            SEND_MAIL_PASSWORD_RESET_LINK: "Pošalji poveznicu za resetiranje lozinke putem e-maila",
+            CHANGELOG: 'Dnevnik promjena',
          });
    });

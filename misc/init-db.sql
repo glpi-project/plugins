@@ -75,6 +75,7 @@ CREATE TABLE `plugin` (
   `download_url` text,
   `issues_url` text,
   `readme_url` text,
+  `changelog_url` text,
   `license` varchar(255) DEFAULT NULL,
   `date_added` date DEFAULT NULL,
   `date_updated` date DEFAULT NULL,
