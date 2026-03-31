@@ -46,7 +46,13 @@ class Tool {
 
       $payload = self::getPayload($_payload);
       $app->response->headers->set('Content-Type', 'application/json');
-      $app->halt($code, json_encode($payload));
+      // If the payload is a PaginatedCollection, getPayload() already called
+      // setStatus() on $app->response (e.g. 206 for partial range, 400 for
+      // out-of-range start). Respect that status instead of always using 200.
+      $effectiveCode = ($_payload instanceof \API\Core\PaginatedCollection)
+                       ? $app->response->status()
+                       : $code;
+      $app->halt($effectiveCode, json_encode($payload));
    }
 
    /**
@@ -105,7 +111,7 @@ class Tool {
                   break;
                }
             }
-            if (empty($description)) {
+            if (empty($description) && count($plugin['descriptions']) > 0) {
                $description = $plugin['descriptions'][0]['long_description'];
             }
 
@@ -160,7 +166,7 @@ class Tool {
             try {
                call_user_func_array($callable, $args);
             }
-            catch (\Exception $e) {
+            catch (\Throwable $e) {
                global $app;
                if (!preg_match('/^API\\\\Exception/', get_class($e))) {
                   switch (get_class($e)) {
@@ -316,7 +322,8 @@ class Tool {
    public static $config = null;
    public static function getConfig() {
       if (!self::$config) {
-         require dirname(__FILE__) . '/../../config.php';
+         $configFile = getenv('APP_CONFIG_FILE') ?: dirname(__FILE__) . '/../../config.php';
+         require $configFile;
          self::$config = $config;
       }
       return self::$config;

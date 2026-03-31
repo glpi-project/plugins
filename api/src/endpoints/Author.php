@@ -74,6 +74,7 @@ $author_plugins = Tool::makeEndpoint(function($id) use($app) {
                                        ->withAverageNote()
                                        ->descWithLang(Tool::getRequestLang())
                                        ->whereAuthor($author->id)
+                                       ->where('active', '=', 1)
                      )
    );
 });

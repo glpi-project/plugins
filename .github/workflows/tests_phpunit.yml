@@ -1,0 +1,37 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Functional tests — Apache/PHP 7.4 + MySQL 8.0 via Docker Compose
+  # ---------------------------------------------------------------------------
+  functional:
+    name: Functional tests
+    runs-on: ubuntu-latest
+    env:
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        if: env.DOCKERHUB_TOKEN != ''
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build test images
+        run: docker compose -f docker-compose.test.yml build
+
+      - name: Run functional tests
+        run: docker compose -f docker-compose.test.yml run --rm phpunit
+
+      - name: Tear down
+        if: always()
+        run: docker compose -f docker-compose.test.yml down -v

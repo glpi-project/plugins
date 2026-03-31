@@ -68,7 +68,7 @@ $user_declare_app = Tool::makeEndpoint(function() use($app, $resourceServer) {
       throw new InvalidField('name');
    } else if (App::where('user_id', '=', $user_id)
                  ->where('name', '=', $body->name)->first() != null) {
-      throw new UnavailableName('app', $name);
+      throw new UnavailableName('app', $body->name);
    }
    else {
      $app->name = $body->name;

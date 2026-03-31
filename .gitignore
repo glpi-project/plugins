@@ -7,3 +7,4 @@ api/config.php
 /misc/illuminate_queries.log
 .vagrant
 /docker-compose.override.yaml
+api/.phpunit.result.cache
