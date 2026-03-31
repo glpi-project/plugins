@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <name>Fields</name>
+  <key>fields</key>
+  <state>stable</state>
+  <description>
+    <short>
+      <lang name="en">Add custom fields to GLPI objects.</lang>
+    </short>
+    <long>
+      <lang name="en">Updated Fields plugin metadata for E2E panel save coverage.</lang>
+    </long>
+  </description>
+  <homepage>https://example.com/fields</homepage>
+  <download>https://example.com/fields/download</download>
+  <authors>
+    <author>Plugin Author</author>
+  </authors>
+  <versions>
+    <version>
+      <num>1.2.0</num>
+      <compatibility>10.0</compatibility>
+      <download_url>https://example.com/fields/1.2.0</download_url>
+    </version>
+  </versions>
+  <langs>
+    <lang>en</lang>
+  </langs>
+  <license>GPL-2.0</license>
+  <tags>
+    <en>
+      <tag>inventory</tag>
+    </en>
+  </tags>
+</root>

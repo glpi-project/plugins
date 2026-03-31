@@ -8,7 +8,7 @@ This is the **GLPI Plugin Directory** — a web application for browsing and man
 
 - `api/` — PHP REST API built on Slim 2 + Eloquent ORM
 - `frontend/` — AngularJS 1 SPA built with Grunt
-- `specs/` — Modernization specs and test plans (functional)
+- `specs/` — Modernization specs and test plans (functional, e2e)
 - `misc/` — Background task runner and DB initialization scripts
 
 The project is in **active modernization** (Step 1: adding test coverage is in progress). The stack is intentionally legacy (Slim 2, AngularJS 1) and will be upgraded in later steps.
@@ -95,5 +95,6 @@ GitHub Actions (`.github/workflows/tests_phpunit.yml`):
 
 Detailed test specifications live in `specs/testing/`:
 - `functional.md` — what functional tests should cover
+- `e2e.md` — E2E test plan
 
 `specs/api/endpoints.md` is the full REST API reference including auth scopes, request/response shapes, and pagination behavior.

@@ -41,7 +41,7 @@
                   {{'DOWNLOAD'|translate}}
                </md-tooltip>
             </md-button>
-            <md-button ng-show="authed" class="md-fab md-primary md-raised watch-button" ng-click="watch()">
+            <md-button ng-show="authed" class="md-fab md-primary md-raised watch-button" ng-click="watch()" data-testid="watch-button">
                <i class="fa fa-2x white" ng-class="plugin.watched ? 'fa-eye-slash' : 'fa-eye'"></i>
                <md-tooltip md-direction="top">
                   <span ng-show="plugin.watched" translate="PLUGIN_UNWATCH"></span>

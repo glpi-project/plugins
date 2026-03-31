@@ -5,7 +5,7 @@
       <form id="signup-form">
          <md-input-container>
             <label translate="SIGNUP_USERNAME"></label>
-            <input ng-model="user.username" type="text">
+            <input ng-model="user.username" type="text" data-testid="signup-username-input">
             <div ng-messages="form_errors.username">
                <div ng-message="required">{{'FIELD_REQUIRED'|translate}}</div>
                <div ng-message="tooshort">{{'SIGNUP_USERNAME_TOOSHORT'|translate:'{n: 4}'}}</div>
@@ -23,7 +23,7 @@
          </md-input-container>
          <md-input-container>
             <label>{{'SIGNUP_EMAIL'|translate}}</label>
-            <input ng-model="user.email" type="text">
+            <input ng-model="user.email" type="text" data-testid="signup-email-input">
             <div ng-messages="form_errors.email">
                <div ng-message="required">{{'FIELD_REQUIRED'|translate}}</div>
                <div ng-message="invalid">{{'SIGNUP_EMAIL_INVALID'|translate}}</div>
@@ -31,14 +31,14 @@
          </md-input-container>
          <md-input-container>
             <label translate="SIGNUP_WEBSITE"></label>
-            <input ng-model="user.website" type="text">
+            <input ng-model="user.website" type="text" data-testid="signup-website-input">
             <div ng-messages="form_errors.website">
                <div ng-message="invalid">{{'SIGNUP_WEBSITE_INVALID'|translate}}</div>
             </div>
          </md-input-container>
          <md-input-container>
             <label translate="SIGNUP_PASSWORD"></label>
-            <input ng-model="password" type="password">
+            <input ng-model="password" type="password" data-testid="signup-password-input">
             <div ng-messages="form_errors.password">
                <div ng-message="required">{{'FIELD_REQUIRED'|translate}}</div>
                <div ng-message="different">{{'SIGNUP_PASSWORD_DIFFERENT'|translate}}</div>
@@ -48,7 +48,7 @@
          </md-input-container>
          <md-input-container>
             <label translate="SIGNUP_CONFIRM_PASSWORD"></label>
-            <input ng-model="password_repeat" type="password">
+            <input ng-model="password_repeat" type="password" data-testid="signup-confirm-password-input">
          </md-input-container>
          <md-button class="md-raised md-primary" ng-click="signUp()" id="signup-button">Sign-Up !</md-button>
       </form>
