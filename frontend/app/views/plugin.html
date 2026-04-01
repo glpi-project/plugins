@@ -3,15 +3,15 @@
       <div layout="row" layout-wrap layout-align="start start">
          <img class="icon" src="{{plugin.logo_url}}" />
          <div class='plugin_name' flex-sm="45">
-            <h2>{{plugin.name}}</h2>
-            <h4 class="inline-authors">
+            <h2 data-testid="plugin-name">{{plugin.name}}</h2>
+            <h4 class="inline-authors" data-testid="plugin-authors">
                <span translate="BY"></span>
                <span inline-authors="plugin.authors"></span>
             </h4>
          </div>
          <div flex-sm="45" layout="row" layout-sm="column" layout-align="end end">
             <div class='pills'>
-               <span ng-repeat="version in (unique_versions = (plugin.versions | unique: 'compatibility') | subpart:3)" class="pill bg_lightblue" ui-sref="version({version: version.compatibility})">{{version.compatibility}}</span>
+               <span ng-repeat="version in (unique_versions = (plugin.versions | unique: 'compatibility') | subpart:3)" class="pill bg_lightblue" data-testid="version-badge" ui-sref="version({version: version.compatibility})">{{version.compatibility}}</span>
                <span ng-show="unique_versions.length > 3">
                   ...
                   <md-tooltip class="versions_more">
@@ -41,7 +41,7 @@
                   {{'DOWNLOAD'|translate}}
                </md-tooltip>
             </md-button>
-            <md-button ng-show="authed" class="md-fab md-primary md-raised watch-button" ng-click="watch()">
+            <md-button ng-show="authed" class="md-fab md-primary md-raised watch-button" ng-click="watch()" data-testid="watch-button">
                <i class="fa fa-2x white" ng-class="plugin.watched ? 'fa-eye-slash' : 'fa-eye'"></i>
                <md-tooltip md-direction="top">
                   <span ng-show="plugin.watched" translate="PLUGIN_UNWATCH"></span>
@@ -61,7 +61,7 @@
          <md-tabs md-dynamic-height md-selected="selectedIndex">
             <md-tab ng-repeat="description in plugin.descriptions" label="{{description.lang}}">
                <md-content class="md-padding description">
-                  <div btf-markdown="description.long_description" class="markdown"></div>
+                  <div btf-markdown="description.long_description" class="markdown" data-testid="plugin-description"></div>
                </md-content>
             </md-tab>
          </md-tabs>

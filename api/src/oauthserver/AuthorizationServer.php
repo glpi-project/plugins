@@ -53,6 +53,9 @@ class AuthorizationServer extends \League\OAuth2\Server\AuthorizationServer {
             return false;
          } else {
             $user = $user->first();
+            if (!$user->active) {
+               return false;
+            }
             if ($user->assertPasswordIs($password)) {
                return $user->id;
             } else {

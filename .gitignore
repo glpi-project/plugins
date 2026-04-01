@@ -4,6 +4,9 @@ npm-debug.log
 api/config.php
 *.swp
 /frontend/app/scripts/conf.js
+/frontend/**/node_modules
+/frontend/e2e/test-results
 /misc/illuminate_queries.log
 .vagrant
 /docker-compose.override.yaml
+api/.phpunit.result.cache

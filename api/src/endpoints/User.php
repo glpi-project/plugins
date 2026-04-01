@@ -34,6 +34,8 @@ use API\Exception\NoCredentialsLeft;
 use API\Exception\InvalidCredentials;
 use API\Exception\InvalidXML;
 use API\Exception\WrongPasswordResetToken;
+use API\Exception\AccountNotFound;
+use API\Exception\ResourceNotFound;
 
 use League\OAuth2\Server\Util\SecureKey;
 use API\OAuthServer\AuthorizationServer;
@@ -471,7 +473,7 @@ $user_reset_password = Tool::makeEndpoint(function() use($app) {
     $user->setPassword($body->password);
     $user->save();
     // Deleting the ResetPasswordToken objects for this user
-    $user->passwordResetTokens()->truncate();
+    $user->passwordResetTokens()->delete();
     $app->halt(200);
 });
 

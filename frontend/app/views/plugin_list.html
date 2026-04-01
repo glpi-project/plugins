@@ -24,7 +24,7 @@
             <img class="icon" ng-src="{{plugin.logo_url}}" />
             <div class='plugin_name' flex='45' flex-sm='30' >
                <h2 class="name">
-                  <a ui-sref="plugin({id: plugin.id, key: plugin.key})">{{plugin.name}}</a>
+                  <a ui-sref="plugin({id: plugin.id, key: plugin.key})" data-testid="search-result-name">{{plugin.name}}</a>
                </h2>
                <h4 class="inline-authors">
                   <span translate="BY"></span>

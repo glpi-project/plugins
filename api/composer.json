@@ -38,8 +38,31 @@
          "API\\Exception\\": "src/exceptions"
       }
    },
+   "require-dev": {
+      "guzzlehttp/guzzle": "^6.0",
+      "mockery/mockery": "^1.6",
+      "phpunit/phpunit": "^9.5",
+      "symfony/process": "^5.0"
+   },
+   "autoload-dev": {
+      "psr-4": {
+         "Tests\\": "tests/"
+      }
+   },
+   "extra": {
+      "upgrade-notes": [
+         "slim/slim is pinned to ~2.0 — index.php has a get_magic_quotes_gpc() polyfill that must be removed when upgrading to Slim 3+.",
+         "illuminate/database is pinned to 5.1.* — vendor/nesbot/carbon Carbon.php has a manual PHP 8.2 compat patch (getLastErrors() returning false) that must be removed when upgrading Eloquent/Carbon."
+      ]
+   },
    "config": {
       "optimize-autoloader": true,
-      "sort-packages": true
+      "sort-packages": true,
+      "platform": {
+         "php": "7.4.0"
+      },
+      "allow-plugins": {
+         "kylekatarnls/update-helper": true
+      }
    }
 }

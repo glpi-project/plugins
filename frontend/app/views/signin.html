@@ -5,18 +5,18 @@
       <form ng-submit="ctrl.loginAttempt()">
          <md-input-container>
             <label translate="SIGNIN_USERNAME_OR_EMAIL"></label>
-            <input type="text" ng-model="login">
+            <input type="text" ng-model="login" data-testid="signin-username-input">
          </md-input-container>
 
          <md-input-container>
             <label translate="SIGNIN_PASSWORD"></label>
-            <input type="password" ng-model="password">
+            <input type="password" ng-model="password" data-testid="signin-password-input">
             <a aria-label="I forgot my password" ng-click="ctrl.iForgotMyPassword($event)" class="i-forgot-my-password">I forgot my password</a>
          </md-input-container>
 
          <div vc-recaptcha theme="light" key="key" on-create="setWidgetId(widgetId)" on-success="setResponse(response)" on-expire="cbExpiration()"></div>
 
-         <md-button class="md-raised md-primary" type="submit" translate="SIGNIN_LOGIN"></md-button>
+         <md-button class="md-raised md-primary" type="submit" translate="SIGNIN_LOGIN" data-testid="signin-submit-button"></md-button>
       </form>
 
 

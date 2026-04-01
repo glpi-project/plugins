@@ -146,7 +146,7 @@ $single_authormode_edit = Tool::makeEndpoint(function($key) use($app) {
    if (isset($body->xml_url)) {
       // We check if the URL is a correct URI
       if (!filter_var($body->xml_url, FILTER_VALIDATE_URL)) {
-         throw new InvalidField;
+         throw new InvalidField('xml_url');
       }
 
       // We check if we can fetch the file via HTTP
@@ -530,7 +530,7 @@ $submit = Tool::makeEndpoint(function() use($app) {
    $body = Tool::getBody();
 
    $recaptcha = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
-   $resp = $recaptcha->verify($body->recaptcha_response);
+   $resp = $recaptcha->verify($body->recaptcha_response ?? null);
    if (!$resp->isSuccess()) {
       throw new InvalidRecaptcha;
    }

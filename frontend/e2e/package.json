@@ -1,0 +1,15 @@
+{
+  "name": "glpi-plugins-e2e",
+  "private": true,
+  "devDependencies": {
+    "@playwright/test": "^1.44.0"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

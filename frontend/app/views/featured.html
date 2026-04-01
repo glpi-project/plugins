@@ -7,7 +7,7 @@
          </md-subheader>
          <span class='legend' translate="TRENDING_SUB"></span>
          <md-list-item ng-repeat="plugin in trending">
-            <md-button ui-sref="plugin({key: plugin.key})">
+            <md-button ui-sref="plugin({key: plugin.key})" data-testid="trending-plugin-item">
                <h4>{{plugin.name}}</h4>
                <md-tooltip md-direction="right">
                   <span translate="DOWNLOADED_N_TIMES" translate-value-n="{{plugin.download_count}}"></span>
@@ -27,7 +27,7 @@
          </md-subheader>
          <span class="legend" translate="NEW_SUB"></span>
          <md-list-item ng-repeat="plugin in new">
-            <md-button ui-sref="plugin({key: plugin.key})">
+            <md-button ui-sref="plugin({key: plugin.key})" data-testid="new-plugin-item">
                <h4>{{plugin.name}}</h4>
                <md-tooltip md-direction="right">
                   <span translate="ADDED_ON_DATE" translate-value-date="{{plugin.date_added}}"></span>
@@ -44,7 +44,7 @@
          </md-subheader>
          <span class='legend' translate="POPULAR_SUB"></span>
          <md-list-item ng-repeat="plugin in popular">
-            <md-button ui-sref="plugin({key: plugin.key})">
+            <md-button ui-sref="plugin({key: plugin.key})" data-testid="popular-plugin-item">
                <h4>{{plugin.name}}</h4>
                <md-tooltip md-direction="right">
                   <span translate="DOWNLOADED_N_TIMES" translate-value-n="{{plugin.download_count}}"></span>
@@ -64,7 +64,7 @@
          </md-subheader>
          <span class='legend' translate="UPDATED_SUB"></span>
          <md-list-item ng-repeat="plugin in updated">
-            <md-button ui-sref="plugin({key: plugin.key})">
+            <md-button ui-sref="plugin({key: plugin.key})" data-testid="updated-plugin-item">
                <h4>{{plugin.name}}</h4>
                <md-tooltip md-direction="right">
                   <span translate="UPDATED_MOMENTS_AGO" translate-value-momentsago="{{fromNow(plugin.date_updated)}}"></span>

@@ -22,8 +22,6 @@ use \API\Exception\InvalidField;
 use \API\Exception\MissingField;
 use \API\Exception\InvalidRecaptcha;
 
-require dirname(__FILE__) . '/../../config.php';
-
 $send = Tool::makeEndpoint(function() use($app) {
    OAuthHelper::needsScopes(['message']);
 
@@ -32,7 +30,7 @@ $send = Tool::makeEndpoint(function() use($app) {
    $fields = ['firstname', 'lastname', 'email', 'subject', 'message'];
 
    $recaptcha = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
-   $resp = $recaptcha->verify($body->recaptcha_response);
+   $resp = $recaptcha->verify($body->recaptcha_response ?? null);
    if (!$resp->isSuccess()) {
       throw new InvalidRecaptcha();
    }
