@@ -9,19 +9,19 @@ test.describe('F2 — Plugin detail page', () => {
   });
 
   test('plugin name is visible in the header', async ({ page }) => {
-    await expect(page.locator('.plugin_name h2')).toHaveText('Fields');
+    await expect(page.locator('[data-testid="plugin-name"]')).toHaveText('Fields');
   });
 
   test('author name is present', async ({ page }) => {
-    await expect(page.locator('.inline-authors').first()).toContainText('Plugin Author');
+    await expect(page.locator('[data-testid="plugin-authors"]').first()).toContainText('Plugin Author');
   });
 
   test('at least one version compatibility badge is shown', async ({ page }) => {
-    await expect(page.locator('.pill.bg_lightblue').first()).toBeVisible();
+    await expect(page.locator('[data-testid="version-badge"]').first()).toBeVisible();
   });
 
   test('description tab content is rendered', async ({ page }) => {
-    await expect(page.locator('.description .markdown, .description p').first()).toBeVisible();
+    await expect(page.locator('[data-testid="plugin-description"]').first()).toBeVisible();
   });
 
   test('watch button is hidden when not logged in', async ({ page }) => {

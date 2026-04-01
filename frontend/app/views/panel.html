@@ -86,7 +86,7 @@
 
       <md-list>
          <md-list-item ng-repeat="plugin in plugins" layout="column">
-            <h4 class="plugin-name" ui-sref="pluginpanel({key: plugin.key})" eat-click-if="!plugin.pivot.admin && !plugin.pivot.allowed_refresh_xml && !plugin.pivot.allowed_change_xml_url" ng-class="(!plugin.pivot.admin && !plugin.pivot.allowed_refresh_xml && !plugin.pivot.allowed_change_xml_url) ? 'not-admin-of' : ''" ui-sref="pluginpanel({key: plugin.key})">{{plugin.name}}</h4>
+            <h4 class="plugin-name" data-testid="panel-plugin-name" ui-sref="pluginpanel({key: plugin.key})" eat-click-if="!plugin.pivot.admin && !plugin.pivot.allowed_refresh_xml && !plugin.pivot.allowed_change_xml_url" ng-class="(!plugin.pivot.admin && !plugin.pivot.allowed_refresh_xml && !plugin.pivot.allowed_change_xml_url) ? 'not-admin-of' : ''" ui-sref="pluginpanel({key: plugin.key})">{{plugin.name}}</h4>
             <div class="buttons">
                <md-button ng-show="!plugin.pivot.admin" ng-click="openDeleteRelationToPlugin(plugin)">
                   <i class="fa fa-user-times"></i>

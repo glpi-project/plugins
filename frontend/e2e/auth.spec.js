@@ -18,10 +18,11 @@ test.describe('F4 — Authentication', () => {
     await page.locator('[data-testid="signup-confirm-password-input"]').fill('Passw0rd!');
 
     await page.getByRole('button', { name: /sign.?up/i }).click();
-    await page.waitForURL('/#/');
 
-    // On success the controller shows a toast and redirects to featured
+    // On success the controller shows a toast and redirects to featured.
+    // Check for the toast before the redirect completes so it isn't dismissed.
     await expect(page.getByText(/check your mailbox/i)).toBeVisible();
+    await expect(page).toHaveURL('/#/');
   });
 
   test('sign in: valid credentials log the user in', async ({ page }) => {
@@ -30,7 +31,7 @@ test.describe('F4 — Authentication', () => {
 
     await page.locator('[data-testid="signin-username-input"]').fill('testuser');
     await page.locator('[data-testid="signin-password-input"]').fill('Password1');
-    await page.locator('#signin form button[type="submit"]').click();
+    await page.locator('[data-testid="signin-submit-button"]').click();
 
     // Auth service shows this toast on success
     await expect(page.getByText('You are now successfully logged in')).toBeVisible();
@@ -42,12 +43,10 @@ test.describe('F4 — Authentication', () => {
 
     await page.locator('[data-testid="signin-username-input"]').fill('testuser');
     await page.locator('[data-testid="signin-password-input"]').fill('wrongpassword');
-    await page.locator('#signin form button[type="submit"]').click();
+    await page.locator('[data-testid="signin-submit-button"]').click();
 
-    // The interceptor shows a translated error; INVALID_CREDENTIALS or similar
-    await expect(
-      page.locator('md-toast, .md-toast-content').filter({ hasText: /.+/ })
-    ).toBeVisible();
+    // The interceptor translates INVALID_CREDENTIALS and shows it in a toast
+    await expect(page.getByText(/wrong credentials/i)).toBeVisible();
     // User stays on the sign-in page
     await expect(page).toHaveURL(/#\/signin/);
   });
@@ -58,7 +57,7 @@ test.describe('F4 — Authentication', () => {
 
     await page.locator('[data-testid="signin-username-input"]').fill('testuser');
     await page.locator('[data-testid="signin-password-input"]').fill('Password1');
-    await page.locator('#signin form button[type="submit"]').click();
+    await page.locator('[data-testid="signin-submit-button"]').click();
     await expect(page.getByText('You are now successfully logged in')).toBeVisible();
 
     // Find and click the sign-out control in the user menu

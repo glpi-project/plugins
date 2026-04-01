@@ -16,6 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up PHP 7.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+
       - name: Install API dependencies
         working-directory: api
         run: composer install --no-interaction --prefer-dist --ignore-platform-reqs
@@ -36,7 +41,7 @@ jobs:
             curl -sf http://localhost:4200 && break
             echo "Waiting for frontend… ($i/30)"
             sleep 5
-          done
+          done || exit 1 || exit 1
 
       - name: Set up Node.js
         uses: actions/setup-node@v4

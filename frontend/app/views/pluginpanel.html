@@ -1,6 +1,6 @@
 <div layout="column" class="pluginpanel">
    <div class="pluginpanel-header">
-      <h2 class="plugin-name">{{plugin.card.name}}</h2>
+      <h2 class="plugin-name" data-testid="plugin-panel-header-name">{{plugin.card.name}}</h2>
       <h2 class="panel-title" translate="PLUGIN_PANEL"></h2>
    </div>
 
@@ -73,7 +73,7 @@
          </md-list>
       </div>
 
-      <md-content class="xml-errors">
+      <md-content class="xml-errors" data-testid="xml-errors">
          <md-list>
             <md-list-item ng-repeat="error in xml_errors" layout="column">
                <div class="reason">

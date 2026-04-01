@@ -61,3 +61,8 @@ INSERT INTO `user` (`id`, `username`, `email`, `password`, `realname`, `active`,
 
 -- testuser has admin rights on the Fields plugin
 INSERT INTO `plugin_permission` (`plugin_id`, `user_id`, `admin`) VALUES (1, 1, 1);
+
+-- Recent downloads so both plugins appear in the trending list
+INSERT INTO `plugin_download` (`plugin_id`, `downloaded_at`) VALUES
+  (1, NOW()), (1, NOW()), (1, NOW()),
+  (2, NOW()), (2, NOW());

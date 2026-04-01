@@ -12,6 +12,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: glpi_plugins_e2e
+      MYSQL_USER: e2euser
+      MYSQL_PASSWORD: e2epass
     volumes:
       - ./api/tests/Functional/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
       - ./api/tests/E2E/seeds.sql:/docker-entrypoint-initdb.d/02-seeds.sql
@@ -34,11 +36,16 @@ services:
       APP_CONFIG_FILE: /var/www/api/config.e2e.php
       TEST_DB_HOST: mysql
       TEST_DB_NAME: glpi_plugins_e2e
-      TEST_DB_USER: root
-      TEST_DB_PASS: root
+      TEST_DB_USER: e2euser
+      TEST_DB_PASS: e2epass
     depends_on:
       mysql:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-s", "-o", "/dev/null", "http://localhost/api/plugin"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   frontend:
     build:
@@ -47,4 +54,5 @@ services:
     ports:
       - "4200:80"
     depends_on:
-      - api
+      api:
+        condition: service_healthy
