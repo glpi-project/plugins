@@ -1,6 +1,6 @@
-FROM composer:1 AS composer
+FROM composer:latest AS composer
 
-FROM php:7.4-apache-bullseye
+FROM php:8.5-apache-trixie
 
 # Workaround to make apache use same UID/GID as host user.
 ARG HOST_GROUP_ID=1000
@@ -29,6 +29,7 @@ RUN apt-get update \
   && npm install -g bower grunt \
   && apt-get install --assume-yes --no-install-recommends --quiet ruby-dev \
   && gem install compass \
+  && find /var/lib/gems/3.3.0/gems/ -type f -name *.rb -exec sed -i 's/File.exists/File.exist/g' {} + \
   && apt-get install --assume-yes --no-install-recommends --quiet libfontconfig1 libfreetype6 \
   \
   # Install openssl required for PhantomJS.
