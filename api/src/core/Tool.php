@@ -10,8 +10,9 @@ namespace API\Core;
 use \API\Exception\ErrorResponse;
 use \API\Exception\InvalidRecaptcha;
 use \API\Model\Plugin;
-use \League\OAuth2\Server\Exception\OAuthException;
 use \ReCaptcha\ReCaptcha;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 /**
  * this class has very wide scope,
@@ -19,46 +20,14 @@ use \ReCaptcha\ReCaptcha;
  * used in every endpoint
  */
 class Tool {
-   public static function getPayload($_payload, $code = 200) {
-      global $app;
-
-      // Handling special case of PaginatedCollection
-      if ($_payload instanceof \API\Core\PaginatedCollection) {
-         $_payload->setStatus($app->response);
-         $_payload->setHeaders($app->response);
-         $payload = $_payload->get($app->request->headers['x-range']);
-      } else {
-         $payload = &$_payload;
-         http_response_code($code);
-      }
-
-      return $payload;
-   }
-
-
-   /**
-    * Method used to end with
-    * a JSON value from
-    * an endpoint.
-    */
-   public static function endWithJson($_payload, $code = 200) {
-      global $app;
-
-      $payload = self::getPayload($_payload);
-      $app->response->headers->set('Content-Type', 'application/json');
-      $app->halt($code, json_encode($payload));
-   }
-
    /**
     * Method used to end with
     * a Rss value from
     * an endpoint.
+    *
+    * @return \Slim\Http\Response
     */
-   public static function endWithRSS($_payload, $feed_title = '', $code = 200) {
-      global $app;
-
-      $plugins = self::getPayload($_payload);
-
+   public static function getCollectionRssFeedResponse($plugins, $feed_title = '') {
       // retrieve app config
       $app_config = self::getConfig();
       $url = $app_config['client_url'];
@@ -133,8 +102,9 @@ class Tool {
          }
       }
 
-      // render feed
-      $app->halt($code, $feed->render());
+      $response = new Response();
+      return $response->withHeader('content-type', 'application/rss+xml')
+        ->write($feed->render());
    }
 
    /**
@@ -154,14 +124,12 @@ class Tool {
     * various responses
     */
    public static function makeEndpoint($callable) {
-      $decoratedEndpoint = function() use($callable) {
-         $args = func_get_args();
+      $decoratedEndpoint = function(Request $request, Response $response, $args = []) use($callable) {
          try {
             try {
-               call_user_func_array($callable, $args);
+               return call_user_func_array($callable, [$request, $response, ...$args]);
             }
             catch (\Exception $e) {
-               global $app;
                if (!preg_match('/^API\\\\Exception/', get_class($e))) {
                   switch (get_class($e)) {
                      case 'League\OAuth2\Server\Exception\InvalidRequestException':
@@ -170,11 +138,11 @@ class Tool {
                            case 'client_secret':
                               $clientId = null;
                               $clientSecret = null;
-                              if ($app->request->post('client_id')) {
-                                 $clientId = $app->request->post('client_id');
+                              if ($request->getParsedBodyParam('client_id')) {
+                                 $clientId = $request->getParsedBodyParam('client_id');
                               }
-                              if ($app->request->post('client_secret')) {
-                                 $clientSecret = $app->request->post('client_secret');
+                              if ($request->getParsedBodyParam('client_secret')) {
+                                 $clientSecret = $request->getParsedBodyParam('client_secret');
                               }
                               throw (new \API\Exception\ClientSecretError($clientId, $clientSecret))
                                      ->childOf($e);
@@ -188,18 +156,19 @@ class Tool {
                      case 'League\OAuth2\Server\Exception\InvalidClientException':
                         $clientId = null;
                         $clientSecret = null;
-                        if ($app->request->post('client_id')) {
-                           $clientId = $app->request->post('client_id');
+                        if ($request->getParsedBodyParam('client_id')) {
+                           $clientId = $request->getParsedBodyParam('client_id');
                         }
-                        if ($app->request->post('client_secret')) {
-                           $clientSecret = $app->request->post('client_secret');
+                        if ($request->getParsedBodyParam('client_secret')) {
+                           $clientSecret = $request->getParsedBodyParam('client_secret');
                         }
                         throw (new \API\Exception\ClientSecretError($clientId, $clientSecret))
                                ->childOf($e);
                         break;
                      case 'League\OAuth2\Server\Exception\AccessDeniedException':
-                        if (isset($app->request->headers['authorization'])) {
-                           $token = $app->request->headers['authorization'];
+                        $auth_header = $request->getHeader('authorization')[0] ?? null;
+                        if ($auth_header !== null) {
+                           $token = $auth_header;
                         } else {
                            $token = null;
                         }
@@ -207,8 +176,8 @@ class Tool {
                               ->childOf($e);
                         break;
                      case 'League\OAuth2\Server\Exception\InvalidRefreshException':
-                        if ($app->request->post('refresh_token')) {
-                           $token = $app->request->post('refresh_token');
+                        if ($request->getParsedBodyParam('refresh_token')) {
+                           $token = $request->getParsedBodyParam('refresh_token');
                         } else {
                            $token = null;
                         }
@@ -221,8 +190,8 @@ class Tool {
                               ->childOf($e);
                         break;
                      case 'League\OAuth2\Server\Exception\InvalidCredentialsException':
-                        throw (new \API\Exception\InvalidCredentials(($app->request->post('username') ? $app->request->post('username') : null),
-                                                                                           ($app->request->post('password') ? strlen($app->request->post('password')) : 0)))
+                        throw (new \API\Exception\InvalidCredentials(($request->getParsedBodyParam('username') ? $request->getParsedBodyParam('username') : null),
+                                                                                           ($request->getParsedBodyParam('password') ? strlen($request->getParsedBodyParam('password')) : 0)))
                                ->childOf($e);
                         break;
                      case 'Slim\Exception\Stop':
@@ -248,26 +217,13 @@ class Tool {
          }
          catch (ErrorResponse $e) {
             $e->log();
-            return Tool::endWithJson([
+            return $response->withJson([
                "error" => $e->getRepresentation(true)
             ], $e->httpStatusCode);
          }
 
       };
       return $decoratedEndpoint;
-   }
-
-   /**
-    * You can use this method in
-    * an endpoint to get the value
-    * of the JSON body being given
-    * with a request
-    */
-   public static function getBody() {
-      global $app;
-      $json = $app->request->getBody();
-      $json = json_decode($json);
-      return $json;
    }
 
    /**
@@ -299,13 +255,10 @@ class Tool {
     * user specified current default
     * language for text
     */
-   public static function getRequestLang() {
-      global $app;
-      if ($app->request->headers['x-lang']) {
-         if (in_array($app->request->headers['x-lang'],
-                       ['fr','en','es'])) {
-            return $app->request->headers['x-lang'];
-         }
+   public static function getRequestLang(Request $request) {
+      $lang = $request->getHeader('x-lang')[0] ?? null;
+      if (in_array($lang, ['fr','en','es'])) {
+         return $lang;
       }
       return 'en';
    }
@@ -325,8 +278,8 @@ class Tool {
    /**
     * Shortcut to get a PaginatedCollection instance
     */
-   public static function paginateCollection($queryBuilder) {
-      return  new \API\Core\PaginatedCollection($queryBuilder);
+   public static function paginateCollection($queryBuilder, $request = null) {
+      return  new \API\Core\PaginatedCollection($queryBuilder, $request);
    }
 
    /**

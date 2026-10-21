@@ -12,8 +12,7 @@ class OAuthClient {
    public function __construct($provider) {
       if (!isset(Tool::getConfig()['oauth'][$provider])) {
          Tool::log('OAuth settings not configured for provider \''.$provider.'\' in config.php');
-         Tool::endWithJson([], 500);
-         exit;
+         throw new \Exception('OAuth settings not configured for provider \''.$provider.'\'.');
       }
       $config = Tool::getConfig()['oauth'][$provider];
 
@@ -24,10 +23,7 @@ class OAuthClient {
             'clientSecret' => $config['clientSecret']
          ]);
       } else {
-         Tool::endWithJson([
-            "error" => "OAuth Provider ".$provider." doesn\'t exist"
-         ], 500);
-         exit;
+         throw new \Exception("OAuth Provider ".$provider." doesn\'t exist");
       }
    }
 
@@ -37,22 +33,12 @@ class OAuthClient {
     * access token with an authorization code
     */
    public function getAccessToken($code) {
-      global $app;
+      // Try to get an access token (using the authorization code grant)
+      $token = $this->provider->getAccessToken('authorization_code', [
+          'code' => $code
+      ]);
 
-      if (!$code) {
-         Tool::endWithJson([
-            "error" => "There is no authorization code provided"
-         ], 400);
-         exit;
-      }
-      else {
-          // Try to get an access token (using the authorization code grant)
-          $token = $this->provider->getAccessToken('authorization_code', [
-              'code' => $code
-          ]);
-
-          return $token->getToken();
-      }
+      return $token->getToken();
    }
 
    /**

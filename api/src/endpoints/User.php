@@ -11,92 +11,90 @@
 use API\Core\Tool;
 use API\Core\OAuthClient;
 use API\Core\Mailer;
-use API\Core\ValidableXMLPluginDescription;
 
-use Illuminate\Database\Capsule\Manager as DB;
 
 use API\Model\User;
-use API\Model\UserExternalAccount;
-use API\Model\Session;
-use API\Model\AccessToken;
-use API\Model\Scope;
-use API\Model\App;
 use API\Model\ValidationToken;
 use API\Model\Plugin;
 use API\Model\PluginWatch;
 use API\Model\ResetPasswordToken;
 
+use API\Exception\AccountNotFound;
+use API\Exception\ResourceNotFound;
 use API\Exception\UnavailableName;
 use API\Exception\InvalidField;
-use API\Exception\ExternalAccountAlreadyPaired;
 use API\Exception\AlreadyWatched;
-use API\Exception\NoCredentialsLeft;
 use API\Exception\InvalidCredentials;
-use API\Exception\InvalidXML;
 use API\Exception\WrongPasswordResetToken;
 
 use League\OAuth2\Server\Util\SecureKey;
-use API\OAuthServer\AuthorizationServer;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use API\OAuthServer\OAuthHelper;
-use ReCaptcha\ReCaptcha;
+
+/**
+ * @var \Slim\App $app
+ * @var \League\OAuth2\Server\ResourceServer $resourceServer
+ */
+global $app, $resourceServer;
 
 /**
  * Register a new user
  */
-$register = Tool::makeEndpoint(function() use ($app) {
-   $body = Tool::getBody();
+$register = Tool::makeEndpoint(function(Request $request, Response $response) {
+   $body = $request->getParsedBody();
    $new_user = new User;
 
-   if (!isset($body->username) ||
-       strlen($body->username) < 4 ||
-       strlen($body->username) > 28 ||
-       !preg_match('/^[a-zA-Z0-9]+$/', $body->username)) {
+   if (!isset($body['username']) ||
+       strlen($body['username']) < 4 ||
+       strlen($body['username']) > 28 ||
+       !preg_match('/^[a-zA-Z0-9]+$/', $body['username'])) {
       throw new InvalidField('username');
    } else {
-      if (User::where('username' , '=', $body->username)->first() != null) {
-         throw new UnavailableName('User', $body->username);
+      if (User::where('username' , '=', $body['username'])->first() != null) {
+         throw new UnavailableName('User', $body['username']);
       }
-      $new_user->username = $body->username;
+      $new_user->username = $body['username'];
    }
 
-   if (!isset($body->email) ||
-      !filter_var($body->email, FILTER_VALIDATE_EMAIL)) {
+   if (!isset($body['email']) ||
+      !filter_var($body['email'], FILTER_VALIDATE_EMAIL)) {
       throw new InvalidField('email');
    } else {
-      if (User::where('email', '=', $body->email)->first() != null) {
-         throw new UnavailableName('Email', $body->email);
+      if (User::where('email', '=', $body['email'])->first() != null) {
+         throw new UnavailableName('Email', $body['email']);
       }
-      $new_user->email = $body->email;
+      $new_user->email = $body['email'];
    }
 
-   if (!isset($body->realname) ||
-       strlen($body->realname) < 4 ||
-       preg_match('[^a-zA-Z0-9 ]', $body->realname)) {
+   if (!isset($body['realname']) ||
+       strlen($body['realname']) < 4 ||
+       preg_match('[^a-zA-Z0-9 ]', $body['realname'])) {
       $new_user->realname = '';
    } else {
-      $new_user->realname = $body->realname;
+      $new_user->realname = $body['realname'];
    }
 
-   if (!isset($body->location) ||
-       gettype($body->location) != 'string' ||
-       strlen($body->location) < 1) {
+   if (!isset($body['location']) ||
+       gettype($body['location']) != 'string' ||
+       strlen($body['location']) < 1) {
       $new_user->location = '';
    } else {
-      $new_user->location = $body->location;
+      $new_user->location = $body['location'];
    }
 
-   if (!isset($body->website) ||
-       strlen($body->website) < 4 ||
-       !filter_var($body->email, FILTER_VALIDATE_URL)) {
+   if (!isset($body['website']) ||
+       strlen($body['website']) < 4 ||
+       !filter_var($body['email'], FILTER_VALIDATE_URL)) {
       $new_user->website = '';
    } else {
-      $new_user->website = $body->website;
+      $new_user->website = $body['website'];
    }
 
-   if (!User::isValidPassword($body->password)) {
+   if (!User::isValidPassword($body['password'])) {
       throw new InvalidField('password');
    }
-   $new_user->setPassword($body->password);
+   $new_user->setPassword($body['password']);
 
    $new_user->active = false;
    $new_user->save();
@@ -113,14 +111,16 @@ $register = Tool::makeEndpoint(function() use ($app) {
                         'user' => $new_user->toArray(),
                         'validation_token' => $validationToken->token
                      ]);
+
+   return $response->withStatus(200);
 });
 
 /**
  * Deletes the GLPi account on user request
  */
-$user_delete_account = Tool::makeEndpoint(function() use($app, $resourceServer) {
+$user_delete_account = Tool::makeEndpoint(function(Request $request, Response $response) {
    OAuthHelper::needsScopes(['user']);
-   $body = Tool::getBody();
+   $body = $request->getParsedBody();
 
    $user = OAuthHelper::currentlyAuthed();
 
@@ -131,15 +131,15 @@ $user_delete_account = Tool::makeEndpoint(function() use($app, $resourceServer) 
    // strings if evil.com
    // owner come visit
    // our systems
-   if (!isset($body->password) ||
-       gettype($body->password) != 'string' ||
-       !User::isValidPassword($body->password)) {
+   if (!isset($body['password']) ||
+       gettype($body['password']) != 'string' ||
+       !User::isValidPassword($body['password'])) {
       throw new InvalidField('password');
    }
 
    // Ensures given password is the good one
-   if (!$user->assertPasswordIs($body->password)) {
-      throw new InvalidCredentials($user->username, strlen($body->password));
+   if (!$user->assertPasswordIs($body['password'])) {
+      throw new InvalidCredentials($user->username, strlen($body['password']));
    }
 
    // Delete the session and access_token
@@ -159,14 +159,15 @@ $user_delete_account = Tool::makeEndpoint(function() use($app, $resourceServer) 
 
    // Finally delete the user
    $user->delete();
-   $app->halt(200);
+
+   return $response->withStatus(200);
 });
 
 /**
  * Validate the email address for a manually registered user
  * (i.e: click on the link that is sent by mail)
  */
-$user_validate_mail = Tool::makeEndpoint(function($_validationToken) use($app) {
+$user_validate_mail = Tool::makeEndpoint(function(Request $request, Response $response, $_validationToken) {
   $validationToken = ValidationToken::where('token', '=', $_validationToken)->first();
 
   if ($validationToken) {
@@ -189,7 +190,7 @@ $user_validate_mail = Tool::makeEndpoint(function($_validationToken) use($app) {
                      ]);
    $validationToken->delete();
 
-   Tool::endWithJson([
+   return $response->withJson([
       "access_token" => $accessToken['token'],
       "refresh_token" => $accessToken['refresh_token'],
       "expires_in" => $accessToken['ttl']
@@ -206,28 +207,28 @@ $user_validate_mail = Tool::makeEndpoint(function($_validationToken) use($app) {
 /**
  * Returns the profile
  */
-$profile_view = Tool::makeEndpoint(function() use($app, $resourceServer) {
+$profile_view = Tool::makeEndpoint(function(Request $request, Response $response) {
    OAuthHelper::needsScopes(['user']);
 
    $user = OAuthHelper::currentlyAuthed();
    // Adding gravatar
    $user->gravatar = md5(strtolower(trim($user->email)));
 
-   Tool::endWithJson($user, 200);
+   return $response->withJson($user, 200);
 });
 
 /**
  * endpoint to edit the main profile
  * of the logged user
  */
-$profile_edit = Tool::makeEndpoint(function() use($app, $resourceServer) {
+$profile_edit = Tool::makeEndpoint(function(Request $request, Response $response) use($resourceServer) {
    OAuthHelper::needsScopes(['user']);
 
-   $body = Tool::getBody();
+   $body = $request->getParsedBody();
 
    $user = OAuthHelper::currentlyAuthed();
 
-   if (isset($body->email)) {
+   if (isset($body['email'])) {
       $externalAccounts = $user->externalAccounts()->get();
 
       $email_found = false;
@@ -235,7 +236,7 @@ $profile_edit = Tool::makeEndpoint(function() use($app, $resourceServer) {
          $oAuth = new OAuthClient($externalAccount->service);
          $emails = $oAuth->getEmails($externalAccount->token);
          foreach ($emails as $_email) {
-            if ($_email == $body->email) {
+            if ($_email == $body['email']) {
                $email_found = true;
                break;
             }
@@ -252,7 +253,7 @@ $profile_edit = Tool::makeEndpoint(function() use($app, $resourceServer) {
              'author', 'version', 'message', 'user:externalaccounts',
              'user:apps']);
          $user->active = true;
-         $user->email = $body->email;
+         $user->email = $body['email'];
 
          $mailer = new Mailer;
          $mailer->sendMail('external_account_mail_as_main.html', [$user->email] ,
@@ -262,36 +263,36 @@ $profile_edit = Tool::makeEndpoint(function() use($app, $resourceServer) {
       }
    }
 
-   if (isset($body->password) &&
-       User::isValidPassword($body->password)) {
-      $user->setPassword($body->password);
+   if (isset($body['password']) &&
+       User::isValidPassword($body['password'])) {
+      $user->setPassword($body['password']);
    }
 
-   if (isset($body->realname) &&
-       User::isValidRealname($body->realname)) {
-      $user->realname = $body->realname;
+   if (isset($body['realname']) &&
+       User::isValidRealname($body['realname'])) {
+      $user->realname = $body['realname'];
    }
 
-   if (isset($body->website) &&
-       User::isValidWebsite($body->website)) {
-      $user->website = $body->website;
+   if (isset($body['website']) &&
+       User::isValidWebsite($body['website'])) {
+      $user->website = $body['website'];
    }
 
    $user->save();
 
-   Tool::endWithJson($user, 200);
+   return $response->withJson($user, 200);
 });
 
 /**
  * Returns list of plugins for the current
  * user if he has an associated author.
  */
-$user_plugins = Tool::makeEndpoint(function() use($app, $resourceServer) {
+$user_plugins = Tool::makeEndpoint(function(Request $request, Response $response) {
    OAuthHelper::needsScopes(['user', 'plugins']);
 
    $user = OAuthHelper::currentlyAuthed();
 
-   Tool::endWithJson($user->pluginPermissions()
+   return $response->withJson($user->pluginPermissions()
                           ->where('active', '=', true)
                           ->get());
 });
@@ -300,7 +301,7 @@ $user_plugins = Tool::makeEndpoint(function() use($app, $resourceServer) {
  * Returns the list of plugins that the user
  * watch by key.
  */
-$user_watchs = Tool::makeEndpoint(function() use($app, $resourceServer) {
+$user_watchs = Tool::makeEndpoint(function(Request $request, Response $response) {
    OAuthHelper::needsScopes(['user', 'plugins']);
 
    $user = OAuthHelper::currentlyAuthed();
@@ -310,49 +311,48 @@ $user_watchs = Tool::makeEndpoint(function() use($app, $resourceServer) {
       $plugins[] = $watch->plugin->key;
    }
 
-   Tool::endWithJson($plugins);
+   return $response->withJson($plugins);
 });
 
 /**
  * Endpoint whose action is to declare the watch
  * of a plugin
  */
-$user_add_watch = Tool::makeEndpoint(function() use($app, $resourceServer) {
+$user_add_watch = Tool::makeEndpoint(function(Request $request, Response $response) {
    OAuthHelper::needsScopes(['user', 'plugins']);
-   $body = Tool::getBody();
+   $body = $request->getParsedBody();
 
    $user = OAuthHelper::currentlyAuthed();
 
-   if (!isset($body->plugin_key) ||
-       gettype($body->plugin_key) != 'string') {
+   if (!isset($body['plugin_key']) ||
+       gettype($body['plugin_key']) != 'string') {
       throw new InvalidField('plugin_key');
    }
 
-   $plugin = Plugin::where('key', '=', $body->plugin_key)->first();
+   $plugin = Plugin::where('key', '=', $body['plugin_key'])->first();
    if (!$plugin) {
-      throw new ResourceNotFound('Plugin', $body->plugin_key);
+      throw new ResourceNotFound('Plugin', $body['plugin_key']);
    }
 
    $already = $user->watchs()->where('plugin_id', '=', $plugin->id)->count();
 
    if ($already > 0) {
-      throw new AlreadyWatched($body->plugin_key);
+      throw new AlreadyWatched($body['plugin_key']);
    }
 
    $watch = new PluginWatch;
    $watch->plugin_id = $plugin->id;
    $user->watchs()->save($watch);
 
-   $app->halt(200);
+   return $response->withStatus(200);
 });
 
 /**
  * Endpoint whose action is to stop watching
  * a specific plugin
  */
-$user_remove_watch = Tool::makeEndpoint(function ($key) use($app, $resourceServer) {
+$user_remove_watch = Tool::makeEndpoint(function (Request $request, Response $response, $key) {
    OAuthHelper::needsScopes(['user', 'plugins']);
-   $body = Tool::getBody();
 
    $user = OAuthHelper::currentlyAuthed();
 
@@ -366,21 +366,21 @@ $user_remove_watch = Tool::makeEndpoint(function ($key) use($app, $resourceServe
    if ($watch) {
       $watch->delete();
    } else {
-      $app->halt(404);
+      return $response->withStatus(404);
    }
 
-   $app->halt(200);
+   return $response->withStatus(200);
 });
 
-$user_search = Tool::makeEndpoint(function() {
+$user_search = Tool::makeEndpoint(function(Request $request, Response $response) {
    OAuthHelper::needsScopes(['users:search']);
-   $body = Tool::getBody();
+   $body = $request->getParsedBody();
 
-   if (!isset($body->search) ||
-       gettype($body->search) != 'string') {
+   if (!isset($body['search']) ||
+       gettype($body['search']) != 'string') {
       throw new InvalidField('search');
    }
-   $search = $body->search;
+   $search = $body['search'];
 
    $results = User::select(['username', 'realname'])
          ->where('username', 'LIKE', "%$search%")
@@ -388,32 +388,18 @@ $user_search = Tool::makeEndpoint(function() {
          ->orWhere('email', '=', $search)
          ->get();
 
-   Tool::endWithJson($results);
+   return $response->withJson($results);
 });
 
-$user_send_password_reset_link = Tool::makeEndpoint(function() use($app) {
-    $body = Tool::getBody();
+$user_send_password_reset_link = Tool::makeEndpoint(function(Request $request, Response $response) {
+    $body = $request->getParsedBody();
 
-    if (!isset($body->email) ||
-        gettype($body->email) !== 'string') {
+    if (!isset($body['email']) ||
+        gettype($body['email']) !== 'string') {
         throw new InvalidField('email');
     }
-    
-    // -- <this_is_not_used_for_now> --
-    // rejecting if request isn't signed by
-    // a recaptcha captcha
-    // if (!isset($body->recaptcha_response) ||
-    //     gettype($body->recaptcha_response) !== 'string') {
-    //    throw new InvalidRecaptcha;
-    // }
-    // $recaptchaStuff = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
-    // $resp = $recaptchaStuff->verify($body->recaptcha_response);
-    // if (!$resp->isSuccess()) {
-    //     throw new InvalidRecaptcha;
-    // }
-    // -- </this_is_not_used_for_now>
 
-    $user = User::where('email', '=', $body->email)->first();
+    $user = User::where('email', '=', $body['email'])->first();
     if (!$user) {
         throw new AccountNotFound();
     }
@@ -432,34 +418,24 @@ $user_send_password_reset_link = Tool::makeEndpoint(function() use($app) {
                           'reset_password_token' => $resetPasswordToken->token
                       ]);
 
-     $app->halt(200);
+     return $response->withStatus(200);
 });
 
-$user_reset_password = Tool::makeEndpoint(function() use($app) {
-    $body = Tool::getBody();
+$user_reset_password = Tool::makeEndpoint(function(Request $request, Response $response) {
+    $body = $request->getParsedBody();
     // rejecting if token not provided as a string
-    if (!isset($body->token)  ||
-        gettype($body->token) !== 'string') {
+    if (!isset($body['token'])  ||
+        gettype($body['token']) !== 'string') {
         throw new WrongPasswordResetToken();
     }
-    $token = ResetPasswordToken::where('token', '=', $body->token)
+    $token = ResetPasswordToken::where('token', '=', $body['token'])
                                ->first();
     // rejecting if no password given
-    if (!isset($body->password) ||
-        gettype($body->password) !== 'string') {
+    if (!isset($body['password']) ||
+        gettype($body['password']) !== 'string') {
        throw new InvalidField('password');
     }
-    // rejecting if request isn't signed by
-    // a recaptcha captcha
-    // if (!isset($body->recaptcha_response) ||
-    //     gettype($body->recaptcha_response) !== 'string') {
-    //    throw new InvalidRecaptcha;
-    // }
-    // $recaptchaStuff = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
-    // $resp = $recaptchaStuff->verify($body->recaptcha_response);
-    // if (!$resp->isSuccess()) {
-    //     throw new InvalidRecaptcha;
-    // }
+
     // ultimately rejecting request if token is not in db
     if (!$token) {
         throw new WrongPasswordResetToken();
@@ -468,11 +444,12 @@ $user_reset_password = Tool::makeEndpoint(function() use($app) {
     // password change procedure.
     $user = $token->user;
     // Changing the password
-    $user->setPassword($body->password);
+    $user->setPassword($body['password']);
     $user->save();
     // Deleting the ResetPasswordToken objects for this user
     $user->passwordResetTokens()->truncate();
-    $app->halt(200);
+
+    return $response->withStatus(200);
 });
 
 // HTTP REST Map
@@ -482,7 +459,7 @@ $app->post('/user', $register);
 $app->post('/user/delete', $user_delete_account);
 $app->get('/user', $profile_view);
 $app->put('/user', $profile_edit);
-$app->get('/user/validatemail/:token', $user_validate_mail);
+$app->get('/user/validatemail/{token}', $user_validate_mail);
 $app->post('/user/sendpasswordresetlink', $user_send_password_reset_link);
 $app->put('/user/password', $user_reset_password);
 
@@ -492,7 +469,7 @@ $app->get('/user/plugins', $user_plugins);
 // user watched plugins related
 $app->get('/user/watchs', $user_watchs);
 $app->post('/user/watchs', $user_add_watch);
-$app->delete('/user/watchs/:key', $user_remove_watch);
+$app->delete('/user/watchs/{key}', $user_remove_watch);
 
 // search trough user names
 $app->post('/user/search', $user_search);
@@ -500,7 +477,7 @@ $app->post('/user/search', $user_search);
 // options for CORS
 $app->options('/user', function() {});
 $app->options('/user/delete', function() {});
-$app->options('/user/validatemail/:token', function($token) {});
+$app->options('/user/validatemail/{token}', function() {});
 $app->options('/user/watchs', function() {});
 $app->options('/user/plugins', function() {});
 $app->options('/user/search', function() {});

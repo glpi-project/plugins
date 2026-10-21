@@ -11,10 +11,16 @@
 use \API\Core\Tool;
 use \API\Model\Plugin;
 use \API\Model\PluginDownload;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use \Illuminate\Database\Capsule\Manager as DB;
-use \API\OAuthServer\OAuthHelper;
 
-$download = Tool::makeEndpoint(function($key) use($app) {
+/**
+ * @var \Slim\App $app
+ */
+global $app;
+
+$download = Tool::makeEndpoint(function(Request $request, Response $response, $key) {
    $plugin = Plugin::where('key', '=', $key)->first();
 
    $plugin->download_count = DB::raw('download_count + 1');
@@ -26,9 +32,9 @@ $download = Tool::makeEndpoint(function($key) use($app) {
    $plugin_download->save();
 
    // don't redirect if it's an api call
-   $accept = $app->request->headers->get('Accept');
-   if (strtolower($accept) == "application/json") {
-      return;
+   $accept = $request->getHeader('authorization')[0] ?? null;
+   if ($accept !== null && strtolower($accept) == "application/json") {
+      return $response->withStatus(200);
    }
 
    /**
@@ -46,11 +52,11 @@ $download = Tool::makeEndpoint(function($key) use($app) {
          $plugin->download_url);
    }
 
-   $app->redirect($plugin->download_url, 301);
+   return $response->withRedirect($plugin->download_url, 301);
 });
 
 
 // HTTP Rest Map
-$app->get('/plugin/:key/download', $download);
+$app->get('/plugin/{key}/download', $download);
 
-$app->options('/plugin/:key/download', function($key){});
+$app->options('/plugin/{key}/download', function(){});

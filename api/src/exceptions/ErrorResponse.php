@@ -105,7 +105,7 @@ class ErrorResponse extends \Exception implements \JsonSerializable {
       $userId = null;
       $url = null;
       try {
-        $url = $app->request->getResourceUri();
+        $url = (string) $app->getContainer()->get('request')->getUri();
       } catch (\Exception $e) {}
       try {
         $resourceServer->isValidRequest();
@@ -116,7 +116,7 @@ class ErrorResponse extends \Exception implements \JsonSerializable {
       Tool::log((($accessToken && !$userId) ? '[anonymous]' : '').
                 ($accessToken ? '['.$accessToken.'] ' : '').
                 ($userId ? '('.$userId.') ' : '').
-                ($url ? '['.$app->request->getMethod().' '.$url.'] ' : '').
+                ($url ? '['.$app->getContainer()->get('request')->getMethod().' '.$url.'] ' : '').
                 $this->getRepresentation().
                 ($this->parent ? ' because of ' . get_class($this->parent) . ' thrown at '. $this->parent->getFile(). ' line ' . $this->parent->getLine() : ''));
    }

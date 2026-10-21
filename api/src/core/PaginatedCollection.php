@@ -2,6 +2,8 @@
 
 namespace API\Core;
 
+use Slim\Http\Response;
+
 class PaginatedCollection {
    private $queryBuilder;
 
@@ -11,7 +13,7 @@ class PaginatedCollection {
 
    private $page;
 
-   public function __construct($queryBuilder) {
+   public function __construct($queryBuilder, $request = null) {
       $this->queryBuilder = $queryBuilder;
 
       // Clone the query builder to compute
@@ -31,7 +33,7 @@ class PaginatedCollection {
       // Parse range headers and compute
       // available range that is going
       // to be returned
-      $this->parseRangeHeader();
+      $this->parseRangeHeader($request);
       if (!$this->currentRange) {
          $this->page = [];
       } else {
@@ -41,8 +43,7 @@ class PaginatedCollection {
       }
    }
 
-   private function parseRangeHeader() {
-      global $app;
+   private function parseRangeHeader($request) {
       $requested = new \stdClass();
       $returned = new \stdClass();
 
@@ -52,9 +53,10 @@ class PaginatedCollection {
 
       // Parsing requested header of fallback
       // to a default value
-      if ($app->request->headers['x-range'] &&
+      $range = $request !== null ? ($request->getHeader('x-range')[0] ?? null) : null;
+      if ($range &&
           preg_match('/^([0-9]+)-([0-9]+)$/',
-                    $app->request->headers['x-range'],
+                    $range,
                     $start_end)) {
          array_splice($start_end, 0, 1);
          $requested->startIndex = $start_end[0];
@@ -102,22 +104,23 @@ class PaginatedCollection {
                             ->get();
    }
 
-   public function setHeaders(&$response) {
-      $response->headers['accept-range']   = 'model '. $this->length;
+   public function toResponse(): Response {
+      $response = new Response();
+
+      $response = $response->withHeader('accept-range', 'model '. $this->length);
+
       if ($this->currentRange) {
-         $response->headers['content-range']  = $this->currentRange->startIndex;
-         $response->headers['content-range'] .= '-'.$this->currentRange->endIndex;
-         $response->headers['content-range'] .= '/'.$this->length;
+         $response = $response->withHeader(
+            'content-range',
+            $this->currentRange->startIndex.'-'.$this->currentRange->endIndex.'/'.$this->length
+         );
       } else if($this->length == 0) {
-         $response->headers['content-range'] = '0-0/0';
+         $response = $response->withHeader(
+            'content-range',
+            '0-0/0'
+         );
       }
-   }
 
-   public function setStatus(&$response) {
-      return $response->status($this->responseStatus);
-   }
-
-   public function get($rangeHeader) {
-      return $this->page;
+      return $response->withJson($this->page, $this->responseStatus);
    }
 }
