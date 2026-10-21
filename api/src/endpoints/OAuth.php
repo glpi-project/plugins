@@ -8,6 +8,14 @@ use \API\Model\AccessToken;
 use \API\Exception\NoCredentialsLeft;
 use \API\OAuthServer\AuthorizationServer;
 use \API\OAuthServer\OAuthHelper;
+use Slim\Http\Request;
+use Slim\Http\Response;
+
+/**
+ * @var \Slim\App $app
+ * @var \League\OAuth2\Server\ResourceServer $resourceServer
+ */
+global $app, $resourceServer;
 
 /**
  * Callback from a OAuth2 supported external service which handles
@@ -16,9 +24,17 @@ use \API\OAuthServer\OAuthHelper;
  *  - authentification is external account is already known to be linked to
  *    a GLPi Plugins account
  */
-$user_associate_external_account = Tool::makeEndpoint(function($service) use($app, $resourceServer) {
+$user_associate_external_account = Tool::makeEndpoint(function(Request $request, Response $response, $service) use($resourceServer) {
+
+   $code = $request->getParam('code');
+   if (!$code) {
+      return $response->withJson([
+         "error" => "There is no authorization code provided"
+      ], 400);
+   }
+
    $oAuth = new OAuthClient($service);
-   $token = $oAuth->getAccessToken($app->request->get('code'));
+   $token = $oAuth->getAccessToken($code);
    $data = [];
 
 
@@ -29,9 +45,9 @@ $user_associate_external_account = Tool::makeEndpoint(function($service) use($ap
       $accessToken = AccessToken::where('token', '=', $_COOKIE['access_token'])->first();
       setcookie('access_token', '', 1, '/');
       if (!$accessToken) {
-         Tool::endWithJson([
+         return $response->withJson([
             "error" => "You provided a wrong access_token via cookie"
-         ]);
+         ], 400);
       } else {
          $user_id = $accessToken->session->user->id;
       }
@@ -45,7 +61,7 @@ $user_associate_external_account = Tool::makeEndpoint(function($service) use($ap
       $user = User::where('id', '=', $user_id)->first();
       if (!$user) {
          Tool::log('warning: session has unexisting user_id '.$user_id);
-         Tool::endWithJson([
+         return $response->withJson([
             "error" => "Service error"
          ], 400);
       }
@@ -123,15 +139,17 @@ $user_associate_external_account = Tool::makeEndpoint(function($service) use($ap
 
    if (isset($data['error'])) {
       if ($data['error'] == 'Service error') {
-         $app->response->status(500);
+         return $response->withStatus(500);
       } else {
-         $app->response->status(400);
+         return $response->withStatus(400);
       }
    }
 
-   echo '<!DOCTYPE html><html><head></head><body><script type="text/javascript">'.
+   return $response->write(
+        '<!DOCTYPE html><html><head></head><body><script type="text/javascript">'.
            'var data = \''.json_encode($data).'\'; var i = 0 ; var interval = setInterval(function(){  if (i == 300) {clearInterval(interval);} i++; window.postMessage(data, "*");}, 750);'.
-        '</script></body></html>';
+        '</script></body></html>'
+   );
 });
 
 /**
@@ -139,22 +157,24 @@ $user_associate_external_account = Tool::makeEndpoint(function($service) use($ap
  * access token, this is directly backed
  * by leaguephp/oauth2-server
  */
-$authorize = Tool::makeEndpoint(function() use($app) {
+$authorize = Tool::makeEndpoint(function(Request $request, Response $response) {
    $authorizationServer = new AuthorizationServer();
-   Tool::endWithJson($authorizationServer->issueAccessToken(), 200);
+
+   return $response->withJson($authorizationServer->issueAccessToken(), 200);
 });
 
 /**
  * Return the complete list of external accounts for an
  * authentified user
  */
-$user_external_accounts = Tool::makeEndpoint(function() use ($app, $resourceServer) {
+$user_external_accounts = Tool::makeEndpoint(function(Request $request, Response $response) use ($resourceServer) {
    OAuthHelper::needsScopes(['user:externalaccounts']);
 
    $user = OAuthHelper::currentlyAuthed();
 
    $external_accounts = $user->externalAccounts()->get();
-   Tool::endWithJson($external_accounts, 200);
+
+   return $response->withJson($external_accounts, 200);
 });
 
 /**
@@ -169,7 +189,7 @@ $user_external_accounts = Tool::makeEndpoint(function() use ($app, $resourceServ
  * feature, but we still prefer to alert the user that
  * he need to setup basic password.
  */
-$user_delete_external_account = Tool::makeEndpoint(function($id) use($app, $resourceServer) {
+$user_delete_external_account = Tool::makeEndpoint(function(Request $request, Response $response, $id) use($app, $resourceServer) {
    OAuthHelper::needsScopes(['user:externalaccounts']);
 
    $user = OAuthHelper::currentlyAuthed();
@@ -191,8 +211,7 @@ $user_delete_external_account = Tool::makeEndpoint(function($id) use($app, $reso
       $externalAccount->delete();
    }
 
-
-   $app->halt(200);
+   return $response->withStatus(200);
 });
 
 /**
@@ -200,7 +219,7 @@ $user_delete_external_account = Tool::makeEndpoint(function($id) use($app, $reso
  * that are available through the
  * external accounts
  */
-$oauth_external_emails = Tool::makeEndpoint(function() use($app, $resourceServer) {
+$oauth_external_emails = Tool::makeEndpoint(function(Request $request, Response $response) use($resourceServer) {
    OAuthHelper::needsScopes(['user']);
 
    $user = OAuthHelper::currentlyAuthed();
@@ -217,15 +236,15 @@ $oauth_external_emails = Tool::makeEndpoint(function() use($app, $resourceServer
       }
    }
 
-   Tool::endWithJson($emails);
+   return $response->withJson($emails);
 });
 
 $app->get('/user/external_accounts', $user_external_accounts);
-$app->delete('/user/external_accounts/:id', $user_delete_external_account);
+$app->delete('/user/external_accounts/{id}', $user_delete_external_account);
 $app->get('/oauth/available_emails', $oauth_external_emails);
-$app->get('/oauth/associate/:service', $user_associate_external_account);
+$app->get('/oauth/associate/{service}', $user_associate_external_account);
 $app->post('/oauth/authorize', $authorize);
 $app->options('/user/external_accounts', function() {});
 $app->options('/oauth/available_emails', function() {});
 $app->options('/oauth/authorize', function() {});
-$app->options('/oauth/associate/:service', function() {});
+$app->options('/oauth/associate/{service}', function() {});

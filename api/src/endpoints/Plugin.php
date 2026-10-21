@@ -20,12 +20,12 @@ use API\Model\Plugin;
 use API\Model\Author;
 use API\Model\PluginStar;
 use ReCaptcha\ReCaptcha;
+use Slim\Http\Request;
 use API\Core\ValidableXMLPluginDescription;
 use API\Exception\ResourceNotFound;
 use API\OAuthServer\OAuthHelper;
 use API\Exception\InvalidRecaptcha;
 use API\Exception\InvalidField;
-use API\Exception\LackAuthorship;
 use API\Exception\LackPermission;
 use API\Exception\InvalidXML;
 use API\Exception\DifferentPluginSignature;
@@ -33,11 +33,18 @@ use API\Exception\RightAlreadyExist;
 use API\Exception\RightDoesntExist;
 use API\Exception\CannotDeleteAdmin;
 use API\Exception\UnavailableName;
+use Slim\Http\Response;
+
+/**
+ * @var \Slim\App $app
+ * @var \League\OAuth2\Server\ResourceServer $resourceServer
+ */
+global $app, $resourceServer;
 
 /**
  * Giving infos to display a single plugin page
  */
-$single = Tool::makeEndpoint(function($key) use($app, $resourceServer) {
+$single = Tool::makeEndpoint(function(Request $request, Response $response, $key) use($resourceServer) {
    OAuthHelper::needsScopes(['plugin:card']);
 
    $plugin = Plugin::with('descriptions', 'authors', 'versions', 'screenshots', 'tags', 'langs')
@@ -54,7 +61,7 @@ $single = Tool::makeEndpoint(function($key) use($app, $resourceServer) {
          $user = User::where('id', '=', $user_id)->first();
          $plugin['watched'] = $user->watchs()->where('plugin_id', '=', $plugin['id'])->count() > 0;
       }
-      Tool::endWithJson($plugin);
+      return $response->withJson($plugin);
    } else {
       throw new \API\Exception\ResourceNotFound('Plugin', $key);
    }
@@ -64,7 +71,7 @@ $single = Tool::makeEndpoint(function($key) use($app, $resourceServer) {
  * giving info to display the plugin page in the panel
  * The object sent by $single is in the attribute "card"
  */
-$single_authormode_view = Tool::makeEndpoint(function($key) use($app) {
+$single_authormode_view = Tool::makeEndpoint(function(Request $request, Response $response, $key) {
    OAuthHelper::needsScopes(['plugin:card', 'user']);
 
    $user = OAuthHelper::currentlyAuthed();
@@ -92,7 +99,7 @@ $single_authormode_view = Tool::makeEndpoint(function($key) use($app) {
       throw new LackPermission('Plugin', $key, $user->username, 'authormode_view');
    }
 
-   Tool::endWithJson([
+   return $response->withJson([
       "card" => $plugin,
       "tags" => $plugin->tags()->get(),
       "statistics" => [
@@ -109,7 +116,7 @@ $single_authormode_view = Tool::makeEndpoint(function($key) use($app) {
  * Currently, this endpoint is only used to
  * modify the xml_url of the plugin.
  */
-$single_authormode_edit = Tool::makeEndpoint(function($key) use($app) {
+$single_authormode_edit = Tool::makeEndpoint(function(Request $request, Response $response, $key) {
    OAuthHelper::needsScopes(['user', 'plugin:card']);
 
    $user = OAuthHelper::currentlyAuthed();
@@ -140,19 +147,19 @@ $single_authormode_edit = Tool::makeEndpoint(function($key) use($app) {
       throw new LackPermission('Plugin', $key, $user->username, 'change_xml_url');
    }
 
-   $body = Tool::getBody();
+   $body = $request->getParsedBody();
 
    // User can change it's xml_url with this endpoint
-   if (isset($body->xml_url)) {
+   if (isset($body['xml_url'])) {
       // We check if the URL is a correct URI
-      if (!filter_var($body->xml_url, FILTER_VALIDATE_URL)) {
+      if (!filter_var($body['xml_url'], FILTER_VALIDATE_URL)) {
          throw new InvalidField;
       }
 
       // We check if we can fetch the file via HTTP
-      $xml = @file_get_contents($body->xml_url);
+      $xml = @file_get_contents($body['xml_url']);
       if (!$xml) {
-         throw new InvalidXML('url', $body->xml_url);
+         throw new InvalidXML('url', $body['xml_url']);
       }
 
       // We check is the plugin meta-description is
@@ -191,14 +198,14 @@ $single_authormode_edit = Tool::makeEndpoint(function($key) use($app) {
          }
       }
 
-      $plugin->xml_url = $body->xml_url;
+      $plugin->xml_url = $body['xml_url'];
       $plugin->save();
    }
 
-   $app->halt(200);
+   return $response->withStatus(200);
 });
 
-$plugin_view_permissions = Tool::makeEndpoint(function($key) use ($app) {
+$plugin_view_permissions = Tool::makeEndpoint(function(Request $request, Response $response, $key) {
    OAuthHelper::needsScopes(['user', 'plugin:card']);
    $user = OAuthHelper::currentlyAuthed();
 
@@ -216,13 +223,13 @@ $plugin_view_permissions = Tool::makeEndpoint(function($key) use ($app) {
       throw new LackPermission('Plugin', $key, $user->username, 'manage_permissions');
    }
 
-   Tool::endWithJson($plugin->permissions);
+   return $response->withJson($plugin->permissions);
 });
 
-$plugin_add_permission = Tool::makeEndpoint(function($key) use($app) {
+$plugin_add_permission = Tool::makeEndpoint(function(Request $request, Response $response, $key) {
    OAuthHelper::needsScopes(['user', 'plugin:card']);
    $user = OAuthHelper::currentlyAuthed();
-   $body = Tool::getBody();
+   $body = $request->getParsedBody();
 
    $plugin = Plugin::where('key', '=', $key)->first();
    if (!$plugin) {
@@ -235,27 +242,28 @@ $plugin_add_permission = Tool::makeEndpoint(function($key) use($app) {
       throw new LackPermission('manage_permissions', 'Plugin', $key);
    }
 
-   if (!isset($body->username) ||
-       gettype($body->username) != 'string') {
+   if (!isset($body['username']) ||
+       gettype($body['username']) != 'string') {
       throw new InvalidField('username');
    }
 
    // verify user has the admin flag on the plugin
    // otherwise reject
-   $target_user = User::where('username', '=', $body->username)->first();
+   $target_user = User::where('username', '=', $body['username'])->first();
    if (!$target_user) {
-      throw new ResourceNotFound('User', $body->username);
+      throw new ResourceNotFound('User', $body['username']);
    }
 
    if ($plugin->permissions->find($target_user)) {
-      throw new RightAlreadyExist($body->username, $plugin->key);
+      throw new RightAlreadyExist($body['username'], $plugin->key);
    }
 
    $plugin->permissions()->attach($target_user);
-   $app->halt(200);
+
+   return $response->withStatus(200);
 });
 
-$plugin_delete_permission = Tool::makeEndpoint(function($key, $username) use($app) {
+$plugin_delete_permission = Tool::makeEndpoint(function(Request $request, Response $response, $key, $username) {
    OAuthHelper::needsScopes(['user', 'plugin:card']);
    $user = OAuthHelper::currentlyAuthed();
 
@@ -290,26 +298,26 @@ $plugin_delete_permission = Tool::makeEndpoint(function($key, $username) use($ap
    // the permission
    $plugin->permissions()->detach($target_user);
 
-   $app->halt(200);
+   return $response->withStatus(200);
 });
 
 /**
  * Endpoint that allows to modify permission on a plugin
  * from pov of specific user
  */
-$plugin_modify_permission = Tool::makeEndpoint(function($key, $username) use($app) {
+$plugin_modify_permission = Tool::makeEndpoint(function(Request $request, Response $response, $key, $username) {
    OAuthHelper::needsScopes(['user', 'plugin:card']);
-   $body = Tool::getBody();
+   $body = $request->getParsedBody();
    $user = OAuthHelper::currentlyAuthed();
 
-   if (!isset($body->right) ||
-       gettype($body->right) != 'string' ||
-       !in_array($body->right, ['allowed_refresh_xml', 'allowed_change_xml_url', 'allowed_notifications'])) {
+   if (!isset($body['right']) ||
+       gettype($body['right']) != 'string' ||
+       !in_array($body['right'], ['allowed_refresh_xml', 'allowed_change_xml_url', 'allowed_notifications'])) {
       throw new InvalidField('right');
    }
 
-   if (!isset($body->set) ||
-       gettype($body->set) != 'boolean') {
+   if (!isset($body['set']) ||
+       gettype($body['set']) != 'boolean') {
       throw new InvalidField('set');
    }
 
@@ -334,12 +342,13 @@ $plugin_modify_permission = Tool::makeEndpoint(function($key, $username) use($ap
       throw new RightDoesntExist($username, $plugin->key);
    }
 
-   $target_user->pivot[$body->right] = ($body->set) ? $body->set : null;
+   $target_user->pivot[$body['right']] = ($body['set']) ? $body['set'] : null;
    $target_user->pivot->save();
-   $app->halt(200);
+
+   return $response->withStatus(200);
 });
 
-$plugin_refresh_xml = Tool::makeEndpoint(function($key) use($app) {
+$plugin_refresh_xml = Tool::makeEndpoint(function(Request $request, Response $response, $key) {
    OAuthHelper::needsScopes(['user', 'plugin:card']);
    $user = OAuthHelper::currentlyAuthed();
 
@@ -384,7 +393,7 @@ $plugin_refresh_xml = Tool::makeEndpoint(function($key) use($app) {
       }
    }
 
-   Tool::endWithJson([
+   return $response->withJson([
       "errors" => $errors,
       "xml_state" => $taskDispatcher->currentPluginState
    ]);
@@ -393,129 +402,137 @@ $plugin_refresh_xml = Tool::makeEndpoint(function($key) use($app) {
 /**
  * List of all plugins
  */
-$all = Tool::makeEndpoint(function() use($app) {
+$all = Tool::makeEndpoint(function(Request $request, Response $response) {
    OAuthHelper::needsScopes(['plugins']);
 
    $plugins = Tool::paginateCollection(
      Plugin::short()
            ->with('authors', 'versions', 'descriptions')
            ->withAverageNote()
-           ->descWithLang(Tool::getRequestLang())
-           ->where('active', '=', 1)
+           ->descWithLang(Tool::getRequestLang($request))
+           ->where('active', '=', 1),
+      $request
    );
-   Tool::endWithJson($plugins);
+
+   return $plugins->toResponse();
 });
 
 /**
  * Most popular plugins
  */
-$popular = Tool::makeEndpoint(function() use($app) {
+$popular = Tool::makeEndpoint(function(Request $request, Response $response) {
    OAuthHelper::needsScopes(['plugins']);
 
    $popular_plugins = Tool::paginateCollection(
       Plugin::popularTop()
-         ->where('active', '=', 1)
+         ->where('active', '=', 1),
+      $request
    );
 
-   Tool::endWithJson($popular_plugins);
+   return $popular_plugins->toResponse();
 });
 
 /**
  * Trending plugins
  *  most popular the 2 last weeks
  */
-$trending = Tool::makeEndpoint(function() use($app) {
+$trending = Tool::makeEndpoint(function(Request $request, Response $response) {
    OAuthHelper::needsScopes(['plugins']);
 
    $trending_plugins = Tool::paginateCollection(
       Plugin::trendingTop()
-         ->where('active', '=', 1)
+         ->where('active', '=', 1),
+      $request
    );
 
-   Tool::endWithJson($trending_plugins);
+   return $trending_plugins->toResponse();
 });
 
 /**
  * Updated plugins
  *  most recently updated plugins
  */
-$updated = Tool::makeEndpoint(function() use($app) {
+$updated = Tool::makeEndpoint(function(Request $request, Response $response) {
    OAuthHelper::needsScopes(['plugins']);
 
    $updated_plugins = Tool::paginateCollection(
       Plugin::updatedRecently()
-         ->where('active', '=', 1)
+         ->where('active', '=', 1),
+      $request
    );
 
-   Tool::endWithJson($updated_plugins);
+   return $updated_plugins->toResponse();
 });
 // rss endpoint
-$rss_updated = Tool::makeEndpoint(function() use($app) {
+$rss_updated = Tool::makeEndpoint(function(Request $request, Response $response) {
    $updated_plugins = Plugin::updatedRecently()
                             ->where('active', '=', 1)
                             ->limit(30)
                             ->get();
-   Tool::endWithRSS($updated_plugins, "Updated plugins");
+
+   return Tool::getCollectionRssFeedResponse($updated_plugins, "Updated plugins");
 });
 
 /**
  * New plugins
  *  most recently added plugins
  */
-$new = Tool::makeEndpoint(function() use($app) {
+$new = Tool::makeEndpoint(function(Request $request, Response $response) {
    OAuthHelper::needsScopes(['plugins']);
 
    $new_plugins = Tool::paginateCollection(
       Plugin::mostFreshlyAddedPlugins()
-         ->where('active', '=', 1)
+         ->where('active', '=', 1),
+      $request
    );
 
-   Tool::endWithJson($new_plugins);
+   return $new_plugins->toResponse();
 });
 // rss endpoint
-$rss_new = Tool::makeEndpoint(function() use($app) {
+$rss_new = Tool::makeEndpoint(function(Request $request, Response $response) {
    $new_plugins = Plugin::mostFreshlyAddedPlugins()
                        ->where('active', '=', 1)
                        ->limit(30)
                        ->get();
-   Tool::endWithRSS($new_plugins, "New Plugins");
+
+   return Tool::getCollectionRssFeedResponse($new_plugins, "New Plugins");
 });
 
 /**
  * Remote procedure to star a plugin
  */
-$star = Tool::makeEndpoint(function() use($app) {
+$star = Tool::makeEndpoint(function(Request $request, Response $response) {
    OAuthHelper::needsScopes(['plugin:star']);
-   $body = Tool::getBody();
+   $body = $request->getParsedBody();
 
-   if (!isset($body->plugin_id) ||
-       !isset($body->note) ||
-       !is_numeric($body->plugin_id) ||
-       !is_numeric($body->note)) {
-      Tool::endWithJson([
+   if (!isset($body['plugin_id']) ||
+       !isset($body['note']) ||
+       !is_numeric($body['plugin_id']) ||
+       !is_numeric($body['note'])) {
+      $response->withJson([
          "error" => "plugin_id and note should be provided as integer"
       ], 400);
    }
 
-   $plugin = Plugin::where('active', '=', true)->find($body->plugin_id);
+   $plugin = Plugin::where('active', '=', true)->find($body['plugin_id']);
 
    if ($plugin == NULL) {
-      Tool::endWithJson([
+      $response->withJson([
          "error" => "you try to note a plugin that doesn't exists"
       ], 400);
    }
 
 
    $plugin_star = new PluginStar();
-   $plugin_star->note = $body->note;
+   $plugin_star->note = $body['note'];
    $plugin_star->date = DB::raw('NOW()');
 
    $plugin->stars()->save($plugin_star);
 
    $plugin = Plugin::withAverageNote()
-                   ->find($body->plugin_id);
+                   ->find($body['plugin_id']);
    // returning new average
-   Tool::endWithJson([
+   return $response->withJson([
       "new_average" => $plugin->note
    ]);
 });
@@ -523,31 +540,31 @@ $star = Tool::makeEndpoint(function() use($app) {
 /**
  * Method called when an user submits a plugin
  */
-$submit = Tool::makeEndpoint(function() use($app) {
+$submit = Tool::makeEndpoint(function(Request $request, Response $response) {
    OAuthHelper::needsScopes(['plugin:submit']);
 
    $user = OAuthHelper::currentlyAuthed();
-   $body = Tool::getBody();
+   $body = $request->getParsedBody();
 
    $recaptcha = new ReCaptcha(Tool::getConfig()['recaptcha_secret']);
-   $resp = $recaptcha->verify($body->recaptcha_response);
+   $resp = $recaptcha->verify($body['recaptcha_response']);
    if (!$resp->isSuccess()) {
       throw new InvalidRecaptcha;
    }
 
-   if (!isset($body->plugin_url) ||
-       gettype($body->plugin_url) != 'string') {
+   if (!isset($body['plugin_url']) ||
+       gettype($body['plugin_url']) != 'string') {
       throw new InvalidField('plugin_url');
    }
 
    // Quickly validating
-   if (Plugin::where('xml_url', '=', $body->plugin_url)->count() > 0) {
-      throw new UnavailableName('XML_URL', $body->plugin_url);
+   if (Plugin::where('xml_url', '=', $body['plugin_url'])->count() > 0) {
+      throw new UnavailableName('XML_URL', $body['plugin_url']);
    }
 
-   $xml = @file_get_contents($body->plugin_url);
+   $xml = @file_get_contents($body['plugin_url']);
    if (!$xml) {
-      throw new InvalidXML('url', $body->plugin_url);
+      throw new InvalidXML('url', $body['plugin_url']);
    }
 
    $xml = new ValidableXMLPluginDescription($xml);
@@ -560,7 +577,7 @@ $submit = Tool::makeEndpoint(function() use($app) {
 
    $plugin = new Plugin;
    $plugin->key = $xml->key;
-   $plugin->xml_url = $body->plugin_url;
+   $plugin->xml_url = $body['plugin_url'];
    $plugin->date_added = DB::raw('NOW()');
    $plugin->active = false;
    $plugin->download_count = 0;
@@ -578,7 +595,7 @@ $submit = Tool::makeEndpoint(function() use($app) {
                      '[PLUGIN SUBMISSION] '.$xml->name. ' ('.$xml->key.')',
                      ['plugin_xml' => (array)$xml]);
 
-   Tool::endWithJson([
+   return $response->withJson([
       "success" => true
    ]);
 });
@@ -595,14 +612,14 @@ $app->get('/plugin/updated', $updated);
 $app->get('/plugin/rss_new', $rss_new);
 $app->get('/plugin/rss_updated', $rss_updated);
 $app->post('/plugin/star', $star);
-$app->get('/plugin/:key', $single);
-$app->get('/panel/plugin/:key', $single_authormode_view);
-$app->post('/panel/plugin/:key', $single_authormode_edit);
-$app->get('/plugin/:key/permissions', $plugin_view_permissions);
-$app->post('/plugin/:key/permissions', $plugin_add_permission);
-$app->delete('/plugin/:key/permissions/:username', $plugin_delete_permission);
-$app->patch('/plugin/:key/permissions/:username', $plugin_modify_permission);
-$app->post('/plugin/:key/refresh_xml', $plugin_refresh_xml);
+$app->get('/plugin/{key}', $single);
+$app->get('/panel/plugin/{key}', $single_authormode_view);
+$app->post('/panel/plugin/{key}', $single_authormode_edit);
+$app->get('/plugin/{key}/permissions', $plugin_view_permissions);
+$app->post('/plugin/{key}/permissions', $plugin_add_permission);
+$app->delete('/plugin/{key}/permissions/{username}', $plugin_delete_permission);
+$app->patch('/plugin/{key}/permissions/{username}', $plugin_modify_permission);
+$app->post('/plugin/{key}/refresh_xml', $plugin_refresh_xml);
 
 $app->options('/plugin',function(){});
 $app->options('/plugin/popular',function(){});
@@ -610,6 +627,6 @@ $app->options('/plugin/trending',function(){});
 $app->options('/plugin/updated',function(){});
 $app->options('/plugin/new',function(){});
 $app->options('/plugin/star',function(){});
-$app->options('/plugin/:id',function($id){});
-$app->options('/panel/plugin/:id',function($id){});
-$app->options('/plugin/:key/permissions', function($key){});
+$app->options('/plugin/{id}',function(){});
+$app->options('/panel/plugin/{id}',function(){});
+$app->options('/plugin/{key}/permissions', function(){});

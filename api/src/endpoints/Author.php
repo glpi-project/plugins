@@ -11,35 +11,44 @@
 
 use API\Core\Tool;
 use API\Core\Mailer;
-use Illuminate\Database\Capsule\Manager as DB;
 use API\OAuthServer\OAuthHelper;
 use API\Exception\InvalidRecaptcha;
 use API\Exception\InvalidField;
 use API\Exception\ResourceNotFound;
 use API\Model\Author;
 use API\Model\User;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
-$all = Tool::makeEndpoint(function() use($app) {
+/**
+ * @var \Slim\App $app
+ * @var \League\OAuth2\Server\ResourceServer $resourceServer
+ */
+global $app, $resourceServer;
+
+$all = Tool::makeEndpoint(function(Request $request, Response $response) {
    OAuthHelper::needsScopes(['authors']);
 
    $all = Tool::paginateCollection(
-            \API\Model\Author::mostActive()
-                             ->contributorsOnly());
+      \API\Model\Author::mostActive()->contributorsOnly(),
+      $request
+   );
 
-   Tool::endWithJson($all);
+   return $all->toResponse();
 });
 
-$top = Tool::makeEndpoint(function() use($app) {
+$top = Tool::makeEndpoint(function(Request $request, Response $response) {
    OAuthHelper::needsScopes(['authors']);
 
    $top = Tool::paginateCollection(
-       \API\Model\Author::mostActive()
+       \API\Model\Author::mostActive(),
+       $request
    );
 
-   Tool::endWithJson($top);
+   return $top->toResponse();
 });
 
-$single = Tool::makeEndpoint(function($id) use($app) {
+$single = Tool::makeEndpoint(function(Request $request, Response $response, $id) {
    OAuthHelper::needsScopes(['author']);
 
    $author = \API\Model\Author::withPluginCount()
@@ -56,10 +65,10 @@ $single = Tool::makeEndpoint(function($id) use($app) {
       }
    }
 
-   Tool::endWithJson($author);
+   return $response->withJson($author);
 });
 
-$author_plugins = Tool::makeEndpoint(function($id) use($app) {
+$author_plugins = Tool::makeEndpoint(function(Request $request, Response $response, $id) {
    OAuthHelper::needsScopes(['author', 'plugins']);
 
    $author = \API\Model\Author::where('id', '=', $id)->first();
@@ -67,58 +76,60 @@ $author_plugins = Tool::makeEndpoint(function($id) use($app) {
       throw new \API\Exception\ResourceNotFound('Author', $id);
    }
 
-   Tool::endWithJson(Tool::paginateCollection(
-                        \API\Model\Plugin
-                                       ::with('versions', 'authors', 'descriptions')
-                                       ->short()
-                                       ->withAverageNote()
-                                       ->descWithLang(Tool::getRequestLang())
-                                       ->whereAuthor($author->id)
-                     )
+   $plugins = Tool::paginateCollection(
+      \API\Model\Plugin::with('versions', 'authors', 'descriptions')
+                       ->short()
+                       ->withAverageNote()
+                       ->descWithLang(Tool::getRequestLang($request))
+                       ->whereAuthor($author->id),
+       $request
    );
+
+   return $plugins->toResponse();
 });
 
-$claim_authorship = Tool::makeEndpoint(function() use($app, $resourceServer) {
+$claim_authorship = Tool::makeEndpoint(function(Request $request, Response $response) use($resourceServer) {
    OAuthHelper::needsScopes(['user']);
-   $body = Tool::getBody();
+   $body = $request->getParsedBody();
 
    $user_id = $resourceServer->getAccessToken()->getSession()->getOwnerId();
    $user = User::where('id', '=', $user_id)->first();
 
    // We ensure the recatpcha_response
    // is provided as a string
-   if (!isset($body->recaptcha_response) ||
-       gettype($body->recaptcha_response) != 'string') {
+   if (!isset($body['recaptcha_response']) ||
+       gettype($body['recaptcha_response']) != 'string') {
       throw new InvalidRecaptcha;
    }
    // and we verify it with recaptcha
-   Tool::assertRecaptchaValid($body->recaptcha_response);
+   Tool::assertRecaptchaValid($body['recaptcha_response']);
 
-   if (!isset($body->author) ||
-       gettype($body->author) != 'string' ||
-       strlen($body->author) > 90) {
+   if (!isset($body['author']) ||
+       gettype($body['author']) != 'string' ||
+       strlen($body['author']) > 90) {
       throw new InvalidField('author');
    }
 
-   if (!($author =Author::where('name', '=', $body->author)->first())) {
-      throw new ResourceNotFound('Author', $body->author);
+   if (!($author =Author::where('name', '=', $body['author'])->first())) {
+      throw new ResourceNotFound('Author', $body['author']);
    }
 
    $mailer = new Mailer;
    $mailer->sendMail('authorship_claim.html', Tool::getConfig()['msg_alerts']['local_admins'],
                      'User '.$user->username.' claim authorship', ['user' => $user->toArray(),
                                                                   'author' => $author->toArray()]);
-   $app->halt(200);
+
+   return $response->withStatus(200);
 });
 
 // HTTP REST Map
 $app->get('/author', $all);
 $app->get('/author/top', $top);
-$app->get('/author/:id', $single);
-$app->get('/author/:id/plugin', $author_plugins);
+$app->get('/author/{id}', $single);
+$app->get('/author/{id}/plugin', $author_plugins);
 $app->post('/claimauthorship', $claim_authorship);
 
 $app->options('/author',function(){});
 $app->options('/author/top',function(){});
-$app->options('/author/:id',function($id){});
-$app->options('/author/:id/plugin',function($id){});
+$app->options('/author/{id}',function(){});
+$app->options('/author/{id}/plugin',function(){});

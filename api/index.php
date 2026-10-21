@@ -1,15 +1,21 @@
 <?php
 
-require 'vendor/autoload.php';
 use \API\Core\Tool;
 use API\OAuthServer\OAuthHelper;
+use Slim\Http\Request;
+use Slim\Http\Response;
+
+error_reporting(E_ALL & ~E_DEPRECATED); // Suppress deprecation messages
+
+require 'vendor/autoload.php';
 
 // Initialisation of Database (Illuminate)
 // and webapp global object
 \API\Core\DB::initCapsule();
-$app = new \Slim\Slim();
+$app = new \Slim\App();
 
 // Instantiating the Resource Server
+global $resourceServer;
 $resourceServer = new \League\OAuth2\Server\ResourceServer(
   OAuthHelper::getSessionStorage(),
   OAuthHelper::getAccessTokenStorage(),
@@ -32,14 +38,15 @@ while ($ent = readdir($dir_endpoints)) {
 closedir($dir_endpoints);
 
 // JSON 404 response
-$app->notFound(Tool::makeEndpoint(function() {
-   throw new \API\Exception\InvalidEndpoint;
-}));
+$app->getContainer()['notFoundHandler'] = function ($c) {
+    return function (Request $request, Response $response) use ($c) {
+        return $response->withJson([], 404);
+    };
+};
 
 // Welcoming browsers when they reach /api
-$app->get('/', function() use($app) {
-   $app->halt(200);
-   //echo file_get_contents(__DIR__.'/welcome.html');
+$app->get('/', function (Request $request, Response $response, $args = []) {
+   return $response->withStatus(200);
 });
 
 // Ready to serve with Slim
