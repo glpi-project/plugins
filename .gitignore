@@ -5,5 +5,6 @@ api/config.php
 *.swp
 /frontend/app/scripts/conf.js
 /misc/illuminate_queries.log
+/misc/php-errors.log
 .vagrant
 /docker-compose.override.yaml
