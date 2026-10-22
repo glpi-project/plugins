@@ -20,7 +20,7 @@
       "google/recaptcha": "^1.1",
       "illuminate/database": "5.1.*",
       "illuminate/events": "5.1.*",
-      "laminas/laminas-uri": "^2.8",
+      "laminas/laminas-uri": "^2.14",
       "league/oauth2-client": "^1.0",
       "league/oauth2-github": "^0.2.0",
       "league/oauth2-server": "^4.1",
