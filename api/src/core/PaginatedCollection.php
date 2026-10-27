@@ -34,9 +34,7 @@ class PaginatedCollection {
       // available range that is going
       // to be returned
       $this->parseRangeHeader($request);
-      if (!$this->currentRange) {
-         $this->page = [];
-      } else {
+      if ($this->currentRange) {
          // If parseRangeHeader() worked,
          // we can fetch the page
          $this->page = $this->getPage();
@@ -73,10 +71,8 @@ class PaginatedCollection {
          return;
       }
       elseif ($requested->startIndex >= $this->length) {
-         $this->responseStatus = 400;
-         $this->page = [
-            "error" => "Start at unexisting index"
-         ];
+         $this->responseStatus = 200;
+         $this->page = [];
          return;
       }
       elseif ($requested->endIndex >= $this->length) {
